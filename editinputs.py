@@ -7,8 +7,6 @@ from atom import Atom
 # edits a cp2k template file called cp2k.template.in
 # and writes a new version called cp2k.[input name].in
 # with required lattice vectors and atomic positions
-
-
 def editcp2k(inName, vectors, atoms):
     with open("cp2k.template.in") as tempFile:
         tempContent = tempFile.readlines()
@@ -37,12 +35,30 @@ def editcp2k(inName, vectors, atoms):
         # writes atomic coordinates
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
-                cp2kIn.write(str(atom.elem) + "\t" + str(atom.x) +
-                             "\t" + str(atom.y) + "\t" + str(atom.z) + "\n")
+                cp2kIn.write(str(atom.elem) + " \t" + str(atom.x) +
+                             " \t" + str(atom.y) + " \t" + str(atom.z) + "\n")
 
         else:  # if no tag is found
             cp2kIn.write(line)
 
     tempFile.close()
+    cp2kIn.close()
+    return
 
+# edits a cp2k submission script template to
+# give it the correct job, input and output names
+# possibly useless, stored here for later use
+def editcp2kSub(inName):
+    with open("script-cp2k.template") as tempFile:
+        tempContent = tempFile.readlines()
+
+    subScript = open("script-cp2k."+inName, "w")
+
+    for line in tempContent:
+        if "XXX__NAME__XXX" in line:
+            subScript.write(line.replace("XXX__NAME__XXX", inName))
+        else:
+            subScript.write(line)
+
+    tempFile.close()
     return
