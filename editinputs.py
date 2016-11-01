@@ -7,6 +7,8 @@ from atom import Atom
 # edits a cp2k template file called cp2k.template.in
 # and writes a new version called cp2k.[input name].in
 # with required lattice vectors and atomic positions
+
+
 def editcp2k(inName, vectors, atoms):
     with open("cp2k.template.in") as tempFile:
         tempContent = tempFile.readlines()
@@ -48,11 +50,13 @@ def editcp2k(inName, vectors, atoms):
 # edits a cp2k submission script template to
 # give it the correct job, input and output names
 # possibly useless, stored here for later use
+
+
 def editcp2kSub(inName):
     with open("script-cp2k.template") as tempFile:
         tempContent = tempFile.readlines()
 
-    subScript = open("script-cp2k."+inName, "w")
+    subScript = open("script-cp2k." + inName, "w")
 
     for line in tempContent:
         if "XXX__NAME__XXX" in line:
@@ -63,12 +67,50 @@ def editcp2kSub(inName):
     tempFile.close()
     return
 
+# writes an xyz file from a list of atoms
+
 
 def writexyz(inName, atoms):
-    outFile = open(inName+".xyz","w")
-    outFile.write(str(len(atoms))+"\n")
-    outFile.write(inName+"\n")
+    outFile = open(inName + ".xyz", "w")
+    outFile.write(str(len(atoms)) + "\n")
+    outFile.write(inName + "\n")
 
     for atom in atoms:
         outFile.write(atom.xyzStr())
     return
+
+
+# writes a .uc file for the Ewald program
+# input the name, the matrix of lattice vectors
+# each multiplication of cell through a vector
+# and a list of Atom objects
+def writeuc(inName, vectors, aN, bN, cN, atoms):
+    outFile = open(inName + ".uc", "w")
+    outFile.write("\t".join(map(str, vectors[0])) + "\t" + str(aN) + "\n")
+    outFile.write("\t".join(map(str, vectors[1])) + "\t" + str(bN) + "\n")
+    outFile.write("\t".join(map(str, vectors[2])) + "\t" + str(cN) + "\n")
+
+    # Transpose to ge the transformation matrix
+    M = numpy.transpose(vectors)
+    # Inverse transformation matrix
+    U = numpy.linalg.inv(M)
+
+    for atom in atoms:
+        dirPos = [atom.x, atom.y, atom.z]
+        fracPos = numpy.dot(U, dirPos).tolist()
+        for coord in fracPos:
+            if coord < 0:
+                fracPos[fracPos.index(coord)] = 1 + coord
+        strLine = "\t".join(map(str, fracPos)) + "\t" + \
+            str(atom.q) + "\t" + str(atom.elem) + "\n"
+        outFile.write(strLine)
+
+    return
+
+# writes a .qc file for Ewald with a name and a list of atoms
+
+
+def writeqc(inName, atoms):
+    outFile = open(inName + ".qc", "w")
+    for atom in atoms:
+        outFile.write(str(atom))

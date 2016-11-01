@@ -71,11 +71,11 @@ class Atom:
                         z3 = z2
         return rMin, x3, y3, z3
 
-        #translates the atomic coordinates by some vector
+        # translates the atomic coordinates by some vector
     def translate(self, x1, y1, z1):
         xout, yout, zout = self.x, self.y, self.z
         xout += x1
         yout += y1
         zout += z1
-        outAtom=Atom(self.elem, xout, yout, zout, self.q)
+        outAtom = Atom(self.elem, xout, yout, zout, self.q)
         return outAtom
