@@ -8,8 +8,35 @@ from readfile import *
 from editinputs import *
 from molselect import *
 
+##########
+##########
+# Start user inputs
+##########
+##########
+
 # the name of the job goes here
 name = "naphthalene222"
+
+# maximum bond length when defining a molecule
+maxBL = 2.2
+
+# label of an atom which will be part of the quantum cluster
+labelAtom = 2
+
+# the number of checkpoints in region 1
+nChk = 1000
+
+# the number of constrained charge atoms
+# i.e. atoms in regions 1 and 2
+nAt = 500
+
+##########
+##########
+# End user inputs
+##########
+##########
+
+
 
 # extracts the unrelaxed cell information
 # from a vasp file
@@ -32,7 +59,7 @@ for index, atom in enumerate(relaxedAtoms):
 # the atoms which are part of the same selected molecule
 # first with intact coordiantes and second with certain
 # atoms translated to join up the molecule with their image
-fullMol, fullMolTrans = select2(2.2, relaxedAtoms, 2, vectors)
+fullMol, fullMolTrans = select2(maxBL, relaxedAtoms, labelAtom, vectors)
 
 # atoms from molecule which need translating
 partMol = [atom for atom in fullMol if atom not in fullMolTrans]
@@ -81,3 +108,4 @@ cN = 2
 
 writeuc(name, vectors, aN, bN, cN, transAtoms)
 writeqc(name, transMol)
+writeEwIn(name, nChk, nAt)

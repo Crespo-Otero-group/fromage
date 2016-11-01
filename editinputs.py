@@ -114,3 +114,15 @@ def writeqc(inName, atoms):
     outFile = open(inName + ".qc", "w")
     for atom in atoms:
         outFile.write(str(atom))
+
+# writes a ewald.in file from the job name,
+# the amount of checkpoints in zone 1 and
+# the amount of atoms with constrained charge
+
+
+def writeEwIn(inName, nChk, nAt):
+    outFile = open("ewald." + inName + ".in", "w")
+    outFile.write(inName + "\n")
+    outFile.write(str(nChk) + "\n")
+    outFile.write(str(nAt) + "\n")
+    outFile.write("0\n")
