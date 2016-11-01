@@ -25,5 +25,31 @@ charges = readcp2kMull("cp2k."+name)
 
 for index, atom in enumerate(relaxedAtoms):
     atom.q = charges[index]
-select(2.2, relaxedAtoms, 2)
-select2(2.2, relaxedAtoms, 2, vectors)
+
+
+fullMol, fullMolTrans = select2(2.2, relaxedAtoms, 2, vectors)
+partMol = [atom for atom in fullMol if atom not in fullMolTrans]
+partMolImg = [atom for atom in fullMolTrans if atom not in fullMol]
+
+print relaxedAtoms
+
+for atom in relaxedAtoms:
+    if atom in partMol:
+        relaxedAtoms[relaxedAtoms.index(atom)] = partMolImg[partMol.index(atom)]
+
+N=len(fullMolTrans)
+baryX, baryY, baryZ = 0, 0, 0
+for atom in fullMolTrans:
+    baryX += atom.x/N
+    baryY += atom.y/N
+    baryZ += atom.z/N
+print baryX, baryY, baryZ
+
+transAtoms=[]
+for atom in relaxedAtoms:
+    transAtoms.append(atom.translate(-baryX, -baryY, -baryZ))
+
+transMol=[]
+for atom in fullMolTrans:
+    transMol.append(atom.translate(-baryX, -baryY, -baryZ))
+writexyz("testxyz", transMol)

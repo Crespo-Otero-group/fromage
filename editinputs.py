@@ -62,3 +62,13 @@ def editcp2kSub(inName):
 
     tempFile.close()
     return
+
+
+def writexyz(inName, atoms):
+    outFile = open(inName+".xyz","w")
+    outFile.write(str(len(atoms))+"\n")
+    outFile.write(inName+"\n")
+
+    for atom in atoms:
+        outFile.write(atom.xyzStr())
+    return
