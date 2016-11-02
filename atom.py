@@ -23,15 +23,18 @@ class Atom:
 
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
-        return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
+        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 
     def __str__(self):
-        return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
+        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 
         # writes the atom coordinates in xyz format
 
     def xyzStr(self):
-        return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\n"
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z)
+        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\n"
 
         # equality method
     def __eq__(self, other):

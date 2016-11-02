@@ -110,7 +110,7 @@ transMol = []
 for atom in fullMolTrans:
     transMol.append(atom.translate(-baryX, -baryY, -baryZ))
 
-writexyz("testnaph", transAtoms)
+
 # write Ewald input files
 
 writeuc(name, vectors, aN, bN, cN, transAtoms)
