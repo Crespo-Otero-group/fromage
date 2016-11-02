@@ -35,6 +35,7 @@ def editcp2k(inName, vectors, atoms):
             cp2kIn.write(line.replace("XXX__CVEC__XXX", cVec))
 
         # writes atomic coordinates
+        # NB, tabs are not sufficient, a blank space is added
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
                 cp2kIn.write(str(atom.elem) + " \t" + str(atom.x) +
@@ -121,8 +122,29 @@ def writeqc(inName, atoms):
 
 
 def writeEwIn(inName, nChk, nAt):
-    outFile = open("ewald." + inName + ".in", "w")
+    outFile = open("ewald.in." + inName, "w")
     outFile.write(inName + "\n")
     outFile.write(str(nChk) + "\n")
     outFile.write(str(nAt) + "\n")
     outFile.write("0\n")
+
+# writes a Gaussian input file from a template
+# with atoms and point charges as inputs
+def writeGauss(inName, atoms, points):
+    with open("template.com") as tempFile:
+        tempContent = tempFile.readlines()
+
+    outFile = open(inName + ".com", "w")
+
+    for line in tempContent:
+        if "XXX__NAME__XXX" in line:
+            outFile.write(line.replace("XXX__NAME__XXX", inName))
+        elif "XXX__POS__XXX" in line:
+            for atom in atoms:
+                atomStr = str(atom.elem) + " \t" + str(atom.x) + " \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
+                outFile.write(atomStr)
+        elif "XXX__CHARGES__XXX" in line:
+            for point in points:
+                pointStr = str(point.elem) + " \t" + str(atom.x) +" \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
+                outFile.write(pointStr)
+    return

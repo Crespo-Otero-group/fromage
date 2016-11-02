@@ -30,6 +30,12 @@ nChk = 1000
 # i.e. atoms in regions 1 and 2
 nAt = 500
 
+# Ewald will multiply the unit cell in the direction
+# of the a, b or c vector 2N times (N positive and N negative)
+aN = 2
+bN = 2
+cN = 2
+
 ##########
 ##########
 # End user inputs
@@ -51,6 +57,11 @@ editcp2k(name, vectors, atoms)
 relaxedAtoms = readxyz(name + "-pos-1")[-1]
 charges = readcp2kMull("cp2k." + name)
 
+# due to poor precision in cp2k, the molecule is usually
+# electrically neutral only up to 10e-7.
+# here the charge of the last atom is tweaked to compensate
+if sum(charges) != 0.0:
+    charges[-1] -= sum(charges)
 
 for index, atom in enumerate(relaxedAtoms):
     atom.q = charges[index]
@@ -66,10 +77,7 @@ partMol = [atom for atom in fullMol if atom not in fullMolTrans]
 # atoms from molecule which were translated
 partMolImg = [atom for atom in fullMolTrans if atom not in fullMol]
 
-print fullMol
-print fullMolTrans
-print partMol
-print partMolImg
+
 
 # for all atoms in the cell
 for atom in relaxedAtoms:
@@ -78,6 +86,10 @@ for atom in relaxedAtoms:
         # translate the atom
         relaxedAtoms[relaxedAtoms.index(atom)] = partMolImg[
             partMol.index(atom)]
+
+# now in relaxedAtoms if the selected molecule had been
+# chopped off from the cell, the chopped part is restored
+# to the site of the molecule
 
 # finding the barycentre of the complete molecule
 N = len(fullMolTrans)
@@ -98,14 +110,18 @@ transMol = []
 for atom in fullMolTrans:
     transMol.append(atom.translate(-baryX, -baryY, -baryZ))
 
+writexyz("testnaph", transAtoms)
 # write Ewald input files
-
-# Ewald will multiply the unit cell in the direction
-# of the a, b or c vector 2N times (positive and negative)
-aN = 2
-bN = 2
-cN = 2
 
 writeuc(name, vectors, aN, bN, cN, transAtoms)
 writeqc(name, transMol)
 writeEwIn(name, nChk, nAt)
+
+# run Ewald
+#subprocess.call("./Ewald < ewald.in."+name,shell=True)
+
+# read points output by Ewald
+points = readPoints(name)
+
+# write Gaussian input file
+writeGauss(name, transMol, points)

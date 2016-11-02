@@ -8,12 +8,20 @@ class Atom:
 
     def __init__(self, elemIn="H", xIn=0.0, yIn=0.0, zIn=0.0, qIn=0.0):
         self.elem = elemIn
-        self.x = float(xIn)
-        self.y = float(yIn)
-        self.z = float(zIn)
-        self.q = float(qIn)
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
+        self.q = 0.0
+        try:
+            self.x = float(xIn)
+            self.y = float(yIn)
+            self.z = float(zIn)
+            self.q = float(qIn)
 
-        # to string methods to be used mainly for debugging
+        except ValueError:
+            print "Some coordinates or charges cannot be cast to float!"
+
+        # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
         return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 

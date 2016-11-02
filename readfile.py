@@ -44,7 +44,7 @@ def readvasp(inName):
 
         for line in vaspContent:
             if vaspContent.index(line) in range(firstAt, lastAt):
-                xAtom, yAtom, zAtom = line.split()
+                xAtom, yAtom, zAtom = map(float,line.split())
                 atoms.append(Atom(element, xAtom, yAtom, zAtom))
     vaspFile.close()
     return {"vectors": M, "atoms": atoms}
@@ -73,7 +73,8 @@ def readxyz(inName):
             # from 2 lines after the amount of atoms to the last atom line
             # for the relaxation step
             for lineInStep in xyzContent[xyzContent.index(line) + 2:xyzContent.index(line) + int(line) + 2]:
-                elemAtom, xAtom, yAtom, zAtom = lineInStep.split()
+                elemAtom = lineInStep.split()[0]
+                xAtom, yAtom, zAtom = map(float,lineInStep.split()[1:])
                 atoms.append(Atom(elemAtom, xAtom, yAtom, zAtom))
 
             atomStep.append(atoms)
@@ -97,9 +98,25 @@ def readcp2kMull(inName):
 
     for line in cp2kContent[lastMull + 3:]:
         if line.split()[0] != '#':
-            charges.append(line.split()[4])
+            charges.append(float(line.split()[4]))
         else:
             break
 
     cp2kFile.close()
     return charges
+
+# reads a point file from the house version of Ewald
+# in format x y z q \n
+def readPoints(inName):
+    with open(inName + ".pts-tb") as ptsFile:
+        ptsContent = ptsFile.readlines()
+
+        #store point charges here
+    points = []
+
+    for line in ptsContent:
+        xIn, yIn, zIn, qIn = map(float,line.split())
+        point = Atom("point", xIn, yIn, zIn, qIn)
+        points.append(point)
+
+    return points
