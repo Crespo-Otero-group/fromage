@@ -39,6 +39,8 @@ def editcp2k(inName, vectors, atoms):
         # NB, tabs are not sufficient, a blank space is added
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
+                #lineStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(atom.elem, atom.x, atom.y, atom.z)
+                #cp2kIn.write(lineStr+"\n")
                 cp2kIn.write(str(atom.elem) + " \t" + str(atom.x) +
                              " \t" + str(atom.y) + " \t" + str(atom.z) + "\n")
 
