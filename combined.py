@@ -116,7 +116,7 @@ writexyz("testnaph", transAtoms)
 writeuc(name, vectors, aN, bN, cN, transAtoms)
 writeqc(name, transMol)
 writeEwIn(name, nChk, nAt)
-
+writeSeed()
 # run Ewald
 #subprocess.call("./Ewald < ewald.in."+name,shell=True)
 

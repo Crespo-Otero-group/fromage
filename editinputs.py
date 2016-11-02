@@ -3,6 +3,7 @@
 import sys
 import numpy
 from atom import Atom
+from random import randint
 
 # edits a cp2k template file called cp2k.template.in
 # and writes a new version called cp2k.[input name].in
@@ -65,7 +66,7 @@ def editcp2kSub(inName):
         else:
             subScript.write(line)
 
-    tempFile.close()
+    subScript.close()
     return
 
 # writes an xyz file from a list of atoms
@@ -78,6 +79,7 @@ def writexyz(inName, atoms):
 
     for atom in atoms:
         outFile.write(atom.xyzStr())
+    outFile.close()
     return
 
 
@@ -105,7 +107,7 @@ def writeuc(inName, vectors, aN, bN, cN, atoms):
         strLine = "\t".join(map(str, fracPos)) + "\t" + \
             str(atom.q) + "\t" + str(atom.elem) + "\n"
         outFile.write(strLine)
-
+    outFile.close()
     return
 
 # writes a .qc file for Ewald with a name and a list of atoms
@@ -115,7 +117,8 @@ def writeqc(inName, atoms):
     outFile = open(inName + ".qc", "w")
     for atom in atoms:
         outFile.write(str(atom))
-
+    outFile.close()
+    return
 # writes a ewald.in file from the job name,
 # the amount of checkpoints in zone 1 and
 # the amount of atoms with constrained charge
@@ -127,9 +130,22 @@ def writeEwIn(inName, nChk, nAt):
     outFile.write(str(nChk) + "\n")
     outFile.write(str(nAt) + "\n")
     outFile.write("0\n")
+    outFile.close()
+    return
 
+# writes a seed file for Ewald
+
+
+def writeSeed():
+    outFile = open("seedfile", "w")
+    seed1 = randint(1, 2**31 - 86)
+    seed2 = randint(1, 2**31 - 250)
+    outFile.write(str(seed1) + " " + str(seed2))
+    outFile.close()
 # writes a Gaussian input file from a template
 # with atoms and point charges as inputs
+
+
 def writeGauss(inName, atoms, points):
     with open("template.com") as tempFile:
         tempContent = tempFile.readlines()
@@ -141,10 +157,15 @@ def writeGauss(inName, atoms, points):
             outFile.write(line.replace("XXX__NAME__XXX", inName))
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
-                atomStr = str(atom.elem) + " \t" + str(atom.x) + " \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
+                atomStr = str(atom.elem) + " \t" + str(atom.x) + \
+                    " \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
                 outFile.write(atomStr)
         elif "XXX__CHARGES__XXX" in line:
             for point in points:
-                pointStr = str(point.elem) + " \t" + str(atom.x) +" \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
+                pointStr = str(point.x) + " \t" + str(point.y) + \
+                    " \t" + str(point.z) + " \t" + str(point.q) + "\n"
                 outFile.write(pointStr)
+        else:
+            outFile.write(line)
+    outFile.close()
     return
