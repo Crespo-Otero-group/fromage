@@ -12,14 +12,14 @@ def select(maxR, atoms, label):
     M = zeros((N, N))
 
     selected = [atoms[label]]
-    n = 0
-    while n == 0:
-        n = 1
+    n = True
+    while n == True:
+        n = False
         for i in selected:
             for j in atoms:
                 if i.dist(j.x, j.y, j.z) <= maxR and j not in selected:
                     selected.append(j)
-                    n = 0
+                    n = True
 
     return selected
 
@@ -31,28 +31,31 @@ def select(maxR, atoms, label):
 
 
 def select2(maxR, atoms, label, vectors):
-    N = len(atoms)
-    M = zeros((N, N))
 
     # list of selected atoms from the unit cell
     selected = [atoms[label]]
     # list of selected atoms where the periodic image
     # atoms are translated back to form a molecule
     selectedImg = [atoms[label]]
-    n = 0
-    while n == 0:
-        n = 1
+
+    # n is true as long as there are still molecules to add to the list
+    n = True
+    while n == True:
+        n = False
         for i in selectedImg:
             for j in atoms:
                 # contains the distance from the point or image and the
                 # coordinates of the point or image
                 gamma = i.distLat(j.x, j.y, j.z, vectors[
                                   0], vectors[1], vectors[2])
+
+                # if the atom is close enough to be part of the molecule
+                # and is not already part of the molecule
                 if gamma[0] <= maxR and j not in selected:
                     selected.append(j)
                     k = copy(j)
                     k.x, k.y, k.z = gamma[1:]
                     selectedImg.append(k)
-                    n = 0
+                    n = True
 
     return selected, selectedImg

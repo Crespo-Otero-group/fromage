@@ -1,4 +1,4 @@
-# functions for editing inputs of various programs
+# functions for editing and writing inputs of various programs
 
 import sys
 import numpy
@@ -11,13 +11,13 @@ from random import randint
 
 
 def editcp2k(inName, vectors, atoms):
-    with open("cp2k.template.in") as tempFile:
+    with open("cp2k." + inName + ".template.in") as tempFile:
         tempContent = tempFile.readlines()
 
     # strings for each lattice vector
-    aVec = "\t".join(map(str, vectors[0]))
-    bVec = "\t".join(map(str, vectors[1]))
-    cVec = "\t".join(map(str, vectors[2]))
+    aVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[0])
+    bVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[1])
+    cVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[2])
 
     cp2kIn = open("cp2k." + inName + ".in", "w")
 
@@ -36,42 +36,21 @@ def editcp2k(inName, vectors, atoms):
             cp2kIn.write(line.replace("XXX__CVEC__XXX", cVec))
 
         # writes atomic coordinates
-        # NB, tabs are not sufficient, a blank space is added
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
-                lineStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(atom.elem, atom.x, atom.y, atom.z)
-                cp2kIn.write(lineStr+"\n")
-                #cp2kIn.write(str(atom.elem) + " \t" + str(atom.x) +
-                #             " \t" + str(atom.y) + " \t" + str(atom.z) + "\n")
+                lineStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
+                    atom.elem, atom.x, atom.y, atom.z)
+                cp2kIn.write(lineStr + "\n")
 
         else:  # if no tag is found
             cp2kIn.write(line)
 
-    tempFile.close()
     cp2kIn.close()
     return
 
-# edits a cp2k submission script template to
-# give it the correct job, input and output names
-# possibly useless, stored here for later use
-
-
-def editcp2kSub(inName):
-    with open("script-cp2k.template") as tempFile:
-        tempContent = tempFile.readlines()
-
-    subScript = open("script-cp2k." + inName, "w")
-
-    for line in tempContent:
-        if "XXX__NAME__XXX" in line:
-            subScript.write(line.replace("XXX__NAME__XXX", inName))
-        else:
-            subScript.write(line)
-
-    subScript.close()
-    return
 
 # writes an xyz file from a list of atoms
+# for future use
 
 
 def writexyz(inName, atoms):
@@ -80,7 +59,7 @@ def writexyz(inName, atoms):
     outFile.write(inName + "\n")
 
     for atom in atoms:
-        outFile.write(atom.xyzStr()+"\n")
+        outFile.write(atom.xyzStr() + "\n")
     outFile.close()
     return
 
@@ -89,37 +68,38 @@ def writexyz(inName, atoms):
 # input the name, the matrix of lattice vectors
 # each multiplication of cell through a vector
 # and a list of Atom objects
+
+
 def writeuc(inName, vectors, aN, bN, cN, atoms):
 
-    line1 = vectors[0].tolist()+[aN]
-    line2 = vectors[1].tolist()+[bN]
-    line3 = vectors[2].tolist()+[cN]
-    print line1
+    line1 = vectors[0].tolist() + [aN]
+    line2 = vectors[1].tolist() + [bN]
+    line3 = vectors[2].tolist() + [cN]
     outFile = open(inName + ".uc", "w")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1)+"\n")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2)+"\n")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3)+"\n")
-    #outFile.write("\t".join(map(str, vectors[0])) + "\t" + str(aN) + "\n")
-    #outFile.write("\t".join(map(str, vectors[1])) + "\t" + str(bN) + "\n")
-    #outFile.write("\t".join(map(str, vectors[2])) + "\t" + str(cN) + "\n")
+    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
+    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
+    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
 
-    # Transpose to ge the transformation matrix
+    # transpose to get the transformation matrix
     M = numpy.transpose(vectors)
-    # Inverse transformation matrix
+    # inverse transformation matrix
     U = numpy.linalg.inv(M)
 
     for atom in atoms:
+        # change of basis transformation
         dirPos = [atom.x, atom.y, atom.z]
         fracPos = numpy.dot(U, dirPos).tolist()
         for coord in fracPos:
+            # if the coordinate is negative
             if coord < 0:
+                # translate it to the range [0,1]
                 fracPos[fracPos.index(coord)] = 1 + coord
-        strLine="{:10.6f} {:10.6f} {:10.6f} {:10.6f} {:>6}".format(*fracPos+[atom.q]+[atom.elem])+"\n"
-        #strLine = "\t".join(map(str, fracPos)) + "\t" + \
-        #    str(atom.q) + "\t" + str(atom.elem) + "\n"
+        strLine = "{:10.6f} {:10.6f} {:10.6f} {:10.6f} {:>6}".format(
+            *fracPos + [atom.q] + [atom.elem]) + "\n"
         outFile.write(strLine)
     outFile.close()
     return
+
 
 # writes a .qc file for Ewald with a name and a list of atoms
 
@@ -127,9 +107,11 @@ def writeuc(inName, vectors, aN, bN, cN, atoms):
 def writeqc(inName, atoms):
     outFile = open(inName + ".qc", "w")
     for atom in atoms:
-        outFile.write(str(atom)+"\n")
+        outFile.write(str(atom) + "\n")
     outFile.close()
     return
+
+
 # writes a ewald.in file from the job name,
 # the amount of checkpoints in zone 1 and
 # the amount of atoms with constrained charge
@@ -153,6 +135,8 @@ def writeSeed():
     seed2 = randint(1, 2**31 - 250)
     outFile.write(str(seed1) + " " + str(seed2))
     outFile.close()
+
+
 # writes a Gaussian input file from a template
 # with atoms and point charges as inputs
 
@@ -168,17 +152,39 @@ def writeGauss(inName, atoms, points):
             outFile.write(line.replace("XXX__NAME__XXX", inName))
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
-                atomStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(atom.elem, atom.x, atom.y, atom.z)+"\n"
-                #atomStr = str(atom.elem) + " \t" + str(atom.x) + \
+                atomStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
+                    atom.elem, atom.x, atom.y, atom.z) + "\n"
+                # atomStr = str(atom.elem) + " \t" + str(atom.x) + \
                 #    " \t" + str(atom.y) + " \t" + str(atom.z) + "\n"
                 outFile.write(atomStr)
         elif "XXX__CHARGES__XXX" in line:
             for point in points:
-                pointStr = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(point.x, point.y, point.z, point.q)+"\n"
-                #pointStr = str(point.x) + " \t" + str(point.y) + \
+                pointStr = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+                    point.x, point.y, point.z, point.q) + "\n"
+                # pointStr = str(point.x) + " \t" + str(point.y) + \
                 #    " \t" + str(point.z) + " \t" + str(point.q) + "\n"
                 outFile.write(pointStr)
         else:
             outFile.write(line)
     outFile.close()
+    return
+
+
+def editControl(points):
+    with open("control.template") as ctrlFile:
+        content = ctrlFile.readlines()
+
+    outFile = open("control", "w")
+
+    for line in content:
+        if "$end" in line:
+            outFile.write("$point_charges\n")
+            for point in points:
+                pointStr = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+                    point.x, point.y, point.z, point.q) + "\n"
+                outFile.write(pointStr)
+            outFile.write("$end")
+        else:
+            outFile.write(line)
+
     return

@@ -24,19 +24,22 @@ class Atom:
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
-        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
+        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
+        # "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 
     def __str__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
-        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\t" + str(self.q) + "\n"
+        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
+        # "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 
         # writes the atom coordinates in xyz format
 
     def xyzStr(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z)
-        #return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) + "\t" + str(self.z) + "\n"
+        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
+        # "\t" + str(self.z) + "\n"
 
-        # equality method
+        # equality function
     def __eq__(self, other):
         return self.elem == other.elem and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
@@ -46,7 +49,7 @@ class Atom:
         return r
 
         # returns the distance of the atom from an input point or
-        # the closest periodic image and the coordinates of
+        # its closest periodic image and the coordinates of
         # whichever was closest
     def distLat(self, x1, y1, z1, aVec, bVec, cVec):
         # null vector
@@ -74,6 +77,8 @@ class Atom:
                     z2 = z1 + trans1[2] + trans2[2] + trans3[2]
                     r = sqrt((self.x - x2) ** 2 + (self.y - y2)
                              ** 2 + (self.z - z2) ** 2)
+                    # if this particular translation of the point is the closest
+                    # to the atom so far
                     if r < rMin:
                         rMin = r
                         # image coordinates
@@ -82,7 +87,7 @@ class Atom:
                         z3 = z2
         return rMin, x3, y3, z3
 
-        # translates the atomic coordinates by some vector
+        # returns an atom translated by some vector
     def translate(self, x1, y1, z1):
         xout, yout, zout = self.x, self.y, self.z
         xout += x1

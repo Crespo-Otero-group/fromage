@@ -16,7 +16,7 @@ def readvasp(inName):
     # selective dynamics is not enabled
     # and the file is in Cartesian coordinates
 
-    # sattice vectors
+    # lattice vectors
 
     vec1 = vaspContent[2].split()
     vec2 = vaspContent[3].split()
@@ -44,9 +44,8 @@ def readvasp(inName):
 
         for line in vaspContent:
             if vaspContent.index(line) in range(firstAt, lastAt):
-                xAtom, yAtom, zAtom = map(float,line.split())
+                xAtom, yAtom, zAtom = map(float, line.split())
                 atoms.append(Atom(element, xAtom, yAtom, zAtom))
-    vaspFile.close()
     return {"vectors": M, "atoms": atoms}
 
 
@@ -74,7 +73,7 @@ def readxyz(inName):
             # for the relaxation step
             for lineInStep in xyzContent[xyzContent.index(line) + 2:xyzContent.index(line) + int(line) + 2]:
                 elemAtom = lineInStep.split()[0]
-                xAtom, yAtom, zAtom = map(float,lineInStep.split()[1:])
+                xAtom, yAtom, zAtom = map(float, lineInStep.split()[1:])
                 atoms.append(Atom(elemAtom, xAtom, yAtom, zAtom))
 
             atomStep.append(atoms)
@@ -82,11 +81,11 @@ def readxyz(inName):
     xyzFile.close()
     return atomStep
 
+
 # reads a cp2k output file to extract the Mulliken charges in a list
 
 
-def readcp2kMull(inName):
-
+def readcp2k(inName):
     with open(inName + ".out") as cp2kFile:
         cp2kContent = cp2kFile.readlines()
 
@@ -101,21 +100,29 @@ def readcp2kMull(inName):
             charges.append(float(line.split()[4]))
         else:
             break
+    # find each occurrence of Energy
+    for line in cp2kContent:
+        if "ENERGY|" in line:
+            energy = float(line.split()[8])
 
     cp2kFile.close()
-    return charges
+    return {"charges": charges, "energy": energy}
 
-# reads a point file from the house version of Ewald
-# in format x y z q \n
+
+# returns point charges as Atom objects of element
+# "point". the format is .pts-tb, output from the house
+# version of Ewald
+
+
 def readPoints(inName):
     with open(inName + ".pts-tb") as ptsFile:
         ptsContent = ptsFile.readlines()
 
-        #store point charges here
+        # store point charges here
     points = []
 
     for line in ptsContent:
-        xIn, yIn, zIn, qIn = map(float,line.split())
+        xIn, yIn, zIn, qIn = map(float, line.split())
         point = Atom("point", xIn, yIn, zIn, qIn)
         points.append(point)
 
