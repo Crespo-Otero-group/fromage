@@ -9,10 +9,9 @@ from random import randint
 # edits a cp2k template file called cp2k.template.in
 # and writes a new version called cp2k.[input name].in
 # with required lattice vectors and atomic positions
-
-
-def editcp2k(inName, vectors, atoms):
-    with open("cp2k." + inName + ".template.in") as tempFile:
+def editcp2k(pathIn, inName, vectors, atoms):
+    tempName = "cp2k." + inName + ".template.in"
+    with open(os.path.join(pathIn, tempName)) as tempFile:
         tempContent = tempFile.readlines()
 
     # strings for each lattice vector
@@ -20,7 +19,8 @@ def editcp2k(inName, vectors, atoms):
     bVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[1])
     cVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[2])
 
-    cp2kIn = open("cp2k." + inName + ".in", "w")
+    outName = "cp2k." + inName + ".in"
+    cp2kIn = open(os.path.join(pathIn,outName), "w")
 
     for line in tempContent:
 
@@ -71,12 +71,12 @@ def writexyz(inName, atoms):
 # and a list of Atom objects
 
 
-def writeuc(inName, vectors, aN, bN, cN, atoms):
+def writeuc(pathIn, inName, vectors, aN, bN, cN, atoms):
 
     line1 = vectors[0].tolist() + [aN]
     line2 = vectors[1].tolist() + [bN]
     line3 = vectors[2].tolist() + [cN]
-    outFile = open(inName + ".uc", "w")
+    outFile = open(os.path.join(pathIn,inName) + ".uc", "w")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
@@ -105,8 +105,8 @@ def writeuc(inName, vectors, aN, bN, cN, atoms):
 # writes a .qc file for Ewald with a name and a list of atoms
 
 
-def writeqc(inName, atoms):
-    outFile = open(inName + ".qc", "w")
+def writeqc(pathIn,inName, atoms):
+    outFile = open(os.path.join(pathIn,inName) + ".qc", "w")
     for atom in atoms:
         outFile.write(str(atom) + "\n")
     outFile.close()
@@ -118,8 +118,8 @@ def writeqc(inName, atoms):
 # the amount of atoms with constrained charge
 
 
-def writeEwIn(inName, nChk, nAt):
-    outFile = open("ewald.in." + inName, "w")
+def writeEwIn(pathIn, inName, nChk, nAt):
+    outFile = open(os.path.join(pathIn,"ewald.in." + inName), "w")
     outFile.write(inName + "\n")
     outFile.write(str(nChk) + "\n")
     outFile.write(str(nAt) + "\n")
@@ -130,8 +130,8 @@ def writeEwIn(inName, nChk, nAt):
 # writes a seed file for Ewald
 
 
-def writeSeed():
-    outFile = open("seedfile", "w")
+def writeSeed(pathIn):
+    outFile = open(os.path.join(pathIn,"seedfile"), "w")
     seed1 = randint(1, 2**31 - 86)
     seed2 = randint(1, 2**31 - 250)
     outFile.write(str(seed1) + " " + str(seed2))
