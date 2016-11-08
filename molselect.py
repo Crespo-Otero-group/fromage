@@ -59,3 +59,24 @@ def select2(maxR, atoms, label, vectors):
                     n = True
 
     return selected, selectedImg
+
+# selects multiple molecules with the select2 procedure
+
+def multiSelect(maxR, atoms, labels, vectors):
+
+    selectedMols = []
+    selectedImgMols = []
+
+    for label in labels:
+        selectedMol, selectedImgMol = select2(maxR, atoms, label, vectors)
+        selectedMols.append(selectedMol)
+        selectedImgMols.append(selectedImgMol)
+
+        # checks to see if the user selected the same molecule twice
+    for moleculeI in selectedMols:
+        for moleculeJ in selectedMols:
+            if moleculeI != moleculeJ:
+                if moleculeI[0] in moleculeJ:
+                    raise ValueError("You have selected several atoms in the same molecule!")
+
+    return selectedMols, selectedImgMols

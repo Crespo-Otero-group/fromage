@@ -83,6 +83,13 @@ partMol = [atom for atom in fullMol if atom not in fullMolTrans]
 partMolImg = [atom for atom in fullMolTrans if atom not in fullMol]
 
 
+a = [1, 3, 100]
+
+atest, btest = multiSelect(maxBL, relaxedAtoms, a, vectors)
+print atest[0][0]
+print atest[1]
+print atest[0][0] in atest[1]
+
 # for all atoms in the cell
 for atom in relaxedAtoms:
     # if the atom needs translating
@@ -153,7 +160,7 @@ elif program == 1:
 
 
 # sets up a cp2k calculation of the subsystem at low level theory
-# currently the bounding box is 5^3* the input cell volume
+# currently the bounding box is 5* the input cell
 # this should be plenty but it could be changed to a parameter in the future
 #editcp2k(name + ".low", vectors*5, transMol)
 #subprocess.call("cp2k.popt -i cp2k."+name+".low.in -o cp2k."+name+".low.out",shell=True)

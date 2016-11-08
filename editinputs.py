@@ -2,6 +2,7 @@
 
 import sys
 import numpy
+import os
 from atom import Atom
 from random import randint
 
@@ -186,5 +187,25 @@ def editControl(points):
             outFile.write("$end")
         else:
             outFile.write(line)
+
+    return
+
+def dirWrite():
+    here = os.path.dirname(os.path.realpath(__file__))
+    subdir = "subdir"
+    filename = "myfile.txt"
+    filepath = os.path.join(here, subdir, filename)
+
+    print here
+    print subdir
+    print filename
+    print filepath
+    # create your subdirectory
+    # os.mkdir(os.path.join(here, subdir))
+    #
+    # output = open(filepath,"w")
+    #
+    # output.write("beep")
+
 
     return
