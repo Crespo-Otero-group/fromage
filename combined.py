@@ -20,10 +20,10 @@ from molselect import *
 name = "naphthalene222"
 
 # maximum bond length when defining a molecule
-maxBL = 2.2
+maxBL = 1.58
 
 # label of an atom which will be part of the quantum cluster
-# warning: [0,N-1], not [1,N]
+# warning: [0,N-1], not [1,N], remember to take away 1 to any atom labels
 labelAtom = 2
 
 # the number of checkpoints in region 1
@@ -31,7 +31,8 @@ nChk = 1000
 
 # the number of constrained charge atoms
 # i.e. atoms in regions 1 and 2
-nAt = 500
+# pick a larger number for larger "real system" atoms
+nAt = 1000
 
 # Ewald will multiply the unit cell in the direction
 # of the a, b or c vector 2N times (N positive and N negative)
@@ -50,9 +51,11 @@ program = 0
 
 here = os.path.dirname(os.path.realpath(__file__))
 cp2kDir = "CP2K"
-cp2kPath = os.path.join(here,cp2kDir)
-ewaldDir = "EWALD"
-ewaldPath = os.path.join(here,ewaldDir)
+cp2kPath = os.path.join(here, cp2kDir)
+ewald1Dir = "EWALD1"
+ewald1Path = os.path.join(here, ewald1Dir)
+ewald2Dir = "EWALD2"
+ewald2Path = os.path.join(here, ewald2Dir)
 
 # extracts the cell information
 # from a vasp file
@@ -61,13 +64,13 @@ atoms = readvasp(name)["atoms"]
 
 # sets up a cp2k relaxation (or single point by changing the template)
 editcp2k(cp2kPath, name, vectors, atoms)
-#os.chdir(cp2kPath)
+# os.chdir(cp2kPath)
 #subprocess.call("cp2k.popt -i cp2k."+name+".in -o cp2k."+name+".out",shell=True)
-#os.chdir(here)
+# os.chdir(here)
 
 # reads the output of the relaxation
 relaxedAtoms = readxyz(os.path.join(cp2kPath, name + "-pos-1"))[-1]
-charges = readcp2k(os.path.join(cp2kPath,"cp2k." + name))["charges"]
+charges = readcp2k(os.path.join(cp2kPath, "cp2k." + name))["charges"]
 
 # due to poor precision in cp2k, the molecule is usually
 # electrically neutral only up to 10e-7.
@@ -90,16 +93,17 @@ partMol = [atom for atom in fullMol if atom not in fullMolTrans]
 # atoms from molecule which were translated
 partMolImg = [atom for atom in fullMolTrans if atom not in fullMol]
 
+tweakedCell = copy(relaxedAtoms)
 
 # for all atoms in the cell
-for atom in relaxedAtoms:
+for atom in tweakedCell:
     # if the atom needs translating
     if atom in partMol:
         # translate the atom
-        relaxedAtoms[relaxedAtoms.index(atom)] = partMolImg[
+        tweakedCell[tweakedCell.index(atom)] = partMolImg[
             partMol.index(atom)]
 
-# now in relaxedAtoms if the selected molecule had been
+# now in tweakedCell if the selected molecule had been
 # chopped off from the cell, the chopped off atoms
 # have been translated back to form a whole molecule
 
@@ -115,7 +119,7 @@ for atom in fullMolTrans:
 # translate the whole system to have the barycentre
 # at the origin
 transAtoms = []
-for atom in relaxedAtoms:
+for atom in tweakedCell:
     transAtoms.append(atom.translate(-baryX, -baryY, -baryZ))
 
 # translate only the molecule as well
@@ -124,28 +128,89 @@ for atom in fullMolTrans:
     transMol.append(atom.translate(-baryX, -baryY, -baryZ))
 
 
-# write Ewald input files
+# write Ewald input files for a small cluster
 
-writeuc(ewaldPath, name, vectors, aN, bN, cN, transAtoms)
-writeqc(ewaldPath, name, transMol)
+writeuc(ewald1Path, name, vectors, aN, bN, cN, transAtoms)
+writeqc(ewald1Path, name, transMol)
 # For now the following line ensures no defects in the
 # step of the Ewald procedure
 # In future versions .dc could be different to .qc
-subprocess.call("cp " + os.path.join(ewaldPath, name) + ".qc " + os.path.join(ewaldPath, name) + ".dc", shell=True)
-writeEwIn(ewaldPath, name, nChk, nAt)
-writeSeed(ewaldPath)
+subprocess.call("cp " + os.path.join(ewald1Path, name) + ".qc " +
+                os.path.join(ewald1Path, name) + ".dc", shell=True)
+writeEwIn(ewald1Path, name, nChk, nAt)
+writeSeed(ewald1Path)
 # run Ewald
-os.chdir(ewaldPath)
+os.chdir(ewald1Path)
 subprocess.call("./Ewald < ewald.in." + name, shell=True)
 os.chdir(here)
 # read points output by Ewald
-points = readPoints(os.path.join(ewaldPath,name))
+points = readPoints(os.path.join(ewald1Path, name))
+
+# write Ewald input files for a large cluster
+
+# this will contain an even bigger supercell made of 8 supercells
+superMegaCell = []
+
+traA = (-1, 0)
+traB = (-1, 0)
+traC = (-1, 0)
+
+for i in traA:
+    for j in traB:
+        for k in traC:
+            traX = vectors[0][0] * i + vectors[1][0] * j + vectors[2][0] * k
+            traY = vectors[0][1] * i + vectors[1][1] * j + vectors[2][1] * k
+            traZ = vectors[0][2] * i + vectors[1][2] * j + vectors[2][2] * k
+
+            for atom in transAtoms:
+                superMegaCell.append(atom.translate(traX, traY, traZ))
+
+
+# the cluster will be of all molecules with atoms less than
+# clustRad away from the centre of the central molecule
+clustRad = 5
+
+# atoms within the sphere of rad clustRad
+seedatoms = []
+
+for atom in superMegaCell:
+    if atom.dist(0, 0, 0) < clustRad:
+        seedatoms.append(atom)
+
+# atoms in the cluster (seedatoms + atoms to complete molecules)
+clustAtoms = []
+for atom in seedatoms:
+    if atom not in clustAtoms:
+        mol2Add = select(maxBL, superMegaCell, superMegaCell.index(atom))
+        for atom2Add in mol2Add:
+            clustAtoms.append(atom2Add)
+
+
+
+# write Ewald input files for a large cluster
+
+writeuc(ewald2Path, name + ".clust", vectors, aN, bN, cN, transAtoms)
+writeqc(ewald2Path, name + ".clust", clustAtoms)
+# For now the following line ensures no defects in the
+# step of the Ewald procedure
+# In future versions .dc could be different to .qc
+subprocess.call("cp " + os.path.join(ewald2Path, name + ".clust") + ".qc " +
+                os.path.join(ewald2Path, name + ".clust") + ".dc", shell=True)
+writeEwIn(ewald2Path, name + ".clust", nChk, nAt)
+writeSeed(ewald2Path)
+# run Ewald
+os.chdir(ewald2Path)
+subprocess.call("./Ewald < ewald.in." + name + ".clust", shell=True)
+os.chdir(here)
+# read points output by Ewald
+pointsClust = readPoints(os.path.join(ewald2Path, name + ".clust"))
+
 
 # select the program to do the high level subsystem calculation with
 if program == 0:
     # write Gaussian input file
     writeGauss(name, transMol, points)
-    #subprocess.call("g09 "+name+".com "+name+".g09.out",shell=True)
+    writeGauss(name + ".clust", clustAtoms, pointsClust)
 elif program == 1:
     # write Turbomole control
     editControl(points)

@@ -8,8 +8,7 @@ from copy import copy
 
 
 def select(maxR, atoms, label):
-    N = len(atoms)
-    M = zeros((N, N))
+
 
     selected = [atoms[label]]
     n = True
