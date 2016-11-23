@@ -142,9 +142,14 @@ def writeSeed(pathIn):
 # with atoms and point charges as inputs
 
 
-def writeGauss(inName, atoms, points):
-    with open("template.com") as tempFile:
-        tempContent = tempFile.readlines()
+def writeGauss(inName, atoms, points, switch):
+    if switch == 0:
+        with open("template.low.com") as tempFile:
+            tempContent = tempFile.readlines()
+    elif switch == 1:
+        with open("template.high.com") as tempFile:
+            tempContent = tempFile.readlines()
+
 
     outFile = open(inName + ".com", "w")
 

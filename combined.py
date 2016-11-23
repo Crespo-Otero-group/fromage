@@ -43,6 +43,17 @@ cN = 2
 # Gaussian (0) or Turbomole (1)
 program = 0
 
+# the cluster will be of all molecules with atoms less than
+# clustRad away from the centre of the central molecule
+clustRad = 10
+
+# how many times the input cluster needs to be repeated along each vector
+# positively and negatively to be able to contain the cluster to select.
+# the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) time bigger
+traAN = 1
+traBN = 1
+traCN = 1
+
 ##########
 ##########
 # End user inputs
@@ -141,7 +152,7 @@ writeEwIn(ewald1Path, name, nChk, nAt)
 writeSeed(ewald1Path)
 # run Ewald
 os.chdir(ewald1Path)
-subprocess.call("./Ewald < ewald.in." + name, shell=True)
+#subprocess.call("./Ewald < ewald.in." + name, shell=True)
 os.chdir(here)
 # read points output by Ewald
 points = readPoints(os.path.join(ewald1Path, name))
@@ -151,9 +162,9 @@ points = readPoints(os.path.join(ewald1Path, name))
 # this will contain an even bigger supercell made of 8 supercells
 superMegaCell = []
 
-traA = (-1, 0)
-traB = (-1, 0)
-traC = (-1, 0)
+traA = range(-traAN,traAN+1)
+traB = range(-traBN,traBN+1)
+traC = range(-traCN,traCN+1)
 
 for i in traA:
     for j in traB:
@@ -166,9 +177,7 @@ for i in traA:
                 superMegaCell.append(atom.translate(traX, traY, traZ))
 
 
-# the cluster will be of all molecules with atoms less than
-# clustRad away from the centre of the central molecule
-clustRad = 5
+
 
 # atoms within the sphere of rad clustRad
 seedatoms = []
@@ -186,7 +195,6 @@ for atom in seedatoms:
             clustAtoms.append(atom2Add)
 
 
-
 # write Ewald input files for a large cluster
 
 writeuc(ewald2Path, name + ".clust", vectors, aN, bN, cN, transAtoms)
@@ -200,21 +208,38 @@ writeEwIn(ewald2Path, name + ".clust", nChk, nAt)
 writeSeed(ewald2Path)
 # run Ewald
 os.chdir(ewald2Path)
-subprocess.call("./Ewald < ewald.in." + name + ".clust", shell=True)
+#subprocess.call("./Ewald < ewald.in." + name + ".clust", shell=True)
 os.chdir(here)
 # read points output by Ewald
 pointsClust = readPoints(os.path.join(ewald2Path, name + ".clust"))
 
 
+
+outerAtoms = []
+
+for atom in clustAtoms:
+    if atom not in transAtoms:
+        outerAtoms.append(atom)
+
+outerPoints = []
+
+for atom in outerAtoms:
+    point = copy(atom)
+    point.elem = "point"
+    outerPoints.append(point)
+
+pointsInner = outerPoints.append(pointsClust)
+
 # select the program to do the high level subsystem calculation with
 if program == 0:
     # write Gaussian input file
-    writeGauss(name, transMol, points)
-    writeGauss(name + ".clust", clustAtoms, pointsClust)
+    writeGauss(name, transMol, points, 1)
+    writeGauss(name + ".clust", clustAtoms, pointsClust, 0)
 elif program == 1:
     # write Turbomole control
     editControl(points)
     #subprocess.call("jobex -ex -c 300",shell=True)
+
 
 
 # at this point we have extracted the energy of the
