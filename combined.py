@@ -32,7 +32,7 @@ nChk = 1000
 # the number of constrained charge atoms
 # i.e. atoms in regions 1 and 2
 # pick a larger number for larger "real system" atoms
-nAt = 1000
+nAt = 1500
 
 # Ewald will multiply the unit cell in the direction
 # of the a, b or c vector 2N times (N positive and N negative)
@@ -45,7 +45,7 @@ program = 0
 
 # the cluster will be of all molecules with atoms less than
 # clustRad away from the centre of the central molecule
-clustRad = 10
+clustRad = 5
 
 # how many times the input cluster needs to be repeated along each vector
 # positively and negatively to be able to contain the cluster to select.
@@ -60,13 +60,13 @@ traCN = 1
 ##########
 ##########
 
+
+# defining directories
 here = os.path.dirname(os.path.realpath(__file__))
 cp2kDir = "CP2K"
 cp2kPath = os.path.join(here, cp2kDir)
-ewald1Dir = "EWALD1"
-ewald1Path = os.path.join(here, ewald1Dir)
-ewald2Dir = "EWALD2"
-ewald2Path = os.path.join(here, ewald2Dir)
+ewaldDir = "EWALD"
+ewaldPath = os.path.join(here, ewaldDir)
 
 # extracts the cell information
 # from a vasp file
@@ -139,25 +139,6 @@ for atom in fullMolTrans:
     transMol.append(atom.translate(-baryX, -baryY, -baryZ))
 
 
-# write Ewald input files for a small cluster
-
-writeuc(ewald1Path, name, vectors, aN, bN, cN, transAtoms)
-writeqc(ewald1Path, name, transMol)
-# For now the following line ensures no defects in the
-# step of the Ewald procedure
-# In future versions .dc could be different to .qc
-subprocess.call("cp " + os.path.join(ewald1Path, name) + ".qc " +
-                os.path.join(ewald1Path, name) + ".dc", shell=True)
-writeEwIn(ewald1Path, name, nChk, nAt)
-writeSeed(ewald1Path)
-# run Ewald
-os.chdir(ewald1Path)
-#subprocess.call("./Ewald < ewald.in." + name, shell=True)
-os.chdir(here)
-# read points output by Ewald
-points = readPoints(os.path.join(ewald1Path, name))
-
-# write Ewald input files for a large cluster
 
 # this will contain an even bigger supercell made of 8 supercells
 superMegaCell = []
@@ -166,6 +147,7 @@ traA = range(-traAN,traAN+1)
 traB = range(-traBN,traBN+1)
 traC = range(-traCN,traCN+1)
 
+# multiplying the cell
 for i in traA:
     for j in traB:
         for k in traC:
@@ -195,32 +177,34 @@ for atom in seedatoms:
             clustAtoms.append(atom2Add)
 
 
-# write Ewald input files for a large cluster
+# write Ewald input files for a cluster
 
-writeuc(ewald2Path, name + ".clust", vectors, aN, bN, cN, transAtoms)
-writeqc(ewald2Path, name + ".clust", clustAtoms)
+writeuc(ewaldPath, name , vectors, aN, bN, cN, transAtoms)
+writeqc(ewaldPath, name , clustAtoms)
 # For now the following line ensures no defects in the
 # step of the Ewald procedure
 # In future versions .dc could be different to .qc
-subprocess.call("cp " + os.path.join(ewald2Path, name + ".clust") + ".qc " +
-                os.path.join(ewald2Path, name + ".clust") + ".dc", shell=True)
-writeEwIn(ewald2Path, name + ".clust", nChk, nAt)
-writeSeed(ewald2Path)
+subprocess.call("cp " + os.path.join(ewaldPath, name) + ".qc " +
+                os.path.join(ewaldPath, name) + ".dc", shell=True)
+writeEwIn(ewaldPath, name , nChk, nAt)
+writeSeed(ewaldPath)
 # run Ewald
-os.chdir(ewald2Path)
-#subprocess.call("./Ewald < ewald.in." + name + ".clust", shell=True)
+os.chdir(ewaldPath)
+subprocess.call("./Ewald < ewald.in." + name, shell=True)
 os.chdir(here)
 # read points output by Ewald
-pointsClust = readPoints(os.path.join(ewald2Path, name + ".clust"))
+pointsClust = readPoints(os.path.join(ewaldPath, name))
 
 
 
+# atoms in the outer region of the cluster
 outerAtoms = []
 
 for atom in clustAtoms:
-    if atom not in transAtoms:
+    if atom not in transMol:
         outerAtoms.append(atom)
 
+# turn them into point charges
 outerPoints = []
 
 for atom in outerAtoms:
@@ -228,32 +212,14 @@ for atom in outerAtoms:
     point.elem = "point"
     outerPoints.append(point)
 
+# the Ewald points + the outer region points to embed the inner region
 pointsInner = outerPoints.append(pointsClust)
 
 # select the program to do the high level subsystem calculation with
 if program == 0:
     # write Gaussian input file
-    writeGauss(name, transMol, points, 1)
-    writeGauss(name + ".clust", clustAtoms, pointsClust, 0)
+    writeGauss(name, transMol, pointsClust, 1)
 elif program == 1:
     # write Turbomole control
     editControl(points)
     #subprocess.call("jobex -ex -c 300",shell=True)
-
-
-
-# at this point we have extracted the energy of the
-# subsystem embedded in Ewald charges
-
-
-# the next lines presume that we also want to calculate the system
-# at a low level of theory in cp2k. This might turn out to be impossible
-# if we want to include our own charge embedding
-
-
-# sets up a cp2k calculation of the subsystem at low level theory
-# currently the bounding box is 5* the input cell
-# this should be plenty but it could be changed to a parameter in the future
-#editcp2k(name + ".low", vectors*5, transMol)
-#subprocess.call("cp2k.popt -i cp2k."+name+".low.in -o cp2k."+name+".low.out",shell=True)
-#lowEnergy = readcp2k("cp2k." + name +".low")["energy"]
