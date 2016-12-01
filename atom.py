@@ -95,3 +95,23 @@ class Atom:
         zout += z1
         outAtom = Atom(self.elem, xout, yout, zout, self.q)
         return outAtom
+
+    def electrons(self):
+        total=0
+        valence=0
+
+        element = self.elem.lower()
+        if element == "h":
+            total = 1
+            valence = 1
+        elif element == "c":
+            total = 6
+            valence = 4
+        elif element == "n":
+            total = 7
+            valence = 5
+        elif element == "o":
+            total = 8
+            valence = 6
+
+        return (valence,total)

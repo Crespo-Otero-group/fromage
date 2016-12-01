@@ -127,3 +127,44 @@ def readPoints(inName):
         points.append(point)
 
     return points
+
+
+# Same as readcp2k but for gaussian log files
+
+def readGMull(inName):
+    with open(inName + ".log") as gaussFile:
+        content = gaussFile.readlines()
+
+    # find last occurrence of Mulliken charges
+    lastMull = len(content) - 1 - \
+        content[::-1].index(" Mulliken charges:\n")
+
+    charges=[]
+
+    for line in content[lastMull+2:]:
+        print line
+        if line.split()[0].isdigit():
+            charges.append(float(line.split()[2]))
+        else:
+            break
+    # find each occurrence of Energy
+    for line in content:
+        if "E(TD-HF/TD-KS)" in line:
+            energy = float(line.split()[4])
+
+    return {"charges": charges, "energy": energy}
+
+# returns the charge values from a bader calculation
+
+def readBader(inDat, inCube):
+    with open(inDat + ".dat") as baderFile:
+        contentB = baderFile.readlines()
+
+    # electron charge per atom
+    charges = []
+    for line in contentB:
+        if line.split()[0].isdigit():
+            charge = float(line.split()[4])
+            charges.append(charge)
+
+    return charges

@@ -9,6 +9,8 @@ from random import randint
 # edits a cp2k template file called cp2k.template.in
 # and writes a new version called cp2k.[input name].in
 # with required lattice vectors and atomic positions
+
+
 def editcp2k(pathIn, inName, vectors, atoms):
     tempName = "cp2k." + inName + ".template.in"
     with open(os.path.join(pathIn, tempName)) as tempFile:
@@ -20,7 +22,7 @@ def editcp2k(pathIn, inName, vectors, atoms):
     cVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[2])
 
     outName = "cp2k." + inName + ".in"
-    cp2kIn = open(os.path.join(pathIn,outName), "w")
+    cp2kIn = open(os.path.join(pathIn, outName), "w")
 
     for line in tempContent:
 
@@ -76,7 +78,7 @@ def writeuc(pathIn, inName, vectors, aN, bN, cN, atoms):
     line1 = vectors[0].tolist() + [aN]
     line2 = vectors[1].tolist() + [bN]
     line3 = vectors[2].tolist() + [cN]
-    outFile = open(os.path.join(pathIn,inName) + ".uc", "w")
+    outFile = open(os.path.join(pathIn, inName) + ".uc", "w")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
@@ -105,8 +107,8 @@ def writeuc(pathIn, inName, vectors, aN, bN, cN, atoms):
 # writes a .qc file for Ewald with a name and a list of atoms
 
 
-def writeqc(pathIn,inName, atoms):
-    outFile = open(os.path.join(pathIn,inName) + ".qc", "w")
+def writeqc(pathIn, inName, atoms):
+    outFile = open(os.path.join(pathIn, inName) + ".qc", "w")
     for atom in atoms:
         outFile.write(str(atom) + "\n")
     outFile.close()
@@ -119,7 +121,7 @@ def writeqc(pathIn,inName, atoms):
 
 
 def writeEwIn(pathIn, inName, nChk, nAt):
-    outFile = open(os.path.join(pathIn,"ewald.in." + inName), "w")
+    outFile = open(os.path.join(pathIn, "ewald.in." + inName), "w")
     outFile.write(inName + "\n")
     outFile.write(str(nChk) + "\n")
     outFile.write(str(nAt) + "\n")
@@ -131,7 +133,7 @@ def writeEwIn(pathIn, inName, nChk, nAt):
 
 
 def writeSeed(pathIn):
-    outFile = open(os.path.join(pathIn,"seedfile"), "w")
+    outFile = open(os.path.join(pathIn, "seedfile"), "w")
     seed1 = randint(1, 2**31 - 86)
     seed2 = randint(1, 2**31 - 250)
     outFile.write(str(seed1) + " " + str(seed2))
@@ -190,6 +192,7 @@ def editControl(points):
 
     return
 
+
 def dirWrite():
     here = os.path.dirname(os.path.realpath(__file__))
     subdir = "subdir"
@@ -207,5 +210,22 @@ def dirWrite():
     #
     # output.write("beep")
 
+    return
+
+# the atoms need to be in the right order for VASP
+def editVaspPos(inName, atoms):
+    with open(inName + ".vasp") as vaspFile:
+        content = vaspFile.readlines()
+
+    outFile = open(inName + ".vasp.new", "w")
+
+    for line in content:
+        outFile.write(line)
+        if "Cartesian" in line:
+            break
+    for atom in atoms:
+        atomStr = "{:10.6f} {:10.6f} {:10.6f}".format(
+            atom.x, atom.y, atom.z) + "\n"
+        outFile.write(atomStr)
 
     return
