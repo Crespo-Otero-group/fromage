@@ -96,6 +96,8 @@ class Atom:
         outAtom = Atom(self.elem, xout, yout, zout, self.q)
         return outAtom
 
+        # extract electronic information from atomic type
+        # update this is we want other atom types
     def electrons(self):
         total=0
         valence=0

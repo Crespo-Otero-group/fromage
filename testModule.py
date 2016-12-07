@@ -7,17 +7,16 @@ from readfile import *
 from editinputs import *
 from molselect import *
 
+name = "naphthalene222"
+
 here = os.path.dirname(os.path.realpath(__file__))
-popDir = "POP"
-popPath = os.path.join(here,popDir)
+qeDir = "QE"
+qePath = os.path.join(here,qeDir)
 
-boop = readBader(os.path.join(popPath,"ACF"),os.path.join(popPath,"naph"))
-for charge in boop:
-    print charge
-print sum(boop)
+vectors = readvasp(name)["vectors"]
+atoms = readvasp(name)["atoms"]
 
-atat = Atom("c",0,0,0,5)
-print atat
-a,b=atat.electrons()
-print a
-print b
+os.chdir(qePath)
+
+
+editQE("yabadabada", vectors, atoms)

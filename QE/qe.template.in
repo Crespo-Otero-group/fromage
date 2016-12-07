@@ -1,0 +1,36 @@
+&CONTROL
+  calculation  = "relax",
+  prefix       = "XXX__NAME__XXX",
+  pseudo_dir   = "/data/home/btx156/espresso/pseudo/",
+/
+&SYSTEM
+  ibrav     = 0,
+  nat       = 148, 
+  ntyp      = 4,
+  ecutwfc   = 30.D0, 
+  tot_charge = 0
+  input_dft = "PBE"
+/
+&ELECTRONS
+  conv_thr    = 1.D-7,
+  mixing_beta = 0.7D0,
+  electron_maxstep = 1000
+/
+&IONS
+  pot_extrapolation = "none",
+  wfc_extrapolation = "none",
+/
+CELL_PARAMETERS (angstrom)
+XXX__AVEC__XXX
+XXX__BVEC__XXX
+XXX__CVEC__XXX
+ATOMIC_SPECIES
+C  12.0d0     C.blyp-hgh.UPF
+H  1.0079d0   H.blyp-hgh.UPF
+O  15.9994d0  O.blyp-hgh.UPF
+N  14.0067d0  N.blyp-hgh.UPF
+ATOMIC_POSITIONS (angstrom)
+XXX__POS__XXX
+K_POINTS {automatic}
+2 3 2 0 0 0
+

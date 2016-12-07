@@ -156,7 +156,7 @@ def readGMull(inName):
 
 # returns the charge values from a bader calculation
 
-def readBader(inDat, inCube):
+def readBader(inDat):
     with open(inDat + ".dat") as baderFile:
         contentB = baderFile.readlines()
 
@@ -168,3 +168,25 @@ def readBader(inDat, inCube):
             charges.append(charge)
 
     return charges
+
+
+# returns final positions of a Quantum Espresso calculation
+def readQE(inFile):
+    with open(inFile+".out") as fileQE:
+        content = fileQE.readlines()
+
+    lastPos = 0
+    for line in content[::-1]:
+        if "ATOMIC_POSITIONS" in line.split():
+            lastPos = content[::-1].index(line)
+            break
+
+    atoms = []
+    for line in content[-lastPos:]:
+        if line.split()[0] == "End":
+            break
+        print line
+        elem, xPos, yPos, zPos = line.split()
+        atom2Add = Atom(elem, xPos, yPos, zPos, 0)
+        atoms.append(atom2Add)
+    return atoms

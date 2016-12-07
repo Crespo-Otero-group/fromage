@@ -39,8 +39,15 @@ aN = 2
 bN = 2
 cN = 2
 
-# Gaussian (0) or Turbomole (1)
-program = 0
+# Periodic program QE (0) CP2K (1)
+programPer = 0
+
+# Excited state program Gaussian (0) or Turbomole (1)
+programEx = 0
+
+# Population analysis method if pertinent
+# none(0) Bader(1) Hirshfeld (2)
+programPop = 1
 
 # relaxing with cp2k or just single point?
 relaxBool = False
@@ -63,25 +70,52 @@ gaussianDir = "GAUSSIAN"
 gaussianPath = os.path.join(here,gaussianDir)
 popDir = "POP"
 popPath = os.path.join(here,popDir)
+qeDir = "QE"
+qePath = os.path.join(here,qeDir)
+
 # extracts the cell information
 # from a vasp file
 vectors = readvasp(name)["vectors"]
 atoms = readvasp(name)["atoms"]
 
-# sets up a cp2k relaxation (or single point by changing the template)
-editcp2k(cp2kPath, name, vectors, atoms)
-#os.chdir(cp2kPath)
-#subprocess.call("cp2k.popt -i cp2k."+name+".in -o cp2k."+name+".out",shell=True)
-#os.chdir(here)
+# sets up a periodic relaxation (or single point by changing the template)
 
-# reads the output of the relaxation
-if relaxBool ==True:
-    relaxedAtoms = readxyz(os.path.join(cp2kPath, name + "-pos-1"))[-1]
-# unless they are already relaxed and it was single point
-else:
-    relaxedAtoms = atoms
-charges = readcp2k(os.path.join(cp2kPath,"cp2k." + name))["charges"]
+# if Quantum Espresso
+if programPer == 0:
+    os.chdir(qePath)
+    editQE(name, vectors, atoms)
+    #subprocess.call("pw.x <qe."+name+".in qe."+name+".out",shell=True)
+    relaxedAtoms = readQE("qe."+name)
 
+    # get a population analysis
+    editPP(name)
+    #subprocess.call("pp.x <pp."+name+".in> pp."+name+".out")
+
+
+
+
+# if CP2K
+elif programPer == 1:
+    os.chdir(cp2kPath)
+    editcp2k(name, vectors, atoms)
+    #subprocess.call("cp2k.popt -i cp2k."+name+".in -o cp2k."+name+".out",shell=True)
+
+
+    # reads the output of the relaxation
+    if relaxBool ==True:
+        relaxedAtoms = readxyz(name + "-pos-1")[-1]
+    # unless they are already relaxed and it was single point
+    else:
+        relaxedAtoms = atoms
+    charges = readcp2k("cp2k." + name)["charges"]
+os.chdir(here)
+
+#if Bader
+if programPop == 1:
+    os.chdir(popDir)
+    #subprocess.call("bader -vac off "+os.path.join(qePath,name+".cube"),shell=True)
+    chargesV = readBader("ACF")
+    charges = [round(b.electrons()[0] - a,6) for a, b in zip(chargesV,relaxedAtoms)]
 # due to poor precision in cp2k, the molecule is usually
 # electrically neutral only up to 10e-7.
 # here the charge of the last atom is tweaked to compensate
@@ -91,6 +125,7 @@ if sum(charges) != 0.0:
 # assigns Mulliken charges to atoms
 for index, atom in enumerate(relaxedAtoms):
     atom.q = charges[index]
+
 
 
 # the atoms which are part of the same selected molecule.
@@ -139,29 +174,31 @@ for atom in fullMolTrans:
 
 # write Ewald input files
 
-writeuc(ewaldPath, name, vectors, aN, bN, cN, transAtoms)
-writeqc(ewaldPath, name, transMol)
+os.chdir(ewaldPath)
+writeuc(name, vectors, aN, bN, cN, transAtoms)
+writeqc(name, transMol)
 # For now the following line ensures no defects in the
 # step of the Ewald procedure
 # In future versions .dc could be different to .qc
-subprocess.call("cp " + os.path.join(ewaldPath, name) + ".qc " + os.path.join(ewaldPath, name) + ".dc", shell=True)
-writeEwIn(ewaldPath, name, nChk, nAt)
-writeSeed(ewaldPath)
+subprocess.call("cp " + name + ".qc " + name + ".dc", shell=True)
+writeEwIn(name, nChk, nAt)
+writeSeed()
 # run Ewald
-os.chdir(ewaldPath)
-#subprocess.call("./Ewald < ewald.in." + name, shell=True)
-os.chdir(here)
+subprocess.call("./Ewald < ewald.in." + name, shell=True)
 # read points output by Ewald
-points = readPoints(os.path.join(ewaldPath,name))
+points = readPoints(os.path.join(name))
+os.chdir(here)
+
+
 
 # select the program to do the high level subsystem calculation with
-if program == 0:
+if programEx == 0:
     # write Gaussian input file
     os.chdir(gaussianPath)
     writeGauss(name, transMol, points)
     os.chdir(here)
     #subprocess.call("g09 "+name+".com "+name+".g09.out",shell=True)
-elif program == 1:
+elif programEx == 1:
     # write Turbomole control
     editControl(points)
     #subprocess.call("jobex -ex -c 300",shell=True)

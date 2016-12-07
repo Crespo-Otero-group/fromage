@@ -11,9 +11,9 @@ from random import randint
 # with required lattice vectors and atomic positions
 
 
-def editcp2k(pathIn, inName, vectors, atoms):
-    tempName = "cp2k." + inName + ".template.in"
-    with open(os.path.join(pathIn, tempName)) as tempFile:
+def editcp2k(inName, vectors, atoms):
+    tempName = "cp2k.template.in"
+    with open(tempName) as tempFile:
         tempContent = tempFile.readlines()
 
     # strings for each lattice vector
@@ -22,7 +22,7 @@ def editcp2k(pathIn, inName, vectors, atoms):
     cVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[2])
 
     outName = "cp2k." + inName + ".in"
-    cp2kIn = open(os.path.join(pathIn, outName), "w")
+    cp2kIn = open(outName, "w")
 
     for line in tempContent:
 
@@ -73,12 +73,12 @@ def writexyz(inName, atoms):
 # and a list of Atom objects
 
 
-def writeuc(pathIn, inName, vectors, aN, bN, cN, atoms):
+def writeuc(inName, vectors, aN, bN, cN, atoms):
 
     line1 = vectors[0].tolist() + [aN]
     line2 = vectors[1].tolist() + [bN]
     line3 = vectors[2].tolist() + [cN]
-    outFile = open(os.path.join(pathIn, inName) + ".uc", "w")
+    outFile = open(inName + ".uc", "w")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
     outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
@@ -107,10 +107,12 @@ def writeuc(pathIn, inName, vectors, aN, bN, cN, atoms):
 # writes a .qc file for Ewald with a name and a list of atoms
 
 
-def writeqc(pathIn, inName, atoms):
-    outFile = open(os.path.join(pathIn, inName) + ".qc", "w")
+def writeqc(inName, atoms):
+    outFile = open(inName + ".qc", "w")
     for atom in atoms:
-        outFile.write(str(atom) + "\n")
+        strLine = "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+            atom.elem, atom.x, atom.y, atom.z, atom.q)+"\n"
+        outFile.write(strLine)
     outFile.close()
     return
 
@@ -120,8 +122,8 @@ def writeqc(pathIn, inName, atoms):
 # the amount of atoms with constrained charge
 
 
-def writeEwIn(pathIn, inName, nChk, nAt):
-    outFile = open(os.path.join(pathIn, "ewald.in." + inName), "w")
+def writeEwIn(inName, nChk, nAt):
+    outFile = open(("ewald.in." + inName), "w")
     outFile.write(inName + "\n")
     outFile.write(str(nChk) + "\n")
     outFile.write(str(nAt) + "\n")
@@ -132,8 +134,8 @@ def writeEwIn(pathIn, inName, nChk, nAt):
 # writes a seed file for Ewald
 
 
-def writeSeed(pathIn):
-    outFile = open(os.path.join(pathIn, "seedfile"), "w")
+def writeSeed():
+    outFile = open("seedfile", "w")
     seed1 = randint(1, 2**31 - 86)
     seed2 = randint(1, 2**31 - 250)
     outFile.write(str(seed1) + " " + str(seed2))
@@ -213,6 +215,8 @@ def dirWrite():
     return
 
 # the atoms need to be in the right order for VASP
+
+
 def editVaspPos(inName, atoms):
     with open(inName + ".vasp") as vaspFile:
         content = vaspFile.readlines()
@@ -228,4 +232,65 @@ def editVaspPos(inName, atoms):
             atom.x, atom.y, atom.z) + "\n"
         outFile.write(atomStr)
 
+    return
+
+
+# makes a Quantum Espresso input file from template
+def editQE(inName, vectors, atoms):
+    tempName = "qe.template.in"
+    with open(tempName) as tempFile:
+        tempContent = tempFile.readlines()
+
+    # strings for each lattice vector
+    aVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[0])
+    bVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[1])
+    cVec = "{:10.6f} {:10.6f} {:10.6f}".format(*vectors[2])
+
+    outName = "qe." + inName + ".in"
+    qeIn = open(outName, "w")
+
+    for line in tempContent:
+
+        # writes the name of the calculation at the top of the file
+        if "XXX__NAME__XXX" in line:
+            qeIn.write(line.replace("XXX__NAME__XXX", inName))
+
+        # replace the tags with the coordinates of lattice vectors
+        elif "XXX__AVEC__XXX" in line:
+            qeIn.write(line.replace("XXX__AVEC__XXX", aVec))
+        elif "XXX__BVEC__XXX" in line:
+            qeIn.write(line.replace("XXX__BVEC__XXX", bVec))
+        elif "XXX__CVEC__XXX" in line:
+            qeIn.write(line.replace("XXX__CVEC__XXX", cVec))
+
+        # writes atomic coordinates
+        elif "XXX__POS__XXX" in line:
+            for atom in atoms:
+                lineStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
+                    atom.elem, atom.x, atom.y, atom.z)
+                qeIn.write(lineStr + "\n")
+
+        else:  # if no tag is found
+            qeIn.write(line)
+    qeIn.close()
+    return
+
+# makes a QE pp input file
+
+
+def editPP(inName):
+    tempName = "pp.template.in"
+    with open(tempName) as tempFile:
+        tempContent = tempFile.readlines()
+
+    outName = "pp." + inName + ".in"
+    ppIn = open(outName, "w")
+
+    for line in tempContent:
+
+        if "XXX__NAME__XXX" in line:
+            ppIn.write(line.replace("XXX__NAME__XXX", inName))
+        else:
+            ppIn.write(line)
+    ppIn.close()
     return
