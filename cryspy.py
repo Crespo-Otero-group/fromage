@@ -84,12 +84,14 @@ atoms = readvasp(name)["atoms"]
 if programPer == 0:
     os.chdir(qePath)
     editQE(name, vectors, atoms)
-    #subprocess.call("pw.x <qe."+name+".in qe."+name+".out",shell=True)
-    relaxedAtoms = readQE("qe."+name)
-
+    #subprocess.call("pw.x <qe."+name+".in> qe."+name+".out",shell=True)
+    if relaxBool ==True:
+        relaxedAtoms = readQE("qe."+name)
+    else:
+        relaxedAtoms = atoms
     # get a population analysis
     editPP(name)
-    #subprocess.call("pp.x <pp."+name+".in> pp."+name+".out")
+    #subprocess.call("pp.x <pp."+name+".in> pp."+name+".out",shell=True)
 
 
 
@@ -112,7 +114,7 @@ os.chdir(here)
 
 #if Bader
 if programPop == 1:
-    os.chdir(popDir)
+    os.chdir(popPath)
     #subprocess.call("bader -vac off "+os.path.join(qePath,name+".cube"),shell=True)
     chargesV = readBader("ACF")
     charges = [round(b.electrons()[0] - a,6) for a, b in zip(chargesV,relaxedAtoms)]
@@ -196,8 +198,9 @@ if programEx == 0:
     # write Gaussian input file
     os.chdir(gaussianPath)
     writeGauss(name, transMol, points)
+    #subprocess.call("g09 "+name+".com",shell=True)
     os.chdir(here)
-    #subprocess.call("g09 "+name+".com "+name+".g09.out",shell=True)
+
 elif programEx == 1:
     # write Turbomole control
     editControl(points)
@@ -219,7 +222,7 @@ if loopBool==True:
         # if the atom from the cell was not part of the main molecule
         if atom not in transMol:
             # add the atom
-            newcell.append(atom)
+            newCell.append(atom)
         # if the atom is in the main molecule
         else:
             # add the excited version of it instead

@@ -64,19 +64,20 @@ def readxyz(inName):
     for line in xyzContent:
 
         # if the line is the amount of atoms in the system
-        if line.split()[0].isdigit():
+        if line:
+            if line.split()[0].isdigit():
 
-            # list of atom objects inside on relaxation step
-            atoms = []
+                # list of atom objects inside on relaxation step
+                atoms = []
 
-            # from 2 lines after the amount of atoms to the last atom line
-            # for the relaxation step
-            for lineInStep in xyzContent[xyzContent.index(line) + 2:xyzContent.index(line) + int(line) + 2]:
-                elemAtom = lineInStep.split()[0]
-                xAtom, yAtom, zAtom = map(float, lineInStep.split()[1:])
-                atoms.append(Atom(elemAtom, xAtom, yAtom, zAtom))
+                # from 2 lines after the amount of atoms to the last atom line
+                # for the relaxation step
+                for lineInStep in xyzContent[xyzContent.index(line) + 2:xyzContent.index(line) + int(line) + 2]:
+                    elemAtom = lineInStep.split()[0]
+                    xAtom, yAtom, zAtom = map(float, lineInStep.split()[1:])
+                    atoms.append(Atom(elemAtom, xAtom, yAtom, zAtom))
 
-            atomStep.append(atoms)
+                atomStep.append(atoms)
 
     xyzFile.close()
     return atomStep
@@ -142,7 +143,6 @@ def readGMull(inName):
     charges=[]
 
     for line in content[lastMull+2:]:
-        print line
         if line.split()[0].isdigit():
             charges.append(float(line.split()[2]))
         else:

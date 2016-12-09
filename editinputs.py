@@ -221,7 +221,7 @@ def editVaspPos(inName, atoms):
     with open(inName + ".vasp") as vaspFile:
         content = vaspFile.readlines()
 
-    outFile = open(inName + ".vasp.new", "w")
+    outFile = open(inName + ".new.vasp", "w")
 
     for line in content:
         outFile.write(line)
@@ -266,7 +266,7 @@ def editQE(inName, vectors, atoms):
         # writes atomic coordinates
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
-                lineStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
+                lineStr = "{:<6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z)
                 qeIn.write(lineStr + "\n")
 
