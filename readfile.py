@@ -149,7 +149,7 @@ def readGMull(inName):
             break
     # find each occurrence of Energy
     for line in content:
-        if "E(TD-HF/TD-KS)" in line:
+        if "Total Energy" in line:
             energy = float(line.split()[4])
 
     return {"charges": charges, "energy": energy}
@@ -183,9 +183,8 @@ def readQE(inFile):
 
     atoms = []
     for line in content[-lastPos:]:
-        if line.split()[0] == "End":
+        if line == "End final coordinates":
             break
-        print line
         elem, xPos, yPos, zPos = line.split()
         atom2Add = Atom(elem, xPos, yPos, zPos, 0)
         atoms.append(atom2Add)
