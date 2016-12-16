@@ -1,6 +1,7 @@
 # main function which takes in a vasp unit cell file
-# and outputs a Gaussian or Turbomole output file of
+# and outputs a Gaussian output file of
 # the subsystem embedded in Ewald charges
+# The potential can also be calculated self-consistently
 import sys
 import numpy
 import subprocess
@@ -55,8 +56,8 @@ relaxBool = False
 # make a vasp file at the end with an excited molecule in the unit cell?
 loopBool = False
 
-# assign excited Mulliken charges and loop the Ewald calculation
-mullLoop = True
+# assign excited charges and loop the Ewald calculation
+ewLoop = True
 
 ##########
 ##########
@@ -81,7 +82,7 @@ qePath = os.path.join(here, qeDir)
 vectors = readvasp(name)["vectors"]
 atoms = readvasp(name)["atoms"]
 
-# sets up a periodic relaxation (or single point by changing the template)
+# sets up a periodic relaxation (or single point by changing the template and option)
 
 # if Quantum Espresso
 if programPer == 0:
@@ -97,7 +98,7 @@ if programPer == 0:
     #subprocess.call("pp.x <pp."+name+".in> pp."+name+".out",shell=True)
 
 
-# if CP2K
+# if CP2K (currently don't use Bader with CP2K)
 elif programPer == 1:
     os.chdir(cp2kPath)
     editcp2k(name, vectors, atoms)
@@ -178,7 +179,7 @@ for atom in fullMolTrans:
 looping = True
 loopNum = 0
 
-# while we are still looping gaussian calculations with Ewald
+# while we are still looping Gaussian calculations with Ewald
 while looping and loopNum < 4:
     # if it's not the first step
     if loopNum > 0:
@@ -231,8 +232,18 @@ while looping and loopNum < 4:
 
         os.chdir(popPath)
         subprocess.call("bader -vac off "+os.path.join(gaussianPath,name+".cube"),shell=True)
+
+        if loopNum>0:
+            oldCharges = newCharges
         newChargesV = readBader("ACF")
         newCharges = [round(b.electrons()[0] - a, 6) for a, b in zip(newChargesV, transMol)]
+
+        if loopNum>0:
+            diffList = [abs(a-b) for a,b in zip(oldCharges,newCharges)]
+            avgDiff = sum(diffList) / len(diffList)
+            if avgDiff < 0.001:
+                looping = False
+
 
 
         os.chdir(here)
@@ -244,8 +255,11 @@ while looping and loopNum < 4:
 
 
     loopNum += 1
-    if not mullLoop:
+    print("Loop: "+str(loopNum))
+
+    if not ewLoop:
         looping = False
+
 
 
 

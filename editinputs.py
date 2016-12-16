@@ -174,6 +174,7 @@ def writeGauss(inName, atoms, points):
     outFile.close()
     return
 
+# adds point charges to a Turbomole control file
 
 def editControl(points):
     with open("control.template") as ctrlFile:
@@ -195,24 +196,6 @@ def editControl(points):
     return
 
 
-def dirWrite():
-    here = os.path.dirname(os.path.realpath(__file__))
-    subdir = "subdir"
-    filename = "myfile.txt"
-    filepath = os.path.join(here, subdir, filename)
-
-    print here
-    print subdir
-    print filename
-    print filepath
-    # create your subdirectory
-    # os.mkdir(os.path.join(here, subdir))
-    #
-    # output = open(filepath,"w")
-    #
-    # output.write("beep")
-
-    return
 
 # the atoms need to be in the right order for VASP
 
@@ -276,7 +259,7 @@ def editQE(inName, vectors, atoms):
     return
 
 # makes a QE pp input file
-
+# to generate a .cube file
 
 def editPP(inName):
     tempName = "pp.template.in"
