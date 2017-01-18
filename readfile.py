@@ -183,7 +183,7 @@ def readQE(inFile):
 
     atoms = []
     for line in content[-lastPos:]:
-        if line == "End final coordinates":
+        if line == "End final coordinates\n":
             break
         elem, xPos, yPos, zPos = line.split()
         atom2Add = Atom(elem, xPos, yPos, zPos, 0)
