@@ -92,13 +92,13 @@ def readcp2k(inName):
 
     # find last occurrence of Mulliken charges
     lastMull = len(cp2kContent) - 1 - \
-        cp2kContent[::-1].index(" MULLIKEN POPULATION ANALYSIS\n")
+        cp2kContent[::-1].index("                           Hirshfeld Charges\n")
 
     charges = []
 
     for line in cp2kContent[lastMull + 3:]:
-        if line.split()[0] != '#':
-            charges.append(float(line.split()[4]))
+        if line != '\n':
+            charges.append(float(line.split()[5]))
         else:
             break
     # find each occurrence of Energy
@@ -184,6 +184,25 @@ def readQE(inFile):
     atoms = []
     for line in content[-lastPos:]:
         if line == "End final coordinates\n":
+            break
+        elem, xPos, yPos, zPos = line.split()
+        atom2Add = Atom(elem, xPos, yPos, zPos, 0)
+        atoms.append(atom2Add)
+    return atoms
+
+# returns the atom list in a Gaussian input file
+def readGauss(inFile):
+    with open(inFile+".com") as fileGauss:
+        content= fileGauss.readlines()
+
+    for line in content:
+        if line != "\n":
+            if line.split()[0].isdigit():
+                lastPos=content.index(line)
+                break
+    atoms = []
+    for line in content[lastPos+1:]:
+        if line =="\n" or not line:
             break
         elem, xPos, yPos, zPos = line.split()
         atom2Add = Atom(elem, xPos, yPos, zPos, 0)

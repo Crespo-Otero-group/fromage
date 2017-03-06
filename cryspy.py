@@ -18,10 +18,10 @@ from molselect import *
 ##########
 
 # name of the job goes here
-name = "naphthalene222"
+name = "2HC1"
 
 # maximum bond length when defining a molecule
-maxBL = 2.2
+maxBL = 1.58
 
 # label of an atom which will be part of the quantum cluster
 # warning: [0,N-1], not [1,N]
@@ -32,7 +32,7 @@ nChk = 1000
 
 # the number of constrained charge atoms
 # i.e. atoms in regions 1 and 2
-nAt = 500
+nAt = 2700
 
 # Ewald will multiply the unit cell in the direction
 # of the a, b or c vector 2N times (N positive and N negative)
@@ -41,23 +41,35 @@ bN = 2
 cN = 2
 
 # Periodic program QE (0) CP2K (1)
-programPer = 0
+programPer = 1
 
 # Excited state program Gaussian (0) or Turbomole (1)
 programEx = 0
 
 # Population analysis method if pertinent
-# none(0) Bader(1) Hirshfeld (2)
-programPop = 1
+# Hirshfeld(0) Bader(1)
+programPop = 0
 
 # relaxing with cp2k or just single point?
-relaxBool = False
+relaxBool = True
 
 # make a vasp file at the end with an excited molecule in the unit cell?
 loopBool = False
 
 # assign excited charges and loop the Ewald calculation
-ewLoop = True
+ewLoop = False
+
+
+# the cluster will be of all molecules with atoms less than
+# clustRad away from the centre of the central molecule
+clustRad = 5
+
+# how many times the input cluster needs to be repeated along each vector
+# positively and negatively to be able to contain the cluster to select.
+# the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) time bigger
+traAN = 1
+traBN = 1
+traCN = 1
 
 ##########
 ##########
@@ -116,7 +128,7 @@ os.chdir(here)
 # if Bader
 if programPop == 1:
     os.chdir(popPath)
-    #subprocess.call("bader -vac off "+os.path.join(qePath,name+".cube"),shell=True)
+    subprocess.call("bader -vac off "+os.path.join(qePath,name+".cube"),shell=True)
     chargesV = readBader("ACF")
     charges = [round(b.electrons()[0] - a, 6)
                for a, b in zip(chargesV, relaxedAtoms)]
@@ -176,8 +188,62 @@ for atom in fullMolTrans:
 
 
 
+
+
+# this will contain an even bigger supercell
+superMegaCell = []
+
+traA = range(-traAN,traAN+1)
+traB = range(-traBN,traBN+1)
+traC = range(-traCN,traCN+1)
+
+# multiplying the cell
+for i in traA:
+    for j in traB:
+        for k in traC:
+            traX = vectors[0][0] * i + vectors[1][0] * j + vectors[2][0] * k
+            traY = vectors[0][1] * i + vectors[1][1] * j + vectors[2][1] * k
+            traZ = vectors[0][2] * i + vectors[1][2] * j + vectors[2][2] * k
+
+            for atom in transAtoms:
+                superMegaCell.append(atom.translate(traX, traY, traZ))
+
+
+
+
+# atoms within the sphere of rad clustRad
+seedatoms = []
+
+for atom in superMegaCell:
+    if atom.dist(0, 0, 0) < clustRad:
+        seedatoms.append(atom)
+
+# atoms in the cluster (seedatoms + atoms to complete molecules)
+clustAtoms = []
+for atom in seedatoms:
+    if atom not in clustAtoms:
+        mol2Add = select(maxBL, superMegaCell, superMegaCell.index(atom))
+        for atom2Add in mol2Add:
+            clustAtoms.append(atom2Add)
+
+
+clustPoints = []
+shellAtoms= []
+for atom in clustAtoms:
+    if atom not in transMol:
+        shellAtoms.append(atom)
+        newClustPoint=copy(atom)
+        newClustPoint.elem=("point")
+        clustPoints.append(newClustPoint)
+
+os.chdir(here)
+writexyz("mol", transMol)
+writexyz("clust", clustAtoms)
+writexyz("shell", shellAtoms)
+
 looping = True
 loopNum = 0
+
 
 # while we are still looping Gaussian calculations with Ewald
 while looping and loopNum < 4:
@@ -207,7 +273,7 @@ while looping and loopNum < 4:
 
     os.chdir(ewaldPath)
     writeuc(name, vectors, aN, bN, cN, transAtoms)
-    writeqc(name, transMol)
+    writeqc(name, clustAtoms)
     # For now the following line ensures no defects in the
     # step of the Ewald procedure
     # In future versions .dc could be different to .qc
@@ -225,10 +291,11 @@ while looping and loopNum < 4:
     if programEx == 0:
         # write Gaussian input file
         os.chdir(gaussianPath)
-        writeGauss(name, transMol, points)
+        writeGauss(name+".clust", clustAtoms, points)
+        writeGauss(name, transMol, points+clustPoints)
         #subprocess.call("g09 "+name+".com",shell=True)
-        subprocess.call("formchk "+name+".chk "+name+".fck",shell=True)
-        subprocess.call("cubegen 1 Density=CI "+name+".fck "+name+".cube",shell=True)
+        #subprocess.call("formchk "+name+".chk "+name+".fck",shell=True)
+        #subprocess.call("cubegen 1 Density=CI "+name+".fck "+name+".cube",shell=True)
 
         os.chdir(popPath)
         subprocess.call("bader -vac off "+os.path.join(gaussianPath,name+".cube"),shell=True)
