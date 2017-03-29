@@ -43,12 +43,9 @@ cN = 2
 # Periodic program QE (0) CP2K (1)
 programPer = 1
 
-# Excited state program Gaussian (0) or Turbomole (1)
-programEx = 0
-
 # Population analysis method if pertinent
-# Hirshfeld(0) Bader(1)
-programPop = 0
+# Mulliken(0) Hirshfeld(1) RESP(1)
+programPop = 1
 
 # relaxing with cp2k or just single point?
 relaxBool = True
@@ -122,23 +119,16 @@ elif programPer == 1:
     # unless they are already relaxed and it was single point
     else:
         relaxedAtoms = atoms
-    charges = readcp2k("cp2k." + name)["charges"]
+    charges = readcp2k("cp2k." + name,programPop)["charges"]
 os.chdir(here)
 
-# if Bader
-if programPop == 1:
-    os.chdir(popPath)
-    subprocess.call("bader -vac off "+os.path.join(qePath,name+".cube"),shell=True)
-    chargesV = readBader("ACF")
-    charges = [round(b.electrons()[0] - a, 6)
-               for a, b in zip(chargesV, relaxedAtoms)]
 # due to poor precision in cp2k, the molecule is usually
 # electrically neutral only up to 10e-7.
 # here the charge of the last atom is tweaked to compensate
 if sum(charges) != 0.0:
     charges[-1] -= sum(charges)
 
-# assigns Mulliken charges to atoms
+# assigns charges to atoms
 for index, atom in enumerate(relaxedAtoms):
     atom.q = charges[index]
 
@@ -241,115 +231,32 @@ writexyz("mol", transMol)
 writexyz("clust", clustAtoms)
 writexyz("shell", shellAtoms)
 
-looping = True
-loopNum = 0
+
+###EWALD
+
+os.chdir(ewaldPath)
+writeuc(name, vectors, aN, bN, cN, transAtoms)
+writeqc(name, clustAtoms)
+# For now the following line ensures no defects in the
+# step of the Ewald procedure
+# In future versions .dc could be different to .qc
+subprocess.call("cp " + name + ".qc " + name + ".dc", shell=True)
+writeEwIn(name, nChk, nAt)
+writeSeed()
+# run Ewald
+subprocess.call("./Ewald < ewald.in." + name, shell=True)
+# read points output by Ewald
+points = readPoints(name)
+os.chdir(here)
 
 
-# while we are still looping Gaussian calculations with Ewald
-while looping and loopNum < 4:
-    # if it's not the first step
-    if loopNum > 0:
-        # assign new charges to the list of all atoms
-        for atom in transAtoms:
-            if atom in transMol:
-                atomIndx = transMol.index(atom)
-                atom.q = newCharges[atomIndx]
-
-        # assign new charges to molecule
-        transMol = [Atom(atom.elem, atom.x, atom.y, atom.z, i)
-                    for atom, i in zip(transMol, newCharges)]
-
-        # correct poor Gaussian precision
-        if sum([i.q for i in transAtoms]) != 0:
-            charCorrect = sum([i.q for i in transAtoms])
-
-        for atom in transAtoms:
-            if atom not in transMol:
-                atom.q -= charCorrect
-                break
+###GAUSSIAN
 
 
-    # write Ewald input files
-
-    os.chdir(ewaldPath)
-    writeuc(name, vectors, aN, bN, cN, transAtoms)
-    writeqc(name, clustAtoms)
-    # For now the following line ensures no defects in the
-    # step of the Ewald procedure
-    # In future versions .dc could be different to .qc
-    subprocess.call("cp " + name + ".qc " + name + ".dc", shell=True)
-    writeEwIn(name, nChk, nAt)
-    writeSeed()
-    # run Ewald
-    subprocess.call("./Ewald < ewald.in." + name, shell=True)
-    # read points output by Ewald
-    points = readPoints(name)
-    os.chdir(here)
-
-    # select the program to do the high level subsystem calculation
-    # with
-    if programEx == 0:
-        # write Gaussian input file
-        os.chdir(gaussianPath)
-        writeGauss(name+".clust", clustAtoms, points)
-        writeGauss(name, transMol, points+clustPoints)
-        #subprocess.call("g09 "+name+".com",shell=True)
-        #subprocess.call("formchk "+name+".chk "+name+".fck",shell=True)
-        #subprocess.call("cubegen 1 Density=CI "+name+".fck "+name+".cube",shell=True)
-
-        os.chdir(popPath)
-        subprocess.call("bader -vac off "+os.path.join(gaussianPath,name+".cube"),shell=True)
-
-        if loopNum>0:
-            oldCharges = newCharges
-        newChargesV = readBader("ACF")
-        newCharges = [round(b.electrons()[0] - a, 6) for a, b in zip(newChargesV, transMol)]
-
-        if loopNum>0:
-            diffList = [abs(a-b) for a,b in zip(oldCharges,newCharges)]
-            avgDiff = sum(diffList) / len(diffList)
-            if avgDiff < 0.001:
-                looping = False
-
-
-
-        os.chdir(here)
-
-    elif programEx == 1:
-        # write Turbomole control
-        editControl(points)
-        #subprocess.call("jobex -ex -c 300",shell=True)
-
-
-    loopNum += 1
-    print("Loop: "+str(loopNum))
-
-    if not ewLoop:
-        looping = False
-
-
-
-
-# if we want the self-consistent version by Wilbraham
-if loopBool == True:
-    os.chdir(gaussianPath)
-    # convert Gaussian output to xyz
-    subprocess.call("g092xyz.pl " + name + ".log", shell=True)
-    excitedAtoms = readxyz("g09-result")[-1]
-    os.chdir(here)
-
-    # this will be the translated cell but the molecule at the origin will be
-    # relaxed in excited state
-    newCell = []
-    for atom in transAtoms:
-        # if the atom from the cell was not part of the main molecule
-        if atom not in transMol:
-            # add the atom
-            newCell.append(atom)
-        # if the atom is in the main molecule
-        else:
-            # add the excited version of it instead
-            atom2append = excitedAtoms[transMol.index(atom)]
-            newCell.append(atom2append)
-    # make a new vasp file with the information
-    editVaspPos(name, newCell)
+# write Gaussian input file
+os.chdir(gaussianPath)
+writeGauss(name+".clust", clustAtoms, points)
+writeGauss(name, transMol, points+clustPoints)
+#subprocess.call("g09 "+name+".com",shell=True)
+#subprocess.call("formchk "+name+".chk "+name+".fck",shell=True)
+#subprocess.call("cubegen 1 Density=CI "+name+".fck "+name+".cube",shell=True)

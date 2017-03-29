@@ -84,23 +84,56 @@ def readxyz(inName):
 
 
 # reads a cp2k output file to extract the Mulliken charges in a list
+# types are 0:Mulliken ; 1:Hirshfeld ; 2:RESP
 
-
-def readcp2k(inName):
+def readcp2k(inName,type):
     with open(inName + ".out") as cp2kFile:
         cp2kContent = cp2kFile.readlines()
 
-    # find last occurrence of Mulliken charges
-    lastMull = len(cp2kContent) - 1 - \
-        cp2kContent[::-1].index("                           Hirshfeld Charges\n")
+    #Mulliken
+    if type==0:
+        # find last occurrence of Mulliken charges
+        lastMull = len(cp2kContent) - 1 - \
+            cp2kContent[::-1].index("                     Mulliken Population Analysis\n")
 
-    charges = []
+        charges = []
 
-    for line in cp2kContent[lastMull + 3:]:
-        if line != '\n':
-            charges.append(float(line.split()[5]))
-        else:
-            break
+        for line in cp2kContent[lastMull + 3:]:
+            if line.split()[0] != '#':
+                charges.append(float(line.split()[4]))
+            else:
+                break
+
+
+    #Hirshfeld
+    if type==1:
+        # find last occurrence of Hirshfeld charges
+        lastMull = len(cp2kContent) - 1 - \
+            cp2kContent[::-1].index("                           Hirshfeld Charges\n")
+
+        charges = []
+
+        for line in cp2kContent[lastMull + 3:]:
+            if line != '\n':
+                charges.append(float(line.split()[5]))
+            else:
+                break
+
+
+    #RESP
+    if type==1:
+        # find last occurrence of RESP charges
+        lastMull = len(cp2kContent) - 1 - \
+            cp2kContent[::-1].index(" RESP charges:\n")
+
+        charges = []
+
+        for line in cp2kContent[lastMull + 3:]:
+            if line.split()[0] != 'Total':
+                charges.append(float(line.split()[3]))
+            else:
+                break
+
     # find each occurrence of Energy
     for line in cp2kContent:
         if "ENERGY|" in line:
