@@ -32,7 +32,7 @@ nChk = 1000
 
 # the number of constrained charge atoms
 # i.e. atoms in regions 1 and 2
-nAt = 2700
+nAt = 500
 
 # Ewald will multiply the unit cell in the direction
 # of the a, b or c vector 2N times (N positive and N negative)
@@ -44,8 +44,8 @@ cN = 2
 programPer = 1
 
 # Population analysis method if pertinent
-# Mulliken(0) Hirshfeld(1) RESP(1)
-programPop = 1
+# Mulliken(0) Hirshfeld(1) RESP(2)
+programPop = 2
 
 # relaxing with cp2k or just single point?
 relaxBool = True
@@ -59,7 +59,7 @@ ewLoop = False
 
 # the cluster will be of all molecules with atoms less than
 # clustRad away from the centre of the central molecule
-clustRad = 5
+clustRad = 2
 
 # how many times the input cluster needs to be repeated along each vector
 # positively and negatively to be able to contain the cluster to select.
@@ -122,11 +122,16 @@ elif programPer == 1:
     charges = readcp2k("cp2k." + name,programPop)["charges"]
 os.chdir(here)
 
+# if we are working with cp2k supercells, we only want
+# charges for one unit cell
+charges=charges[:len(relaxedAtoms)]
+
 # due to poor precision in cp2k, the molecule is usually
 # electrically neutral only up to 10e-7.
 # here the charge of the last atom is tweaked to compensate
 if sum(charges) != 0.0:
-    charges[-1] -= sum(charges)
+    print "Charge correction: "+str(sum(charges))
+    charges[-1] -=  sum(charges)
 
 # assigns charges to atoms
 for index, atom in enumerate(relaxedAtoms):
@@ -258,5 +263,3 @@ os.chdir(gaussianPath)
 writeGauss(name+".clust", clustAtoms, points)
 writeGauss(name, transMol, points+clustPoints)
 #subprocess.call("g09 "+name+".com",shell=True)
-#subprocess.call("formchk "+name+".chk "+name+".fck",shell=True)
-#subprocess.call("cubegen 1 Density=CI "+name+".fck "+name+".cube",shell=True)

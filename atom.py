@@ -1,6 +1,7 @@
 # Atom class to interface between formatting
 # in different programs
 from numpy import *
+from collections import Counter
 
 
 class Atom:
@@ -12,6 +13,8 @@ class Atom:
         self.y = 0.0
         self.z = 0.0
         self.q = 0.0
+        self.connectivity = None
+        self.kind = None
         try:
             self.x = float(xIn)
             self.y = float(yIn)
@@ -99,8 +102,8 @@ class Atom:
         # extract electronic information from atomic type
         # update this is we want other atom types
     def electrons(self):
-        total=0
-        valence=0
+        total = 0
+        valence = 0
 
         element = self.elem.lower()
         if element == "h":
@@ -116,4 +119,15 @@ class Atom:
             total = 8
             valence = 6
 
-        return (valence,total)
+        return (valence, total)
+
+        # use a list of atoms containing this one and a row
+        # from the connectivity matrix to define the kind of the atom
+    def set_connectivity(self, in_atoms, in_row):
+        links = []
+        for i, atom in enumerate(in_atoms):
+            if in_row[i] != 0:
+                links.append((in_atoms[i].elem, in_row[i]))
+        self.connectivity = frozenset(Counter(links).most_common())
+        self.kind = (self.elem, self.connectivity)
+        return

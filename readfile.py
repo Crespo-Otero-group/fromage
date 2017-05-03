@@ -64,7 +64,7 @@ def readxyz(inName):
     for line in xyzContent:
 
         # if the line is the amount of atoms in the system
-        if line:
+        if line.strip():
             if line.split()[0].isdigit():
 
                 # list of atom objects inside on relaxation step
@@ -121,7 +121,7 @@ def readcp2k(inName,type):
 
 
     #RESP
-    if type==1:
+    if type==2:
         # find last occurrence of RESP charges
         lastMull = len(cp2kContent) - 1 - \
             cp2kContent[::-1].index(" RESP charges:\n")
@@ -182,7 +182,7 @@ def readGMull(inName):
             break
     # find each occurrence of Energy
     for line in content:
-        if "Total Energy" in line:
+        if "Done" in line:
             energy = float(line.split()[4])
 
     return {"charges": charges, "energy": energy}

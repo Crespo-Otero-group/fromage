@@ -1,33 +1,36 @@
- DBCSR| Multiplication driver                                                SMM
+ DBCSR| Multiplication driver                                               BLAS
  DBCSR| Multrec recursion limit                                              512
  DBCSR| Multiplication stack size                                           1000
  DBCSR| Maximum elements for images                                    UNLIMITED
+ DBCSR| Multiplicative factor virtual images                                   1
+ DBCSR| Randmat seed                                                    12341313
  DBCSR| Multiplication size stacks                                             3
+ DBCSR| Number of 3D layers                                               SINGLE
  DBCSR| Use MPI memory allocation                                              T
  DBCSR| Use RMA algorithm                                                      F
  DBCSR| Use Communication thread                                               T
  DBCSR| Communication thread load                                             87
 
 
-  **** **** ******  **  PROGRAM STARTED AT               2017-01-24 14:22:52.719
- ***** ** ***  *** **   PROGRAM STARTED ON                                  nxn7
+  **** **** ******  **  PROGRAM STARTED AT               2017-03-29 13:02:03.425
+ ***** ** ***  *** **   PROGRAM STARTED ON                                 nxn14
  **    ****   ******    PROGRAM STARTED BY                                btx156
- ***** **    ** ** **   PROGRAM PROCESS ID                                 30698
-  **** **  *******  **  PROGRAM STARTED IN /data/home/btx156/cp2k/2HC/single_poi
-                                           nt_structure1/super
+ ***** **    ** ** **   PROGRAM PROCESS ID                                 31302
+  **** **  *******  **  PROGRAM STARTED IN        /data/home/btx156/cp2k/2HC/ESP
 
- CP2K| version string:                    CP2K version 2.7 (Development Version)
- CP2K| source code revision number:                                  git:6662250
- CP2K| cp2kflags: omp fftw3 parallel mpi2 scalapack
- CP2K| is freely available from                             http://www.cp2k.org/
- CP2K| Program compiled at                          Wed Jul 22 12:28:41 BST 2015
- CP2K| Program compiled on                                                 dn107
+ CP2K| version string:                                          CP2K version 4.1
+ CP2K| source code revision number:                                    svn:17462
+ CP2K| cp2kflags: fftw3 parallel mpi3 scalapack                                 
+ CP2K| is freely available from                            https://www.cp2k.org/
+ CP2K| Program compiled at                          Thu Jan 26 14:58:43 GMT 2017
+ CP2K| Program compiled on                                                  dn15
  CP2K| Program compiled for                              Linux-x86-64-intel-host
- CP2K| Data directory path             /data/home/aaw643/Projects/cp2k/cp2k/data
+ CP2K| Data directory path           /data/scratch/aaw771/cp2k_4.1/cp2k-4.1/data
  CP2K| Input file name                                                   cp2k.in
  
  GLOBAL| Force Environment number                                              1
- GLOBAL| Basis set file name                    /data/home/btx156/cp2k/POTENTIAL
+ GLOBAL| Basis set file name                    /data/home/btx156/cp2k/BASIS_SET
+ GLOBAL| Potential file name                    /data/home/btx156/cp2k/POTENTIAL
  GLOBAL| MM Potential file name                                     MM_POTENTIAL
  GLOBAL| Coordinate file name                                      __STD_INPUT__
  GLOBAL| Method name                                                        CP2K
@@ -41,16 +44,17 @@
  GLOBAL| Total number of message passing processes                            64
  GLOBAL| Number of threads for this process                                    1
  GLOBAL| This output is from process                                           0
+ GLOBAL| CPU model name :  Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
 
  MEMORY| system memory details [Kb]
  MEMORY|                        rank 0           min           max       average
- MEMORY| MemTotal             65942532      65942532      65942536      65942535
- MEMORY| MemFree              56747380      56743316      62075616      59402885
- MEMORY| Buffers                258220        255980        258220        257265
- MEMORY| Cached                4849664        884432       5004052       2906741
- MEMORY| Slab                   335652        216696        338196        276871
- MEMORY| SReclaimable           271744        155644        276700        214951
- MEMORY| MemLikelyFree        62127008      62127008      63376128      62781842
+ MEMORY| MemTotal             65942532      65942532      65942536      65942534
+ MEMORY| MemFree              61769396      61737576      61825800      61780650
+ MEMORY| Buffers                257504        257504        258624        258040
+ MEMORY| Cached                 934856        934856        973116        953111
+ MEMORY| Slab                   250960        250292        251104        250764
+ MEMORY| SReclaimable           188572        187392        188580        188263
+ MEMORY| MemLikelyFree        63150328      63150328      63211568      63180064
 
 
  *** Fundamental physical constants (SI units) ***
@@ -142,7 +146,7 @@
  **                                                                           **
  **                                                ... make the atoms dance   **
  **                                                                           **
- **            Copyright (C) by CP2K Developers Group (2000 - 2015)           **
+ **            Copyright (C) by CP2K developers group (2000 - 2016)           **
  **                                                                           **
  *******************************************************************************
 
@@ -160,7 +164,7 @@
  FUNCTIONAL| ROUTINE=NEW
  FUNCTIONAL| PBE:
  FUNCTIONAL| J.P.Perdew, K.Burke, M.Ernzerhof, Phys. Rev. Letter, vol. 77, n 18,
- FUNCTIONAL|  pp. 3865-3868, (1996){spin unpolarized}
+ FUNCTIONAL|  pp. 3865-3868, (1996){spin unpolarized}                           
  vdW POTENTIAL|                                                   Pair Potential
  vdW POTENTIAL|                   Potential Form: S. Grimme, JCC 27: 1787 (2006)
  vdW POTENTIAL|                   Cutoff Radius [Bohr]:                    20.00
@@ -1926,6 +1930,8 @@
                        1     1          2.000      -0.174957           -4.760833
  
 
+ Total Electron Density at R=0:                                         0.000320
+
  Guess for atomic kind: H
 
  Electronic structure
@@ -1961,6 +1967,8 @@
                        1     0          1.000      -0.187807           -5.110495
  
 
+ Total Electron Density at R=0:                                         0.223735
+
  Guess for atomic kind: N
 
  Electronic structure
@@ -1981,12 +1989,12 @@
                           4        0.203257E-03                  -9.542183264531
                           5        0.951830E-04                  -9.542183274804
                           6        0.618506E-04                  -9.542183276471
-                          7        0.694265E-06                  -9.542183277689
+                          7        0.694265E-06                  -9.542183277688
 
- Energy components [Hartree]           Total Energy ::           -9.542183277689
+ Energy components [Hartree]           Total Energy ::           -9.542183277688
                                         Band Energy ::           -2.053201020383
                                      Kinetic Energy ::            6.749152074322
-                                   Potential Energy ::          -16.291335352011
+                                   Potential Energy ::          -16.291335352010
                                       Virial (-V/T) ::            2.413834385803
                                         Core Energy ::          -15.536723393721
                                           XC Energy ::           -2.162741334516
@@ -2002,6 +2010,8 @@
  
                        1     1          3.000      -0.242395           -6.595894
  
+
+ Total Electron Density at R=0:                                         0.000586
 
  Guess for atomic kind: O
 
@@ -2045,6 +2055,8 @@
  
                        1     1          4.000      -0.315769           -8.592524
  
+
+ Total Electron Density at R=0:                                         0.000893
  Re-scaling the density matrix to get the right number of electrons
                   # Electrons              Trace(P)               Scaling factor
                          3264              3264.000                        1.000
@@ -2061,7 +2073,7 @@
   Total charge density on r-space grids:        0.0008663790
   Total charge density g-space grids:           0.0008663790
 
-     1 NoMix/Diag. 0.50E+00   47.4     1.69229272     -4728.0369067906 -4.73E+03
+     1 NoMix/Diag. 0.50E+00   20.8     1.69229272     -4728.0369067906 -4.73E+03
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9987991033        0.0012008967
@@ -2069,7 +2081,7 @@
   Total charge density on r-space grids:        0.0009926667
   Total charge density g-space grids:           0.0009926667
 
-     2 Pulay/Diag. 0.50E+00   54.3     0.35369456     -4450.0573349168  2.78E+02
+     2 Pulay/Diag. 0.50E+00   21.7     0.35369456     -4450.0573349168  2.78E+02
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9987852175        0.0012147825
@@ -2077,7 +2089,7 @@
   Total charge density on r-space grids:        0.0010065525
   Total charge density g-space grids:           0.0010065525
 
-     3 Pulay/Diag. 0.50E+00   48.3     0.49373742     -4727.3938834216 -2.77E+02
+     3 Pulay/Diag. 0.50E+00   21.5     0.49373742     -4727.3938834216 -2.77E+02
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9987922220        0.0012077780
@@ -2085,7 +2097,7 @@
   Total charge density on r-space grids:        0.0009995480
   Total charge density g-space grids:           0.0009995480
 
-     4 Pulay/Diag. 0.50E+00   48.0     0.49097300     -4715.2876490244  1.21E+01
+     4 Pulay/Diag. 0.50E+00   21.5     0.49097300     -4715.2876490244  1.21E+01
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9987994363        0.0012005637
@@ -2093,7 +2105,7 @@
   Total charge density on r-space grids:        0.0009923337
   Total charge density g-space grids:           0.0009923337
 
-     5 Pulay/Diag. 0.50E+00   48.4     0.17721529     -4762.8162202105 -4.75E+01
+     5 Pulay/Diag. 0.50E+00   21.5     0.17721529     -4762.8162202105 -4.75E+01
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002536        0.0011997464
@@ -2101,7 +2113,7 @@
   Total charge density on r-space grids:        0.0009915165
   Total charge density g-space grids:           0.0009915165
 
-     6 Pulay/Diag. 0.50E+00   49.4     0.05421032     -4757.1992218334  5.62E+00
+     6 Pulay/Diag. 0.50E+00   21.5     0.05421032     -4757.1992218334  5.62E+00
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9987997375        0.0012002625
@@ -2109,7 +2121,7 @@
   Total charge density on r-space grids:        0.0009920325
   Total charge density g-space grids:           0.0009920325
 
-     7 Pulay/Diag. 0.50E+00   47.7     0.01817420     -4759.4669530395 -2.27E+00
+     7 Pulay/Diag. 0.50E+00   21.3     0.01817420     -4759.4669530395 -2.27E+00
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002756        0.0011997244
@@ -2117,7 +2129,7 @@
   Total charge density on r-space grids:        0.0009914944
   Total charge density g-space grids:           0.0009914944
 
-     8 Pulay/Diag. 0.50E+00   48.4     0.00501831     -4761.2758958711 -1.81E+00
+     8 Pulay/Diag. 0.50E+00   21.3     0.00501831     -4761.2758958711 -1.81E+00
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002853        0.0011997147
@@ -2125,7 +2137,7 @@
   Total charge density on r-space grids:        0.0009914847
   Total charge density g-space grids:           0.0009914847
 
-     9 Pulay/Diag. 0.50E+00   47.7     0.00194691     -4759.7020226285  1.57E+00
+     9 Pulay/Diag. 0.50E+00   22.5     0.00194691     -4759.7020226285  1.57E+00
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002575        0.0011997425
@@ -2133,7 +2145,7 @@
   Total charge density on r-space grids:        0.0009915125
   Total charge density g-space grids:           0.0009915125
 
-    10 Pulay/Diag. 0.50E+00   47.7     0.00144526     -4759.8529657349 -1.51E-01
+    10 Pulay/Diag. 0.50E+00   21.3     0.00144526     -4759.8529657349 -1.51E-01
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002686        0.0011997314
@@ -2141,7 +2153,7 @@
   Total charge density on r-space grids:        0.0009915014
   Total charge density g-space grids:           0.0009915014
 
-    11 Pulay/Diag. 0.50E+00   48.8     0.00078339     -4759.8753693219 -2.24E-02
+    11 Pulay/Diag. 0.50E+00   21.3     0.00078339     -4759.8753693219 -2.24E-02
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002807        0.0011997193
@@ -2149,7 +2161,7 @@
   Total charge density on r-space grids:        0.0009914893
   Total charge density g-space grids:           0.0009914893
 
-    12 Pulay/Diag. 0.50E+00   47.6     0.00026546     -4759.8767603409 -1.39E-03
+    12 Pulay/Diag. 0.50E+00   21.3     0.00026546     -4759.8767603409 -1.39E-03
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002872        0.0011997128
@@ -2157,7 +2169,7 @@
   Total charge density on r-space grids:        0.0009914829
   Total charge density g-space grids:           0.0009914829
 
-    13 Pulay/Diag. 0.50E+00   47.8     0.00020570     -4759.8329810759  4.38E-02
+    13 Pulay/Diag. 0.50E+00   21.3     0.00020570     -4759.8329810759  4.38E-02
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002804        0.0011997196
@@ -2165,7 +2177,7 @@
   Total charge density on r-space grids:        0.0009914896
   Total charge density g-space grids:           0.0009914896
 
-    14 Pulay/Diag. 0.50E+00   49.2     0.00012715     -4759.8269139490  6.07E-03
+    14 Pulay/Diag. 0.50E+00   21.3     0.00012715     -4759.8269139490  6.07E-03
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002809        0.0011997191
@@ -2173,7 +2185,7 @@
   Total charge density on r-space grids:        0.0009914891
   Total charge density g-space grids:           0.0009914891
 
-    15 Pulay/Diag. 0.50E+00   47.4     0.00004494     -4759.8461740410 -1.93E-02
+    15 Pulay/Diag. 0.50E+00   21.3     0.00004494     -4759.8461740410 -1.93E-02
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002821        0.0011997179
@@ -2181,7 +2193,7 @@
   Total charge density on r-space grids:        0.0009914879
   Total charge density g-space grids:           0.0009914879
 
-    16 Pulay/Diag. 0.50E+00   48.0     0.00003151     -4759.8427293646  3.44E-03
+    16 Pulay/Diag. 0.50E+00   21.3     0.00003151     -4759.8427293646  3.44E-03
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002819        0.0011997181
@@ -2189,7 +2201,7 @@
   Total charge density on r-space grids:        0.0009914882
   Total charge density g-space grids:           0.0009914882
 
-    17 Pulay/Diag. 0.50E+00   47.8     0.00001090     -4759.8399196134  2.81E-03
+    17 Pulay/Diag. 0.50E+00   21.3     0.00001090     -4759.8399196134  2.81E-03
 
   Trace(PS):                                 3264.0000000000
   Electronic density on regular grids:      -3263.9988002817        0.0011997183
@@ -2197,7 +2209,7 @@
   Total charge density on r-space grids:        0.0009914883
   Total charge density g-space grids:           0.0009914883
 
-    18 Pulay/Diag. 0.50E+00   49.6     0.00000402     -4759.8418453114 -1.93E-03
+    18 Pulay/Diag. 0.50E+00   21.3     0.00000402     -4759.8418453114 -1.93E-03
 
   *** SCF run converged in    18 steps ***
 
@@ -2209,7 +2221,7 @@
 
   Overlap energy of the core charge distribution:               0.00013298496366
   Self energy of the core charge distribution:             -11474.43917369163864
-  Core Hamiltonian energy:                                   3494.21777368931180
+  Core Hamiltonian energy:                                   3494.21777368931225
   Hartree energy:                                            4661.32316836339851
   Exchange-correlation energy:                              -1438.22507725045170
   Dispersion energy:                                           -2.71866940703049
@@ -3472,14 +3484,14 @@
      58       C      1       4.000          4.021                        -0.021
      59       C      1       4.000          4.021                        -0.021
      60       C      1       4.000          4.021                        -0.021
-     61       C      1       4.000          4.002                        -0.001
-     62       C      1       4.000          4.002                        -0.001
-     63       C      1       4.000          4.002                        -0.001
-     64       C      1       4.000          4.002                        -0.001
-     65       C      1       4.000          4.000                        -0.001
-     66       C      1       4.000          4.000                        -0.001
-     67       C      1       4.000          4.000                        -0.001
-     68       C      1       4.000          4.000                        -0.001
+     61       C      1       4.000          4.002                        -0.002
+     62       C      1       4.000          4.002                        -0.002
+     63       C      1       4.000          4.002                        -0.002
+     64       C      1       4.000          4.002                        -0.002
+     65       C      1       4.000          4.000                        -0.000
+     66       C      1       4.000          4.000                        -0.000
+     67       C      1       4.000          4.000                        -0.000
+     68       C      1       4.000          4.000                        -0.000
      69       H      2       1.000          0.950                         0.050
      70       H      2       1.000          0.950                         0.050
      71       H      2       1.000          0.950                         0.050
@@ -4600,6 +4612,1218 @@
   Total Charge                                                           -0.005
  !-----------------------------------------------------------------------------!
 
+ STARTING RESP FIT
+
+  Fit the variance of the potential (REPEAT method).
+  Number of explicit constraints:                                              0
+  Number of explicit restraints:                                               0
+  Constrain total charge                                                       T
+  Restrain heavy atoms                                                         F
+  Stride:                                                            2    2    2
+  ------------------------------------------------------------------------------
+  Using sphere sampling
+  Element                                    RMIN [angstrom]     RMAX [angstrom]
+  C                                                  1.92600           192.60000
+  H                                                  1.44300           144.30000
+  N                                                  1.83000           183.00000
+  O                                                  1.75000           175.00000
+  ------------------------------------------------------------------------------
+  Width of Gaussian charge distribution [angstrom^-2]:                  11.24900
+  Number of fitting points found:                                          94000
+
+ RESP charges:
+  Type |   Atom   |    Charge
+
+  RESP       1  C     0.419315
+  RESP       2  C     0.419301
+  RESP       3  C     0.409933
+  RESP       4  C     0.409963
+  RESP       5  C    -0.330896
+  RESP       6  C    -0.330924
+  RESP       7  C    -0.324230
+  RESP       8  C    -0.324239
+  RESP       9  C    -0.002788
+  RESP      10  C    -0.002713
+  RESP      11  C     0.003009
+  RESP      12  C     0.003009
+  RESP      13  C    -0.118667
+  RESP      14  C    -0.118678
+  RESP      15  C    -0.132069
+  RESP      16  C    -0.132123
+  RESP      17  C    -0.164091
+  RESP      18  C    -0.164117
+  RESP      19  C    -0.155549
+  RESP      20  C    -0.155454
+  RESP      21  C    -0.202622
+  RESP      22  C    -0.202549
+  RESP      23  C    -0.195648
+  RESP      24  C    -0.195711
+  RESP      25  C     0.387710
+  RESP      26  C     0.387703
+  RESP      27  C     0.371435
+  RESP      28  C     0.371313
+  RESP      29  C    -0.385934
+  RESP      30  C    -0.386028
+  RESP      31  C    -0.377447
+  RESP      32  C    -0.377281
+  RESP      33  C     0.058771
+  RESP      34  C     0.058838
+  RESP      35  C     0.050639
+  RESP      36  C     0.050521
+  RESP      37  C     0.093412
+  RESP      38  C     0.093402
+  RESP      39  C     0.099468
+  RESP      40  C     0.099589
+  RESP      41  C    -0.071260
+  RESP      42  C    -0.071303
+  RESP      43  C    -0.075823
+  RESP      44  C    -0.075827
+  RESP      45  C    -0.389617
+  RESP      46  C    -0.389552
+  RESP      47  C    -0.383029
+  RESP      48  C    -0.383063
+  RESP      49  C     0.464799
+  RESP      50  C     0.464775
+  RESP      51  C     0.459050
+  RESP      52  C     0.459073
+  RESP      53  C    -0.474586
+  RESP      54  C    -0.474632
+  RESP      55  C    -0.477310
+  RESP      56  C    -0.477317
+  RESP      57  C     0.041869
+  RESP      58  C     0.041934
+  RESP      59  C     0.041261
+  RESP      60  C     0.041191
+  RESP      61  C    -0.089385
+  RESP      62  C    -0.089483
+  RESP      63  C    -0.063828
+  RESP      64  C    -0.063776
+  RESP      65  C    -0.129575
+  RESP      66  C    -0.129565
+  RESP      67  C    -0.132985
+  RESP      68  C    -0.133127
+  RESP      69  H     0.164922
+  RESP      70  H     0.164926
+  RESP      71  H     0.163194
+  RESP      72  H     0.163220
+  RESP      73  H     0.085790
+  RESP      74  H     0.085748
+  RESP      75  H     0.083224
+  RESP      76  H     0.083237
+  RESP      77  H     0.122752
+  RESP      78  H     0.122772
+  RESP      79  H     0.121909
+  RESP      80  H     0.121919
+  RESP      81  H     0.133471
+  RESP      82  H     0.133460
+  RESP      83  H     0.132027
+  RESP      84  H     0.132003
+  RESP      85  H     0.146087
+  RESP      86  H     0.146106
+  RESP      87  H     0.145021
+  RESP      88  H     0.144981
+  RESP      89  H     0.036995
+  RESP      90  H     0.036999
+  RESP      91  H     0.037613
+  RESP      92  H     0.037618
+  RESP      93  H     0.118276
+  RESP      94  H     0.118303
+  RESP      95  H     0.116511
+  RESP      96  H     0.116518
+  RESP      97  H     0.192912
+  RESP      98  H     0.192884
+  RESP      99  H     0.191139
+  RESP     100  H     0.191127
+  RESP     101  H     0.202221
+  RESP     102  H     0.202244
+  RESP     103  H     0.203462
+  RESP     104  H     0.203484
+  RESP     105  H     0.081337
+  RESP     106  H     0.081289
+  RESP     107  H     0.081518
+  RESP     108  H     0.081537
+  RESP     109  H    -0.003485
+  RESP     110  H    -0.003455
+  RESP     111  H    -0.004915
+  RESP     112  H    -0.004935
+  RESP     113  H     0.103953
+  RESP     114  H     0.104000
+  RESP     115  H     0.094415
+  RESP     116  H     0.094397
+  RESP     117  H    -0.011723
+  RESP     118  H    -0.011697
+  RESP     119  H    -0.017722
+  RESP     120  H    -0.017740
+  RESP     121  H     0.047754
+  RESP     122  H     0.047766
+  RESP     123  H     0.049809
+  RESP     124  H     0.049815
+  RESP     125  H     0.068033
+  RESP     126  H     0.068025
+  RESP     127  H     0.070605
+  RESP     128  H     0.070638
+  RESP     129  H     0.073711
+  RESP     130  H     0.073702
+  RESP     131  H     0.071159
+  RESP     132  H     0.071203
+  RESP     133  H     0.318688
+  RESP     134  H     0.318663
+  RESP     135  H     0.323351
+  RESP     136  H     0.323415
+  RESP     137  N    -0.086945
+  RESP     138  N    -0.086976
+  RESP     139  N    -0.088493
+  RESP     140  N    -0.088440
+  RESP     141  O    -0.500247
+  RESP     142  O    -0.500234
+  RESP     143  O    -0.502413
+  RESP     144  O    -0.502420
+  RESP     145  O    -0.398354
+  RESP     146  O    -0.398347
+  RESP     147  O    -0.390946
+  RESP     148  O    -0.390855
+  RESP     149  C     0.419299
+  RESP     150  C     0.419315
+  RESP     151  C     0.409962
+  RESP     152  C     0.409934
+  RESP     153  C    -0.330922
+  RESP     154  C    -0.330895
+  RESP     155  C    -0.324238
+  RESP     156  C    -0.324230
+  RESP     157  C    -0.002714
+  RESP     158  C    -0.002789
+  RESP     159  C     0.003008
+  RESP     160  C     0.003009
+  RESP     161  C    -0.118678
+  RESP     162  C    -0.118666
+  RESP     163  C    -0.132122
+  RESP     164  C    -0.132070
+  RESP     165  C    -0.164117
+  RESP     166  C    -0.164092
+  RESP     167  C    -0.155456
+  RESP     168  C    -0.155548
+  RESP     169  C    -0.202547
+  RESP     170  C    -0.202621
+  RESP     171  C    -0.195710
+  RESP     172  C    -0.195648
+  RESP     173  C     0.387703
+  RESP     174  C     0.387708
+  RESP     175  C     0.371312
+  RESP     176  C     0.371436
+  RESP     177  C    -0.386029
+  RESP     178  C    -0.385932
+  RESP     179  C    -0.377280
+  RESP     180  C    -0.377447
+  RESP     181  C     0.058838
+  RESP     182  C     0.058768
+  RESP     183  C     0.050520
+  RESP     184  C     0.050639
+  RESP     185  C     0.093401
+  RESP     186  C     0.093414
+  RESP     187  C     0.099589
+  RESP     188  C     0.099469
+  RESP     189  C    -0.071302
+  RESP     190  C    -0.071260
+  RESP     191  C    -0.075825
+  RESP     192  C    -0.075823
+  RESP     193  C    -0.389553
+  RESP     194  C    -0.389616
+  RESP     195  C    -0.383065
+  RESP     196  C    -0.383029
+  RESP     197  C     0.464776
+  RESP     198  C     0.464799
+  RESP     199  C     0.459075
+  RESP     200  C     0.459050
+  RESP     201  C    -0.474632
+  RESP     202  C    -0.474585
+  RESP     203  C    -0.477317
+  RESP     204  C    -0.477309
+  RESP     205  C     0.041935
+  RESP     206  C     0.041867
+  RESP     207  C     0.041190
+  RESP     208  C     0.041259
+  RESP     209  C    -0.089481
+  RESP     210  C    -0.089384
+  RESP     211  C    -0.063775
+  RESP     212  C    -0.063826
+  RESP     213  C    -0.129564
+  RESP     214  C    -0.129577
+  RESP     215  C    -0.133129
+  RESP     216  C    -0.132984
+  RESP     217  H     0.164925
+  RESP     218  H     0.164922
+  RESP     219  H     0.163220
+  RESP     220  H     0.163193
+  RESP     221  H     0.085749
+  RESP     222  H     0.085790
+  RESP     223  H     0.083238
+  RESP     224  H     0.083224
+  RESP     225  H     0.122772
+  RESP     226  H     0.122753
+  RESP     227  H     0.121919
+  RESP     228  H     0.121909
+  RESP     229  H     0.133460
+  RESP     230  H     0.133471
+  RESP     231  H     0.132004
+  RESP     232  H     0.132026
+  RESP     233  H     0.146106
+  RESP     234  H     0.146087
+  RESP     235  H     0.144980
+  RESP     236  H     0.145022
+  RESP     237  H     0.036999
+  RESP     238  H     0.036995
+  RESP     239  H     0.037618
+  RESP     240  H     0.037613
+  RESP     241  H     0.118302
+  RESP     242  H     0.118276
+  RESP     243  H     0.116518
+  RESP     244  H     0.116511
+  RESP     245  H     0.192884
+  RESP     246  H     0.192912
+  RESP     247  H     0.191127
+  RESP     248  H     0.191139
+  RESP     249  H     0.202244
+  RESP     250  H     0.202221
+  RESP     251  H     0.203484
+  RESP     252  H     0.203462
+  RESP     253  H     0.081289
+  RESP     254  H     0.081337
+  RESP     255  H     0.081538
+  RESP     256  H     0.081519
+  RESP     257  H    -0.003456
+  RESP     258  H    -0.003485
+  RESP     259  H    -0.004934
+  RESP     260  H    -0.004915
+  RESP     261  H     0.103999
+  RESP     262  H     0.103952
+  RESP     263  H     0.094396
+  RESP     264  H     0.094414
+  RESP     265  H    -0.011697
+  RESP     266  H    -0.011723
+  RESP     267  H    -0.017740
+  RESP     268  H    -0.017722
+  RESP     269  H     0.047766
+  RESP     270  H     0.047754
+  RESP     271  H     0.049815
+  RESP     272  H     0.049810
+  RESP     273  H     0.068024
+  RESP     274  H     0.068033
+  RESP     275  H     0.070638
+  RESP     276  H     0.070604
+  RESP     277  H     0.073701
+  RESP     278  H     0.073711
+  RESP     279  H     0.071204
+  RESP     280  H     0.071158
+  RESP     281  H     0.318663
+  RESP     282  H     0.318688
+  RESP     283  H     0.323415
+  RESP     284  H     0.323350
+  RESP     285  N    -0.086976
+  RESP     286  N    -0.086943
+  RESP     287  N    -0.088442
+  RESP     288  N    -0.088494
+  RESP     289  O    -0.500234
+  RESP     290  O    -0.500247
+  RESP     291  O    -0.502419
+  RESP     292  O    -0.502413
+  RESP     293  O    -0.398347
+  RESP     294  O    -0.398353
+  RESP     295  O    -0.390856
+  RESP     296  O    -0.390946
+  RESP     297  C     0.419315
+  RESP     298  C     0.419301
+  RESP     299  C     0.409933
+  RESP     300  C     0.409962
+  RESP     301  C    -0.330896
+  RESP     302  C    -0.330924
+  RESP     303  C    -0.324230
+  RESP     304  C    -0.324239
+  RESP     305  C    -0.002789
+  RESP     306  C    -0.002713
+  RESP     307  C     0.003009
+  RESP     308  C     0.003009
+  RESP     309  C    -0.118667
+  RESP     310  C    -0.118678
+  RESP     311  C    -0.132069
+  RESP     312  C    -0.132123
+  RESP     313  C    -0.164090
+  RESP     314  C    -0.164117
+  RESP     315  C    -0.155549
+  RESP     316  C    -0.155454
+  RESP     317  C    -0.202622
+  RESP     318  C    -0.202549
+  RESP     319  C    -0.195648
+  RESP     320  C    -0.195712
+  RESP     321  C     0.387710
+  RESP     322  C     0.387703
+  RESP     323  C     0.371436
+  RESP     324  C     0.371313
+  RESP     325  C    -0.385934
+  RESP     326  C    -0.386028
+  RESP     327  C    -0.377446
+  RESP     328  C    -0.377281
+  RESP     329  C     0.058771
+  RESP     330  C     0.058838
+  RESP     331  C     0.050639
+  RESP     332  C     0.050521
+  RESP     333  C     0.093412
+  RESP     334  C     0.093402
+  RESP     335  C     0.099468
+  RESP     336  C     0.099589
+  RESP     337  C    -0.071259
+  RESP     338  C    -0.071303
+  RESP     339  C    -0.075823
+  RESP     340  C    -0.075827
+  RESP     341  C    -0.389617
+  RESP     342  C    -0.389552
+  RESP     343  C    -0.383029
+  RESP     344  C    -0.383063
+  RESP     345  C     0.464799
+  RESP     346  C     0.464774
+  RESP     347  C     0.459051
+  RESP     348  C     0.459073
+  RESP     349  C    -0.474586
+  RESP     350  C    -0.474631
+  RESP     351  C    -0.477310
+  RESP     352  C    -0.477317
+  RESP     353  C     0.041869
+  RESP     354  C     0.041934
+  RESP     355  C     0.041261
+  RESP     356  C     0.041191
+  RESP     357  C    -0.089384
+  RESP     358  C    -0.089484
+  RESP     359  C    -0.063826
+  RESP     360  C    -0.063776
+  RESP     361  C    -0.129575
+  RESP     362  C    -0.129565
+  RESP     363  C    -0.132985
+  RESP     364  C    -0.133127
+  RESP     365  H     0.164923
+  RESP     366  H     0.164926
+  RESP     367  H     0.163194
+  RESP     368  H     0.163220
+  RESP     369  H     0.085790
+  RESP     370  H     0.085748
+  RESP     371  H     0.083224
+  RESP     372  H     0.083237
+  RESP     373  H     0.122752
+  RESP     374  H     0.122772
+  RESP     375  H     0.121909
+  RESP     376  H     0.121919
+  RESP     377  H     0.133471
+  RESP     378  H     0.133460
+  RESP     379  H     0.132027
+  RESP     380  H     0.132003
+  RESP     381  H     0.146087
+  RESP     382  H     0.146106
+  RESP     383  H     0.145021
+  RESP     384  H     0.144981
+  RESP     385  H     0.036994
+  RESP     386  H     0.036999
+  RESP     387  H     0.037613
+  RESP     388  H     0.037618
+  RESP     389  H     0.118276
+  RESP     390  H     0.118303
+  RESP     391  H     0.116511
+  RESP     392  H     0.116518
+  RESP     393  H     0.192912
+  RESP     394  H     0.192884
+  RESP     395  H     0.191139
+  RESP     396  H     0.191127
+  RESP     397  H     0.202221
+  RESP     398  H     0.202244
+  RESP     399  H     0.203462
+  RESP     400  H     0.203484
+  RESP     401  H     0.081337
+  RESP     402  H     0.081290
+  RESP     403  H     0.081518
+  RESP     404  H     0.081537
+  RESP     405  H    -0.003485
+  RESP     406  H    -0.003455
+  RESP     407  H    -0.004915
+  RESP     408  H    -0.004935
+  RESP     409  H     0.103952
+  RESP     410  H     0.104000
+  RESP     411  H     0.094415
+  RESP     412  H     0.094397
+  RESP     413  H    -0.011723
+  RESP     414  H    -0.011696
+  RESP     415  H    -0.017722
+  RESP     416  H    -0.017740
+  RESP     417  H     0.047754
+  RESP     418  H     0.047766
+  RESP     419  H     0.049809
+  RESP     420  H     0.049814
+  RESP     421  H     0.068033
+  RESP     422  H     0.068025
+  RESP     423  H     0.070605
+  RESP     424  H     0.070638
+  RESP     425  H     0.073711
+  RESP     426  H     0.073702
+  RESP     427  H     0.071159
+  RESP     428  H     0.071203
+  RESP     429  H     0.318688
+  RESP     430  H     0.318663
+  RESP     431  H     0.323351
+  RESP     432  H     0.323415
+  RESP     433  N    -0.086946
+  RESP     434  N    -0.086975
+  RESP     435  N    -0.088494
+  RESP     436  N    -0.088441
+  RESP     437  O    -0.500247
+  RESP     438  O    -0.500234
+  RESP     439  O    -0.502413
+  RESP     440  O    -0.502420
+  RESP     441  O    -0.398354
+  RESP     442  O    -0.398347
+  RESP     443  O    -0.390946
+  RESP     444  O    -0.390855
+  RESP     445  C     0.419299
+  RESP     446  C     0.419315
+  RESP     447  C     0.409961
+  RESP     448  C     0.409933
+  RESP     449  C    -0.330923
+  RESP     450  C    -0.330896
+  RESP     451  C    -0.324238
+  RESP     452  C    -0.324230
+  RESP     453  C    -0.002714
+  RESP     454  C    -0.002789
+  RESP     455  C     0.003008
+  RESP     456  C     0.003009
+  RESP     457  C    -0.118678
+  RESP     458  C    -0.118667
+  RESP     459  C    -0.132122
+  RESP     460  C    -0.132069
+  RESP     461  C    -0.164117
+  RESP     462  C    -0.164091
+  RESP     463  C    -0.155456
+  RESP     464  C    -0.155547
+  RESP     465  C    -0.202547
+  RESP     466  C    -0.202621
+  RESP     467  C    -0.195710
+  RESP     468  C    -0.195648
+  RESP     469  C     0.387704
+  RESP     470  C     0.387708
+  RESP     471  C     0.371312
+  RESP     472  C     0.371436
+  RESP     473  C    -0.386029
+  RESP     474  C    -0.385932
+  RESP     475  C    -0.377280
+  RESP     476  C    -0.377447
+  RESP     477  C     0.058839
+  RESP     478  C     0.058768
+  RESP     479  C     0.050520
+  RESP     480  C     0.050639
+  RESP     481  C     0.093401
+  RESP     482  C     0.093414
+  RESP     483  C     0.099588
+  RESP     484  C     0.099469
+  RESP     485  C    -0.071301
+  RESP     486  C    -0.071260
+  RESP     487  C    -0.075825
+  RESP     488  C    -0.075823
+  RESP     489  C    -0.389553
+  RESP     490  C    -0.389616
+  RESP     491  C    -0.383065
+  RESP     492  C    -0.383029
+  RESP     493  C     0.464776
+  RESP     494  C     0.464798
+  RESP     495  C     0.459075
+  RESP     496  C     0.459050
+  RESP     497  C    -0.474632
+  RESP     498  C    -0.474584
+  RESP     499  C    -0.477318
+  RESP     500  C    -0.477309
+  RESP     501  C     0.041935
+  RESP     502  C     0.041866
+  RESP     503  C     0.041191
+  RESP     504  C     0.041259
+  RESP     505  C    -0.089480
+  RESP     506  C    -0.089384
+  RESP     507  C    -0.063774
+  RESP     508  C    -0.063826
+  RESP     509  C    -0.129564
+  RESP     510  C    -0.129577
+  RESP     511  C    -0.133129
+  RESP     512  C    -0.132984
+  RESP     513  H     0.164925
+  RESP     514  H     0.164922
+  RESP     515  H     0.163220
+  RESP     516  H     0.163194
+  RESP     517  H     0.085749
+  RESP     518  H     0.085790
+  RESP     519  H     0.083238
+  RESP     520  H     0.083224
+  RESP     521  H     0.122772
+  RESP     522  H     0.122752
+  RESP     523  H     0.121919
+  RESP     524  H     0.121909
+  RESP     525  H     0.133460
+  RESP     526  H     0.133471
+  RESP     527  H     0.132004
+  RESP     528  H     0.132026
+  RESP     529  H     0.146106
+  RESP     530  H     0.146087
+  RESP     531  H     0.144980
+  RESP     532  H     0.145022
+  RESP     533  H     0.036999
+  RESP     534  H     0.036995
+  RESP     535  H     0.037618
+  RESP     536  H     0.037613
+  RESP     537  H     0.118302
+  RESP     538  H     0.118276
+  RESP     539  H     0.116518
+  RESP     540  H     0.116511
+  RESP     541  H     0.192884
+  RESP     542  H     0.192911
+  RESP     543  H     0.191127
+  RESP     544  H     0.191139
+  RESP     545  H     0.202244
+  RESP     546  H     0.202221
+  RESP     547  H     0.203484
+  RESP     548  H     0.203462
+  RESP     549  H     0.081289
+  RESP     550  H     0.081338
+  RESP     551  H     0.081538
+  RESP     552  H     0.081519
+  RESP     553  H    -0.003456
+  RESP     554  H    -0.003485
+  RESP     555  H    -0.004935
+  RESP     556  H    -0.004915
+  RESP     557  H     0.103999
+  RESP     558  H     0.103952
+  RESP     559  H     0.094396
+  RESP     560  H     0.094415
+  RESP     561  H    -0.011697
+  RESP     562  H    -0.011723
+  RESP     563  H    -0.017740
+  RESP     564  H    -0.017722
+  RESP     565  H     0.047766
+  RESP     566  H     0.047754
+  RESP     567  H     0.049815
+  RESP     568  H     0.049809
+  RESP     569  H     0.068024
+  RESP     570  H     0.068033
+  RESP     571  H     0.070638
+  RESP     572  H     0.070604
+  RESP     573  H     0.073701
+  RESP     574  H     0.073711
+  RESP     575  H     0.071204
+  RESP     576  H     0.071158
+  RESP     577  H     0.318663
+  RESP     578  H     0.318688
+  RESP     579  H     0.323415
+  RESP     580  H     0.323350
+  RESP     581  N    -0.086976
+  RESP     582  N    -0.086943
+  RESP     583  N    -0.088442
+  RESP     584  N    -0.088494
+  RESP     585  O    -0.500234
+  RESP     586  O    -0.500247
+  RESP     587  O    -0.502419
+  RESP     588  O    -0.502413
+  RESP     589  O    -0.398348
+  RESP     590  O    -0.398354
+  RESP     591  O    -0.390856
+  RESP     592  O    -0.390946
+  RESP     593  C     0.419315
+  RESP     594  C     0.419300
+  RESP     595  C     0.409933
+  RESP     596  C     0.409963
+  RESP     597  C    -0.330895
+  RESP     598  C    -0.330924
+  RESP     599  C    -0.324230
+  RESP     600  C    -0.324239
+  RESP     601  C    -0.002789
+  RESP     602  C    -0.002714
+  RESP     603  C     0.003009
+  RESP     604  C     0.003009
+  RESP     605  C    -0.118667
+  RESP     606  C    -0.118678
+  RESP     607  C    -0.132069
+  RESP     608  C    -0.132123
+  RESP     609  C    -0.164091
+  RESP     610  C    -0.164117
+  RESP     611  C    -0.155549
+  RESP     612  C    -0.155454
+  RESP     613  C    -0.202622
+  RESP     614  C    -0.202549
+  RESP     615  C    -0.195648
+  RESP     616  C    -0.195711
+  RESP     617  C     0.387711
+  RESP     618  C     0.387703
+  RESP     619  C     0.371435
+  RESP     620  C     0.371314
+  RESP     621  C    -0.385934
+  RESP     622  C    -0.386028
+  RESP     623  C    -0.377446
+  RESP     624  C    -0.377282
+  RESP     625  C     0.058771
+  RESP     626  C     0.058837
+  RESP     627  C     0.050638
+  RESP     628  C     0.050520
+  RESP     629  C     0.093413
+  RESP     630  C     0.093402
+  RESP     631  C     0.099469
+  RESP     632  C     0.099589
+  RESP     633  C    -0.071260
+  RESP     634  C    -0.071303
+  RESP     635  C    -0.075824
+  RESP     636  C    -0.075827
+  RESP     637  C    -0.389617
+  RESP     638  C    -0.389552
+  RESP     639  C    -0.383029
+  RESP     640  C    -0.383064
+  RESP     641  C     0.464799
+  RESP     642  C     0.464775
+  RESP     643  C     0.459051
+  RESP     644  C     0.459073
+  RESP     645  C    -0.474586
+  RESP     646  C    -0.474632
+  RESP     647  C    -0.477310
+  RESP     648  C    -0.477317
+  RESP     649  C     0.041869
+  RESP     650  C     0.041934
+  RESP     651  C     0.041260
+  RESP     652  C     0.041191
+  RESP     653  C    -0.089385
+  RESP     654  C    -0.089481
+  RESP     655  C    -0.063826
+  RESP     656  C    -0.063776
+  RESP     657  C    -0.129575
+  RESP     658  C    -0.129565
+  RESP     659  C    -0.132986
+  RESP     660  C    -0.133127
+  RESP     661  H     0.164922
+  RESP     662  H     0.164925
+  RESP     663  H     0.163194
+  RESP     664  H     0.163220
+  RESP     665  H     0.085790
+  RESP     666  H     0.085748
+  RESP     667  H     0.083224
+  RESP     668  H     0.083237
+  RESP     669  H     0.122752
+  RESP     670  H     0.122773
+  RESP     671  H     0.121909
+  RESP     672  H     0.121919
+  RESP     673  H     0.133471
+  RESP     674  H     0.133460
+  RESP     675  H     0.132027
+  RESP     676  H     0.132003
+  RESP     677  H     0.146087
+  RESP     678  H     0.146106
+  RESP     679  H     0.145021
+  RESP     680  H     0.144981
+  RESP     681  H     0.036995
+  RESP     682  H     0.036999
+  RESP     683  H     0.037613
+  RESP     684  H     0.037618
+  RESP     685  H     0.118276
+  RESP     686  H     0.118303
+  RESP     687  H     0.116512
+  RESP     688  H     0.116518
+  RESP     689  H     0.192912
+  RESP     690  H     0.192884
+  RESP     691  H     0.191139
+  RESP     692  H     0.191127
+  RESP     693  H     0.202221
+  RESP     694  H     0.202244
+  RESP     695  H     0.203462
+  RESP     696  H     0.203484
+  RESP     697  H     0.081337
+  RESP     698  H     0.081289
+  RESP     699  H     0.081518
+  RESP     700  H     0.081537
+  RESP     701  H    -0.003485
+  RESP     702  H    -0.003455
+  RESP     703  H    -0.004915
+  RESP     704  H    -0.004935
+  RESP     705  H     0.103953
+  RESP     706  H     0.103999
+  RESP     707  H     0.094415
+  RESP     708  H     0.094397
+  RESP     709  H    -0.011723
+  RESP     710  H    -0.011697
+  RESP     711  H    -0.017722
+  RESP     712  H    -0.017740
+  RESP     713  H     0.047754
+  RESP     714  H     0.047766
+  RESP     715  H     0.049810
+  RESP     716  H     0.049815
+  RESP     717  H     0.068033
+  RESP     718  H     0.068025
+  RESP     719  H     0.070605
+  RESP     720  H     0.070638
+  RESP     721  H     0.073711
+  RESP     722  H     0.073702
+  RESP     723  H     0.071159
+  RESP     724  H     0.071203
+  RESP     725  H     0.318688
+  RESP     726  H     0.318663
+  RESP     727  H     0.323351
+  RESP     728  H     0.323415
+  RESP     729  N    -0.086946
+  RESP     730  N    -0.086976
+  RESP     731  N    -0.088493
+  RESP     732  N    -0.088441
+  RESP     733  O    -0.500247
+  RESP     734  O    -0.500234
+  RESP     735  O    -0.502413
+  RESP     736  O    -0.502420
+  RESP     737  O    -0.398354
+  RESP     738  O    -0.398347
+  RESP     739  O    -0.390946
+  RESP     740  O    -0.390855
+  RESP     741  C     0.419299
+  RESP     742  C     0.419315
+  RESP     743  C     0.409961
+  RESP     744  C     0.409934
+  RESP     745  C    -0.330922
+  RESP     746  C    -0.330895
+  RESP     747  C    -0.324238
+  RESP     748  C    -0.324230
+  RESP     749  C    -0.002714
+  RESP     750  C    -0.002789
+  RESP     751  C     0.003008
+  RESP     752  C     0.003009
+  RESP     753  C    -0.118678
+  RESP     754  C    -0.118667
+  RESP     755  C    -0.132122
+  RESP     756  C    -0.132070
+  RESP     757  C    -0.164117
+  RESP     758  C    -0.164092
+  RESP     759  C    -0.155456
+  RESP     760  C    -0.155547
+  RESP     761  C    -0.202547
+  RESP     762  C    -0.202621
+  RESP     763  C    -0.195710
+  RESP     764  C    -0.195648
+  RESP     765  C     0.387703
+  RESP     766  C     0.387708
+  RESP     767  C     0.371313
+  RESP     768  C     0.371435
+  RESP     769  C    -0.386028
+  RESP     770  C    -0.385932
+  RESP     771  C    -0.377280
+  RESP     772  C    -0.377446
+  RESP     773  C     0.058838
+  RESP     774  C     0.058768
+  RESP     775  C     0.050519
+  RESP     776  C     0.050639
+  RESP     777  C     0.093401
+  RESP     778  C     0.093414
+  RESP     779  C     0.099589
+  RESP     780  C     0.099469
+  RESP     781  C    -0.071302
+  RESP     782  C    -0.071260
+  RESP     783  C    -0.075825
+  RESP     784  C    -0.075823
+  RESP     785  C    -0.389552
+  RESP     786  C    -0.389617
+  RESP     787  C    -0.383065
+  RESP     788  C    -0.383029
+  RESP     789  C     0.464775
+  RESP     790  C     0.464800
+  RESP     791  C     0.459075
+  RESP     792  C     0.459050
+  RESP     793  C    -0.474632
+  RESP     794  C    -0.474586
+  RESP     795  C    -0.477318
+  RESP     796  C    -0.477309
+  RESP     797  C     0.041935
+  RESP     798  C     0.041867
+  RESP     799  C     0.041190
+  RESP     800  C     0.041259
+  RESP     801  C    -0.089481
+  RESP     802  C    -0.089383
+  RESP     803  C    -0.063775
+  RESP     804  C    -0.063825
+  RESP     805  C    -0.129563
+  RESP     806  C    -0.129577
+  RESP     807  C    -0.133128
+  RESP     808  C    -0.132984
+  RESP     809  H     0.164925
+  RESP     810  H     0.164922
+  RESP     811  H     0.163220
+  RESP     812  H     0.163193
+  RESP     813  H     0.085749
+  RESP     814  H     0.085790
+  RESP     815  H     0.083238
+  RESP     816  H     0.083224
+  RESP     817  H     0.122773
+  RESP     818  H     0.122753
+  RESP     819  H     0.121919
+  RESP     820  H     0.121909
+  RESP     821  H     0.133460
+  RESP     822  H     0.133471
+  RESP     823  H     0.132004
+  RESP     824  H     0.132026
+  RESP     825  H     0.146106
+  RESP     826  H     0.146087
+  RESP     827  H     0.144981
+  RESP     828  H     0.145022
+  RESP     829  H     0.037000
+  RESP     830  H     0.036995
+  RESP     831  H     0.037618
+  RESP     832  H     0.037613
+  RESP     833  H     0.118302
+  RESP     834  H     0.118276
+  RESP     835  H     0.116518
+  RESP     836  H     0.116511
+  RESP     837  H     0.192884
+  RESP     838  H     0.192912
+  RESP     839  H     0.191127
+  RESP     840  H     0.191139
+  RESP     841  H     0.202244
+  RESP     842  H     0.202221
+  RESP     843  H     0.203484
+  RESP     844  H     0.203462
+  RESP     845  H     0.081290
+  RESP     846  H     0.081337
+  RESP     847  H     0.081538
+  RESP     848  H     0.081519
+  RESP     849  H    -0.003456
+  RESP     850  H    -0.003485
+  RESP     851  H    -0.004935
+  RESP     852  H    -0.004915
+  RESP     853  H     0.103999
+  RESP     854  H     0.103952
+  RESP     855  H     0.094396
+  RESP     856  H     0.094414
+  RESP     857  H    -0.011697
+  RESP     858  H    -0.011723
+  RESP     859  H    -0.017740
+  RESP     860  H    -0.017722
+  RESP     861  H     0.047766
+  RESP     862  H     0.047754
+  RESP     863  H     0.049815
+  RESP     864  H     0.049810
+  RESP     865  H     0.068024
+  RESP     866  H     0.068033
+  RESP     867  H     0.070638
+  RESP     868  H     0.070604
+  RESP     869  H     0.073701
+  RESP     870  H     0.073711
+  RESP     871  H     0.071204
+  RESP     872  H     0.071158
+  RESP     873  H     0.318664
+  RESP     874  H     0.318688
+  RESP     875  H     0.323415
+  RESP     876  H     0.323351
+  RESP     877  N    -0.086976
+  RESP     878  N    -0.086945
+  RESP     879  N    -0.088442
+  RESP     880  N    -0.088493
+  RESP     881  O    -0.500235
+  RESP     882  O    -0.500247
+  RESP     883  O    -0.502419
+  RESP     884  O    -0.502414
+  RESP     885  O    -0.398348
+  RESP     886  O    -0.398353
+  RESP     887  O    -0.390856
+  RESP     888  O    -0.390946
+  RESP     889  C     0.419315
+  RESP     890  C     0.419301
+  RESP     891  C     0.409932
+  RESP     892  C     0.409962
+  RESP     893  C    -0.330896
+  RESP     894  C    -0.330924
+  RESP     895  C    -0.324230
+  RESP     896  C    -0.324239
+  RESP     897  C    -0.002789
+  RESP     898  C    -0.002713
+  RESP     899  C     0.003009
+  RESP     900  C     0.003009
+  RESP     901  C    -0.118667
+  RESP     902  C    -0.118678
+  RESP     903  C    -0.132069
+  RESP     904  C    -0.132123
+  RESP     905  C    -0.164091
+  RESP     906  C    -0.164117
+  RESP     907  C    -0.155549
+  RESP     908  C    -0.155454
+  RESP     909  C    -0.202622
+  RESP     910  C    -0.202549
+  RESP     911  C    -0.195647
+  RESP     912  C    -0.195712
+  RESP     913  C     0.387711
+  RESP     914  C     0.387704
+  RESP     915  C     0.371435
+  RESP     916  C     0.371314
+  RESP     917  C    -0.385935
+  RESP     918  C    -0.386028
+  RESP     919  C    -0.377446
+  RESP     920  C    -0.377282
+  RESP     921  C     0.058771
+  RESP     922  C     0.058837
+  RESP     923  C     0.050639
+  RESP     924  C     0.050521
+  RESP     925  C     0.093412
+  RESP     926  C     0.093403
+  RESP     927  C     0.099468
+  RESP     928  C     0.099589
+  RESP     929  C    -0.071260
+  RESP     930  C    -0.071304
+  RESP     931  C    -0.075824
+  RESP     932  C    -0.075827
+  RESP     933  C    -0.389618
+  RESP     934  C    -0.389552
+  RESP     935  C    -0.383030
+  RESP     936  C    -0.383064
+  RESP     937  C     0.464800
+  RESP     938  C     0.464774
+  RESP     939  C     0.459051
+  RESP     940  C     0.459073
+  RESP     941  C    -0.474586
+  RESP     942  C    -0.474631
+  RESP     943  C    -0.477310
+  RESP     944  C    -0.477317
+  RESP     945  C     0.041869
+  RESP     946  C     0.041934
+  RESP     947  C     0.041261
+  RESP     948  C     0.041191
+  RESP     949  C    -0.089384
+  RESP     950  C    -0.089482
+  RESP     951  C    -0.063825
+  RESP     952  C    -0.063776
+  RESP     953  C    -0.129575
+  RESP     954  C    -0.129565
+  RESP     955  C    -0.132985
+  RESP     956  C    -0.133127
+  RESP     957  H     0.164922
+  RESP     958  H     0.164925
+  RESP     959  H     0.163194
+  RESP     960  H     0.163220
+  RESP     961  H     0.085790
+  RESP     962  H     0.085748
+  RESP     963  H     0.083224
+  RESP     964  H     0.083237
+  RESP     965  H     0.122752
+  RESP     966  H     0.122772
+  RESP     967  H     0.121909
+  RESP     968  H     0.121919
+  RESP     969  H     0.133471
+  RESP     970  H     0.133460
+  RESP     971  H     0.132027
+  RESP     972  H     0.132003
+  RESP     973  H     0.146087
+  RESP     974  H     0.146106
+  RESP     975  H     0.145021
+  RESP     976  H     0.144981
+  RESP     977  H     0.036994
+  RESP     978  H     0.036999
+  RESP     979  H     0.037613
+  RESP     980  H     0.037618
+  RESP     981  H     0.118276
+  RESP     982  H     0.118303
+  RESP     983  H     0.116512
+  RESP     984  H     0.116518
+  RESP     985  H     0.192912
+  RESP     986  H     0.192884
+  RESP     987  H     0.191139
+  RESP     988  H     0.191127
+  RESP     989  H     0.202221
+  RESP     990  H     0.202244
+  RESP     991  H     0.203462
+  RESP     992  H     0.203484
+  RESP     993  H     0.081337
+  RESP     994  H     0.081290
+  RESP     995  H     0.081518
+  RESP     996  H     0.081538
+  RESP     997  H    -0.003485
+  RESP     998  H    -0.003455
+  RESP     999  H    -0.004915
+  RESP    1000  H    -0.004935
+  RESP    1001  H     0.103952
+  RESP    1002  H     0.103999
+  RESP    1003  H     0.094414
+  RESP    1004  H     0.094397
+  RESP    1005  H    -0.011723
+  RESP    1006  H    -0.011697
+  RESP    1007  H    -0.017722
+  RESP    1008  H    -0.017740
+  RESP    1009  H     0.047754
+  RESP    1010  H     0.047766
+  RESP    1011  H     0.049810
+  RESP    1012  H     0.049814
+  RESP    1013  H     0.068033
+  RESP    1014  H     0.068025
+  RESP    1015  H     0.070605
+  RESP    1016  H     0.070638
+  RESP    1017  H     0.073711
+  RESP    1018  H     0.073702
+  RESP    1019  H     0.071159
+  RESP    1020  H     0.071203
+  RESP    1021  H     0.318688
+  RESP    1022  H     0.318663
+  RESP    1023  H     0.323350
+  RESP    1024  H     0.323415
+  RESP    1025  N    -0.086946
+  RESP    1026  N    -0.086976
+  RESP    1027  N    -0.088494
+  RESP    1028  N    -0.088441
+  RESP    1029  O    -0.500247
+  RESP    1030  O    -0.500234
+  RESP    1031  O    -0.502413
+  RESP    1032  O    -0.502420
+  RESP    1033  O    -0.398354
+  RESP    1034  O    -0.398347
+  RESP    1035  O    -0.390946
+  RESP    1036  O    -0.390855
+  RESP    1037  C     0.419299
+  RESP    1038  C     0.419315
+  RESP    1039  C     0.409961
+  RESP    1040  C     0.409934
+  RESP    1041  C    -0.330923
+  RESP    1042  C    -0.330895
+  RESP    1043  C    -0.324238
+  RESP    1044  C    -0.324230
+  RESP    1045  C    -0.002714
+  RESP    1046  C    -0.002788
+  RESP    1047  C     0.003008
+  RESP    1048  C     0.003009
+  RESP    1049  C    -0.118678
+  RESP    1050  C    -0.118667
+  RESP    1051  C    -0.132122
+  RESP    1052  C    -0.132070
+  RESP    1053  C    -0.164117
+  RESP    1054  C    -0.164091
+  RESP    1055  C    -0.155456
+  RESP    1056  C    -0.155547
+  RESP    1057  C    -0.202547
+  RESP    1058  C    -0.202621
+  RESP    1059  C    -0.195710
+  RESP    1060  C    -0.195648
+  RESP    1061  C     0.387703
+  RESP    1062  C     0.387708
+  RESP    1063  C     0.371313
+  RESP    1064  C     0.371436
+  RESP    1065  C    -0.386028
+  RESP    1066  C    -0.385932
+  RESP    1067  C    -0.377280
+  RESP    1068  C    -0.377446
+  RESP    1069  C     0.058838
+  RESP    1070  C     0.058768
+  RESP    1071  C     0.050520
+  RESP    1072  C     0.050639
+  RESP    1073  C     0.093400
+  RESP    1074  C     0.093415
+  RESP    1075  C     0.099589
+  RESP    1076  C     0.099468
+  RESP    1077  C    -0.071301
+  RESP    1078  C    -0.071261
+  RESP    1079  C    -0.075825
+  RESP    1080  C    -0.075824
+  RESP    1081  C    -0.389553
+  RESP    1082  C    -0.389617
+  RESP    1083  C    -0.383065
+  RESP    1084  C    -0.383029
+  RESP    1085  C     0.464776
+  RESP    1086  C     0.464799
+  RESP    1087  C     0.459076
+  RESP    1088  C     0.459050
+  RESP    1089  C    -0.474632
+  RESP    1090  C    -0.474585
+  RESP    1091  C    -0.477319
+  RESP    1092  C    -0.477309
+  RESP    1093  C     0.041935
+  RESP    1094  C     0.041866
+  RESP    1095  C     0.041191
+  RESP    1096  C     0.041258
+  RESP    1097  C    -0.089480
+  RESP    1098  C    -0.089384
+  RESP    1099  C    -0.063773
+  RESP    1100  C    -0.063825
+  RESP    1101  C    -0.129564
+  RESP    1102  C    -0.129577
+  RESP    1103  C    -0.133128
+  RESP    1104  C    -0.132984
+  RESP    1105  H     0.164925
+  RESP    1106  H     0.164922
+  RESP    1107  H     0.163220
+  RESP    1108  H     0.163194
+  RESP    1109  H     0.085749
+  RESP    1110  H     0.085790
+  RESP    1111  H     0.083238
+  RESP    1112  H     0.083224
+  RESP    1113  H     0.122772
+  RESP    1114  H     0.122752
+  RESP    1115  H     0.121919
+  RESP    1116  H     0.121909
+  RESP    1117  H     0.133460
+  RESP    1118  H     0.133471
+  RESP    1119  H     0.132004
+  RESP    1120  H     0.132026
+  RESP    1121  H     0.146106
+  RESP    1122  H     0.146087
+  RESP    1123  H     0.144980
+  RESP    1124  H     0.145022
+  RESP    1125  H     0.036999
+  RESP    1126  H     0.036995
+  RESP    1127  H     0.037618
+  RESP    1128  H     0.037613
+  RESP    1129  H     0.118302
+  RESP    1130  H     0.118276
+  RESP    1131  H     0.116518
+  RESP    1132  H     0.116511
+  RESP    1133  H     0.192884
+  RESP    1134  H     0.192912
+  RESP    1135  H     0.191127
+  RESP    1136  H     0.191139
+  RESP    1137  H     0.202244
+  RESP    1138  H     0.202221
+  RESP    1139  H     0.203484
+  RESP    1140  H     0.203462
+  RESP    1141  H     0.081290
+  RESP    1142  H     0.081338
+  RESP    1143  H     0.081538
+  RESP    1144  H     0.081519
+  RESP    1145  H    -0.003456
+  RESP    1146  H    -0.003485
+  RESP    1147  H    -0.004935
+  RESP    1148  H    -0.004915
+  RESP    1149  H     0.103999
+  RESP    1150  H     0.103952
+  RESP    1151  H     0.094396
+  RESP    1152  H     0.094414
+  RESP    1153  H    -0.011697
+  RESP    1154  H    -0.011723
+  RESP    1155  H    -0.017740
+  RESP    1156  H    -0.017722
+  RESP    1157  H     0.047766
+  RESP    1158  H     0.047754
+  RESP    1159  H     0.049815
+  RESP    1160  H     0.049809
+  RESP    1161  H     0.068024
+  RESP    1162  H     0.068033
+  RESP    1163  H     0.070638
+  RESP    1164  H     0.070604
+  RESP    1165  H     0.073701
+  RESP    1166  H     0.073711
+  RESP    1167  H     0.071204
+  RESP    1168  H     0.071158
+  RESP    1169  H     0.318664
+  RESP    1170  H     0.318688
+  RESP    1171  H     0.323415
+  RESP    1172  H     0.323351
+  RESP    1173  N    -0.086976
+  RESP    1174  N    -0.086945
+  RESP    1175  N    -0.088443
+  RESP    1176  N    -0.088494
+  RESP    1177  O    -0.500235
+  RESP    1178  O    -0.500247
+  RESP    1179  O    -0.502419
+  RESP    1180  O    -0.502413
+  RESP    1181  O    -0.398348
+  RESP    1182  O    -0.398354
+  RESP    1183  O    -0.390856
+  RESP    1184  O    -0.390946
+  Total               0.000000
+
+  Root-mean-square (RMS) error of RESP fit:                          2.44393E-05
+  Relative root-mean-square (RRMS) error of RESP fit:                1.30802E-02
+
+
  ENERGY| Total FORCE_EVAL ( QS ) energy (a.u.):            -4759.841845311447287
 
 
@@ -4608,31 +5832,34 @@
  -                                DBCSR STATISTICS                             -
  -                                                                             -
  -------------------------------------------------------------------------------
- COUNTER                                      CPU                  ACC      ACC%
- flops   5 x    5 x   64                905932800                    0       0.0
- flops   5 x   13 x   64               3806300160                    0       0.0
- flops  13 x    5 x   64               4355020800                    0       0.0
- flops  13 x   13 x   64              17898835968                    0       0.0
- flops   5 x    5 x  224              22195353600                    0       0.0
- flops   5 x   13 x  224              93254353920                    0       0.0
- flops  13 x    5 x  224             106698009600                    0       0.0
- flops  13 x   13 x  224             438521481216                    0       0.0
- flops total                         687635288064                    0       0.0
- matmuls inhomo. stacks                         0                    0       0.0
- matmuls total                           16731648                    0       0.0
- number of processed stacks                 36864                    0       0.0
- average stack size                         453.9                  0.0
- marketing flops                    7160787763200
+ COUNTER                                    TOTAL       BLAS       SMM       ACC
+ flops    5 x    5 x  224              9512294400     100.0%      0.0%      0.0%
+ flops    5 x    5 x  192             13588992000     100.0%      0.0%      0.0%
+ flops    5 x   13 x  224             39966151680     100.0%      0.0%      0.0%
+ flops   13 x    5 x  224             45727718400     100.0%      0.0%      0.0%
+ flops    5 x   13 x  192             57094502400     100.0%      0.0%      0.0%
+ flops   13 x    5 x  192             65325312000     100.0%      0.0%      0.0%
+ flops   13 x   13 x  224            187937777664     100.0%      0.0%      0.0%
+ flops   13 x   13 x  192            268482539520     100.0%      0.0%      0.0%
+ flops total                       687.635288E+09     100.0%      0.0%      0.0%
+ flops max/rank                     11.492479E+09     100.0%      0.0%      0.0%
+ matmuls inhomo. stacks                         0       0.0%      0.0%      0.0%
+ matmuls total                           16731648     100.0%      0.0%      0.0%
+ number of processed stacks                 36864     100.0%      0.0%      0.0%
+ average stack size                                   453.9       0.0       0.0
+ marketing flops                     7.160787E+12
  -------------------------------------------------------------------------------
- # max total images/proc                        1
- # MPI data exchanged                       16128
- # MPI data filtered                            0
- MPI data size (elements):
-  total                                4540354560
-  min                                       88320
-  max                                      309120
-  average                                  281520
- MPI breakdown and total data size (bytes):
+ # multiplications                             18
+ max memory usage/rank             311.578624E+06
+ # max total images/rank                        1
+ # MPI messages exchanged                   16128
+ # MPI messages filtered                        0
+ MPI messages size (elements):
+  total size                         4.540355E+09
+  min size                         264.960000E+03
+  max size                         309.120000E+03
+  average size                     281.520000E+03
+ MPI breakdown and total messages size (bytes):
              size <=      128                   0                        0
        128 < size <=     8192                   0                        0
       8192 < size <=    32768                   0                        0
@@ -4641,6 +5868,8 @@
    4194304 < size <= 16777216                   0                        0
   16777216 < size                               0                        0
  -------------------------------------------------------------------------------
+ 
+ MEMORY| Estimated peak process memory [MiB]                                 300
 
  -------------------------------------------------------------------------------
  ----                             MULTIGRID INFO                            ----
@@ -4659,16 +5888,15 @@
 
  ROUTINE             CALLS  TOT TIME [s]  AVE VOLUME [Bytes]  PERFORMANCE [MB/s]
  MP_Group                5         0.000
- MP_Bcast              195         0.066            5073049.            14880.51
- MP_Allreduce          403         5.302               2073.                0.16
- MP_Gather               4         0.002               1792.                4.33
- MP_Sync                 4         0.023
- MP_Alltoall           714        22.520            3562013.              112.93
- MP_ISendRecv         4662         0.024              39060.             7513.98
- MP_Wait              8104        10.820
- MP_ISend             2774         0.024             405296.            46300.95
- MP_IRecv             2774         0.009             382293.           123671.82
- MP_Memory             432         0.018
+ MP_Bcast              197         0.008            5021582.           119567.24
+ MP_Allreduce          421         4.454              28775.                2.72
+ MP_Sync                 4         0.001
+ MP_Alltoall          3179        26.916            6315362.              745.91
+ MP_ISendRecv         4662         0.025              39060.             7343.34
+ MP_Wait             38914        20.973
+ MP_ISend            28340         0.614             320233.            14789.29
+ MP_IRecv            28340         0.059             314899.           151546.15
+ MP_Memory             828         0.005
  -------------------------------------------------------------------------------
 
 
@@ -4678,8 +5906,21 @@
  -                                                                             -
  -------------------------------------------------------------------------------
  
- CP2K version 2.7 (Development Version), the CP2K developers group (2015).
- CP2K is freely available from http://www.cp2k.org/ .
+ CP2K version 4.1, the CP2K developers group (2016).
+ CP2K is freely available from https://www.cp2k.org/ .
+
+ Schuett, Ole; Messmer, Peter; Hutter, Juerg; VandeVondele, Joost. 
+ Electronic Structure Calculations on Graphics Processing Units, John Wiley & Sons, Ltd, 173-190 (2016). 
+ GPU-Accelerated Sparse Matrix-Matrix Multiplication for Linear Scaling Density Functional Theory.
+ http://dx.doi.org/10.1002/9781118670712.ch8
+
+
+ Golze, D; Hutter, J; Iannuzzi, M. 
+ Physical Chemistry Chemical Physics, 17 (22), 14307-14316 (2015). 
+ Wetting of water on hexagonal boron nitride@Rh(111): a QM/MM model
+ based on atomic charges derived for nano-structured substrates.
+ http://dx.doi.org/10.1039/C4CP04638B
+
 
  Borstnik, U; VandeVondele, J; Weber, V; Hutter, J. 
  PARALLEL COMPUTING, 40 (5-6), 47-58 (2014). 
@@ -4692,6 +5933,13 @@
  WILEY INTERDISCIPLINARY REVIEWS-COMPUTATIONAL MOLECULAR SCIENCE, 4 (1), 15-25 (2014). 
  CP2K: atomistic simulations of condensed matter systems.
  http://dx.doi.org/10.1002/wcms.1159
+
+
+ Campana, C; Mussard, B; Woo, T K. 
+ JOURNAL OF CHEMICAL THEORY AND COMPUTATION, 5 (10), 2866 (2009). 
+ Electrostatic Potential Derived Atomic Charges for
+ Periodic Systems Using a Modified Error Functional.
+ http://dx.doi.org/10.1021/ct9003405
 
 
  Grimme, S. 
@@ -4745,6 +5993,13 @@
  http://dx.doi.org/10.1103/PhysRevB.54.1703
 
 
+ Rappe, AK; Casewit, CJ; Colwell, KS; Goddard, WA; Skiff, WM. 
+ JOURNAL OF THE AMERICAN CHEMICAL SOCIETY, 114 (25), 10024-10035 (1992). 
+ UFF, a full periodic table force field for molecular
+ mechanics and molecular dynamics simulations.
+ http://dx.doi.org/10.1021/ja00051a040
+
+
  -------------------------------------------------------------------------------
  -                                                                             -
  -                                T I M I N G                                  -
@@ -4752,22 +6007,40 @@
  -------------------------------------------------------------------------------
  SUBROUTINE                       CALLS  ASD         SELF TIME        TOTAL TIME
                                 MAXIMUM       AVERAGE  MAXIMUM  AVERAGE  MAXIMUM
- CP2K                                 1  1.0    2.142    7.613  897.259  897.272
- qs_energies_scf                      1  2.0    0.002    0.018  887.614  887.616
- scf_env_do_scf                       1  3.0    0.000    0.002  874.378  874.386
- scf_env_do_scf_inner_loop           18  4.0    0.002    0.033  874.378  874.386
- eigensolver                         18  5.0    0.000    0.001  820.577  820.646
- cp_fm_syevd                         18  6.0    0.000    0.000  674.000  674.327
- cp_fm_syevd_base                    18  7.0  674.000  674.326  674.000  674.326
- cp_fm_cholesky_restore              54  6.0  145.242  146.134  145.242  146.134
- qs_ks_update_qs_env                 18  5.0    0.000    0.000   29.081   29.098
- rebuild_ks_matrix                   18  6.0    0.000    0.001   28.931   28.947
- qs_ks_build_kohn_sham_matrix        18  7.0    0.091    5.032   28.931   28.947
+ CP2K                                 1  1.0    0.010    0.013  492.816  492.816
+ qs_energies                          1  2.0    0.000    0.000  492.463  492.464
+ scf_env_do_scf                       1  3.0    0.000    0.000  385.811  385.811
+ scf_env_do_scf_inner_loop           18  4.0    0.001    0.037  385.811  385.811
+ qs_scf_new_mos                      18  5.0    0.000    0.000  363.745  363.815
+ eigensolver                         18  6.0    0.001    0.002  359.699  359.714
+ cp_fm_syevd                         18  7.0    0.000    0.000  287.508  287.549
+ cp_fm_syevd_base                    18  8.0  287.508  287.549  287.508  287.549
+ scf_post_calculation_gpw             1  3.0    0.000    0.000  105.005  105.005
+ qs_scf_post_charges                  1  4.0    0.000    0.000  104.900  104.900
+ resp_fit                             1  5.0    0.072    0.073  104.900  104.900
+ calc_resp_matrix_periodic            1  6.0    2.569    5.509  104.747  104.748
+ cp_fm_cholesky_restore              54  7.0   70.855   71.553   70.855   71.553
+ calculate_rho_resp_single         1184  7.0    0.049    0.075   63.528   65.796
+ pw_transfer                       5105  7.9    0.377    0.558   57.785   59.182
+ fft_wrap_pw1pw2                   2699  8.7    0.027    0.041   54.990   56.422
+ fft_wrap_pw1pw2_100               2588  9.7    2.772    3.472   54.737   56.173
+ fft3d_ps                          2699 10.7   21.000   25.712   46.901   47.783
+ rs_pw_transfer                    1336  8.2    0.018    0.034   34.313   36.345
+ rs_pw_transfer_RS2PW_100          1206  9.0   12.917   14.475   32.633   34.647
+ mp_alltoall_z22v                  2699 12.7   22.695   26.279   22.695   26.279
+ mp_waitany                       27764 10.1   19.274   21.217   19.274   21.217
+ yz_to_x                           1315 12.1    1.120    1.575   14.401   17.625
+ qs_ks_update_qs_env                 18  5.0    0.000    0.000   12.720   12.725
+ rebuild_ks_matrix                   18  6.0    0.000    0.000   12.692   12.696
+ qs_ks_build_kohn_sham_matrix        18  7.0    0.004    0.074   12.691   12.696
+ x_to_yz                           1347 11.3    2.006    2.487   11.416   12.428
  -------------------------------------------------------------------------------
 
-  **** **** ******  **  PROGRAM ENDED AT                 2017-01-24 14:37:51.422
- ***** ** ***  *** **   PROGRAM RAN ON                                      nxn7
+ The number of warnings for this run is : 0
+ 
+ -------------------------------------------------------------------------------
+  **** **** ******  **  PROGRAM ENDED AT                 2017-03-29 13:10:16.766
+ ***** ** ***  *** **   PROGRAM RAN ON                                     nxn14
  **    ****   ******    PROGRAM RAN BY                                    btx156
- ***** **    ** ** **   PROGRAM PROCESS ID                                 30698
-  **** **  *******  **  PROGRAM STOPPED IN /data/home/btx156/cp2k/2HC/single_poi
-                                           nt_structure1/super
+ ***** **    ** ** **   PROGRAM PROCESS ID                                 31302
+  **** **  *******  **  PROGRAM STOPPED IN        /data/home/btx156/cp2k/2HC/ESP
