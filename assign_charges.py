@@ -1,12 +1,37 @@
-from atom import Atom
-from readfile import *
-from collections import Counter
-import numpy as np
-from copy import deepcopy
+"""Functions useful for manipulating atom connectivity.
 
-# takes in a list of atoms, some lattice vectors and a max bond length
-# returns a matrix of first connectivities
+The original use of these functions is to allow for assign_charges to work and
+be able to give a molecule, cluster or periodic cell of atoms the same charges as another
+molecule, cluster or periodic cell.
+
+"""
+
+import numpy as np
+from atom import Atom
+from collections import Counter
+
 def detect_1_connect(in_atoms, vectors, max_BL):
+    """
+    Make a matrix of first connectivities of a list of atoms.
+
+    Parameters
+    ----------
+    in_atoms : list of Atom objects
+        Atoms which need their connectivity detected
+    vectors : 3x3 array-like or None
+        Lattice vectors of the system if it is periodic. If not use None
+    max_BL : float
+        Maximum length between atoms which counts as a bond in the
+        connectivity matrix
+
+    Returns
+    ----------
+    cnct : numpy matrix
+        The matrix where each row and each column correspond to one atom. If the
+        two atoms are bonded or the same, the matrix element is 1. Otherwise it
+        is 0
+
+    """
     nat_mol = len(in_atoms)
     cnct = np.zeros((nat_mol, nat_mol))
     for i, i_atom in enumerate(in_atoms):
@@ -19,10 +44,27 @@ def detect_1_connect(in_atoms, vectors, max_BL):
                     cnct[i][j] = 1
     return cnct
 
-# returns connectivity matrix of one higher order than before
-
 
 def expand_connect(in_mat):
+    """
+    Expand a connectivity matrix
+
+    For one atom, checks which other atoms are connected to it (connectors) and
+    which are not (dangles). Then for each dangle checks if it has connectors in
+    common with the original atom and if so assigns that matrix element the
+    smallest combination of connectors.
+
+    Parameter
+    ----------
+    in_mat : 2-d array-like
+        Connectivity matrix to be expanded
+
+    Returns
+    ----------
+    out_mat: 2-d array-like
+        Once-expanded connectivity matrix
+
+    """
     out_mat = np.copy(in_mat)
     for i, row in enumerate(in_mat):
         # indeces of unconnected atoms
@@ -45,11 +87,9 @@ def expand_connect(in_mat):
                     out_mat[dangle][i] = min(orders)
     return out_mat
 
-# expands the connectivity matrix until it is complete
-# returns the complete matrix
-
 
 def complete_expand(in_mat):
+    """Expand a matrix until it stops expanding."""
     mat = np.copy(in_mat)
     i = 1
     while True:
@@ -61,88 +101,88 @@ def complete_expand(in_mat):
 
     return mat
 
-# reads a list of atoms and of unique kinds and assigns the average charge
-# of the atoms of a specific kind to a tuple (charge,kind)
 
-def charged_kinds(in_atoms,in_kinds):
-    q_kinds=[]
+def charged_kinds(in_atoms, in_kinds):
+    """
+    Get charged atom kinds from charged atoms and kinds.
+
+    For each kind of atom to be charged, goes through the list of atoms and
+    makes an average of the partial atomic charge of atoms of that type.
+
+    Parameters
+    ----------
+    in_atoms : list of Atom objects
+        The atoms should be charged and some of them at least should be of the
+        relevant kind
+    in_kinds : list of tuples
+        The tuples are of the form (a,b) where a is an element string (like 'C')
+        and b is a frozenset of ((element string,order of connection),amount of
+        connections). (a,b) is known as an atom kind
+
+    Returns
+    ----------
+    q_kinds : list of tuples
+        Each tuple is now (average charge,kind). This tuple is known as a
+        charged kind
+
+    """
+    q_kinds = []
     for kind in in_kinds:
-        charges=[]
+        charges = []
         for atom in in_atoms:
-            if atom.kind==kind:
+            if atom.kind == kind:
                 charges.append(atom.q)
-        if charges: #if not empty
-            avg_charge=sum(charges)/float(len(charges))
+        if charges:  # if not empty
+            avg_charge = sum(charges) / float(len(charges))
         else:
-            avg_charge=0
-        q_kinds.append((avg_charge,kind))
+            avg_charge = 0
+        q_kinds.append((avg_charge, kind))
     return q_kinds
 
-# assigns the charges of one first molecule to a set of uncharged molecules
-# based on complete connectivity
-# requires a maximum bond length for the connectivity definition
-# use vectors = None if the atoms are not in a periodic environment
-def assign_charges(char_atoms,char_vectors,unchar_atoms,unchar_vectors,bl):
-    #detect the charged atom's connectivity matrix
+
+def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
+    """
+    Assign charges from one list of atoms to another list of atoms.
+
+    This is based on the connectivity of the charged atoms, as defined by a
+    maximum bond length. The function works for periodic or non periodic systems
+    in the input and the output. The uncharged atoms are changed and there is no
+    output.
+
+    Parameters:
+    ----------
+    char_atoms : list of Atom objects
+        Atoms which already have assigned charge
+    char_vectors : 3x3 array-like or None
+        Lattice vectors of the input system if it is periodic. If not use None
+    unchar_atoms : list of Atom objects
+        Atoms which need charges assigned to them
+    unchar_vectors : 3x3 array-like or None
+        See char_vectors
+    bl : float
+        Maximum distance between atoms which constitutes a bond
+
+    """
+    # detect the charged atom's connectivity matrix
     char_first = detect_1_connect(char_atoms, char_vectors, bl)
     char_cnct = complete_expand(char_first)
 
-    #get charged atom kinds as a result
-    kinds=[]
-    for i,atom in enumerate(char_atoms):
+    # get charged atom kinds as a result
+    kinds = []
+    for i, atom in enumerate(char_atoms):
         atom.set_connectivity(char_atoms, char_cnct[i])
         kinds.append(atom.kind)
     kinds = set(kinds)
-    q_kinds=charged_kinds(char_atoms,kinds)
+    q_kinds = charged_kinds(char_atoms, kinds)
 
+    # detect uncharged atom connectivity
+    unchar_first = detect_1_connect(unchar_atoms, unchar_vectors, bl)
+    unchar_cnct = complete_expand(unchar_first)
 
-    #detect uncharged atom connectivity
-    unchar_first=detect_1_connect(unchar_atoms,unchar_vectors,bl)
-    unchar_cnct=complete_expand(unchar_first)
-
-    #determine kind and cross check with charged kinds
-    for i,atom in enumerate(unchar_atoms):
+    # determine kind and cross check with charged kinds
+    for i, atom in enumerate(unchar_atoms):
         atom.set_connectivity(unchar_atoms, unchar_cnct[i])
         for q_kind in q_kinds:
-            if atom.kind==q_kind[1]:
-                atom.q=q_kind[0]
-
-    return unchar_atoms
-# mol_atoms = readxyz("mol")[0]
-#
-# charges = readGMull("H_hf321")["charges"]
-# for i, atom in enumerate(mol_atoms):
-#     atom.q = charges[i]
-# vectors = readvasp("2HC1")["vectors"]
-# naked_atoms = readvasp("2HC1")["atoms"]
-#
-#
-# bl = 1.9
-# # numpy.set_printoptions(threshold='nan')
-# mol_first = detect_1_connect(mol_atoms, None, bl)
-# mol_cnct = complete_expand(mol_first)
-#
-# #get single mol kinds
-#
-# kinds=[]
-# for i,atom in enumerate(mol_atoms):
-#     atom.set_connectivity(mol_atoms, mol_cnct[i])
-#     kinds.append(atom.kind)
-# kinds = set(kinds)
-#
-# q_kinds=charged_kinds(mol_atoms,kinds)
-#
-#
-# naked_first=detect_1_connect(naked_atoms,vectors,bl)
-# naked_cnct=complete_expand(naked_first)
-#
-# # get uc kinds
-#
-# for i,atom in enumerate(naked_atoms):
-#     atom.set_connectivity(naked_atoms, naked_cnct[i])
-#     for q_kind in q_kinds:
-#         if atom.kind==q_kind[1]:
-#             atom.q=q_kind[0]
-#
-# print naked_atoms
-# print mol_atoms
+            if atom.kind == q_kind[1]:
+                atom.q = q_kind[0]
+    return

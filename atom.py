@@ -1,11 +1,29 @@
-# Atom class to interface between formatting
-# in different programs
-from numpy import *
+"""Defines the Atom object"""
+
+import numpy as np
 from collections import Counter
 
 
 class Atom:
-        # Atom class has element type, coordinates and charge
+    """
+    Object representing an atom.
+
+    Sometimes also used to represent point charges as atoms of element "point".
+    Several functions are present like translate or find_centroid.
+
+    Attributes
+    ----------
+    x,y,z : floats
+        Cartesian coordinates
+    q : float
+        Partial atomic charge
+    connectivity : frozenset of tuples
+        The set is ((atom kind,connectivity order),amount) and is set via a
+        function which takes the connectivity matrix as argument
+    kind : tuple
+        Tuple of (atom element,connectivity). This defines the kind of atom
+
+    """
 
     def __init__(self, elemIn="H", xIn=0.0, yIn=0.0, zIn=0.0, qIn=0.0):
         self.elem = elemIn
@@ -15,6 +33,8 @@ class Atom:
         self.q = 0.0
         self.connectivity = None
         self.kind = None
+
+        # deal with some sneaky int that may be disguised as float
         try:
             self.x = float(xIn)
             self.y = float(yIn)
@@ -27,34 +47,42 @@ class Atom:
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
-        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
-        # "\t" + str(self.z) + "\t" + str(self.q) + "\n"
 
     def __str__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
-        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
-        # "\t" + str(self.z) + "\t" + str(self.q) + "\n"
-
-        # writes the atom coordinates in xyz format
-
-    def xyzStr(self):
-        return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z)
-        # return str(self.elem) + "\t" + str(self.x) + "\t" + str(self.y) +
-        # "\t" + str(self.z) + "\n"
 
         # equality function
     def __eq__(self, other):
         return self.elem == other.elem and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
-        # returns the distance of the atom from an input point
+    def xyz_str(self):
+        """Return a string of the atom in xyz format"""
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z)
+
     def dist(self, x1, y1, z1):
-        r = sqrt((self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2)
+        """Return distance of the atom from a point"""
+        r = np.sqrt((self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2)
         return r
 
-        # returns the distance of the atom from an input point or
-        # its closest periodic image and the coordinates of
-        # whichever was closest
-    def distLat(self, x1, y1, z1, aVec, bVec, cVec):
+    def dist_lat(self, x1, y1, z1, aVec, bVec, cVec):
+        """
+        Find the shortest distance to a point in a periodic system.
+
+        Parameters
+        ----------
+        x1,y1,z1 : floats
+            Cartesian coordinates of the target point
+        aVec,bVec,cVec : 3x1 array-likes
+            Unit cell vectors
+
+        Returns
+        ----------
+        rMin : float
+            Minimal distance to the point
+        x3,y3,z3 : floats
+            Coordinates of the closest image to the point
+
+        """
         # null vector
         nVec = (0, 0, 0)
         # negative vectors
@@ -78,7 +106,7 @@ class Atom:
                     x2 = x1 + trans1[0] + trans2[0] + trans3[0]
                     y2 = y1 + trans1[1] + trans2[1] + trans3[1]
                     z2 = z1 + trans1[2] + trans2[2] + trans3[2]
-                    r = sqrt((self.x - x2) ** 2 + (self.y - y2)
+                    r = np.sqrt((self.x - x2) ** 2 + (self.y - y2)
                              ** 2 + (self.z - z2) ** 2)
                     # if this particular translation of the point is the closest
                     # to the atom so far
@@ -90,8 +118,8 @@ class Atom:
                         z3 = z2
         return rMin, x3, y3, z3
 
-        # returns an atom translated by some vector
-    def translate(self, x1, y1, z1):
+    def translated(self, x1, y1, z1):
+        "Return a new atom which is a translated copy."
         xout, yout, zout = self.x, self.y, self.z
         xout += x1
         yout += y1
@@ -99,9 +127,15 @@ class Atom:
         outAtom = Atom(self.elem, xout, yout, zout, self.q)
         return outAtom
 
-        # extract electronic information from atomic type
-        # update this is we want other atom types
+    def translate(self, x1, y1, z1):
+        "Translate the atom by some vector."
+        self.x += x1
+        self.y += y1
+        self.z += z1
+        return
+
     def electrons(self):
+        # FIND A MONKEY THAT CAN COMPLETE THIS METHOD
         total = 0
         valence = 0
 
@@ -121,9 +155,22 @@ class Atom:
 
         return (valence, total)
 
-        # use a list of atoms containing this one and a row
-        # from the connectivity matrix to define the kind of the atom
     def set_connectivity(self, in_atoms, in_row):
+        """
+        Set the connectivity and the kind of the atom.
+
+        This function needs a row of a connectivity matrix which can be obtained
+        with functions from assign_charges.py
+
+        Parameters
+        ----------
+        in_atoms : list of atoms
+            Atoms in the system of which this atom is a part
+        in_row : 1-d array-like
+            The row of the connectivity matrix of in_atoms which corresponds to
+            this atom
+
+        """
         links = []
         for i, atom in enumerate(in_atoms):
             if in_row[i] != 0:

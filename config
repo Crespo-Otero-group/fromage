@@ -1,0 +1,18 @@
+name 2HC1
+a_vec 12.1199998856         0.0000000000         0.0000000000
+b_vec  0.0000000000        10.2849998474         0.0000000000
+c_vec -5.4720203118         0.0000000000        11.2441994632
+cell_file 2HC1-pos-1.xyz
+cp2k_file cp2k.2HC1.out
+max_bl 1.58
+label_atom 2
+nChk 1000
+nAt 500
+aN 2
+bN 2
+cN 2
+pop_method 2
+clust_rad 2
+traAN 2
+traBN 2
+traCN 2
