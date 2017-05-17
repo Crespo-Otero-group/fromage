@@ -40,8 +40,8 @@ c_vec = inputs["c_vec"]
 
 vectors = np.zeros((3, 3))
 vectors[0] = a_vec
-vectors[1] = c_vec
-vectors[2] = b_vec
+vectors[1] = b_vec
+vectors[2] = c_vec
 
 print "Vectors read in config:"
 print vectors
@@ -71,30 +71,30 @@ else:
     label_atom = 0
 
 # the number of checkpoints in region 1
-if "nChk" in inputs:
-    nChk = int(inputs["nChk"])
+if "nchk" in inputs:
+    nChk = int(inputs["nchk"])
 else:
     nChk = 1000
 
 # the number of constrained charge atoms
 # i.e. atoms in regions 1 and 2
-if "nAt" in inputs:
-    nAt - int(inputs["nAt"])
+if "nat" in inputs:
+    nAt = int(inputs["nat"])
 else:
     nAt = 500
 
 # Ewald will multiply the unit cell in the direction
 # of the a, b or c vector 2N times (N positive and N negative)
-if "aN" in inputs:
-    aN = int(inputs["aN"])
+if "an" in inputs:
+    aN = int(inputs["an"])
 else:
     aN = 2
-if "bN" in inputs:
-    bN = int(inputs["bN"])
+if "bn" in inputs:
+    bN = int(inputs["bn"])
 else:
     bN = 2
-if "cN" in inputs:
-    cN = int(inputs["cN"])
+if "cn" in inputs:
+    cN = int(inputs["cn"])
 else:
     cN = 2
 
@@ -116,16 +116,16 @@ else:
 # positively and negatively to be able to contain the cluster to select.
 # the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times
 # bigger
-if "traAN" in inputs:
-    traAN = int(inputs["traAN"])
+if "traan" in inputs:
+    traAN = int(inputs["traan"])
 else:
     traAN = 2
-if "traBN" in inputs:
-    traBN = int(inputs["traBN"])
+if "trabn" in inputs:
+    traBN = int(inputs["trabn"])
 else:
     traBN = 2
-if "traCN" in inputs:
-    traCN = int(inputs["traCN"])
+if "tracn" in inputs:
+    traCN = int(inputs["tracn"])
 else:
     traCN = 2
 

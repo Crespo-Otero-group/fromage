@@ -40,7 +40,7 @@ def detect_1_connect(in_atoms, vectors, max_BL):
                 if i_atom.dist(j_atom.x, j_atom.y, j_atom.z) < max_BL:
                     cnct[i][j] = 1
             else:
-                if i_atom.distLat(j_atom.x, j_atom.y, j_atom.z, vectors[0], vectors[1], vectors[2])[0] < max_BL:
+                if i_atom.dist_lat(j_atom.x, j_atom.y, j_atom.z, vectors[0], vectors[1], vectors[2])[0] < max_BL:
                     cnct[i][j] = 1
     return cnct
 

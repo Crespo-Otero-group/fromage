@@ -192,12 +192,13 @@ def complete_mol(max_r, atoms, label, vectors):
 
     # for all atoms in the cell
     for atom in atoms:
-        # if the atom needs translating
-        if atom in part_mol:
-            # translate the atom
-            atoms[atoms.index(atom)] = part_mol_img[
-                part_mol.index(atom)]  # awkward phrasing necessary
+        # if the atom is part of the broken molecule
+        if atom in full_mol:
+            # remove the atom
+            atoms.remove(atom)
 
+    for atom in full_mol_trans:
+        atoms.append(atom)
     return full_mol_trans, atoms
 
 

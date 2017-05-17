@@ -218,14 +218,16 @@ def read_points(in_name):
     return points
 
 
-def read_g_mull(in_name):
+def read_g_char(in_name,kind):
     """
-    Read Mulliken charges and energy from a Gaussian log file.
+    Read charges and energy from a Gaussian log file.
 
     Parameters
     ----------
     in_name : str
         Name of the file to read
+    kind : int
+        0 is Mulliken and 1 is ESP
     Returns
     ----------
     charges : list of floats
@@ -238,9 +240,12 @@ def read_g_mull(in_name):
         content = gauss_file.readlines()
 
     # find last occurrence of Mulliken charges
-    last_mull = len(content) - 1 - \
-        content[::-1].index(" Mulliken charges:\n")
-
+    if kind == 0:
+        last_mull = len(content) - 1 - \
+            content[::-1].index(" Mulliken charges:\n")
+    elif kind == 1:
+        last_mull = len(content) - 1 - \
+            content[::-1].index(" ESP charges:\n")
     charges = []
 
     for line in content[last_mull + 2:]:
