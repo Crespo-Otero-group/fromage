@@ -5,10 +5,6 @@ import os
 from atom import Atom
 from random import randint
 
-# edits a cp2k template file called cp2k.template.in
-# and writes a new version called cp2k.[input name].in
-# with required lattice vectors and atomic positions
-
 
 def write_cp2k(in_name, file_name, vectors, atoms, temp_name):
     """
@@ -132,7 +128,7 @@ def write_uc(in_name, vectors, aN, bN, cN, atoms):
             if coord < 0:
                 # translate it to the range [0,1]
                 frac_pos[frac_pos.index(coord)] = 1 + coord
-        str_line = "{:10.6f} {:10.6f} {:10.6f} {:10.6f} {:>6}".format(
+        str_line = "{:10.6f} {:10.6f} {:10.6f} {:10.10f} {:>6}".format(
             *frac_pos + [atom.q] + [atom.elem]) + "\n"
         outFile.write(str_line)
     outFile.close()
@@ -186,6 +182,7 @@ def write_seed():
     outFile.write(str(seed1) + " " + str(seed2))
     outFile.close()
 
+
 def write_gauss(in_name, file_name, atoms, points, temp_name):
     """
     Write a Gaussian input file.
@@ -231,6 +228,7 @@ def write_gauss(in_name, file_name, atoms, points, temp_name):
             outFile.write(line)
     outFile.close()
     return
+
 
 def write_g_temp(in_name, file_name, fixed_atoms, points, temp_name):
     """
@@ -279,6 +277,7 @@ def write_g_temp(in_name, file_name, fixed_atoms, points, temp_name):
             outFile.write(line)
     outFile.close()
     return
+
 
 def edit_vasp_pos(in_name, atoms):
     """
@@ -391,4 +390,27 @@ def write_pp(in_name, file_name, temp_name):
         else:
             pp_in.write(line)
     pp_in.close()
+    return
+
+
+def write_coord(in_atoms):
+    """
+    Write a Turbomole coord file
+
+    The written units are in Bohr but we conserve Angstrom units in this program
+
+    Parameters
+    ----------
+    in_atoms : Atom objects
+        Atoms to write
+
+    """
+    bohrconv = 1.88973
+    coord_file = open("coord", "w")
+    coord_file.write("$coord\n")
+    for atom in in_atoms:
+        form_string = "{:10.6f} {:10.6f} {:10.6f} {:>6}\n".format(
+            atom.x * bohrconv, atom.y * bohrconv, atom.z * bohrconv, atom.elem.lower())
+        coord_file.write(form_string)
+    coord_file.write("$end\n")
     return
