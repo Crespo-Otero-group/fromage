@@ -17,14 +17,6 @@ from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
 
-
-# output
-out_file = open("cryspy.out", "w", 1)
-# print start time
-start_time = datetime.now()
-out_file.write("STARTING TIME: " + str(start_time) + "\n")
-
-
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -131,43 +123,65 @@ def sequence(in_pos):
     out_file.flush()
     return (en_out, gr_out)
 
-evconv = 27.2114  # Something in Hartree * evcomv = Something in eV
-bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
+if __name__ == '__main__':
 
-iteration = 0
+    evconv = 27.2114  # Something in Hartree * evconv = Something in eV
+    bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 
-# is this a CI calculation?
-bool_ci = False
+    # default settings
 
-# clean up the last output
-if os.path.exists("geom_mol.xyz"):
-    subprocess.call("rm geom_mol.xyz", shell=True)
-if os.path.exists("geom_cluster.xyz"):
-    subprocess.call("rm geom_cluster.xyz", shell=True)
+    def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
+              "out_file": "cryspy.out", "bool_ci": "False", "high_level": "gaussian", "low_level": "gaussian"}
+
+    # read user inputs
+    new_inputs = rf.read_config("cyspy.in")
+
+    inputs=def_copy()
+    inputs.update(new_inputs)
+
+    mol_file = inputs["mol_file"]
+    shell_file = inputs["shell_file"]
+    out_file = inputs["out_file"]
+    bool_ci = bool(inputs["bool_ci"])
+    high_level = inputs["gaussian"]
+    low_level = inputs["gaussian"]
+
+    # output
+    out_file = open(out_file, "w", 1)
+    # print start time
+    start_time = datetime.now()
+    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+
+    iteration = 0
 
 
-# read initial coordniates
-mol_atoms = rf.read_xyz("mol.init.xyz")[0]
+    # clean up the last output
+    if os.path.exists("geom_mol.xyz"):
+        subprocess.call("rm geom_mol.xyz", shell=True)
+    if os.path.exists("geom_cluster.xyz"):
+        subprocess.call("rm geom_cluster.xyz", shell=True)
 
-# read shell atoms
-shell_atoms = rf.read_xyz("shell.xyz")[0]
+    # read initial coordniates
+    mol_atoms = rf.read_xyz(mol_file)[0]
 
-# make the initial coordinates into a flat list
-atoms_array = []
-for atom in mol_atoms:
-    atoms_array.append(atom.x)
-    atoms_array.append(atom.y)
-    atoms_array.append(atom.z)
+    # read shell atoms
+    shell_atoms = rf.read_xyz(shell_file)[0]
 
-# make the list into an array
-atoms_array = np.array(atoms_array)
+    # make the initial coordinates into a flat list
+    atoms_array = []
+    for atom in mol_atoms:
+        atoms_array.append(atom.x)
+        atoms_array.append(atom.y)
+        atoms_array.append(atom.z)
 
+    # make the list into an array
+    atoms_array = np.array(atoms_array)
 
-res = minimize(sequence, atoms_array, jac=True,
-               options={'disp': True})
+    res = minimize(sequence, atoms_array, jac=True,
+                   options={'disp': True})
 
-out_file.write("DONE\n")
-end_time = datetime.now()
-out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
-out_file.write("ENDING TIME: " + str(end_time) + "\n")
-out_file.close()
+    out_file.write("DONE\n")
+    end_time = datetime.now()
+    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
+    out_file.write("ENDING TIME: " + str(end_time) + "\n")
+    out_file.close()

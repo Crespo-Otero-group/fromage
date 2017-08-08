@@ -26,9 +26,10 @@ class Calc(object):
     calc_name : str
         Name of the calculation, typically rl, ml, mh or mg
     """
-    def __init__(self, calc_name_in=None):
+    def __init__(self, calc_name_in=None,in_here=os.getcwd()):
         """Constructor which sets the calculation name"""
         self.calc_name = calc_name_in
+        self.here = in_here
 
     def run(self, atoms):
         """
@@ -110,11 +111,11 @@ class Gauss_calc(Calc):
         ----------
         print_bool : bool
             If true, update the geometry files with the one found in .chk
-        positions : list of floats
+        positions : list of floats, optional
             List of atomic coordinates
-        in_mol : list of Atom objects
+        in_mol : list of Atom objects, optional
             Atoms in the inner region
-        in_shell : list of Atom objects
+        in_shell : list of Atom objects, optional
             Atoms in the middle region
         Returns
         -------
@@ -147,4 +148,65 @@ class Turbo_calc(Calc):
     """
     Calculation with Turbomole 7.0
     """
-    
+
+    def run(self, atoms):
+        """
+        Write a Turbomole coord file and return a subprocess.Popen
+
+        Parameters
+        ----------
+        atoms : list of Atom objects
+            Atoms to be calculated with Gaussian
+        Returns
+        -------
+        proc : subprocess.Popen object
+            the object should have a .wait() method
+
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+
+        ef.write_coord(atoms)
+        proc = subprocess.Popen("dscf > dscf.out && ricc2 > ricc2.out",shell=True)
+
+        os.chdir(self.here)
+
+    def read_out(self, print_bool, positions=None, in_mol=None, in_shell=None):
+        """
+        Analyse a Turbomole ricc2.out file while printing geometry updates
+
+        Parameters
+        ----------
+        print_bool : bool
+            If true, update the geometry files with the one found in .chk
+        positions : list of floats, optional
+            List of atomic coordinates
+        in_mol : list of Atom objects, optional
+            Atoms in the inner region
+        in_shell : list of Atom objects, optional
+            Atoms in the middle region
+        Returns
+        -------
+        energy : float
+            Energy calculated by Gaussian in Hartree
+        gradients : list of floats
+            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+        scf_energy : float
+            The ground state energy in Hartree
+
+        """
+        here = os.path.dirname(os.path.realpath(__file__))
+        turbo_path = os.path.join(here, self.calc_name)
+        os.chdir(turbo_path)
+
+        energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
+        # fix gradients units
+        gradients = gradients_b * bohrconv
+        # update the geometry log
+        if print_bool == True:
+            self.update_geom(positions, in_mol, in_shell)
+
+        # truncate gradients if too long
+        gradients = gradients[:len(positions)]
+
+        return (energy, gradients, scf_energy)
