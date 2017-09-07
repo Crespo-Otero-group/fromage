@@ -26,7 +26,8 @@ class Calc(object):
     calc_name : str
         Name of the calculation, typically rl, ml, mh or mg
     """
-    def __init__(self, calc_name_in=None,in_here=os.getcwd()):
+
+    def __init__(self, calc_name_in=None, in_here=os.getcwd()):
         """Constructor which sets the calculation name"""
         self.calc_name = calc_name_in
         self.here = in_here
@@ -80,10 +81,12 @@ class Calc(object):
                 geom_c_file.write(atom_str)
         return
 
+
 class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09
     """
+
     def run(self, atoms):
         """
         Write a Gaussian input file and return a subprocess.Popen
@@ -144,6 +147,7 @@ class Gauss_calc(Calc):
 
         return (energy, gradients, scf_energy)
 
+
 class Turbo_calc(Calc):
     """
     Calculation with Turbomole 7.0
@@ -163,13 +167,18 @@ class Turbo_calc(Calc):
             the object should have a .wait() method
 
         """
+        FNULL = open(os.devnull, 'w')
+
         turbo_path = os.path.join(self.here, self.calc_name)
         os.chdir(turbo_path)
 
         ef.write_coord(atoms)
-        proc = subprocess.Popen("dscf > dscf.out && ricc2 > ricc2.out",shell=True)
+        proc = subprocess.Popen(
+            "dscf > dscf.out && ricc2 > ricc2.out", stdout=FNULL, shell=True)
 
         os.chdir(self.here)
+
+        return proc
 
     def read_out(self, print_bool, positions=None, in_mol=None, in_shell=None):
         """
@@ -195,8 +204,7 @@ class Turbo_calc(Calc):
             The ground state energy in Hartree
 
         """
-        here = os.path.dirname(os.path.realpath(__file__))
-        turbo_path = os.path.join(here, self.calc_name)
+        turbo_path = os.path.join(self.here, self.calc_name)
         os.chdir(turbo_path)
 
         energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
@@ -209,4 +217,5 @@ class Turbo_calc(Calc):
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
 
+        os.chdir(self.here)
         return (energy, gradients, scf_energy)

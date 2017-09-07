@@ -134,17 +134,17 @@ if __name__ == '__main__':
               "out_file": "cryspy.out", "bool_ci": "False", "high_level": "gaussian", "low_level": "gaussian"}
 
     # read user inputs
-    new_inputs = rf.read_config("cyspy.in")
+    new_inputs = rf.read_config("cryspy.in")
 
-    inputs=def_copy()
+    inputs=def_inputs.copy()
     inputs.update(new_inputs)
 
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     out_file = inputs["out_file"]
     bool_ci = bool(inputs["bool_ci"])
-    high_level = inputs["gaussian"]
-    low_level = inputs["gaussian"]
+    high_level = inputs["high_level"]
+    low_level = inputs["low_level"]
 
     # output
     out_file = open(out_file, "w", 1)

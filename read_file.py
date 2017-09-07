@@ -472,6 +472,7 @@ def read_ricc2(in_name):
     grad_x = []
     grad_y = []
     grad_z = []
+    energy=None
 
     for line in lines:
         if "Total energy of excited state:" in line:
@@ -494,5 +495,7 @@ def read_ricc2(in_name):
         grad.append(dx)
         grad.append(dy)
         grad.append(dz)
-
+    # for ground state
+    if not energy:
+        energy = scf_energy
     return energy,grad,scf_energy
