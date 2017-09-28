@@ -11,7 +11,7 @@ nAt 500
 aN 2
 bN 2
 cN 2
-pop_method 2
+cp2k_pop_method 2
 clust_rad 2
 traAN 2
 traBN 2

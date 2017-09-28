@@ -4,7 +4,7 @@ import numpy as np
 from collections import Counter
 
 
-class Atom:
+class Atom(object):
     """
     Object representing an atom.
 
@@ -25,12 +25,13 @@ class Atom:
 
     """
 
-    def __init__(self, elemIn="H", xIn=0.0, yIn=0.0, zIn=0.0, qIn=0.0):
+    def __init__(self, elemIn="H", xIn=0.0, yIn=0.0, zIn=0.0, qIn=0.0, num=1):
         self.elem = elemIn
         self.x = 0.0
         self.y = 0.0
         self.z = 0.0
         self.q = 0.0
+        self.num = 1
         self.connectivity = None
         self.kind = None
 
@@ -42,22 +43,22 @@ class Atom:
             self.q = float(qIn)
 
         except ValueError:
-            print "Some coordinates or charges cannot be cast to float!"
+            print("Some coordinates or charges cannot be cast to float!")
 
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
-        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z, self.q)
 
     def __str__(self):
-        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z, self.q)
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z, self.q)
 
         # equality function
     def __eq__(self, other):
-        return self.elem == other.elem and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
+        return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
     def xyz_str(self):
         """Return a string of the atom in xyz format"""
-        return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self. elem, self.x, self.y, self.z)
+        return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z)
 
     def dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
@@ -76,7 +77,7 @@ class Atom:
             Unit cell vectors
 
         Returns
-        ----------
+        -------
         rMin : float
             Minimal distance to the point
         x3,y3,z3 : floats
@@ -136,6 +137,7 @@ class Atom:
 
     def electrons(self):
         # FIND A MONKEY THAT CAN COMPLETE THIS METHOD
+        # used for Bader
         total = 0
         valence = 0
 
@@ -154,6 +156,24 @@ class Atom:
             valence = 6
 
         return (valence, total)
+
+    periodic = [("H",1),("C",6),("N",7),("O",8)]
+
+    def num_to_elem(self,num):
+        """
+        Sets the element symbol according to input atomic number
+
+        Parameters
+        ----------
+        num : int
+            Atomic number of the element
+        """
+        periodic = [("H",1),("C",6),("N",7),("O",8)]
+        for element in periodic:
+            if num == element[1]:
+                self.elem = element[0]
+        return
+
 
     def set_connectivity(self, in_atoms, in_row):
         """

@@ -20,7 +20,7 @@ def read_vasp(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     M : 3x3 matrix
         Lattice vectors
     atoms : list of Atom types
@@ -63,10 +63,6 @@ def read_vasp(in_name):
     return M, atoms
 
 
-# takes the prefix of an xyz file and returns
-# an array of subarrayz of atoms where each
-# subarray represents the system at a relaxation
-# step
 def read_xyz(in_name):
     """
     Read a .xyz file.
@@ -79,7 +75,7 @@ def read_xyz(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     atom_step = list of lists of Atom objects
         Each element of the list represents a configuration of atoms
 
@@ -125,7 +121,7 @@ def read_cp2k(in_name, kind):
     kind : int
         Kind of charge to read. 0:Mulliken ; 1:Hirshfeld ; 2:RESP
     Returns
-    ----------
+    -------
     charges : list of floats
         Each partial charge value in the file
     energy : float
@@ -199,7 +195,7 @@ def read_points(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     points : list of Atom ojects
         Point charges in the file. They have element "point"
 
@@ -218,7 +214,7 @@ def read_points(in_name):
     return points
 
 
-def read_g_char(in_name,kind):
+def read_g_char(in_name, kind):
     """
     Read charges and energy from a Gaussian log file.
 
@@ -229,7 +225,7 @@ def read_g_char(in_name,kind):
     kind : int
         0 is Mulliken and 1 is ESP
     Returns
-    ----------
+    -------
     charges : list of floats
         Each partial charge value in the file
     energy : float
@@ -270,7 +266,7 @@ def read_bader(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     charges : list of floats
         Charges in file
 
@@ -297,7 +293,7 @@ def read_qe(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     atoms : list of Atom objects
         Last set of atoms in the file
 
@@ -332,7 +328,7 @@ def read_gauss(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     atoms : list of Atom objects
         Last set of atoms in the file
 
@@ -366,13 +362,13 @@ def read_fchk(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     energy : float
         Gaussian total calculated energy in Hartree
     grad : list of floats
-        The gradients in form x1,y1,z1,x2,y2,z2 etc.
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr
     scf_energy : float
-        Gaussian ground state calculated energy in Hartree/Bohr
+        Gaussian ground state calculated energy in Hartree
 
     """
     with open(in_name) as data:
@@ -394,6 +390,7 @@ def read_fchk(in_name):
     grad = np.array(grad)
     return energy, grad, scf_energy
 
+
 def read_config(in_name):
     """
     Read a cryspy config file.
@@ -403,19 +400,102 @@ def read_config(in_name):
     in_name : str
         Name of the file to read
     Returns
-    ----------
+    -------
     settings : dict
         A dictionary with the keywords and the user inputs as strings
 
     """
-    with open(in_name,"r") as data:
+    with open(in_name, "r") as data:
         lines = data.readlines()
-    settings={}
+    settings = {}
     for line in lines:
         if line.strip():
             if line.strip()[0].isalpha():
                 if len(line.split()) == 2:
-                    settings[line.split()[0].lower()]=line.split()[1]
+                    settings[line.split()[0].lower()] = line.split()[1]
                 else:
-                    settings[line.split()[0].lower()]=line.split()[1:]
+                    settings[line.split()[0].lower()] = line.split()[1:]
     return settings
+
+def read_g_pos(in_name):
+    """
+    Read positions from a Gaussian log file.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    atoms : list of Atom objects
+        Atomic positions at the beginning of the file for a single point .log
+    """
+    with open(in_name) as gauss_file:
+        content = gauss_file.readlines()
+
+    # Input orientation
+    for i, line in enumerate(content):
+        if 'Input orientation:' in line:
+            ori_line = i
+        if 'Distance matrix' in line:
+            dist_line = i
+            break
+    atoms = []
+    for line in content[ori_line+5:dist_line-1]:
+        line_bits = [float(i) for i in line.split()]
+        atom_to_add = Atom("",line_bits[3],line_bits[4],line_bits[5],0)
+        atom_to_add.num_to_elem(line_bits[1])
+        atoms.append(atom_to_add)
+    return atoms
+
+def read_ricc2(in_name):
+    """
+    Read energies and gradients from a Turbomole ricc2.out file.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    energy : float
+        Excited state energy in Hartree
+    grad : list of floats
+        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
+    scf_energy : float
+        Ground state energy in Hartree
+
+    """
+    with open(in_name) as data:
+        lines = data.readlines()
+
+    grad_x = []
+    grad_y = []
+    grad_z = []
+    energy=None
+
+    for line in lines:
+        if "Total energy of excited state:" in line:
+            energy = float(line.split()[5])
+        if "Final CC2 energy" in line:
+            scf_energy = float(line.split()[5])
+        if line.strip():
+            if line[0:2] == "dE":
+                nums = [float(i.replace("D","E")) for i in line.split()[1:]]
+                if line.split()[0] == "dE/dx":
+                    grad_x.extend(nums)
+                if line.split()[0] == "dE/dy":
+                    grad_y.extend(nums)
+                if line.split()[0] == "dE/dz":
+                    grad_z.extend(nums)
+    grad=[]
+
+    # combine in correct format
+    for dx,dy,dz in zip(grad_x,grad_y,grad_z):
+        grad.append(dx)
+        grad.append(dy)
+        grad.append(dz)
+    # for ground state
+    if not energy:
+        energy = scf_energy
+    return energy,grad,scf_energy

@@ -11,104 +11,11 @@ import subprocess
 import os
 import read_file as rf
 import edit_file as ef
+import handle_atoms as ha
+import calc
 from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
-
-
-# output
-out_file = open("cryspy.out", "w", 1)
-# print start time
-start_time = datetime.now()
-out_file.write("STARTING TIME: " + str(start_time)+"\n")
-
-
-def array2atom(template, pos):
-    """
-    Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
-    objects
-
-    Parameters
-    ----------
-    template : list of Atom objects
-        A list of the same length of the desired one used to determine the
-        elements of the atoms
-    pos : list of floats
-        List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.
-    Returns
-    ----------
-    out_atoms : list of Atom objects
-        Resulting atoms
-
-    """
-    sliced_pos = [pos[i:i + 3] for i in range(0, len(pos), 3)]
-    out_atoms = []
-    for atom in zip(template, sliced_pos):
-        new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
-        out_atoms.append(new_atom)
-    return out_atoms
-
-
-def treat_chk(positions, name, print_bool, in_mol, in_shell):
-    """
-    Analyse a Gaussian .chk file while printing geometry updates
-
-    Parameters
-    ----------
-    positions : list of floats
-        List of atomic coordinates
-    name : string
-        Name of the .chk file to treat without the extension the extension
-    print_bool : bool
-        If true, update the geometry files with the one found in .chk
-    in_mol : list of Atom objects
-        Atoms in the inner region
-    in_shell : list of Atom objects
-        Atoms in the middle region
-    Returns
-    ----------
-    energy : float
-        Energy calculated by Gaussian in Hartree
-    gradients : list of floats
-        The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
-    scf_energy : float
-        The ground state energy in Hargree
-
-    """
-    # stdout=FNULL to not have to read the output of formchk
-    FNULL = open(os.devnull, 'w')
-    subprocess.call("formchk " + name + ".chk", stdout=FNULL, shell=True)
-    energy, gradients_b, scf_energy = rf.read_fchk(name + ".fchk")
-    # fix gradients units
-    gradients = gradients_b * bohrconv
-    # update the geometry log
-    if print_bool == True:
-        # only the inner region
-        with open("geom_mol.xyz", "a") as geom_m_file:
-            geom_m_file.write(str(len(in_mol)) + "\n")
-            geom_m_file.write("E_" + name + "= " + str(energy) + "\n")
-            for atom in array2atom(in_mol, positions):
-                atomStr = "{:>6} {:10.9f} {:10.6f} {:10.9f}".format(
-                    atom.elem, atom.x, atom.y, atom.z) + "\n"
-                geom_m_file.write(atomStr)
-        # the inner and middle regions
-        with open("geom_cluster.xyz", "a") as geom_c_file:
-            geom_c_file.write(str((len(positions) / 3) + len(in_shell)) + "\n")
-            geom_c_file.write("E_" + name + "= " + str(energy) + "\n")
-            for atom in array2atom(in_mol, positions):
-                atomStr = "{:>6} {:10.9f} {:10.6f} {:10.9f}".format(
-                    atom.elem, atom.x, atom.y, atom.z) + "\n"
-                geom_c_file.write(atomStr)
-            for atom in in_shell:
-                atomStr = "{:>6} {:10.9f} {:10.9f} {:10.9f}".format(
-                    atom.elem, atom.x, atom.y, atom.z) + "\n"
-                geom_c_file.write(atomStr)
-
-    # truncate gradients if too long
-    gradients = gradients[:len(in_mol * 3)]
-
-    return (energy, gradients, scf_energy)
-
 
 def sequence(in_pos):
     """
@@ -124,7 +31,7 @@ def sequence(in_pos):
     in_pos : list of floats
         Input coordinates in array form
     Returns
-    ----------
+    -------
     en_out : float
         Combined energy or penalty function value in Hartree
     gr_out : list of floats
@@ -137,36 +44,32 @@ def sequence(in_pos):
     J. Phys. Chem. B 112, 405-413 (2008).
 
     """
-    # write Gaussian .com files for all calculations
-    ef.write_gauss("rl", "rl.com", array2atom(
-        mol_atoms, in_pos), [], "rl.temp")
-    ef.write_gauss("ml", "ml.com", array2atom(
-        mol_atoms, in_pos), [], "ml.temp")
-    ef.write_gauss("mh", "mh.com", array2atom(
-        mol_atoms, in_pos), [], "mh.temp")
+    # initialise calculation objects
+    rl = calc.Gauss_calc("rl")
+    ml = calc.Gauss_calc("ml")
+    mh = calc.Gauss_calc("mh")
     if bool_ci:
-        ef.write_gauss("mg", "mg.com", array2atom(
-            mol_atoms, in_pos), [], "mg.temp")
+        mg = calc.Gauss_calc("mg")
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
     # the longest
-    p_mh = subprocess.Popen("g09 mh.com", shell=True)
-    p_rl = subprocess.Popen("g09 rl.com", shell=True)
-    p_rl.wait()
-    p_ml = subprocess.Popen("g09 ml.com", shell=True)
-    p_ml.wait()
+    mh_proc = mh.run(ha.array2atom(mol_atoms, in_pos))
+    rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
+    rl_proc.wait()
+    ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
+    ml_proc.wait()
     if bool_ci:
-        p_mg = subprocess.Popen("g09 mg.com", shell=True)
-        p_mg.wait()
-    p_mh.wait()
+        mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
+        mg_proc.wait()
+    mh_proc.wait()
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
-    rl_en_gr = treat_chk(in_pos, "rl", True, mol_atoms, shell_atoms)
-    ml_en_gr = treat_chk(in_pos, "ml", False, mol_atoms, shell_atoms)
-    mh_en_gr = treat_chk(in_pos, "mh", False, mol_atoms, shell_atoms)
+    rl_en_gr = rl.read_out(True, in_pos, mol_atoms, shell_atoms)
+    ml_en_gr = ml.read_out(False, in_pos)
+    mh_en_gr = mh.read_out(False, in_pos)
     if bool_ci:
-        mg_en_gr = treat_chk(in_pos, "mg", False, mol_atoms, shell_atoms)
+        mg_en_gr = mg.read_out(False, in_pos)
 
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
@@ -197,7 +100,7 @@ def sequence(in_pos):
     out_file.write("------------------------------\n")
     global iteration
     iteration += 1
-    out_file.write("Iteration: " + str(iteration)+"\n")
+    out_file.write("Iteration: " + str(iteration) + "\n")
     out_file.write("Real low energy: {:>30.8f} eV\n".format(
         rl_en_gr[0] * evconv))
     out_file.write("Model low energy: {:>29.8f} eV\n".format(
@@ -211,7 +114,8 @@ def sequence(in_pos):
     out_file.write(
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
     if bool_ci == True:
-        out_file.write("Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
+        out_file.write(
+            "Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
     out_file.write("Gap: {:>43.8f} eV\n".format(
@@ -219,43 +123,65 @@ def sequence(in_pos):
     out_file.flush()
     return (en_out, gr_out)
 
-evconv = 27.2114  # Something in Hartree * evcomv = Something in eV
-bohrconv = 1.88973  # Something in Angstrom 8 bohrconv = Something in Bohr
+if __name__ == '__main__':
 
-iteration = 0
+    evconv = 27.2114  # Something in Hartree * evconv = Something in eV
+    bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 
-# is this a CI calculation?
-bool_ci = False
+    # default settings
 
-# clean up the last output
-if os.path.exists("geom_mol.xyz"):
-    subprocess.call("rm geom_mol.xyz", shell=True)
-if os.path.exists("geom_cluster.xyz"):
-    subprocess.call("rm geom_cluster.xyz", shell=True)
+    def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
+              "out_file": "cryspy.out", "bool_ci": "False", "high_level": "gaussian", "low_level": "gaussian"}
+
+    # read user inputs
+    new_inputs = rf.read_config("cryspy.in")
+
+    inputs=def_inputs.copy()
+    inputs.update(new_inputs)
+
+    mol_file = inputs["mol_file"]
+    shell_file = inputs["shell_file"]
+    out_file = inputs["out_file"]
+    bool_ci = bool(inputs["bool_ci"])
+    high_level = inputs["high_level"]
+    low_level = inputs["low_level"]
+
+    # output
+    out_file = open(out_file, "w", 1)
+    # print start time
+    start_time = datetime.now()
+    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+
+    iteration = 0
 
 
-# read initial coordniates
-mol_atoms = rf.read_xyz("mol.init.xyz")[0]
+    # clean up the last output
+    if os.path.exists("geom_mol.xyz"):
+        subprocess.call("rm geom_mol.xyz", shell=True)
+    if os.path.exists("geom_cluster.xyz"):
+        subprocess.call("rm geom_cluster.xyz", shell=True)
 
-# read shell atoms
-shell_atoms = rf.read_xyz("shell.xyz")[0]
+    # read initial coordniates
+    mol_atoms = rf.read_xyz(mol_file)[0]
 
-# make the initial coordinates into a flat list
-atoms_array = []
-for atom in mol_atoms:
-    atoms_array.append(atom.x)
-    atoms_array.append(atom.y)
-    atoms_array.append(atom.z)
+    # read shell atoms
+    shell_atoms = rf.read_xyz(shell_file)[0]
 
-# make the list into an array
-atoms_array = np.array(atoms_array)
+    # make the initial coordinates into a flat list
+    atoms_array = []
+    for atom in mol_atoms:
+        atoms_array.append(atom.x)
+        atoms_array.append(atom.y)
+        atoms_array.append(atom.z)
 
+    # make the list into an array
+    atoms_array = np.array(atoms_array)
 
-res = minimize(sequence, atoms_array, jac=True,
-               options={'disp': True})
+    res = minimize(sequence, atoms_array, jac=True,
+                   options={'disp': True})
 
-out_file.write("DONE\n")
-end_time = datetime.now()
-out_file.write("ELAPSED TIME: " + str(end_time - start_time)+"\n")
-out_file.write("ENDING TIME: " + str(end_time)+"\n")
-out_file.close()
+    out_file.write("DONE\n")
+    end_time = datetime.now()
+    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
+    out_file.write("ENDING TIME: " + str(end_time) + "\n")
+    out_file.close()

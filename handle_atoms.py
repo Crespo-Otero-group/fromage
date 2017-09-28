@@ -26,7 +26,7 @@ def select(max_r, atoms, label):
         chemistry software which counts from 1
 
     Returns
-    ----------
+    -------
     selected : list of Atom objects
         The atoms belonging to the molecule which is selected
 
@@ -65,7 +65,7 @@ def select2(max_r, atoms, label, vectors):
         Lattice vectors
 
     Returns
-    ----------
+    -------
     selected : list of Atom objects
         The atoms belonging to the molecule which is selected
     selected_img : list of Atom objects
@@ -121,7 +121,7 @@ def multi_select(max_r, atoms, labels, vectors):
         Lattice vectors
 
     Returns
-    ----------
+    -------
     selected : list of Atom objects
         The atoms belonging to the molecules which are selected
     selected_img : list of Atom objects
@@ -145,6 +145,11 @@ def multi_select(max_r, atoms, labels, vectors):
                 if moleculeI[0] in moleculeJ:
                     raise ValueError(
                         "You have selected several atoms in the same molecule!")
+    tmp_a = [item for sublist in selected_mols for item in sublist]
+    tmp_b = [item for sublist in selected_img_mols for item in sublist]
+
+    selected_mols = tmp_a
+    selected_img_mols = tmp_b
 
     return selected_mols, selected_img_mols
 
@@ -172,7 +177,7 @@ def complete_mol(max_r, atoms, label, vectors):
         Lattice vectors
 
     Returns
-    ----------
+    -------
     full_mol_trans : list of Atom objects
         The now complete molecule
     atoms :
@@ -183,19 +188,16 @@ def complete_mol(max_r, atoms, label, vectors):
     # the atoms which are part of the same selected molecule.
     # first with intact coordinates and second with appropriate
     # atoms translated to join up the molecule with their image
-    full_mol, full_mol_trans = select2(max_r, atoms, label, vectors)
+    full_mol, full_mol_trans = multi_select(max_r, atoms, label, vectors)
 
     # atoms from molecule which need translating
     part_mol = [atom for atom in full_mol if atom not in full_mol_trans]
     # atoms from molecule which were translated
     part_mol_img = [atom for atom in full_mol_trans if atom not in full_mol]
 
-    # for all atoms in the cell
-    for atom in atoms:
-        # if the atom is part of the broken molecule
-        if atom in full_mol:
-            # remove the atom
-            atoms.remove(atom)
+    # using an explicit loop does not work for some reason,
+    # use list comprehension
+    atoms = [a for a in atoms if a not in full_mol]
 
     for atom in full_mol_trans:
         atoms.append(atom)
@@ -235,7 +237,7 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
         Lattice vectors
 
     Returns
-    ----------
+    -------
     mega_cell : list of Atom objects
         The resulting supercell
 
@@ -282,7 +284,7 @@ def make_cluster(atoms, clust_rad, max_bl):
         Maximum distance which counts as a bond
 
     Returns
-    ----------
+    -------
     clust_atoms : list of Atom objects
         A list of atoms which form a cluster of molecules
 
@@ -302,3 +304,28 @@ def make_cluster(atoms, clust_rad, max_bl):
             for atom2Add in mol2Add:
                 clust_atoms.append(atom2Add)
     return clust_atoms
+
+def array2atom(template, pos):
+    """
+    Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
+    objects
+
+    Parameters
+    ----------
+    template : list of Atom objects
+        A list of the same length of the desired one used to determine the
+        elements of the atoms
+    pos : list of floats
+        List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.
+    Returns
+    -------
+    out_atoms : list of Atom objects
+        Resulting atoms
+
+    """
+    sliced_pos = [pos[i:i + 3] for i in range(0, len(pos), 3)]
+    out_atoms = []
+    for atom in zip(template, sliced_pos):
+        new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
+        out_atoms.append(new_atom)
+    return out_atoms

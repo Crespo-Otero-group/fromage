@@ -25,7 +25,7 @@ def detect_1_connect(in_atoms, vectors, max_BL):
         connectivity matrix
 
     Returns
-    ----------
+    -------
     cnct : numpy matrix
         The matrix where each row and each column correspond to one atom. If the
         two atoms are bonded or the same, the matrix element is 1. Otherwise it
@@ -60,7 +60,7 @@ def expand_connect(in_mat):
         Connectivity matrix to be expanded
 
     Returns
-    ----------
+    -------
     out_mat: 2-d array-like
         Once-expanded connectivity matrix
 
@@ -120,7 +120,7 @@ def charged_kinds(in_atoms, in_kinds):
         connections). (a,b) is known as an atom kind
 
     Returns
-    ----------
+    -------
     q_kinds : list of tuples
         Each tuple is now (average charge,kind). This tuple is known as a
         charged kind
