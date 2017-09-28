@@ -175,6 +175,9 @@ class Turbo_calc(Calc):
         ef.write_coord(atoms)
         proc = subprocess.Popen(
             "dscf > dscf.out && ricc2 > ricc2.out", stdout=FNULL, shell=True)
+        #Clean up the directory to save on memory
+        subprocess.call("rm cc*",shell=True)
+        subprocess.call("rm CC*",shell=True)
 
         os.chdir(self.here)
 

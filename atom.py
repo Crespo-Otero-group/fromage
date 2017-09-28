@@ -43,7 +43,7 @@ class Atom(object):
             self.q = float(qIn)
 
         except ValueError:
-            print "Some coordinates or charges cannot be cast to float!"
+            print("Some coordinates or charges cannot be cast to float!")
 
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):

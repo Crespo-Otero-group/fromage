@@ -27,11 +27,6 @@ if __name__ == '__main__':
     start_time = datetime.now()
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
 
-    # directories
-    here = os.getcwd()
-    ewad_dir = "EWALD"
-    ewald_path = os.path.join(here, ewad_dir)
-
     # read config inputs
     inputs = rf.read_config("config")
 
@@ -263,7 +258,6 @@ if __name__ == '__main__':
         while True:
             sc_loop += 1
             old_charges = [atom.q for atom in mol]
-            os.chdir(ewald_path)
             # write inputs
             ef.write_uc(sc_name + ".uc", vectors, aN, bN, cN, atoms)
             ef.write_qc(sc_name + ".qc", mol)
@@ -273,7 +267,6 @@ if __name__ == '__main__':
             subprocess.call("./Ewald < ewald.in." + sc_name, shell=True)
             # read points output by Ewald
             sc_points = rf.read_points(sc_name + ".pts-tb")
-            os.chdir(here)
 
             ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
             # calculate new charges
@@ -357,7 +350,6 @@ if __name__ == '__main__':
 
     # Final (or only) Ewald
     if ewe:
-        os.chdir(ewald_path)
         # write inputs
         ef.write_uc(name + ".uc", vectors, aN, bN, cN, atoms)
         ef.write_qc(name + ".qc", mol)
@@ -367,8 +359,6 @@ if __name__ == '__main__':
         subprocess.call("./Ewald < ewald.in." + name, shell=True)
         # read points output by Ewald
         points = rf.read_points(name + ".pts-tb")
-        os.chdir(here)
-
 
     if ewe:
         # Make inputs
