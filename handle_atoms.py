@@ -47,7 +47,7 @@ def select(max_r, atoms, label):
     return selected
 
 
-def select2(max_r, atoms, label, vectors):
+def select_per(max_r, atoms, label, vectors):
     """
     Select a molecule out of a list of atoms in a periodic system.
 
@@ -134,7 +134,7 @@ def multi_select(max_r, atoms, labels, vectors):
     selected_img_mols = []
 
     for label in labels:
-        selected_mol, selected_img_mol = select2(max_r, atoms, label, vectors)
+        selected_mol, selected_img_mol = select_per(max_r, atoms, label, vectors)
         selected_mols.append(selected_mol)
         selected_img_mols.append(selected_img_mol)
 
