@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """This module is a tool to prepare template and input files for cryspy.
 
 You will need:

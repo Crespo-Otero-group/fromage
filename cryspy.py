@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Minimises the energy or the gap penalty function of a molecule in a cluster.
 
 Template files are needed as well as an xyz file for the molecule and another
