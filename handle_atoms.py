@@ -214,8 +214,11 @@ def find_centroid(atoms):
         baryZ += atom.z / N
     return (baryX, baryY, baryZ)
 
-# makes a really big cell of atoms from a smaller cell
-
+def center_mol(atoms):
+    """Translate molecules to center"""
+    c_x, c_y, c_z = ha.find_centroid(mol)
+    for atom in atoms:
+        atom.translate(-c_x, -c_y, -c_z)
 
 def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
     """
