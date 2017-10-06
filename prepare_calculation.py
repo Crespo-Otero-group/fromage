@@ -20,33 +20,33 @@ from assign_charges import assign_charges
 from atom import Atom
 from datetime import datetime
 
-    def run_ewald(in_name,in_mol,in_atoms,in_vectors,in_nAt=500,in_aN=2,in_bN=2,in_cN=2,in_nChk=1000):
-        """
-        Perform an Ewald calculation in the working directory
+def run_ewald(in_name,in_mol,in_atoms,in_vectors,in_nAt=500,in_aN=2,in_bN=2,in_cN=2,in_nChk=1000):
+    """
+    Perform an Ewald calculation in the working directory
 
-        Parameters
-        ----------
-        in_name : str
-            Name of the calculation
-        in_mol : list of Atom objects
-            Atoms which constitute the quantum cluster
-        in_atoms : list of Atom objects
-            Atoms in the unit cell
-        in_vectors : 3x3 numpy matrix
-            Lattice vectors
-        in_nAt : int
-            Amount of atoms with fixed charge
-        in_aN, in_bN, in_cN : ints
-            Amount of multiplications in postitive and negative directions of the unit cell
-        in_nChk : int
-            Number of random sampling points in the qc
-        """
-        ef.write_uc(in_name + ".uc", in_vectors, in_aN, in_bN, in_cN, in_atoms)
-        ef.write_qc(in_name + ".qc", in_mol)
-        ef.write_ew_in(in_name, "ewald.in." + in_name, in_nChk, in_nAt)
-        ef.write_seed()
-        # run Ewald
-        subprocess.call("./Ewald < ewald.in." + in_name, shell=True)
+    Parameters
+    ----------
+    in_name : str
+        Name of the calculation
+    in_mol : list of Atom objects
+        Atoms which constitute the quantum cluster
+    in_atoms : list of Atom objects
+        Atoms in the unit cell
+    in_vectors : 3x3 numpy matrix
+        Lattice vectors
+    in_nAt : int
+        Amount of atoms with fixed charge
+    in_aN, in_bN, in_cN : ints
+        Amount of multiplications in postitive and negative directions of the unit cell
+    in_nChk : int
+        Number of random sampling points in the qc
+    """
+    ef.write_uc(in_name + ".uc", in_vectors, in_aN, in_bN, in_cN, in_atoms)
+    ef.write_qc(in_name + ".qc", in_mol)
+    ef.write_ew_in(in_name, "ewald.in." + in_name, in_nChk, in_nAt)
+    ef.write_seed()
+    # run Ewald
+    subprocess.call("./Ewald < ewald.in." + in_name, shell=True)
 
 if __name__ == '__main__':
     output_file = open("prep.out", "w")
@@ -381,7 +381,7 @@ if __name__ == '__main__':
         ef.write_ew_in(name, "ewald.in." + name, nChk, nAt)
         ef.write_seed()
         # run Ewald
-        subprocess.call("./Ewald < ewald.in." + name, shell=True)
+        subprocess.call("Ewald < ewald.in." + name, shell=True)
         # read points output by Ewald
         points = rf.read_points(name + ".pts-tb")
 
