@@ -132,7 +132,7 @@ if __name__ == '__main__':
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
-              "out_file": "cryspy.out", "bool_ci": "False", "high_level": "gaussian", "low_level": "gaussian"}
+              "out_file": "cryspy.out", "bool_ci": "", "high_level": "gaussian", "low_level": "gaussian"}
 
     # read user inputs
     new_inputs = rf.read_config("cryspy.in")
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     out_file = inputs["out_file"]
-    bool_ci = bool(inputs["bool_ci"])
+    bool_ci = bool(int(inputs["bool_ci"]))
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
 

@@ -107,9 +107,9 @@ if __name__ == '__main__':
     # warning: [0,N-1], not [1,N]
     if "label_atom" in inputs:
         if type(inputs["label_atom"]) == str:
-            label_atom = [int(inputs["label_atom"])]
+            label_atom = [int(inputs["label_atom"])-1]
         else:
-            label_atom = [int(i) for i in inputs["label_atom"]]
+            label_atom = [int(i)-1 for i in inputs["label_atom"]]
     else:
         label_atom = 0
 
