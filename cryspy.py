@@ -134,11 +134,12 @@ if __name__ == '__main__':
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
               "out_file": "cryspy.out", "bool_ci": "", "high_level": "gaussian", "low_level": "gaussian"}
 
-    # read user inputs
-    new_inputs = rf.read_config("cryspy.in")
-
     inputs=def_inputs.copy()
-    inputs.update(new_inputs)
+
+    # read user inputs
+    os.path.isfile("cryspy.in"):
+        new_inputs = rf.read_config("cryspy.in")
+        inputs.update(new_inputs)
 
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
