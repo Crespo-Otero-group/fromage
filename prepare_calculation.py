@@ -46,7 +46,7 @@ def run_ewald(in_name,in_mol,in_atoms,in_vectors,in_nAt=500,in_aN=2,in_bN=2,in_c
     ef.write_ew_in(in_name, "ewald.in." + in_name, in_nChk, in_nAt)
     ef.write_seed()
     # run Ewald
-    subprocess.call("./Ewald < ewald.in." + in_name, shell=True)
+    subprocess.call("Ewald < ewald.in." + in_name, shell=True)
 
 if __name__ == '__main__':
     output_file = open("prep.out", "w")
