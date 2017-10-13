@@ -119,7 +119,7 @@ def sequence(in_pos):
             "Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
-    out_file.write("Gap: {:>43.8f} eV\n".format(
+    out_file.write("Gap: {:>42.8f} eV\n".format(
         (en_combo - scf_combo) * evconv))
     out_file.flush()
     return (en_out, gr_out)
