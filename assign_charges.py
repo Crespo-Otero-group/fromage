@@ -210,15 +210,18 @@ def main(in_xyz, in_log, target, output, bond, kind):
 
     assign_charges(mol,None,cluster,None,bond)
 
+    # warning if some atoms have not been assigned or if some original charges
+    # were 0
     bad_atoms=[]
     for atom in cluster:
         if abs(atom.q)<=0.000:
             bad_atoms.append(atom)
-            print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
+    print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
+
     out_file = open(output,"w")
     for atom in cluster:
         out_file.write(str(atom)+"\n")
-
+    out_file.close()
 
 if __name__ == '__main__':
     # parse the input
