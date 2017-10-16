@@ -1,14 +1,26 @@
+#!/usr/bin/env python
 """Functions useful for manipulating atom connectivity.
 
 The original use of these functions is to allow for assign_charges to work and
 be able to give a molecule, cluster or periodic cell of atoms the same charges as another
 molecule, cluster or periodic cell.
 
+Includes a utility to read a molecule xyz file, a population analysis in g09 and
+a target cluster xyz to assign the charges to the cluster.
+
+Usage:
+assign_charges.py mol.xyz mol.log clust.xyz
+
+Includes options for Mulliken or RESP and ouptut file names.
 """
 
 import numpy as np
+import sys
+import read_file as rf
+import argparse
 from atom import Atom
 from collections import Counter
+
 
 def detect_1_connect(in_atoms, vectors, max_BL):
     """
@@ -186,3 +198,44 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
             if atom.kind == q_kind[1]:
                 atom.q = q_kind[0]
     return
+
+
+def main(in_xyz, in_log, target, output, bond, kind):
+    mol = rf.read_xyz(in_xyz)[-1]
+    charges = rf.read_g_char(in_log, kind)[0]
+    cluster = rf.read_xyz(target)[-1]
+
+    for atom,char in zip(mol,charges):
+        atom.q = char
+
+    assign_charges(mol,None,cluster,None,bond)
+
+    bad_atoms=[]
+    for atom in cluster:
+        if abs(atom.q)<=0.000:
+            bad_atoms.append(atom)
+            print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
+    out_file = open(output,"w")
+    for atom in cluster:
+        out_file.write(str(atom)+"\n")
+
+
+if __name__ == '__main__':
+    # parse the input
+    parser = argparse.ArgumentParser()
+    parser.add_argument("in_xyz", help="Input .xyz file of single molecule",
+                        default="geom.xyz")
+    parser.add_argument("in_log", help="Input .log file with RESP analysis",
+                        default="gaussian.log")
+    parser.add_argument("target", help="Target .xyz file to assign charges to",
+                        default="gaussian.log")
+    parser.add_argument("-o", "--output", help="Name of the output file",
+                        default="out_char", type=str)
+    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond",
+                        default=1.7, type=float)
+    parser.add_argument("-k", "--kind", help="Kind of population, Mulliken = 0, RESP = 1",
+                        default=1, type=int)
+    user_input = sys.argv[1:]
+    args = parser.parse_args(user_input)
+    main(args.in_xyz, args.in_log, args.target,
+         args.output, args.bond, args.kind)
