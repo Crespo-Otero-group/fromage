@@ -143,7 +143,7 @@ if __name__ == '__main__':
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
-              "out_file": "cryspy.out", "bool_ci": "", "high_level": "gaussian",
+              "out_file": "cryspy.out", "bool_ci": "0", "high_level": "gaussian",
               "low_level": "gaussian", "sigma": "3.5"}
 
     inputs=def_inputs.copy()
