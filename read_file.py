@@ -417,6 +417,7 @@ def read_config(in_name):
                     settings[line.split()[0].lower()] = line.split()[1:]
     return settings
 
+
 def read_g_pos(in_name):
     """
     Read positions from a Gaussian log file.
@@ -441,12 +442,13 @@ def read_g_pos(in_name):
             dist_line = i
             break
     atoms = []
-    for line in content[ori_line+5:dist_line-1]:
+    for line in content[ori_line + 5:dist_line - 1]:
         line_bits = [float(i) for i in line.split()]
-        atom_to_add = Atom("",line_bits[3],line_bits[4],line_bits[5],0)
+        atom_to_add = Atom("", line_bits[3], line_bits[4], line_bits[5], 0)
         atom_to_add.num_to_elem(line_bits[1])
         atoms.append(atom_to_add)
     return atoms
+
 
 def read_ricc2(in_name):
     """
@@ -472,7 +474,7 @@ def read_ricc2(in_name):
     grad_x = []
     grad_y = []
     grad_z = []
-    energy=None
+    energy = None
 
     for line in lines:
         if "Total energy of excited state:" in line:
@@ -481,21 +483,21 @@ def read_ricc2(in_name):
             scf_energy = float(line.split()[5])
         if line.strip():
             if line[0:2] == "dE":
-                nums = [float(i.replace("D","E")) for i in line.split()[1:]]
+                nums = [float(i.replace("D", "E")) for i in line.split()[1:]]
                 if line.split()[0] == "dE/dx":
                     grad_x.extend(nums)
                 if line.split()[0] == "dE/dy":
                     grad_y.extend(nums)
                 if line.split()[0] == "dE/dz":
                     grad_z.extend(nums)
-    grad=[]
+    grad = []
 
     # combine in correct format
-    for dx,dy,dz in zip(grad_x,grad_y,grad_z):
+    for dx, dy, dz in zip(grad_x, grad_y, grad_z):
         grad.append(dx)
         grad.append(dy)
         grad.append(dz)
     # for ground state
     if not energy:
         energy = scf_energy
-    return energy,grad,scf_energy
+    return energy, grad, scf_energy

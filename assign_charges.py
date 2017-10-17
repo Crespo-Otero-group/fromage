@@ -205,23 +205,23 @@ def main(in_xyz, in_log, target, output, bond, kind):
     charges = rf.read_g_char(in_log, kind)[0]
     cluster = rf.read_xyz(target)[-1]
 
-    for atom,char in zip(mol,charges):
+    for atom, char in zip(mol, charges):
         atom.q = char
 
-    assign_charges(mol,None,cluster,None,bond)
+    assign_charges(mol, None, cluster, None, bond)
 
     # warning if some atoms have not been assigned or if some original charges
     # were 0
-    bad_atoms=[]
+    bad_atoms = []
     for atom in cluster:
-        if abs(atom.q)<=0.000:
+        if abs(atom.q) <= 0.000:
             bad_atoms.append(atom)
     if len(bad_atoms < 0):
-        print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
+        print("WARNING: " + str(len(bad_atoms)) + " atoms have null charge!")
 
-    out_file = open(output,"w")
+    out_file = open(output, "w")
     for atom in cluster:
-        out_file.write(str(atom)+"\n")
+        out_file.write(str(atom) + "\n")
     out_file.close()
 
 if __name__ == '__main__':

@@ -20,7 +20,8 @@ from assign_charges import assign_charges
 from atom import Atom
 from datetime import datetime
 
-def run_ewald(in_name,in_mol,in_atoms,in_vectors,in_nAt=500,in_aN=2,in_bN=2,in_cN=2,in_nChk=1000):
+
+def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
     """
     Perform an Ewald calculation in the working directory
 
@@ -107,9 +108,9 @@ if __name__ == '__main__':
     # warning: [0,N-1], not [1,N]
     if "label_atom" in inputs:
         if type(inputs["label_atom"]) == str:
-            label_atom = [int(inputs["label_atom"])-1]
+            label_atom = [int(inputs["label_atom"]) - 1]
         else:
-            label_atom = [int(i)-1 for i in inputs["label_atom"]]
+            label_atom = [int(i) - 1 for i in inputs["label_atom"]]
     else:
         label_atom = 0
 
@@ -210,7 +211,6 @@ if __name__ == '__main__':
 
     # end config inputs
 
-
     # read the input atoms
     atoms = rf.read_xyz(cell_file)[-1]
     output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
@@ -223,7 +223,8 @@ if __name__ == '__main__':
     # read charges
     if cp2k_file:
         charges = rf.read_cp2k(cp2k_file, cp2k_pop_method)[0]
-        output_file.write("Read " + str(len(atoms)) + " charges in cp2k_file\n")
+        output_file.write("Read " + str(len(atoms)) +
+                          " charges in cp2k_file\n")
         # in case there are more charges than atoms for some reason
         charges = charges[:len(atoms)]
         # correct charges if they are not perfectly neutral
@@ -238,7 +239,8 @@ if __name__ == '__main__':
         mol_char = rf.read_g_char(mol_pop_file, mol_pop_kind)[0]
         # correct charges if they are not perfectly neutral
         if sum(mol_char) != 0.0:
-            output_file.write("Charge correction: " + str(sum(mol_char)) + "\n")
+            output_file.write("Charge correction: " +
+                              str(sum(mol_char)) + "\n")
             mol_char[-1] -= sum(mol_char)
 
         # assigns charges to a molecule
@@ -272,14 +274,14 @@ if __name__ == '__main__':
         if atom not in mol:
             shell.append(atom)
 
-
     # write useful xyz
     ef.write_xyz("mol.init.xyz", mol)
     ef.write_xyz("clust.xyz", clust)
     ef.write_xyz("shell.xyz", shell)
 
     # Self Consistent EWALD
-    #def loop_ewald(in_name,in_mol,in_vectors,in_atoms,in_aN,in_bN,in_cN,in_nChk,in_nAt,in_sc_kind,in_max_bl,in_dev_tol):
+    # def
+    # loop_ewald(in_name,in_mol,in_vectors,in_atoms,in_aN,in_bN,in_cN,in_nChk,in_nAt,in_sc_kind,in_max_bl,in_dev_tol):
     if sc_temp:
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
         sc_name = "sc_" + name
@@ -288,7 +290,7 @@ if __name__ == '__main__':
             sc_loop += 1
             old_charges = [atom.q for atom in mol]
             # Ewald fitting
-            run_ewald(sc_name,mol,atoms,vectors,nat,aN,bN,cN,nChk)
+            run_ewald(sc_name, mol, atoms, vectors, nat, aN, bN, cN, nChk)
             # read points output by Ewald
             sc_points = rf.read_points(sc_name + ".pts-tb")
 
@@ -328,7 +330,7 @@ if __name__ == '__main__':
                 atom.q = new_charges[index]
             assign_charges(mol, None, atoms, vectors, max_bl)
 
-    #Self consistent between cluster and mol, no Ewald
+    # Self consistent between cluster and mol, no Ewald
     elif csc_temp_h:
         csc_name_h = "csc_" + name + "_h"
         csc_name_l = "csc_" + name + "_l"
@@ -339,7 +341,8 @@ if __name__ == '__main__':
             old_charges_l = [atom.q for atom in shell]
 
             # calculate the middle molecule embedded in points
-            ef.write_gauss(csc_name_h, csc_name_h + ".com", mol, shell, csc_temp_h)
+            ef.write_gauss(csc_name_h, csc_name_h +
+                           ".com", mol, shell, csc_temp_h)
             subprocess.call("g09 " + csc_name_h + ".com", sell=True)
             new_charges_h = rf.read_g_char(csc_name_h + ".log", sc_kind)[0]
 
@@ -348,7 +351,8 @@ if __name__ == '__main__':
                 new_charges[-1] -= sum(new_charges)
 
             # calculate the surrounding shell
-            ef.write_gauss(csc_name_l, csc_name_l + ".com", shell, mol, csc_temp_l)
+            ef.write_gauss(csc_name_l, csc_name_l +
+                           ".com", shell, mol, csc_temp_l)
             subprocess.call("g09 " + csc_name_l + ".com", sell=True)
             new_charges_l = rf.read_g_char(csc_name_l + ".log", sc_kind)[0]
 

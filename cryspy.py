@@ -18,6 +18,7 @@ from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
 
+
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -143,10 +144,10 @@ if __name__ == '__main__':
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
-              "out_file": "cryspy.out", "bool_ci": "0", "high_level": "gaussian",
-              "low_level": "gaussian", "sigma": "3.5"}
+                  "out_file": "cryspy.out", "bool_ci": "0", "high_level": "gaussian",
+                  "low_level": "gaussian", "sigma": "3.5"}
 
-    inputs=def_inputs.copy()
+    inputs = def_inputs.copy()
 
     # read user inputs
     if os.path.isfile("cryspy.in"):
@@ -167,7 +168,6 @@ if __name__ == '__main__':
     out_file.write("STARTING TIME: " + str(start_time) + "\n")
 
     iteration = 0
-
 
     # clean up the last output
     if os.path.exists("geom_mol.xyz"):
