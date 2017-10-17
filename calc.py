@@ -137,7 +137,7 @@ class Gauss_calc(Calc):
         energy, gradients_b, scf_energy = rf.read_fchk(
             self.calc_name + ".fchk")
         # fix gradients units
-        gradients = [i * bohrconv for i in gradients_b]
+        gradients = gradients_b * bohrconv
         # update the geometry log
         if print_bool == True:
             self.update_geom(positions, in_mol, in_shell)
@@ -219,7 +219,7 @@ class Turbo_calc(Calc):
 
         energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
         # fix gradients units
-        gradients = [i * bohrconv for i in gradients_b]
+        gradients = gradients_b * bohrconv
         # update the geometry log
         if print_bool == True:
             self.update_geom(positions, in_mol, in_shell)
