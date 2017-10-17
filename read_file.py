@@ -500,4 +500,5 @@ def read_ricc2(in_name):
     # for ground state
     if not energy:
         energy = scf_energy
+    grad = np.array(grad)
     return energy, grad, scf_energy
