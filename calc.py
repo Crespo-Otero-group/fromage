@@ -173,11 +173,17 @@ class Turbo_calc(Calc):
         os.chdir(turbo_path)
 
         ef.write_coord(atoms)
+        # Update mos
+        subprocess.call("rm -f mos",shell=True)
+        with open("define_feed","w") as tmp_def_in:
+            # define input for Huckel guess
+            tmp_def_in.write("\n\n\neht\n\n\n\n\n\n\n\n*\n\n")
+            subprocess.call("define < define_feed")
+            subprocess.call("rm -f define_feed",stdout=FNULL,shell=True)
+
+        # Run Turbomole
         proc = subprocess.Popen(
             "dscf > dscf.out && ricc2 > ricc2.out", stdout=FNULL, shell=True)
-        #Clean up the directory to save on memory
-        subprocess.call("rm cc*",shell=True)
-        subprocess.call("rm CC*",shell=True)
 
         os.chdir(self.here)
 
