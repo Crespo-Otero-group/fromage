@@ -216,7 +216,8 @@ def main(in_xyz, in_log, target, output, bond, kind):
     for atom in cluster:
         if abs(atom.q)<=0.000:
             bad_atoms.append(atom)
-    print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
+    if len(bad_atoms < 0):
+        print("WARNING: "+str(len(bad_atoms))+" atoms have null charge!")
 
     out_file = open(output,"w")
     for atom in cluster:
