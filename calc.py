@@ -178,8 +178,8 @@ class Turbo_calc(Calc):
         with open("define_feed","w") as tmp_def_in:
             # define input for Huckel guess
             tmp_def_in.write("\n\n\neht\n\n\n\n\n\n\n\n*\n\n")
-            subprocess.call("define < define_feed")
-            subprocess.call("rm -f define_feed",stdout=FNULL,shell=True)
+            subprocess.call("define < define_feed",stdout=FNULL,shell=True)
+            subprocess.call("rm -f define_feed",shell=True)
 
         # Run Turbomole
         proc = subprocess.Popen(
