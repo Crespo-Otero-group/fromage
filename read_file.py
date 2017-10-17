@@ -462,7 +462,7 @@ def read_ricc2(in_name):
     -------
     energy : float
         Excited state energy in Hartree
-    grad : list of floats
+    grad : numpy array of floats
         Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
     scf_energy : float
         Ground state energy in Hartree
@@ -500,4 +500,5 @@ def read_ricc2(in_name):
     # for ground state
     if not energy:
         energy = scf_energy
+    grad = np.array(grad)
     return energy, grad, scf_energy
