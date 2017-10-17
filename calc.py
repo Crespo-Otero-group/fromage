@@ -180,6 +180,7 @@ class Turbo_calc(Calc):
             tmp_def_in.write("\n\n\neht\n\n\n\n\n\n\n\n*\n\n")
         subprocess.call("define < define_feed", stdout=FNULL, shell=True)
         subprocess.call("rm -f define_feed", shell=True)
+        subprocess.call("actual -r", shell=True)
 
         # Run Turbomole
         proc = subprocess.Popen(
