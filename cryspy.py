@@ -46,11 +46,23 @@ def sequence(in_pos):
 
     """
     # initialise calculation objects
-    rl = calc.Gauss_calc("rl")
-    ml = calc.Gauss_calc("ml")
-    mh = calc.Gauss_calc("mh")
-    if bool_ci:
-        mg = calc.Gauss_calc("mg")
+    if low_level.lower() == "gaussian":
+        rl = calc.Gauss_calc("rl")
+        ml = calc.Gauss_calc("ml")
+
+    if low_level.lower() == "turbomole":
+        rl = calc.Turbo_calc("rl")
+        ml = calc.Turbo_calc("ml")
+
+    if high_level.lower() == "gaussian":
+        mh = calc.Gauss_calc("mh")
+        if bool_ci:
+            mg = calc.Gauss_calc("mg")
+
+    if high_level.lower() == "turbomole":
+        mh = calc.Turbo_calc("mh")
+        if bool_ci:
+            mg = calc.Turbo_calc("mg")
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
@@ -86,7 +98,6 @@ def sequence(in_pos):
         alpha = 0.02
         # sigma is called lambda in some papers but that is a bad variable name
         # in Python
-        sigma = 3.5
         e_mean = (en_combo + en_combo_g) / 2
         e_diff = en_combo - en_combo_g
         g_ij = e_diff**2 / (e_diff + alpha)
@@ -132,12 +143,13 @@ if __name__ == '__main__':
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
-              "out_file": "cryspy.out", "bool_ci": "", "high_level": "gaussian", "low_level": "gaussian"}
+              "out_file": "cryspy.out", "bool_ci": "", "high_level": "gaussian",
+              "low_level": "gaussian", "sigma": "3.5"}
 
     inputs=def_inputs.copy()
 
     # read user inputs
-    os.path.isfile("cryspy.in"):
+    if os.path.isfile("cryspy.in"):
         new_inputs = rf.read_config("cryspy.in")
         inputs.update(new_inputs)
 
@@ -147,7 +159,7 @@ if __name__ == '__main__':
     bool_ci = bool(int(inputs["bool_ci"]))
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
-
+    sigma = float(inputs["sigma"])
     # output
     out_file = open(out_file, "w", 1)
     # print start time
