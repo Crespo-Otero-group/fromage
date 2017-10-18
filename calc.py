@@ -39,7 +39,7 @@ class Calc(object):
         """
         raise NotImplementedError("Please Implement this method")
 
-    def read_out(self, positions, print_bool, in_mol, in_shell):
+    def read_out(self, positions, in_mol, in_shell):
         """
         Read the output of the calculation and sometimes updates the geom_*.xyz files
 
@@ -106,16 +106,17 @@ class Gauss_calc(Calc):
 
         return proc
 
-    def read_out(self, print_bool, positions=None, in_mol=None, in_shell=None):
+    def read_out(self, positions, in_mol=None, in_shell=None):
         """
         Analyse a Gaussian .chk file while printing geometry updates
 
+        To update the geom files, include in_mol and in_shell
+
         Parameters
         ----------
-        print_bool : bool
-            If true, update the geometry files with the one found in .chk
-        positions : list of floats, optional
-            List of atomic coordinates
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
         in_mol : list of Atom objects, optional
             Atoms in the inner region
         in_shell : list of Atom objects, optional
@@ -139,7 +140,7 @@ class Gauss_calc(Calc):
         # fix gradients units
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if print_bool == True:
+        if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -190,20 +191,21 @@ class Turbo_calc(Calc):
 
         return proc
 
-    def read_out(self, print_bool, positions=None, in_mol=None, in_shell=None):
+    def read_out(self, positions, in_mol=None, in_shell=None):
         """
         Analyse a Turbomole ricc2.out file while printing geometry updates
 
+        To update the geom files, include in_mol and in_shell
+
         Parameters
         ----------
-        print_bool : bool
-            If true, update the geometry files with the one found in .chk
-        positions : list of floats, optional
-            List of atomic coordinates
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
         in_mol : list of Atom objects, optional
-            Atoms in the inner region
+            Atoms in the inner region. Include to write geom files
         in_shell : list of Atom objects, optional
-            Atoms in the middle region
+            Atoms in the middle region. Include to write geom files
         Returns
         -------
         energy : float
@@ -221,7 +223,7 @@ class Turbo_calc(Calc):
         # fix gradients units
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if print_bool == True:
+        if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long

@@ -79,11 +79,11 @@ def sequence(in_pos):
     mh_proc.wait()
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
-    rl_en_gr = rl.read_out(True, in_pos, mol_atoms, shell_atoms)
-    ml_en_gr = ml.read_out(False, in_pos)
-    mh_en_gr = mh.read_out(False, in_pos)
+    rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
+    ml_en_gr = ml.read_out(in_pos)
+    mh_en_gr = mh.read_out(in_pos)
     if bool_ci:
-        mg_en_gr = mg.read_out(False, in_pos)
+        mg_en_gr = mg.read_out(in_pos)
 
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
