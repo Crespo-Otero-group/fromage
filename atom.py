@@ -142,8 +142,7 @@ class Atom(object):
         return
 
     def electrons(self):
-        # FIND A MONKEY THAT CAN COMPLETE THIS METHOD
-        # used for Bader
+        # TODO: add more elements. This is only used with Bader so not important
         total = 0
         valence = 0
 
