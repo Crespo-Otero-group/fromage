@@ -32,7 +32,13 @@ class Atom(object):
         self.z = 0.0
         self.q = 0.0
         self.num = 1
+        # The connectivity is a frozenset of the form (A,N) with A a numpy array
+        # of the connectivity distance matrix and N is the amount of atoms with
+        # that same connectivity. Note that to compare connectivities, A should
+        # come from the same distance matrix (same order)
         self.connectivity = None
+        # Kind is a tuple of (elem,connectivity) and as such is enough to define
+        # an atom type as it would be defined in a forcefield
         self.kind = None
 
         # deal with some sneaky int that may be disguised as float
@@ -181,6 +187,9 @@ class Atom(object):
 
         This function needs a row of a connectivity matrix which can be obtained
         with functions from assign_charges.py
+
+        Check the constructor at the top of this file for more info on connectivity
+        and kind.
 
         Parameters
         ----------
