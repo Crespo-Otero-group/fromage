@@ -61,8 +61,7 @@ if __name__ == "__main__":
     args = parser.parse_args(user_input)
 
     # users will use atom labels starting from 1
-    new_labels = [a-1 for a in args.labels]
+    new_labels = [a - 1 for a in args.labels]
 
     # call the main function
-    picker
-(args.input, args.output, new_labels, args.bond)
+    picker(args.input, args.output, new_labels, args.bond)
