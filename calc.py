@@ -231,3 +231,81 @@ class Turbo_calc(Calc):
 
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
+
+
+class Molcas_calc(Calc):
+    """
+    Calculation with Molcas 8.0
+    """
+
+    def run(self, atoms):
+        """
+        Write a Molcas input file and return a subprocess.Popen
+
+        Make sure the input file is called [name of calculation].input
+        e.g. mh.input and the geometry file in Gateway is called geom.xyz
+
+        Parameters
+        ----------
+        atoms : list of Atom objects
+            Atoms to be calculated with Gaussian
+        Returns
+        -------
+        proc : subprocess.Popen object
+            the object should have a .wait() method
+
+        """
+        FNULL = open(os.devnull, 'w')
+        molcas_path = os.path.join(self.here, self.calc_name)
+        os.chdir(molcas_path)
+
+        # Write a temporary geom file for molcas to read
+        ef.write_xyz("geom.xyz", atoms)
+
+        proc = subprocess.Popen(
+            "molcas " + self.calc_name + ".input -f", shell=True)
+
+        os.chdir(self.here)
+
+        return proc
+
+def read_out(self, positions, in_mol=None, in_shell=None):
+    """
+    Analyse a Turbomole ricc2.out file while printing geometry updates
+
+    To update the geom files, include in_mol and in_shell
+
+    Parameters
+    ----------
+    positions : list of floats
+        List of atomic coordinates, important for truncation of gradients
+        if too many are calculated
+    in_mol : list of Atom objects, optional
+        Atoms in the inner region. Include to write geom files
+    in_shell : list of Atom objects, optional
+        Atoms in the middle region. Include to write geom files
+    Returns
+    -------
+    energy : float
+        Energy calculated by Gaussian in Hartree
+    gradients : list of floats
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+    scf_energy : float
+        The ground state energy in Hartree
+
+    """
+    molcas_path = os.path.join(self.here, self.calc_name)
+    os.chdir(molcas_path)
+
+    energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
+    # fix gradients units
+    gradients = gradients_b * bohrconv
+    # update the geometry log
+    if in_mol != None:
+        self.update_geom(positions, in_mol, in_shell)
+
+    # truncate gradients if too long
+    gradients = gradients[:len(positions)]
+
+    os.chdir(self.here)
+    return (energy, gradients, scf_energy)
