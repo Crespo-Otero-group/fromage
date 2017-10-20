@@ -10,6 +10,11 @@ import argparse
 import read_file as rf
 import edit_file as ef
 import handle_atoms as ha
+from math import sqrt
+
+def vector_distance((x1,y1,z1,x2,y2,z2)):
+    dist = sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2-z1)**2)
+    return dist
 
 in_f = sys.argv[1]
 
@@ -17,16 +22,28 @@ atoms = rf.read_xyz(in_f)[-1]
 natoms= len(atoms)
 selected=[]
 
-for i in range(natoms):
-    mol=ha.select(1.7,atoms,i)
-    if mol[0] in [val for sublist in selected for val in sublist]:
-        next
-        #raise ValueError("Atom " + str(i) + " was already selected!")
 
+for i,atom in enumerate(atoms):
+    if atom in [val for sublist in selected for val in sublist]:
+        next # skip atom if already assigned
     else:
-        selected.append(mol)
+        molecule=ha.select(1.7,atoms,i) #creates a molecule
+        selected.append(molecule)
 
-for i in selected:
-    print "{}\n".format(len(i))
-    for j in i:
-        print j
+dimers=[]
+for mol1 in selected:
+    cent_1=ha.find_centroid(mol1)
+    for other_mol in selected:
+        if other_mol != mol1:
+            cent_2=ha.find_centroid(other_mol)
+            if vector_distance(cent_1+cent_2) <6.55:
+                if other_mol in dimers:
+                    next
+                else:
+                    print vector_distance(cent_1+cent_2
+                    new_mol=mol1+other_mol
+                    dimers.append(mol1+other_mol)
+
+        else:
+            next
+print len(dimers)
