@@ -561,9 +561,9 @@ def read_molcas(in_name):
         if line.strip():
             # Energies
             if "RASSCF root number  1 Total energy:" in line:
-                ex_energy = float(line.split()[-1])
-            if "RASSCF root number  2 Total energy:" in line:
                 gr_energy = float(line.split()[-1])
+            if "RASSCF root number  2 Total energy:" in line:
+                ex_energy = float(line.split()[-1])
             # Gradients
             if "Molecular gradients" in line:
                 reading = True
@@ -571,4 +571,6 @@ def read_molcas(in_name):
                 if len(line.split()) == 4 and line.split()[0][0].isalpha():
                     nums = [float(i) for i in line.split()[1:]]
                     grad = np.concatenate((grad,nums))
+    if not ex_energy:
+        ex_energy = gr_energy
     return ex_energy, grad, gr_energy

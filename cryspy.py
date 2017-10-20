@@ -55,6 +55,10 @@ def sequence(in_pos):
         rl = calc.Turbo_calc("rl")
         ml = calc.Turbo_calc("ml")
 
+    if low_level.lower() == "molcas":
+        rl = calc.Molcas_calc("rl")
+        ml = calc.Molcas_calc("ml")
+
     if high_level.lower() == "gaussian":
         mh = calc.Gauss_calc("mh")
         if bool_ci:
@@ -64,6 +68,11 @@ def sequence(in_pos):
         mh = calc.Turbo_calc("mh")
         if bool_ci:
             mg = calc.Turbo_calc("mg")
+
+    if high_level.lower() == "molcas":
+        mh = calc.Molcas_calc("mh")
+        if bool_ci:
+            mg = calc.Molcas_calc("mg")
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
@@ -77,7 +86,7 @@ def sequence(in_pos):
         mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
         mg_proc.wait()
     mh_proc.wait()
-
+    print(type(mh))
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
     ml_en_gr = ml.read_out(in_pos)

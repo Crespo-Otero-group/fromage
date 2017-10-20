@@ -39,7 +39,7 @@ class Calc(object):
         """
         raise NotImplementedError("Please Implement this method")
 
-    def read_out(self, positions, in_mol, in_shell):
+    def read_out(self, positions, in_mol=None, in_shell=None):
         """
         Read the output of the calculation and sometimes updates the geom_*.xyz files
 
@@ -269,43 +269,43 @@ class Molcas_calc(Calc):
 
         return proc
 
-def read_out(self, positions, in_mol=None, in_shell=None):
-    """
-    Analyse a Turbomole ricc2.out file while printing geometry updates
+    def read_out(self, positions, in_mol=None, in_shell=None):
+        """
+        Analyse a Molcas .input file while printing geometry updates
 
-    To update the geom files, include in_mol and in_shell
+        To update the geom files, include in_mol and in_shell
 
-    Parameters
-    ----------
-    positions : list of floats
-        List of atomic coordinates, important for truncation of gradients
-        if too many are calculated
-    in_mol : list of Atom objects, optional
-        Atoms in the inner region. Include to write geom files
-    in_shell : list of Atom objects, optional
-        Atoms in the middle region. Include to write geom files
-    Returns
-    -------
-    energy : float
-        Energy calculated by Gaussian in Hartree
-    gradients : list of floats
-        The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
-    scf_energy : float
-        The ground state energy in Hartree
+        Parameters
+        ----------
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
+        in_mol : list of Atom objects, optional
+            Atoms in the inner region. Include to write geom files
+        in_shell : list of Atom objects, optional
+            Atoms in the middle region. Include to write geom files
+        Returns
+        -------
+        energy : float
+            Energy calculated by Gaussian in Hartree
+        gradients : list of floats
+            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+        scf_energy : float
+            The ground state energy in Hartree
 
-    """
-    molcas_path = os.path.join(self.here, self.calc_name)
-    os.chdir(molcas_path)
+        """
+        molcas_path = os.path.join(self.here, self.calc_name)
+        os.chdir(molcas_path)
 
-    energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
-    # fix gradients units
-    gradients = gradients_b * bohrconv
-    # update the geometry log
-    if in_mol != None:
-        self.update_geom(positions, in_mol, in_shell)
+        energy, gradients_b, scf_energy = rf.read_molcas(self.calc_name+".log")
+        # fix gradients units
+        gradients = gradients_b * bohrconv
+        # update the geometry log
+        if in_mol != None:
+            self.update_geom(positions, in_mol, in_shell)
 
-    # truncate gradients if too long
-    gradients = gradients[:len(positions)]
+        # truncate gradients if too long
+        gradients = gradients[:len(positions)]
 
-    os.chdir(self.here)
-    return (energy, gradients, scf_energy)
+        os.chdir(self.here)
+        return (energy, gradients, scf_energy)
