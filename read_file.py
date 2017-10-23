@@ -567,7 +567,7 @@ def read_molcas(in_name):
             # Gradients
             if "Molecular gradients" in line:
                 reading = True
-            if reading == True:
+            if reading:
                 if len(line.split()) == 4 and line.split()[0][0].isalpha():
                     nums = [float(i) for i in line.split()[1:]]
                     grad = np.concatenate((grad,nums))
