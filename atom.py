@@ -32,13 +32,15 @@ class Atom(object):
         self.z = 0.0
         self.q = 0.0
         self.num = 1
-        # The connectivity is a frozenset of the form (A,N) with A a numpy array
-        # of the connectivity distance matrix and N is the amount of atoms with
-        # that same connectivity. Note that to compare connectivities, A should
-        # come from the same distance matrix (same order)
+        # The connectivity is a frozenset (because a list would have a built-in ordering)
+        # of the tuples of the form (A,N) where A is an tuple of different
+        # distances to atoms e.g. ("C",4) if there is a carbon 4 bonds away. N
+        # is the amount of carbons 4 bonds away
         self.connectivity = None
         # Kind is a tuple of (elem,connectivity) and as such is enough to define
-        # an atom type as it would be defined in a forcefield
+        # an atom type at least as well as it would be defined in a forcefield
+        # e.g. in acrolein: This is a C atom with 1 O 1-away, an H 1-away, a C
+        # 1-away, an H 2-away, a C 2-away and 2 H 3-away
         self.kind = None
 
         # deal with some sneaky int that may be disguised as float
@@ -68,7 +70,8 @@ class Atom(object):
 
     def dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
-        r = np.sqrt((self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2)
+        r = np.sqrt((self.x - x1) ** 2 + (self.y - y1)
+                    ** 2 + (self.z - z1) ** 2)
         return r
 
     def dist_lat(self, x1, y1, z1, aVec, bVec, cVec):
@@ -114,7 +117,7 @@ class Atom(object):
                     y2 = y1 + trans1[1] + trans2[1] + trans3[1]
                     z2 = z1 + trans1[2] + trans2[2] + trans3[2]
                     r = np.sqrt((self.x - x2) ** 2 + (self.y - y2)
-                             ** 2 + (self.z - z2) ** 2)
+                                ** 2 + (self.z - z2) ** 2)
                     # if this particular translation of the point is the closest
                     # to the atom so far
                     if r < rMin:
@@ -142,7 +145,8 @@ class Atom(object):
         return
 
     def electrons(self):
-        # TODO: add more elements. This is only used with Bader so not important
+        # TODO: add more elements. This is only used with Bader so not
+        # important
         total = 0
         valence = 0
 
@@ -162,9 +166,9 @@ class Atom(object):
 
         return (valence, total)
 
-    periodic = [("H",1),("C",6),("N",7),("O",8)]
+    periodic = [("H", 1), ("C", 6), ("N", 7), ("O", 8)]
 
-    def num_to_elem(self,num):
+    def num_to_elem(self, num):
         """
         Sets the element symbol according to input atomic number
 
@@ -173,12 +177,11 @@ class Atom(object):
         num : int
             Atomic number of the element
         """
-        periodic = [("H",1),("C",6),("N",7),("O",8)]
+        periodic = [("H", 1), ("C", 6), ("N", 7), ("O", 8)]
         for element in periodic:
             if num == element[1]:
                 self.elem = element[0]
         return
-
 
     def set_connectivity(self, in_atoms, in_row):
         """
