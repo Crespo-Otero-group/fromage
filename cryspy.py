@@ -6,6 +6,10 @@ one for the surrounding molecules. Overall the use of subprocess is ugly as it
 is repeated 3 or 4 times but it was found to handle memory better than Pool
 when interfacing with Gaussian.
 
+Energy units are Hartree inside the program but are printed in eV. Distances are
+kept as Angstrom throughout and are converted from Bohr if necessary before
+reaching this module
+
 """
 import numpy as np
 import subprocess
@@ -86,7 +90,7 @@ def sequence(in_pos):
         mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
         mg_proc.wait()
     mh_proc.wait()
-    print(type(mh))
+
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
     ml_en_gr = ml.read_out(in_pos)
@@ -148,8 +152,7 @@ def sequence(in_pos):
 if __name__ == '__main__':
 
     evconv = 27.2114  # Something in Hartree * evconv = Something in eV
-    bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
-
+    
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",

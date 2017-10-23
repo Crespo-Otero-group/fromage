@@ -137,7 +137,7 @@ class Gauss_calc(Calc):
                         ".chk", stdout=FNULL, shell=True)
         energy, gradients_b, scf_energy = rf.read_fchk(
             self.calc_name + ".fchk")
-        # fix gradients units
+        # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
         if in_mol != None:
@@ -220,7 +220,7 @@ class Turbo_calc(Calc):
         os.chdir(turbo_path)
 
         energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
-        # fix gradients units
+        # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
         if in_mol != None:
@@ -263,7 +263,7 @@ class Molcas_calc(Calc):
         ef.write_xyz("geom.xyz", atoms)
 
         proc = subprocess.Popen(
-            "molcas " + self.calc_name + ".input -f", shell=True)
+            "molcas molcas.input -f", shell=True)
 
         os.chdir(self.here)
 
@@ -297,15 +297,17 @@ class Molcas_calc(Calc):
         molcas_path = os.path.join(self.here, self.calc_name)
         os.chdir(molcas_path)
 
-        energy, gradients_b, scf_energy = rf.read_molcas(self.calc_name+".log")
-        # fix gradients units
+        energy, gradients_b, scf_energy = rf.read_molcas("molcas.log")
+        # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
+        #gradients = gradients_b
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
+        # gradients = -gradients[:len(positions)]
 
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
