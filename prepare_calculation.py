@@ -16,6 +16,7 @@ import numpy as np
 import read_file as rf
 import edit_file as ef
 import handle_atoms as ha
+import parse_config_file as pcf
 from assign_charges import assign_charges
 from atom import Atom
 from datetime import datetime
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
 
     # read config inputs
-    inputs = rf.read_config("config")
+    inputs = pcf.parse_inputs("config")
 
     # name of the job goes here
     name = inputs["name"]
@@ -75,139 +76,73 @@ if __name__ == '__main__':
     output_file.write("Vectors read in config:\n")
     output_file.write(str(vectors) + "\n")
     # name of the cell xyz file
-    if "cell_file" in inputs:
-        cell_file = inputs["cell_file"]
-    else:
-        cell_file = name + "xyz"
+    cell_file = inputs["cell_file"]
 
     # name of the cp2k file with population information
-    if "cp2k_file" in inputs:
-        cp2k_file = inputs["cp2k_file"]
-    else:
-        cp2k_file = ""
+    cp2k_file = inputs["cp2k_file"]
+
+    # High level points specifications
+    # name of the program for calculating charges
+    high_pop_program = inputs["high_pop_program"]
 
     # name of the Gaussian log file with population information
-    if "mol_pop_file" in inputs:
-        mol_pop_file = inputs["mol_pop_file"]
-    else:
-        mol_pop_file = ""
+    high_gauss_file = inputs["high_gauss_file"]
 
-    # kind of population in the Gaussian file 0:Mulliken 1:ESP
-    if "mol_pop_kind" in inputs:
-        mol_pop_kind = int(inputs["mol_pop_kind"])
-    else:
-        mol_pop_kind = 0
+    # name of the cp2k log file with population information
+    high_cp2k_file = inputs["high_cp2k_file"]
+
+    # kind of population in the Gaussian  or cp2k file 0:Mulliken 1:ESP 2: Hirshfeld
+    high_pop_method = int(inputs["high_pop_method"])
+
+    # Low level points specifications
+    low_pop_program = inputs["low_pop_program"]
+    low_gauss_file = inputs["low_gauss_file"]
+    low_cp2k_file = inputs["low_cp2k_file"]
+    low_pop_method = int(inputs["low_pop_method"])
 
     # maximum bond length when defining a molecule
-    if "max_bl" in inputs:
-        max_bl = float(inputs["max_bl"])
-    else:
-        max_bl = 1.7
+    max_bl = float(inputs["max_bl"])
 
     # label of an atom which will be part of the quantum cluster
     # warning: [0,N-1], not [1,N]
-    if "label_atom" in inputs:
-        if type(inputs["label_atom"]) == str:
-            label_atom = [int(inputs["label_atom"]) - 1]
-        else:
-            label_atom = [int(i) - 1 for i in inputs["label_atom"]]
-    else:
-        label_atom = 0
+    atom_label = inputs["atom_label"]
 
     # the number of checkpoints in region 1
-    if "nchk" in inputs:
-        nChk = int(inputs["nchk"])
-    else:
-        nChk = 1000
+    nChk = int(inputs["nchk"])
 
     # the number of constrained charge atoms
     # i.e. atoms in regions 1 and 2
-    if "nat" in inputs:
-        nAt = int(inputs["nat"])
-    else:
-        nAt = 500
+    nAt = int(inputs["nat"])
 
     # Ewald will multiply the unit cell in the direction
     # of the a, b or c vector 2N times (N positive and N negative)
-    if "an" in inputs:
         aN = int(inputs["an"])
-    else:
-        aN = 2
-    if "bn" in inputs:
         bN = int(inputs["bn"])
-    else:
-        bN = 2
-    if "cn" in inputs:
         cN = int(inputs["cn"])
-    else:
-        cN = 2
-
-    # Population analysis method if pertinent
-    # Mulliken(0) Hirshfeld(1) RESP(2)
-    if "cp2k_pop_method" in inputs:
-        cp2k_pop_method = int(inputs["cp2k_pop_method"])
-    else:
-        cp2k_pop_method = 0
 
     # the cluster will be of all molecules with atoms less than
     # clust_rad away from the centre of the central molecule
-    if "clust_rad" in inputs:
-        clust_rad = float(inputs["clust_rad"])
-    else:
-        clust_rad = 5
+    clust_rad = float(inputs["clust_rad"])
 
     # how many times the input cluster needs to be repeated along each vector
     # positively and negatively to be able to contain the cluster to select.
     # the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times
     # bigger
-    if "traan" in inputs:
         traAN = int(inputs["traan"])
-    else:
-        traAN = 2
-    if "trabn" in inputs:
         traBN = int(inputs["trabn"])
-    else:
-        traBN = 2
-    if "tracn" in inputs:
         traCN = int(inputs["tracn"])
-    else:
-        traCN = 2
+
+    # use the self consistent version?
+    self_consistent = inputs["self_consistent"]
 
     # Self Consistent Ewald Gaussian template
-    if "sc_temp" in inputs:
-        sc_temp = inputs["sc_temp"]
-    else:
-        sc_temp = ""
-
-    # Self Consistent Ewald atom kind 0:Mulliken 1:ESP
-    if "sc_kind" in inputs:
-        sc_kind = int(inputs["sc_kind"])
-    else:
-        sc_kind = 0
+    sc_temp = inputs["sc_temp"]
 
     # Self Consistent Ewald deviation tolerance
-    if "dev_tol" in inputs:
-        dev_tol = float(inputs["dev_tol"])
-    else:
-        dev_tol = 0.001
+    dev_tol = float(inputs["dev_tol"])
 
     # Ewald embedding, use 0 for false
-    if "ewe" in inputs:
-        ewe = bool(inputs["ewe"])
-    else:
-        ewe = True
-
-    # Cluster self consistent template for mol
-    if "csc_temp_h" in inputs:
-        csc_temp_h = inputs["csc_temp_h"]
-    else:
-        csc_temp_h = ""
-
-    # Cluster self consistent template for shell
-    if "csc_temp_l" in inputs:
-        csc_temp_l = inputs["csc_temp_l"]
-    else:
-        csc_temp_l = ""
+    ewald = bool(inputs["ewald"])
 
     # end config inputs
 

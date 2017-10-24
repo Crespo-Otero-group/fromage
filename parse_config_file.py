@@ -7,31 +7,32 @@ if contradictory features are included.
 import read_file as rf
 import numpy as np
 
-
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
         "high_gauss_file": "gaussian.log",
+        "high_gauss_method": "ESP",
         "high_cp2k_file": "cp2k.out",
-        "high_pop_method": "ESP",
+        "high_cp2k_method": "ESP",
         "low_pop_program": "gaussian",
         "low_gauss_file": "gaussian.log",
+        "low_gauss_method": "ESP",
         "low_cp2k_file": "cp2k.out",
-        "low_pop_method": "ESP",
+        "low_cp2k_method": "ESP",
         "max_bl": "1.7",
         "atom_label": "1",
         "ewald": "",  # gets cast to int then bool
-        "nchk": "1000",
-        "nat": "500",
-        "an": "2",
-        "bn": "2",
-        "cn": "2",
+        "nChk": "1000",
+        "nAt": "500",
+        "aN": "2",
+        "bN": "2",
+        "cN": "2",
         "clust_rad": "5",
-        "traan": "2",
-        "trabn": "2",
-        "tracn": "2",
+        "traAN": "2",
+        "traBN": "2",
+        "traCN": "2",
         "self_consistent": "",  # gets cast to int then bool
         "sc_temp": "sc_temp.template",
         "dev_tol": "0.001"}
@@ -53,10 +54,9 @@ def isfloat(in_str):
     except ValueError:
         return False
 
-
 def bool_cast(in_str):
     """Casts string to bool avoiding some traps"""
-    if in_str.lower().strip() in ("false", "no", "off", "zero", "none", "", "nan"):
+    if in_str.lower().strip() in ("false","no","off","zero","none","","nan"):
         out_bool = False
     elif isfloat(in_str):
         out_bool = bool(float(in_str))
@@ -64,31 +64,26 @@ def bool_cast(in_str):
         out_bool = bool(in_str)
     return out_bool
 
-
 def parse_inputs(name="config"):
     """Convert the string values of the diciontary to the appropriate types"""
 
-    inputs = complete_config(name)
-
+    inputs=complete_config(name)
     inputs["max_bl"] = float(inputs["max_bl"])
-    if type(inputs["atom_label"]):
-        inputs["atom_label"] = [int(inputs["atom_label"]) - 1]
-    else:
-        label_atom = [int(i) - 1 for i in inputs["atom_label"]]
+    inputs["atom_label"] = int(inputs["atom_label"])
     inputs["ewald"] = bool_cast(inputs["max_bl"])
-    inputs["nchk"] = int(inputs["nchk"])
-    inputs["nat"] = int(inputs["nat"])
-    inputs["an"] = int(inputs["an"])
-    inputs["bn"] = int(inputs["bn"])
-    inputs["cn"] = int(inputs["cn"])
+    inputs["nChk"] = int(inputs["nChk"])
+    inputs["nAt"] = int(inputs["nAt"])
+    inputs["aN"] = int(inputs["aN"])
+    inputs["bN"] = int(inputs["bN"])
+    inputs["cN"] = int(inputs["cN"])
     inputs["clust_rad"] = int(inputs["clust_rad"])
-    inputs["traan"] = int(inputs["traan"])
-    inputs["trabn"] = int(inputs["trabn"])
-    inputs["tracn"] = int(inputs["tracn"])
-    inputs["self_consistent"] = bool_cast(inputs["nchk"])
+    inputs["traAN"] = int(inputs["traAN"])
+    inputs["traBN"] = int(inputs["traBN"])
+    inputs["traCN"] = int(inputs["traCN"])
+    inputs["self_consistent"] = bool_cast(inputs["nChk"])
     inputs["dev_tol"] = int(inputs["dev_tol"])
-    inputs["a_vec"] = np.array(inputs["a_vec"])
-    inputs["b_vec"] = np.array(inputs["b_vec"])
-    inputs["c_vec"] = np.array(inputs["c_vec"])
+    inputs["a_vec"]=np.array(inputs["a_vec"])
+    inputs["b_vec"]=np.array(inputs["b_vec"])
+    inputs["c_vec"]=np.array(inputs["c_vec"])
 
     return inputs
