@@ -64,5 +64,4 @@ if __name__ == "__main__":
     new_labels = [a-1 for a in args.labels]
 
     # call the main function
-    picker
-(args.input, args.output, new_labels, args.bond)
+    picker(args.input, args.output, new_labels, args.bond)
