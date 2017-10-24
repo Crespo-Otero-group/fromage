@@ -110,6 +110,7 @@ def read_xyz(in_name):
     xyz_file.close()
     return atom_step
 
+
 def read_pos(in_name):
     """
     Return the last or only set of atomic positions in a file
@@ -165,7 +166,7 @@ def read_cp2k(in_name, pop="ESP"):
         start_tag = " RESP charges:"
         char_pos = 3
         line_test = lambda x: (x.split()[0] == "RESP" and len(x.split()) == 4)
-    if pop.lower() in ("hirshfeld","hirsh"):
+    if pop.lower() in ("hirshfeld", "hirsh"):
         start_tag = "Hirshfeld Charges"
         char_pos = 5
         line_test = lambda x: x.split()[0].isdigit()
@@ -548,7 +549,7 @@ def read_molcas(in_name):
             if reading:
                 if len(line.split()) == 4 and line.split()[0][0].isalpha():
                     nums = [float(i) for i in line.split()[1:]]
-                    grad = np.concatenate((grad,nums))
+                    grad = np.concatenate((grad, nums))
     if not ex_energy:
         ex_energy = gr_energy
     return ex_energy, grad, gr_energy
