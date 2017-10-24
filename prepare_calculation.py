@@ -20,6 +20,7 @@ import parse_config_file as pcf
 from assign_charges import assign_charges
 from atom import Atom
 from datetime import datetime
+from copy import copy
 
 
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
@@ -49,13 +50,131 @@ def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=
     ef.write_seed()
     # run Ewald
     subprocess.call("Ewald < ewald.in." + in_name, shell=True)
+    return
+
 
 if __name__ == '__main__':
+
+    # a few functions to only be used in main
+    def populate_cell(in_atoms, program, pop_file, method):
+        """
+        Assign charge to the atoms from a unit cell
+
+        Don't import this, it depends on variables in the main of this module:
+        output_file, vectors and max_bl
+        If you want to assign charges go straign to assign_charges.py and use
+        those utilities.
+
+        Parameters
+        ----------
+        in_atoms : list of Atom objects
+            Make sure these atoms form a unit cell.
+        program : str
+            Make it "gaussian" or "cp2k"
+        pop_file : str
+            The corresponding file to read charges from
+        method : str
+            Acceptable strings are "esp", "mulliken" and "hirshfeld"
+
+        """
+        if program.lower() == "cp2k"
+            charges = rf.read_cp2k(pop_file, method)[0]
+            output_file.write("Read " + str(len(in_atoms)) +
+                              " charges in cp2k_file\n")
+            # in case there are more charges than atoms
+            charges = charges[:len(in_atoms)]
+            # correct charges if they are not perfectly neutral
+            if sum(charges) != 0.0:
+                output_file.write("Charge correction: " +
+                                  str(sum(charges)) + "\n")
+                charges[-1] -= sum(charges)
+
+        if program.lower() == "gaussian":
+            mol_char = rf.read_g_char(pop_file, method)[0]
+            # correct charges if they are not perfectly neutral
+            if sum(mol_char) != 0.0:
+                output_file.write("Charge correction: " +
+                                  str(sum(mol_char)) + "\n")
+                mol_char[-1] -= sum(mol_char)
+
+            # assigns charges to a molecule
+            pop_mol = rf.read_g_pos(mol_pop_file)
+            for index, atom in enumerate(pop_mol):
+                atom.q = mol_char[index]
+
+            # assign charges to the rest of the cell
+            assign_charges(pop_mol, None, in_atoms, vectors, max_bl)
+        return
+
     output_file = open("prep.out", "w")
 
     # print start time
     start_time = datetime.now()
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
+
+    def ewald_loop(in_atoms, in_mol):
+        """A single iteration of the Ewald + Gaussian loop
+
+        Beware! This function changes the charge values of in_atoms and by
+        extension in_mol. The point is to run this until convergence.
+
+        Parameters:
+        -----------
+        in_atoms : list of Atom objects
+            They should form a cell
+        in_mol: list of Atom objects
+            A list of atoms which are a part of in_atoms and form the quantum
+            cluster
+        Returns:
+        --------
+        deviation : float
+            Average deviation of charges from in_mol after an ewald calculation
+            followed by a Gaussian calculation
+
+        """
+        global sc_loop
+        sc_name = "sc_" + name
+        sc_loop += 1
+
+        # Initial charges in mol
+        old_charges = [atom.q for atom in mol]
+        # Ewald fitting
+        run_ewald(sc_name, mol, atoms, vectors, in_nAt=nat,
+                  in_aN=aN, in_bN=bN, in_cN=cN, in_nChk=nChk)
+        # read points output by Ewald
+        sc_points = rf.read_points(sc_name + ".pts-tb")
+
+        # Calculate new charges
+        ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
+        subprocess.call("g09 " + sc_name + ".com", shell=True)
+        new_charges = rf.read_g_char(sc_name + ".log", sc_kind)[0]
+
+        # Correct charges if they are not perfectly neutral
+        if sum(new_charges) != 0.0:
+            new_charges[-1] -= sum(new_charges)
+
+        # Assign new charges to mol and then to atoms
+        # NB: when the charges are assigned to atoms, degenerate atoms have an
+        # averaged charge which is then reassigned to mol since mol is in atoms
+        for index, atom in enumerate(mol):
+            atom.q = new_charges[index]
+        assign_charges(mol, None, atoms, vectors, max_bl)
+
+        # New charges in mol
+        new_charges = [atom.q for atom in mol]
+
+        # Calculate deviation between initial and new charges
+        deviation = sum([abs(i - j)
+                         for (i, j) in zip(new_charges, old_charges)]) / len(mol)
+        output_file.write("Iteration: " + str(sc_loop) +
+                          "  Deviation: " + str(deviation) + "\n")
+        output_file.flush()
+
+        return deviation
+
+    #-------------------------------------------------------------------------
+    #-----------------------------READING INPUTS------------------------------
+    #-------------------------------------------------------------------------
 
     # read config inputs
     inputs = pcf.parse_inputs("config")
@@ -85,19 +204,16 @@ if __name__ == '__main__':
     # name of the program for calculating charges
     high_pop_program = inputs["high_pop_program"]
 
-    # name of the Gaussian log file with population information
-    high_gauss_file = inputs["high_gauss_file"]
+    # name of the Gaussian log or cp2k file with population information
+    high_pop_file = inputs["high_pop_file"]
 
-    # name of the cp2k log file with population information
-    high_cp2k_file = inputs["high_cp2k_file"]
-
-    # kind of population in the Gaussian  or cp2k file 0:Mulliken 1:ESP 2: Hirshfeld
+    # kind of population in the Gaussian  or cp2k file 0:Mulliken 1:ESP 2:
+    # Hirshfeld
     high_pop_method = int(inputs["high_pop_method"])
 
     # Low level points specifications
     low_pop_program = inputs["low_pop_program"]
-    low_gauss_file = inputs["low_gauss_file"]
-    low_cp2k_file = inputs["low_cp2k_file"]
+    low_pop_file = inputs["low_pop_file"]
     low_pop_method = int(inputs["low_pop_method"])
 
     # maximum bond length when defining a molecule
@@ -146,8 +262,12 @@ if __name__ == '__main__':
 
     # end config inputs
 
+    #-------------------------------------------------------------------------
+    #------------------------------END OF INPUTS------------------------------
+    #-------------------------------------------------------------------------
+
     # read the input atoms
-    atoms = rf.read_xyz(cell_file)[-1]
+    atoms = rf.read_pos(cell_file)
     output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
 
     # the molecule of interest and the atoms which now contain
@@ -155,51 +275,20 @@ if __name__ == '__main__':
     # NB: all objects in mol are also referenced inside atoms
     mol, atoms = ha.complete_mol(max_bl, atoms, label_atom, vectors)
 
-    # read charges
-    if cp2k_file:
-        charges = rf.read_cp2k(cp2k_file, cp2k_pop_method)[0]
-        output_file.write("Read " + str(len(atoms)) +
-                          " charges in cp2k_file\n")
-        # in case there are more charges than atoms for some reason
-        charges = charges[:len(atoms)]
-        # correct charges if they are not perfectly neutral
-        if sum(charges) != 0.0:
-            output_file.write("Charge correction: " + str(sum(charges)) + "\n")
-            charges[-1] -= sum(charges)
-
-        # assigns charges to atoms
-        for index, atom in enumerate(atoms):
-            atom.q = charges[index]
-    elif mol_pop_file:
-        mol_char = rf.read_g_char(mol_pop_file, mol_pop_kind)[0]
-        # correct charges if they are not perfectly neutral
-        if sum(mol_char) != 0.0:
-            output_file.write("Charge correction: " +
-                              str(sum(mol_char)) + "\n")
-            mol_char[-1] -= sum(mol_char)
-
-        # assigns charges to a molecule
-        pop_mol = rf.read_g_pos(mol_pop_file)
-        for index, atom in enumerate(pop_mol):
-            atom.q = mol_char[index]
-
-        # assign charges to the rest of the cell
-        assign_charges(pop_mol, None, atoms, vectors, max_bl)
-    else:
-        output_file.write(
-            "Please input a population file with cp2k_file or mol_pop_file\n")
+    # High level charge assignment
+    populate_cell(atoms, high_pop_program, high_pop_file, high_pop_method)
 
     # find the centroid of the molecule
     c_x, c_y, c_z = ha.find_centroid(mol)
-
     # translate the molecule and atoms to the centroid
-
     for atom in atoms:
         atom.translate(-c_x, -c_y, -c_z)
 
+    # write useful xyz
+    ef.write_xyz("mol.init.xyz", mol)
+
     # make a very big cell
     mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
-
     # get a cluster of atoms
     clust = ha.make_cluster(mega, clust_rad, max_bl)
 
@@ -210,121 +299,59 @@ if __name__ == '__main__':
             shell.append(atom)
 
     # write useful xyz
-    ef.write_xyz("mol.init.xyz", mol)
     ef.write_xyz("clust.xyz", clust)
     ef.write_xyz("shell.xyz", shell)
 
     # Self Consistent EWALD
-    # def
-    # loop_ewald(in_name,in_mol,in_vectors,in_atoms,in_aN,in_bN,in_cN,in_nChk,in_nAt,in_sc_kind,in_max_bl,in_dev_tol):
-    if sc_temp:
+    if self_consistent:
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
-        sc_name = "sc_" + name
         sc_loop = 0
         while True:
-            sc_loop += 1
-            old_charges = [atom.q for atom in mol]
-            # Ewald fitting
-            run_ewald(sc_name, mol, atoms, vectors, nat, aN, bN, cN, nChk)
-            # read points output by Ewald
-            sc_points = rf.read_points(sc_name + ".pts-tb")
-
-            ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
-            # calculate new charges
-            subprocess.call("g09 " + sc_name + ".com", shell=True)
-            new_charges = rf.read_g_char(sc_name + ".log", sc_kind)[0]
-
-            # correct charges if they are not perfectly neutral
-            if sum(new_charges) != 0.0:
-                new_charges[-1] -= sum(new_charges)
-
-            # assign new charges
-            for index, atom in enumerate(mol):
-                atom.q = new_charges[index]
-            assign_charges(mol, None, atoms, vectors, max_bl)
-            # spread evenly
-            new_charges = [atom.q for atom in mol]
-
-            # assign new charges
-            for index, atom in enumerate(mol):
-                atom.q = new_charges[index]
-            assign_charges(mol, None, atoms, vectors, max_bl)
-
+            dev = ewald_loop(in_atoms, in_mol)
             # check convergence
-            deviation = sum([abs(i - j)
-                             for (i, j) in zip(new_charges, old_charges)]) / len(mol)
-            output_file.write("Iteration: " + str(sc_loop) +
-                              "  Deviation: " + str(deviation) + "\n")
-            if deviation < dev_tol:
+            if dev < dev_tol:
                 output_file.write("Tolerance reached: " +
-                                  str(deviation) + " < " + str(dev_tol) + "\n")
+                                  str(dev) + " < " + str(dev_tol) + "\n")
                 break
-            output_file.flush()
-            # assign new charges
-            for index, atom in enumerate(mol):
-                atom.q = new_charges[index]
-            assign_charges(mol, None, atoms, vectors, max_bl)
-
-    # Self consistent between cluster and mol, no Ewald
-    elif csc_temp_h:
-        csc_name_h = "csc_" + name + "_h"
-        csc_name_l = "csc_" + name + "_l"
-        csc_loop = 0
-        while True:
-            csc_loop += 1
-            old_charges_h = [atom.q for atom in mol]
-            old_charges_l = [atom.q for atom in shell]
-
-            # calculate the middle molecule embedded in points
-            ef.write_gauss(csc_name_h, csc_name_h +
-                           ".com", mol, shell, csc_temp_h)
-            subprocess.call("g09 " + csc_name_h + ".com", sell=True)
-            new_charges_h = rf.read_g_char(csc_name_h + ".log", sc_kind)[0]
-
-            # correct for neutrality
-            if sum(new_charges) != 0.0:
-                new_charges[-1] -= sum(new_charges)
-
-            # calculate the surrounding shell
-            ef.write_gauss(csc_name_l, csc_name_l +
-                           ".com", shell, mol, csc_temp_l)
-            subprocess.call("g09 " + csc_name_l + ".com", sell=True)
-            new_charges_l = rf.read_g_char(csc_name_l + ".log", sc_kind)[0]
-
-            # assign new charges
-            for index, atom in enumerate(mol):
-                atom.q = new_charges_h[index]
-
-            for index, atom in enumerate(shell):
-                atom.q = new_charges_l[index]
-
-            # check convergence
-            deviation_h = sum([abs(i - j)
-                               for (i, j) in zip(new_charges_h, old_charges_h)]) / len(mol)
-            deviation_l = sum([abs(i - j)
-                               for (i, j) in zip(new_charges_l, old_charges_l)]) / len(shell)
-            output_file.write("Iteration: " + str(csc_loop) +
-                              "\nDeviation_h: " + str(deviation_h) +
-                              "\nDeviation_l: " + str(deviation_l))
-            if deviation_h < dev_tol and deviation_l < dev_tol:
-                output_file.write("Tolerance reached:" + str(deviation_h) +
-                                  " and " + str(deviation_l) + " < " + dev_tol)
-                break
-            output_file.flush()
 
     # Final (or only) Ewald
-    if ewe:
-        # write inputs
-        ef.write_uc(name + ".uc", vectors, aN, bN, cN, atoms)
-        ef.write_qc(name + ".qc", mol)
-        ef.write_ew_in(name, "ewald.in." + name, nChk, nAt)
-        ef.write_seed()
-        # run Ewald
-        subprocess.call("Ewald < ewald.in." + name, shell=True)
+    if ewald:
+        run_ewald(name, mol, atoms, vectors, in_nAt=nAt,
+                  in_aN=aN, in_bN=bN, in_cN=cN, in_nChk=nChk)
         # read points output by Ewald
         points = rf.read_points(name + ".pts-tb")
 
-    if ewe:
+    else:  # This means normal electrostatic embedding
+        # make a very big cell
+        high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
+        # get a cluster of atoms
+        high_clust = ha.make_cluster(high_mega, clust_rad, max_bl)
+        # make a list of shell atoms
+        high_shell = high_clust
+        for atom_i in high_clust:
+            for atom_j in mol:
+                if not atom_i.very_close(atom_j):
+                    high_shell.append(atom_i)
+
+    # generate a shell of molecules with low level charges
+    low_atoms = [i.copy() for i in atoms]
+    populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
+    # make a very big cell
+    mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors)
+    # get a cluster of atoms
+    clust = ha.make_cluster(mega, clust_rad, max_bl)
+    # make a list of shell atoms
+    shell = clust
+    for atom_i in clust:
+        for atom_j in mol:
+            if not atom_i.very_close(atom_j):
+                shell.append(atom_i)
+
+    # write useful xyz
+    ef.write_xyz("clust.xyz", clust)
+    ef.write_xyz("shell.xyz", shell)
+
+    if ewald:
         # Make inputs
         ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
         ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
@@ -335,8 +362,8 @@ if __name__ == '__main__':
         # Make inputs
         ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
         ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
-        ef.write_g_temp("mh", "mh.temp", [], shell, "mh.template")
-        ef.write_g_temp("mg", "mg.temp", [], shell,
+        ef.write_g_temp("mh", "mh.temp", [], high_shell, "mh.template")
+        ef.write_g_temp("mg", "mg.temp", [], high_shell,
                         "mg.template")  # only useful for CI
     end_time = datetime.now()
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")

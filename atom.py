@@ -64,6 +64,16 @@ class Atom(object):
     def __eq__(self, other):
         return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
+    def very_close(self, other):
+        """Check if two atoms are very close together"""
+        thresh = 0.0001
+        x_cond = abs(self.x - self.x) < thresh
+        y_cond = abs(self.y - self.y) < thresh
+        z_cond = abs(self.z - self.z) < thresh
+
+        cond = x_cond and y_cond and z_cond
+        return cond
+
     def xyz_str(self):
         """Return a string of the atom in xyz format"""
         return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z)
