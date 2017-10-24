@@ -116,9 +116,9 @@ if __name__ == '__main__':
 
     # Ewald will multiply the unit cell in the direction
     # of the a, b or c vector 2N times (N positive and N negative)
-        aN = int(inputs["an"])
-        bN = int(inputs["bn"])
-        cN = int(inputs["cn"])
+    aN = int(inputs["an"])
+    bN = int(inputs["bn"])
+    cN = int(inputs["cn"])
 
     # the cluster will be of all molecules with atoms less than
     # clust_rad away from the centre of the central molecule
@@ -128,9 +128,9 @@ if __name__ == '__main__':
     # positively and negatively to be able to contain the cluster to select.
     # the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times
     # bigger
-        traAN = int(inputs["traan"])
-        traBN = int(inputs["trabn"])
-        traCN = int(inputs["tracn"])
+    traAN = int(inputs["traan"])
+    traBN = int(inputs["trabn"])
+    traCN = int(inputs["tracn"])
 
     # use the self consistent version?
     self_consistent = inputs["self_consistent"]
