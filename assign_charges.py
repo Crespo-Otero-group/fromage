@@ -216,7 +216,7 @@ def main(in_xyz, in_log, target, output, bond, kind):
     for atom in cluster:
         if abs(atom.q) <= 0.000:
             bad_atoms.append(atom)
-    if len(bad_atoms < 0):
+    if len(bad_atoms) > 0:
         print("WARNING: " + str(len(bad_atoms)) + " atoms have null charge!")
 
     out_file = open(output, "w")
@@ -235,7 +235,7 @@ if __name__ == '__main__':
                         default="gaussian.log")
     parser.add_argument("-o", "--output", help="Name of the output file",
                         default="out_char", type=str)
-    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond",
+    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
                         default=1.7, type=float)
     parser.add_argument("-k", "--kind", help="Kind of population, Mulliken = 0, RESP = 1",
                         default=1, type=int)
