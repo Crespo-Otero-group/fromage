@@ -4,11 +4,15 @@
 You will need:
 - config file
 - .xyz file of a unit cell
-- cp2k output file
+- cp2k or gaussian output files for a population analysis at high level and low
+level
 - .template files for ml, mh, mg, rl calculations
 
 And receive
 - .temp files for ml, mh, mg, rl
+- mol.init.xyz containing the selected molecule(s)
+- clust.xyz containing the full molecular cluster
+- shell.xyz containing the cluster without the selected molecule(s)
 """
 import subprocess
 import os
