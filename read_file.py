@@ -134,7 +134,7 @@ def read_pos(in_name):
     return atoms
 
 
-def read_cp2k(in_name, kind):
+def read_cp2k(in_name, pop="ESP"):
     """
     Read the charges and energy in a cp2k output file.
 
@@ -144,7 +144,7 @@ def read_cp2k(in_name, kind):
     ----------
     in_name : str
         Name of the file to read
-    kind : int
+    pop : int
         Kind of charge to read. 0:Mulliken ; 1:Hirshfeld ; 2:RESP
     Returns
     -------
@@ -157,54 +157,32 @@ def read_cp2k(in_name, kind):
     with open(in_name) as cp2k_file:
         cp2k_content = cp2k_file.readlines()
 
-    # Mulliken
-    if kind == 0:
-        # find last occurrence of Mulliken charges
-        last_mull = len(cp2k_content) - 1 - \
-            cp2k_content[
-                ::-1].index("                     Mulliken Population Analysis\n")
+    if pop.lower() == "mulliken":
+        start_tag = "Mulliken Population Analysis"
+        char_pos = 4
+        line_test = lambda x: x.split()[0].isdigit()
+    if pop.lower() == "esp":
+        start_tag = " RESP charges:"
+        char_pos = 3
+        line_test = lambda x: (x.split()[0] == "RESP" and len(x.split()) == 4)
+    if pop.lower() in ("hirshfeld","hirsh"):
+        start_tag = "Hirshfeld Charges"
+        char_pos = 5
+        line_test = lambda x: x.split()[0].isdigit()
 
-        charges = []
+    reading = False
+    charges = []
 
-        for line in cp2k_content[last_mull + 3:]:
-            if line.split()[0] != '#':
-                charges.append(float(line.split()[4]))
-            else:
-                break
-
-    # Hirshfeld
-    if kind == 1:
-        # find last occurrence of Hirshfeld charges
-        last_hir = len(cp2k_content) - 1 - \
-            cp2k_content[
-                ::-1].index("                           Hirshfeld Charges\n")
-
-        charges = []
-
-        for line in cp2k_content[last_hir + 3:]:
-            if line != '\n':
-                charges.append(float(line.split()[5]))
-            else:
-                break
-
-    # RESP
-    if kind == 2:
-        # find last occurrence of RESP charges
-        last_resp = len(cp2k_content) - 1 - \
-            cp2k_content[::-1].index(" RESP charges:\n")
-
-        charges = []
-
-        for line in cp2k_content[last_resp + 3:]:
-            if line.split()[0] != 'Total':
-                charges.append(float(line.split()[3]))
-            else:
-                break
-
-    # find each occurrence of Energy
     for line in cp2k_content:
-        if "ENERGY|" in line:
-            energy = float(line.split()[8])
+        if line.strip():
+            if start_tag in line:
+                reading = True
+            if reading and line_test(line):
+                charges.append(float(line.split()[char_pos]))
+            if "Total" in line:
+                reading = False
+            if "ENERGY|" in line:
+                energy = float(line.split()[8])
 
     cp2k_file.close()
     return charges, energy
@@ -240,7 +218,7 @@ def read_points(in_name):
     return points
 
 
-def read_g_char(in_name, kind):
+def read_g_char(in_name, pop="ESP"):
     """
     Read charges and energy from a Gaussian log file.
 
@@ -248,7 +226,7 @@ def read_g_char(in_name, kind):
     ----------
     in_name : str
         Name of the file to read
-    kind : int
+    pop : int
         0 is Mulliken and 1 is ESP
     Returns
     -------
@@ -262,10 +240,10 @@ def read_g_char(in_name, kind):
         content = gauss_file.readlines()
 
     # find last occurrence of Mulliken charges
-    if kind == 0:
+    if pop.lower() == "mulliken":
         last_mull = len(content) - 1 - \
             content[::-1].index(" Mulliken charges:\n")
-    elif kind == 1:
+    elif pop.lower() == "esp":
         last_mull = len(content) - 1 - \
             content[::-1].index(" ESP charges:\n")
     charges = []

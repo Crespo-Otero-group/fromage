@@ -3,13 +3,22 @@ import read_file as rf
 
 name = "config"
 
-cell_file = name + "xyz"
+
+# Default parameters
+inputs = {
+
+}
+
+cell_file = "cell.xyz"
 # name of the cp2k file with population information
 cp2k_file = False
+# Population analysis method if pertinent
+# Mulliken(0) Hirshfeld(1) RESP(2)
+gauss_method = "ESP"
 # name of the Gaussian log file with population information
-mol_pop_file = False
+gauss_file = False
 # kind of population in the Gaussian file 0:Mulliken 1:ESP
-mol_pop_kind = 0
+mol_pop_method = "ESP"
 # maximum bond length when defining a molecule
 max_bl = 1.7
 # label of an atom which will be part of the quantum cluster
@@ -25,9 +34,6 @@ nAt = 500
 aN = 2
 bN = 2
 cN = 2
-# Population analysis method if pertinent
-# Mulliken(0) Hirshfeld(1) RESP(2)
-cp2k_pop_method = 0
 # the cluster will be of all molecules with atoms less than
 # clust_rad away from the centre of the central molecule
 clust_rad = 5
