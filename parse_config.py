@@ -1,62 +1,42 @@
 #!/usr/bin/env python
+"""Reads the user's config inputs
+
+This contains all of the default settings and may raise warnings and exceptions
+if contradictory features are included.
+"""
 import read_file as rf
 
-name = "config"
+def parse_config(name = "config"):
+    # Default parameters
+    inputs = {
+    "cell_file":"cell.xyz",
+    "high_pop_program":"gaussian",
+    "high_gauss_file":"gaussian.log",
+    "high_gauss_method":"ESP",
+    "high_cp2k_file":"cp2k.out",
+    "high_cp2k_method":"ESP",
+    "low_pop_program":"gaussian",
+    "low_gauss_file":"gaussian.log",
+    "low_gauss_method":"ESP",
+    "low_cp2k_file":"cp2k.out",
+    "low_cp2k_method":"ESP",
+    "max_bl":"1.7",
+    "atom_label":"1",
+    "ewald":"1", # gets cast to int then bool
+    "nChk":"1000",
+    "nAt":"500",
+    "aN":"2",
+    "bN":"2",
+    "cN":"2",
+    "clust_rad":"5",
+    "traAN":"2",
+    "traBN":"2",
+    "traCN":"2",
+    "self_consistent":"0", # gets cast to int then bool
+    "sc_temp":"sc_temp.template",
+    "dev_tol":"0.001"}
 
+    usr_inputs = rf.read_config(name)
+    inputs.update(usr_inputs)
 
-# Default parameters
-inputs = {
-
-}
-
-cell_file = "cell.xyz"
-# name of the cp2k file with population information
-cp2k_file = False
-# Population analysis method if pertinent
-# Mulliken(0) Hirshfeld(1) RESP(2)
-gauss_method = "ESP"
-# name of the Gaussian log file with population information
-gauss_file = False
-# kind of population in the Gaussian file 0:Mulliken 1:ESP
-mol_pop_method = "ESP"
-# maximum bond length when defining a molecule
-max_bl = 1.7
-# label of an atom which will be part of the quantum cluster
-# warning: [0,N-1], not [1,N]
-label_atom = 0
-# the number of checkpoints in region 1
-nChk = 1000
-# the number of constrained charge atoms
-# i.e. atoms in regions 1 and 2
-nAt = 500
-# Ewald will multiply the unit cell in the direction
-# of the a, b or c vector 2N times (N positive and N negative)
-aN = 2
-bN = 2
-cN = 2
-# the cluster will be of all molecules with atoms less than
-# clust_rad away from the centre of the central molecule
-clust_rad = 5
-# how many times the input cluster needs to be repeated along each vector
-# positively and negatively to be able to contain the cluster to select.
-# the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times
-# bigger
-traAN = 2
-traBN = 2
-traCN = 2
-# Self Consistent Ewald Gaussian template
-sc_temp = False
-# Self Consistent Ewald atom kind 0:Mulliken 1:ESP
-sc_kind = 0
-# Self Consistent Ewald deviation tolerance
-dev_tol = 0.001
-# Ewald embedding, use 0 for false
-ewe = True
-# Cluster self consistent template for mol
-csc_temp_h = False
-# Cluster self consistent template for shell
-csc_temp_l = ""
-
-dic = rf.read_config(name)
-
-print(dic)
+    return inputs

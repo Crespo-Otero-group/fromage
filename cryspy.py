@@ -159,7 +159,7 @@ if __name__ == '__main__':
     "mol_file": "mol.init.xyz",
     "shell_file": "shell.xyz",
     "out_file": "cryspy.out",
-    "bool_ci": "",
+    "bool_ci": "0",
     "high_level": "gaussian",
     "low_level": "gaussian"}
 
