@@ -1,5 +1,8 @@
 """Functions to read files from different pieces of chemistry
-softare. Most of these functions return lists of Atom objects
+softare. Most of these functions return lists of Atom objects.
+When it comes to energy and gradient values, the units generally
+the same as in the file being read. Keep further unit conversion
+outside of this file for clarity.
 """
 import sys
 import numpy as np
@@ -106,6 +109,29 @@ def read_xyz(in_name):
 
     xyz_file.close()
     return atom_step
+
+def read_pos(in_name):
+    """
+    Return the last or only set of atomic positions in a file
+
+    Currently only .xyz files as they are the most common. To implement more
+    types, extend this function by parsing the extension but always return the
+    same. read_pos is to be preferred over read_xyz when only one set of
+    coordinates is relevant.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    atom_step = list of Atom objects
+        The last or only set of atomic positions in the file
+
+    """
+    atoms = read_xyz(in_name)[-0]
+
+    return atoms
 
 
 def read_cp2k(in_name, kind):
@@ -461,7 +487,7 @@ def read_ricc2(in_name):
     Returns
     -------
     energy : float
-        Excited state energy in Hartree
+        Excited state energy in Hartree if any, otherwise the ground state energy
     grad : numpy array of floats
         Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
     scf_energy : float
@@ -502,3 +528,49 @@ def read_ricc2(in_name):
         energy = scf_energy
     grad = np.array(grad)
     return energy, grad, scf_energy
+
+
+def read_molcas(in_name):
+    """
+    Read energies and gradients from a Molcas .log file with 2 roots.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    ex_energy : float
+        Excited state energy in Hartree if any, otherwise the ground state energy
+    grad : numpy array of floats
+        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
+    gr_energy : float
+        Ground state energy in Hartree
+
+    """
+    with open(in_name) as data:
+        lines = data.readlines()
+
+    grad = np.array([])
+    ex_energy = None
+    gr_energy = None
+
+    reading = False
+
+    for line in lines:
+        if line.strip():
+            # Energies
+            if "RASSCF root number  1 Total energy:" in line:
+                gr_energy = float(line.split()[-1])
+            if "RASSCF root number  2 Total energy:" in line:
+                ex_energy = float(line.split()[-1])
+            # Gradients
+            if "Molecular gradients" in line:
+                reading = True
+            if reading:
+                if len(line.split()) == 4 and line.split()[0][0].isalpha():
+                    nums = [float(i) for i in line.split()[1:]]
+                    grad = np.concatenate((grad,nums))
+    if not ex_energy:
+        ex_energy = gr_energy
+    return ex_energy, grad, gr_energy

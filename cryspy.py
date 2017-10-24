@@ -6,6 +6,10 @@ one for the surrounding molecules. Overall the use of subprocess is ugly as it
 is repeated 3 or 4 times but it was found to handle memory better than Pool
 when interfacing with Gaussian.
 
+Energy units are Hartree inside the program but are printed in eV. Distances are
+kept as Angstrom throughout and are converted from Bohr if necessary before
+reaching this module
+
 """
 import numpy as np
 import subprocess
@@ -55,6 +59,10 @@ def sequence(in_pos):
         rl = calc.Turbo_calc("rl")
         ml = calc.Turbo_calc("ml")
 
+    if low_level.lower() == "molcas":
+        rl = calc.Molcas_calc("rl")
+        ml = calc.Molcas_calc("ml")
+
     if high_level.lower() == "gaussian":
         mh = calc.Gauss_calc("mh")
         if bool_ci:
@@ -64,6 +72,11 @@ def sequence(in_pos):
         mh = calc.Turbo_calc("mh")
         if bool_ci:
             mg = calc.Turbo_calc("mg")
+
+    if high_level.lower() == "molcas":
+        mh = calc.Molcas_calc("mh")
+        if bool_ci:
+            mg = calc.Molcas_calc("mg")
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
@@ -139,8 +152,7 @@ def sequence(in_pos):
 if __name__ == '__main__':
 
     evconv = 27.2114  # Something in Hartree * evconv = Something in eV
-    bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
-
+    
     # default settings
 
     def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
