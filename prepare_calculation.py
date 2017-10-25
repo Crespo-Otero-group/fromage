@@ -151,7 +151,7 @@ if __name__ == '__main__':
         # Calculate new charges
         ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
-        new_charges = rf.read_g_char(sc_name + ".log", sc_kind)[0]
+        new_charges = rf.read_g_char(sc_name + ".log", high_pop_method)[0]
 
         # Correct charges if they are not perfectly neutral
         if sum(new_charges) != 0.0:
@@ -308,7 +308,7 @@ if __name__ == '__main__':
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
         sc_loop = 0
         while True:
-            dev = ewald_loop(in_atoms, in_mol)
+            dev = ewald_loop(atoms, mol)
             # check convergence
             if dev < dev_tol:
                 output_file.write("Tolerance reached: " +
@@ -330,9 +330,12 @@ if __name__ == '__main__':
         # make a list of shell atoms
         high_shell = high_clust
         for atom_i in high_clust:
+            good_append = True
             for atom_j in mol:
-                if not atom_i.very_close(atom_j):
-                    high_shell.append(atom_i)
+                if atom_i.very_close(atom_j):
+                    good_append = False
+            if good_append:
+                high_shell.append(atom_i)
 
     # generate a shell of molecules with low level charges
     low_atoms = [copy(i) for i in atoms]
@@ -342,11 +345,14 @@ if __name__ == '__main__':
     # get a cluster of atoms
     clust = ha.make_cluster(mega, clust_rad, max_bl)
     # make a list of shell atoms
-    shell = clust
+    shell = []
     for atom_i in clust:
+        good_append = True
         for atom_j in mol:
-            if not atom_i.very_close(atom_j):
-                shell.remove(atom_i)
+            if atom_i.very_close(atom_j):
+                good_append = False
+        if good_append:
+            shell.append(atom_i)
 
     # write useful xyz
     ef.write_xyz("clust.xyz", clust)

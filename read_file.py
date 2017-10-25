@@ -145,8 +145,8 @@ def read_cp2k(in_name, pop="ESP"):
     ----------
     in_name : str
         Name of the file to read
-    pop : int
-        Kind of charge to read. 0:Mulliken ; 1:Hirshfeld ; 2:RESP
+    pop : str
+        Kind of charge to read: mulliken, esp or hirshfeld
     Returns
     -------
     charges : list of floats
@@ -227,8 +227,8 @@ def read_g_char(in_name, pop="ESP"):
     ----------
     in_name : str
         Name of the file to read
-    pop : int
-        0 is Mulliken and 1 is ESP
+    pop : str
+        Kind of charge to read, mulliken or esp
     Returns
     -------
     charges : list of floats
