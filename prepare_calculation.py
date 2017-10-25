@@ -317,19 +317,36 @@ if __name__ == '__main__':
         points = rf.read_points(name + ".pts-tb")
 
     else:  # This means normal electrostatic embedding
-        # make a very big cell
-        high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
-        # get a cluster of atoms
-        high_clust = ha.make_cluster(high_mega, clust_rad, max_bl)
-        # make a list of shell atoms
-        high_shell = high_clust
-        for atom_i in high_clust:
-            good_append = True
-            for atom_j in mol:
-                if atom_i.very_close(atom_j):
-                    good_append = False
-            if good_append:
-                high_shell.append(atom_i)
+        if target_clust:
+                out_file.write("Reading the shell from: "+target_clust+"\n")
+                high_shell = rf.read_pos(target_clust)
+                high_target_mol_char = rf.read_g_char(high_pop_file, high_pop_method)[0]
+                # correct charges if they are not perfectly neutral
+                if sum(high_target_mol_char) != 0.0:
+                    output_file.write("Charge correction: " +
+                                      str(sum(high_target_mol_char)) + "\n")
+                    high_target_mol_char[-1] -= sum(high_target_mol_char)
+                # assigns charges to a molecule
+                high_target_pop_mol = rf.read_g_pos(high_pop_file)
+                for index, atom in enumerate(high_target_pop_mol):
+                    atom.q = high_target_mol_char[index]
+
+                # assign charges to the rest of the cell
+                assign_charges(target_pop_mol, None, shell, None, max_bl)
+        else:
+            # make a very big cell
+            high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
+            # get a cluster of atoms
+            high_clust = ha.make_cluster(high_mega, clust_rad, max_bl)
+            # make a list of shell atoms
+            high_shell = []
+            for atom_i in high_clust:
+                good_append = True
+                for atom_j in mol:
+                    if atom_i.very_close(atom_j):
+                        good_append = False
+                if good_append:
+                    high_shell.append(atom_i)
 
     # to manually input the cluster
     if target_clust:
