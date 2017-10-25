@@ -14,7 +14,6 @@ def complete_config(name="config"):
         "name":"cryspy_calc"
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
-        "high_gauss_file": "gaussian.log",
         "high_pop_file": "cp2k.out",
         "high_pop_method": "ESP",
         "low_pop_program": "gaussian",
