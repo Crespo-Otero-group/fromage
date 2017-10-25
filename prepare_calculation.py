@@ -81,7 +81,7 @@ if __name__ == '__main__':
             Acceptable strings are "esp", "mulliken" and "hirshfeld"
 
         """
-        if program.lower() == "cp2k"
+        if program.lower() == "cp2k":
             charges = rf.read_cp2k(pop_file, method)[0]
             output_file.write("Read " + str(len(in_atoms)) +
                               " charges in cp2k_file\n")
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         # Initial charges in mol
         old_charges = [atom.q for atom in mol]
         # Ewald fitting
-        run_ewald(sc_name, mol, atoms, vectors, in_nAt=nat,
+        run_ewald(sc_name, mol, atoms, vectors, in_nAt=nAt,
                   in_aN=aN, in_bN=bN, in_cN=cN, in_nChk=nChk)
         # read points output by Ewald
         sc_points = rf.read_points(sc_name + ".pts-tb")
