@@ -66,10 +66,10 @@ class Atom(object):
 
     def very_close(self, other):
         """Check if two atoms are very close together"""
-        thresh = 0.0001
-        x_cond = abs(self.x - self.x) < thresh
-        y_cond = abs(self.y - self.y) < thresh
-        z_cond = abs(self.z - self.z) < thresh
+        thresh = 0.001
+        x_cond = abs(self.x - other.x) < thresh
+        y_cond = abs(self.y - other.y) < thresh
+        z_cond = abs(self.z - other.z) < thresh
 
         cond = x_cond and y_cond and z_cond
         return cond

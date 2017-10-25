@@ -102,7 +102,7 @@ if __name__ == '__main__':
                 mol_char[-1] -= sum(mol_char)
 
             # assigns charges to a molecule
-            pop_mol = rf.read_g_pos(mol_pop_file)
+            pop_mol = rf.read_g_pos(pop_file)
             for index, atom in enumerate(pop_mol):
                 atom.q = mol_char[index]
 
@@ -210,12 +210,12 @@ if __name__ == '__main__':
 
     # kind of population in the Gaussian  or cp2k file 0:Mulliken 1:ESP 2:
     # Hirshfeld
-    high_pop_method = int(inputs["high_pop_method"])
+    high_pop_method = inputs["high_pop_method"]
 
     # Low level points specifications
     low_pop_program = inputs["low_pop_program"]
     low_pop_file = inputs["low_pop_file"]
-    low_pop_method = int(inputs["low_pop_method"])
+    low_pop_method = inputs["low_pop_method"]
 
     # maximum bond length when defining a molecule
     max_bl = float(inputs["max_bl"])
@@ -274,7 +274,7 @@ if __name__ == '__main__':
     # the molecule of interest and the atoms which now contain
     # the full, unchopped molecule
     # NB: all objects in mol are also referenced inside atoms
-    mol, atoms = ha.complete_mol(max_bl, atoms, label_atom, vectors)
+    mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)
 
     # High level charge assignment
     populate_cell(atoms, high_pop_program, high_pop_file, high_pop_method)
@@ -335,7 +335,7 @@ if __name__ == '__main__':
                     high_shell.append(atom_i)
 
     # generate a shell of molecules with low level charges
-    low_atoms = [i.copy() for i in atoms]
+    low_atoms = [copy(i) for i in atoms]
     populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
     # make a very big cell
     mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors)
@@ -346,7 +346,7 @@ if __name__ == '__main__':
     for atom_i in clust:
         for atom_j in mol:
             if not atom_i.very_close(atom_j):
-                shell.append(atom_i)
+                shell.remove(atom_i)
 
     # write useful xyz
     ef.write_xyz("clust.xyz", clust)
