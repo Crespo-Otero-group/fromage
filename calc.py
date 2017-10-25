@@ -300,14 +300,12 @@ class Molcas_calc(Calc):
         energy, gradients_b, scf_energy = rf.read_molcas("molcas.log")
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
-        #gradients = gradients_b
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
-        # gradients = -gradients[:len(positions)]
 
         os.chdir(self.here)
         return (energy, gradients, scf_energy)

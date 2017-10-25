@@ -237,8 +237,8 @@ if __name__ == '__main__':
                         default="out_char", type=str)
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
                         default=1.7, type=float)
-    parser.add_argument("-k", "--kind", help="Kind of population, Mulliken = 0, RESP = 1",
-                        default=1, type=int)
+    parser.add_argument("-k", "--kind", help="Kind of population, mulliken or esp",
+                        default="esp", type=str)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     main(args.in_xyz, args.in_log, args.target,

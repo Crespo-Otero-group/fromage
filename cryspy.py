@@ -152,12 +152,16 @@ def sequence(in_pos):
 if __name__ == '__main__':
 
     evconv = 27.2114  # Something in Hartree * evconv = Something in eV
-    
+
     # default settings
 
-    def_inputs = {"mol_file": "mol.init.xyz", "shell_file": "shell.xyz",
-                  "out_file": "cryspy.out", "bool_ci": "0", "high_level": "gaussian",
-                  "low_level": "gaussian", "sigma": "3.5"}
+    def_inputs = {
+        "mol_file": "mol.init.xyz",
+        "shell_file": "shell.xyz",
+        "out_file": "cryspy.out",
+        "bool_ci": "0",
+        "high_level": "gaussian",
+        "low_level": "gaussian"}
 
     inputs = def_inputs.copy()
 

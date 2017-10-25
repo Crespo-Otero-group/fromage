@@ -134,7 +134,8 @@ def multi_select(max_r, atoms, labels, vectors):
     selected_img_mols = []
 
     for label in labels:
-        selected_mol, selected_img_mol = select_per(max_r, atoms, label, vectors)
+        selected_mol, selected_img_mol = select_per(
+            max_r, atoms, label, vectors)
         selected_mols.append(selected_mol)
         selected_img_mols.append(selected_img_mol)
 
@@ -214,11 +215,13 @@ def find_centroid(atoms):
         baryZ += atom.z / N
     return (baryX, baryY, baryZ)
 
+
 def center_mol(atoms):
     """Translate molecules to center"""
     c_x, c_y, c_z = ha.find_centroid(mol)
     for atom in atoms:
         atom.translate(-c_x, -c_y, -c_z)
+
 
 def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
     """
@@ -307,6 +310,7 @@ def make_cluster(atoms, clust_rad, max_bl):
             for atom2Add in mol2Add:
                 clust_atoms.append(atom2Add)
     return clust_atoms
+
 
 def array2atom(template, pos):
     """
