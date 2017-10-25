@@ -48,12 +48,13 @@ def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=
     in_nChk : int
         Number of random sampling points in the qc
     """
+    FNULL = open(os.devnull, 'w')
     ef.write_uc(in_name + ".uc", in_vectors, in_aN, in_bN, in_cN, in_atoms)
     ef.write_qc(in_name + ".qc", in_mol)
     ef.write_ew_in(in_name, "ewald.in." + in_name, in_nChk, in_nAt)
     ef.write_seed()
     # run Ewald
-    subprocess.call("Ewald < ewald.in." + in_name, shell=True)
+    subprocess.call("Ewald < ewald.in." + in_name, stdout=FNULL, shell=True)
     return
 
 
@@ -201,6 +202,9 @@ if __name__ == '__main__':
     # name of the cell xyz file
     cell_file = inputs["cell_file"]
 
+    # name of the xyz target shell file in case it is determined manually
+    target_clust = inputs["target_clust"]
+
     # High level points specifications
     # name of the program for calculating charges
     high_pop_program = inputs["high_pop_program"]
@@ -293,16 +297,6 @@ if __name__ == '__main__':
     # get a cluster of atoms
     clust = ha.make_cluster(mega, clust_rad, max_bl)
 
-    # make a list of shell atoms
-    shell = []
-    for atom in clust:
-        if atom not in mol:
-            shell.append(atom)
-
-    # write useful xyz
-    ef.write_xyz("clust.xyz", clust)
-    ef.write_xyz("shell.xyz", shell)
-
     # Self Consistent EWALD
     if self_consistent:
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
@@ -337,26 +331,46 @@ if __name__ == '__main__':
             if good_append:
                 high_shell.append(atom_i)
 
-    # generate a shell of molecules with low level charges
-    low_atoms = [copy(i) for i in atoms]
-    populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
-    # make a very big cell
-    mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors)
-    # get a cluster of atoms
-    clust = ha.make_cluster(mega, clust_rad, max_bl)
-    # make a list of shell atoms
-    shell = []
-    for atom_i in clust:
-        good_append = True
-        for atom_j in mol:
-            if atom_i.very_close(atom_j):
-                good_append = False
-        if good_append:
-            shell.append(atom_i)
+    # to manually input the cluster
+    if target_clust:
+        out_file.write("Reading the shell from: "+target_clust+"\n")
+        shell = rf.read_pos(target_clust)
+        target_mol_char = rf.read_g_char(low_pop_file, low_pop_method)[0]
+        # correct charges if they are not perfectly neutral
+        if sum(target_mol_char) != 0.0:
+            output_file.write("Charge correction: " +
+                              str(sum(target_mol_char)) + "\n")
+            target_mol_char[-1] -= sum(target_mol_char)
 
-    # write useful xyz
-    ef.write_xyz("clust.xyz", clust)
-    ef.write_xyz("shell.xyz", shell)
+        # assigns charges to a molecule
+        target_pop_mol = rf.read_g_pos(low_pop_file)
+        for index, atom in enumerate(target_pop_mol):
+            atom.q = target_mol_char[index]
+
+        # assign charges to the rest of the cell
+        assign_charges(target_pop_mol, None, shell, None, max_bl)
+    # to generate the cluster from radius
+    else:
+        # generate a shell of molecules with low level charges
+        low_atoms = [copy(i) for i in atoms]
+        populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
+        # make a very big cell
+        mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors)
+        # get a cluster of atoms
+        clust = ha.make_cluster(mega, clust_rad, max_bl)
+        # make a list of shell atoms
+        shell = []
+        for atom_i in clust:
+            good_append = True
+            for atom_j in mol:
+                if atom_i.very_close(atom_j):
+                    good_append = False
+            if good_append:
+                shell.append(atom_i)
+        # write useful xyz
+        ef.write_xyz("clust.xyz", clust)
+        ef.write_xyz("shell.xyz", shell)
+
 
     if ewald:
         # Make inputs

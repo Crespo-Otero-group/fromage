@@ -11,6 +11,7 @@ def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
         "name":"cryspy_calc",
+        "target_clust":"",
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
         "high_pop_file": "cp2k.out",
