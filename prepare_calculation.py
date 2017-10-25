@@ -201,9 +201,6 @@ if __name__ == '__main__':
     # name of the cell xyz file
     cell_file = inputs["cell_file"]
 
-    # name of the cp2k file with population information
-    cp2k_file = inputs["cp2k_file"]
-
     # High level points specifications
     # name of the program for calculating charges
     high_pop_program = inputs["high_pop_program"]
