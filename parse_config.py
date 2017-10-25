@@ -11,6 +11,7 @@ import numpy as np
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
+        "name":"cryspy_calc"
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
         "high_gauss_file": "gaussian.log",
