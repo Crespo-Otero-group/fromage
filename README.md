@@ -118,7 +118,11 @@ To run cryspy, all you need is:
   
 And if you intend to use Turbomole or Molcas, directories set up with the appropriate name (`mh`,`mg` and so on).
 
-For Turbomole ricc2, run a define and then write in all of the point charges from `mh.temp` under the block `$point_charges`.
+The `cryspy.in` file has a similar structure to the `config` file but is much simpler and is not even necessary for geometry optimisation in Gaussian.
+If you want to change a program used in a specific level of theory from Gaussian, simply add `high_level [program]` or `low_level [program]`.
+For MECI search, add `bool_ci 1`
+
+For Turbomole RI-CC2, run a define and then write in all of the point charges from `mh.temp` under the block `$point_charges`.
 
 **IMPORTANT**: Turbomole uses Bohr units in its control file and as such the x, y and z columns should be scaled accordingly
 
@@ -135,9 +139,9 @@ To add point charges, use in `&GATEWAY`:
                 .
 ```
 
-The `cryspy.in` file has a similar structure to the `config` file but is much simpler and is not even necessary for geometry optimisation in Gaussian.
-If you want to change a program used in a specific level of theory from gaussian, simply add `high_level [program]` or `low_level [program]`.
-For MECI search, add `bool_ci 1`
+
+
+
 
 You should be all set now.
 Run `cryspy.py` to begin the calculation.
@@ -148,7 +152,61 @@ The program only has three main outputs:
   - `cryspy.out` which gives updates on all of the individual energies being calculatedm the total gradient norm and tne energy gap
   - `geom_mol.xyz` which keeps a record of the optimising geometry
   - `geom_cluster.xyz` which combines `geom_mol.xyz` and `shell.xyz` for a better view of intermolecular interactions
- 
+  
+If the minimisation ran smoothly, the last line of `cryspy.out` should be the ending time.
+
+## 4 Additional utilities
+
+A couple of useful utilities are included here for manipulation of molecular crystal clusters.
+They may come in handy when making sure that your calculation is doing what you want.
+
+### 4.1 pick_mol.py
+
+This program selects molecules out of a cluster of molecules and writes them to another file.
+This is particulary useful when you are dealing with a large molecular cluster and want to extract something like a dimer.
+
+The syntax is intuitive:
+```bash
+  pick_mol.py cluster_file.xyz 1 56 22
+```
+In this case we have selected a trimer of the molecules containing the atoms labeled 1, 56 and 22 in the input .xyz file.
+This program will get angry if you feed it more than one atom label of one same molecule (as it should!).
+For additional options use `pick_mol.py --help`
+
+### 4.2 assign_charges.py
+
+This is more of a debugging tool for checking to see that you are using a sensible bond length in your definition of your molecules.
+It reads charges and positions from a Gaussian output file for one molecule and assigns those charges to a cluster of atoms made up of those same molecules in a .`xyz`-like file.
+
+It could come in handy as a standalone utility if you want to assign charges in a forcefiled calculation.
+
+The syntax is:
+```bash
+  assign_charges.py population_analysis.log cluster_of_molecules.xyz
+```
+As usual, use `assign_charges.py --help` for more options related to bond length, charge kind etc.
+
+## 5 Some parting words
+
+If you find yourself with a bunch of `core.` files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
+
+If you are happily preparing a calculation, see no error, run `cryspy.py` with sensible geometries and find that your quantum chemistry program is very upset about something, it might be that the point charges you are feeding it are unreasonable.
+Indeed when you start fiddling with large numbers of constrained point charges in Ewald, the system of linear equations which fits them becomes highly linearly dependent and you end up with point charges with values in the thousands. If this happens to you just try a smaller number of constrained point charges while still containing your central molecule.
+
+Gaussian memory management is a mysterious beast and you may need to provide it with a lot of overhead memory to store the thousands of point charges you are feeding it. Allow for 2-4GB more memory that what you are telling `mh.temp` in `%mem`. For optimal performance, depending on what combination of programs and levels of theory you are using, you may want to distribute the Gaussian memory counterintuively. For example a HF calculation with a large cluster of atoms in Gaussian might be slower than an RI-CC2 Turbomole calculation of a small central molecule. Distribute memory accordingly.
+
+Hacking this program for your own personal needs is a perfectly good idea and you may be able to get a lot from just importing the I/O modules and the `Atom` class.
+You may however encounter a couple of difficulties:
+
+- This program makes use of some basic but essential object oriented programming paradigms such as the `Atom` object which is used ubiquitously or inheritance in the `Calc` class. These are made easy to use by the Python syntax but if you are not used to them they may cause an entrance barrier. I have tried to organise everything sensibly in modules which do what you would expect from their name but getting to grips with the architecture may be a bit annoying.
+
+If all you want to do is integrate your favourite quantum chemistry package into cryspy, all you need to do is a) make a new `Calc` objects modeled after one of the existing ones in the `calc.py` module and b) add a clause in the `cryspy.py` modeul for using that program at the very beginning of the sequence.
+
+- The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with prepare_calculation. Some Ewald documentation will come soon to aid you in this quest but apart from some installation and compilation guidelines, I cannot offer too much help.
+
+
 ---
 
-Miguel Rivera
+For any questions about usage, citing or contributing, please email our group at r.crespo-otero@qmul.ac.uk
+
+-Miguel Rivera
