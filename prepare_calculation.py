@@ -203,7 +203,7 @@ if __name__ == '__main__':
     cell_file = inputs["cell_file"]
 
     # name of the xyz target shell file in case it is determined manually
-    target_clust = inputs["target_clust"]
+    target_shell = inputs["target_shell"]
 
     # High level points specifications
     # name of the program for calculating charges
@@ -317,9 +317,9 @@ if __name__ == '__main__':
         points = rf.read_points(name + ".pts-tb")
 
     else:  # This means normal electrostatic embedding
-        if target_clust:
-                out_file.write("Reading the shell from: "+target_clust+"\n")
-                high_shell = rf.read_pos(target_clust)
+        if target_shell:
+                out_file.write("Reading the shell from: "+target_shell+"\n")
+                high_shell = rf.read_pos(target_shell)
                 high_target_mol_char = rf.read_g_char(high_pop_file, high_pop_method)[0]
                 # correct charges if they are not perfectly neutral
                 if sum(high_target_mol_char) != 0.0:
@@ -349,9 +349,9 @@ if __name__ == '__main__':
                     high_shell.append(atom_i)
 
     # to manually input the cluster
-    if target_clust:
-        output_file.write("Reading the shell from: "+target_clust+"\n")
-        shell = rf.read_pos(target_clust)
+    if target_shell:
+        output_file.write("Reading the shell from: "+target_shell+"\n")
+        shell = rf.read_pos(target_shell)
         target_mol_char = rf.read_g_char(low_pop_file, low_pop_method)[0]
         # correct charges if they are not perfectly neutral
         if sum(target_mol_char) != 0.0:
