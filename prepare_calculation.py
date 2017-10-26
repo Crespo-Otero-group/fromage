@@ -350,7 +350,7 @@ if __name__ == '__main__':
 
     # to manually input the cluster
     if target_clust:
-        out_file.write("Reading the shell from: "+target_clust+"\n")
+        output_file.write("Reading the shell from: "+target_clust+"\n")
         shell = rf.read_pos(target_clust)
         target_mol_char = rf.read_g_char(low_pop_file, low_pop_method)[0]
         # correct charges if they are not perfectly neutral
