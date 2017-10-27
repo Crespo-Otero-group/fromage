@@ -9,7 +9,7 @@ Includes a utility to read a molecule xyz file, a population analysis in g09 and
 a target cluster xyz to assign the charges to the cluster.
 
 Usage:
-assign_charges.py mol.xyz mol.log clust.xyz
+assign_charges.py mol.log clust.xyz
 
 Includes options for Mulliken or RESP and ouptut file names.
 """
@@ -201,7 +201,10 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
 
 
 def main(in_xyz, in_log, target, output, bond, kind):
-    mol = rf.read_xyz(in_xyz)[-1]
+    if(in_xyz):
+        mol = rf.read_xyz(in_xyz)[-1]
+    else:
+        mol = rf.read_g_pos(in_log)
     charges = rf.read_g_char(in_log, kind)[0]
     cluster = rf.read_xyz(target)[-1]
 
@@ -220,6 +223,7 @@ def main(in_xyz, in_log, target, output, bond, kind):
         print("WARNING: " + str(len(bad_atoms)) + " atoms have null charge!")
 
     out_file = open(output, "w")
+    out_file.write(str(len(cluster)) + "\n\n")
     for atom in cluster:
         out_file.write(str(atom) + "\n")
     out_file.close()
@@ -227,12 +231,12 @@ def main(in_xyz, in_log, target, output, bond, kind):
 if __name__ == '__main__':
     # parse the input
     parser = argparse.ArgumentParser()
-    parser.add_argument("in_xyz", help="Input .xyz file of single molecule",
-                        default="geom.xyz")
     parser.add_argument("in_log", help="Input .log file with RESP analysis",
                         default="gaussian.log")
     parser.add_argument("target", help="Target .xyz file to assign charges to",
-                        default="gaussian.log")
+                        default="cluster.xyz")
+    parser.add_argument(
+        "-i", "--in_xyz", help="Input .xyz file of single molecule if the geometry in the log file is not good")
     parser.add_argument("-o", "--output", help="Name of the output file",
                         default="out_char", type=str)
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
