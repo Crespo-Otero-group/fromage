@@ -161,7 +161,8 @@ if __name__ == '__main__':
         "out_file": "cryspy.out",
         "bool_ci": "0",
         "high_level": "gaussian",
-        "low_level": "gaussian"}
+        "low_level": "gaussian",
+        "sigma":"3.5"}
 
     inputs = def_inputs.copy()
 

@@ -152,8 +152,9 @@ if __name__ == '__main__':
         # Calculate new charges
         ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
-        new_charges = rf.read_g_char(sc_name + ".log", high_pop_method)[0]
 
+        new_charges, new_energy = rf.read_g_char(sc_name + ".log", high_pop_method)
+        max_char = max([abs(i) for i in new_charges])
         # Correct charges if they are not perfectly neutral
         if sum(new_charges) != 0.0:
             new_charges[-1] -= sum(new_charges)
@@ -172,7 +173,7 @@ if __name__ == '__main__':
         deviation = sum([abs(i - j)
                          for (i, j) in zip(new_charges, old_charges)]) / len(mol)
         output_file.write("Iteration: " + str(sc_loop) +
-                          "  Deviation: " + str(deviation) + "\n")
+                          "  Deviation: " + str(deviation) + " Energy: "+str(new_energy)+"\n")
         output_file.flush()
 
         return deviation

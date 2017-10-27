@@ -234,7 +234,7 @@ def read_g_char(in_name, pop="ESP"):
     charges : list of floats
         Each partial charge value in the file
     energy : float
-        Gaussian ground state calculated energy in Hartree
+        Gaussian calculated energy in Hartree
 
     """
     with open(in_name) as gauss_file:
@@ -258,7 +258,8 @@ def read_g_char(in_name, pop="ESP"):
     for line in content:
         if "Done" in line:
             energy = float(line.split()[4])
-
+        if "Total Energy" in line:
+            energy = float(line.split()[4])
     return charges, energy
 
 
