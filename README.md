@@ -86,7 +86,7 @@ It is important to include the following keywords:
 In certain cases, the cluster of molecules generated radially will be unpractical due to the packing of the crystal.
 For example it may need to include a large number of distant molecules to also include a certain nearest neighbour molecule.
 In those cases a shell file can be manually edited in the user's favourite chemistry visualisation software to remove extra molecules.
-In that case a target shell file can be supplied which will be used to genereate `rl` and `ml`.
+In that case a target shell file can be supplied which will be used to generate `rl` and `ml`.
 Be extra careful that the central molecule has the correct orientation with respect to your generated cluster.
 It is recommended to use the shell file from a large radius calculation and manually strip it down to only the nearest neighbour molecules.
 
@@ -149,7 +149,7 @@ Run `cryspy.py` to begin the calculation.
 ### 3.2 Outputs
 
 The program only has three main outputs:
-  - `cryspy.out` which gives updates on all of the individual energies being calculatedm the total gradient norm and tne energy gap
+  - `cryspy.out` which gives updates on all of the individual energies being calculated, the total gradient norm and the energy gap
   - `geom_mol.xyz` which keeps a record of the optimising geometry
   - `geom_cluster.xyz` which combines `geom_mol.xyz` and `shell.xyz` for a better view of intermolecular interactions
   
@@ -193,14 +193,14 @@ If you find yourself with a bunch of `core.` files during your optimisation, ask
 If you are happily preparing a calculation, see no error, run `cryspy.py` with sensible geometries and find that your quantum chemistry program is very upset about something, it might be that the point charges you are feeding it are unreasonable.
 Indeed when you start fiddling with large numbers of constrained point charges in Ewald, the system of linear equations which fits them becomes highly linearly dependent and you end up with point charges with values in the thousands. If this happens to you just try a smaller number of constrained point charges while still containing your central molecule.
 
-Gaussian memory management is a mysterious beast and you may need to provide it with a lot of overhead memory to store the thousands of point charges you are feeding it. Allow for 2-4GB more memory that what you are telling `mh.temp` in `%mem`. For optimal performance, depending on what combination of programs and levels of theory you are using, you may want to distribute the Gaussian memory counterintuively. For example a HF calculation with a large cluster of atoms in Gaussian might be slower than an RI-CC2 Turbomole calculation of a small central molecule. Distribute memory accordingly.
+Gaussian memory management is a mysterious beast and you may need to provide it with a lot of overhead memory to store the thousands of point charges you are feeding it. Allow for 2-4GB more memory that what you are telling `mh.temp` in `%mem`. For optimal performance, depending on what combination of programs and levels of theory you are using, you may want to distribute the Gaussian memory counterintuitively. For example a HF calculation with a large cluster of atoms in Gaussian might be slower than an RI-CC2 Turbomole calculation of a small central molecule. Distribute memory accordingly.
 
 Hacking this program for your own personal needs is a perfectly good idea and you may be able to get a lot from just importing the I/O modules and the `Atom` class.
 You may however encounter a couple of difficulties:
 
 - This program makes use of some basic but essential object oriented programming paradigms such as the `Atom` object which is used ubiquitously or inheritance in the `Calc` class. These are made easy to use by the Python syntax but if you are not used to them they may cause an entrance barrier. I have tried to organise everything sensibly in modules which do what you would expect from their name but getting to grips with the architecture may be a bit annoying.
 
-If all you want to do is integrate your favourite quantum chemistry package into cryspy, all you need to do is a) make a new `Calc` objects modeled after one of the existing ones in the `calc.py` module and b) add a clause in the `cryspy.py` modeul for using that program at the very beginning of the sequence.
+If all you want to do is integrate your favourite quantum chemistry package into cryspy, all you need to do is a) make a new `Calc` objects modeled after one of the existing ones in the `calc.py` module and b) add a clause in the `cryspy.py` module for using that program at the very beginning of the sequence.
 
 - The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with prepare_calculation. Some Ewald documentation will come soon to aid you in this quest but apart from some installation and compilation guidelines, I cannot offer too much help.
 
