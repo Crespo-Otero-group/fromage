@@ -153,7 +153,8 @@ if __name__ == '__main__':
         ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
-        new_charges, new_energy = rf.read_g_char(sc_name + ".log", high_pop_method)
+        new_charges, new_energy = rf.read_g_char(
+            sc_name + ".log", high_pop_method)
         max_char = max([abs(i) for i in new_charges])
         # Correct charges if they are not perfectly neutral
         if sum(new_charges) != 0.0:
@@ -172,8 +173,10 @@ if __name__ == '__main__':
         # Calculate deviation between initial and new charges
         deviation = sum([abs(i - j)
                          for (i, j) in zip(new_charges, old_charges)]) / len(mol)
-        output_file.write("Iteration: " + str(sc_loop) +
-                          "  Deviation: " + str(deviation) + " Energy: "+str(new_energy)+"\n")
+        out_str = ("Iteration:", sc_loop, "Deviation:",
+                   deviation, "Energy:", new_energy)
+        output_file.write(
+            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f}".format(*out_str)))
         output_file.flush()
 
         return deviation
@@ -290,8 +293,9 @@ if __name__ == '__main__':
     for atom in atoms:
         atom.translate(-c_x, -c_y, -c_z)
 
-    # write useful xyz
+    # write useful xyz and new cell
     ef.write_xyz("mol.init.xyz", mol)
+    ef.write_xyz("fixed_cell.xyz", atoms)
 
     # make a very big cell
     mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
@@ -319,21 +323,22 @@ if __name__ == '__main__':
 
     else:  # This means normal electrostatic embedding
         if target_shell:
-                out_file.write("Reading the shell from: "+target_shell+"\n")
-                high_shell = rf.read_pos(target_shell)
-                high_target_mol_char = rf.read_g_char(high_pop_file, high_pop_method)[0]
-                # correct charges if they are not perfectly neutral
-                if sum(high_target_mol_char) != 0.0:
-                    output_file.write("Charge correction: " +
-                                      str(sum(high_target_mol_char)) + "\n")
-                    high_target_mol_char[-1] -= sum(high_target_mol_char)
-                # assigns charges to a molecule
-                high_target_pop_mol = rf.read_g_pos(high_pop_file)
-                for index, atom in enumerate(high_target_pop_mol):
-                    atom.q = high_target_mol_char[index]
+            out_file.write("Reading the shell from: " + target_shell + "\n")
+            high_shell = rf.read_pos(target_shell)
+            high_target_mol_char = rf.read_g_char(
+                high_pop_file, high_pop_method)[0]
+            # correct charges if they are not perfectly neutral
+            if sum(high_target_mol_char) != 0.0:
+                output_file.write("Charge correction: " +
+                                  str(sum(high_target_mol_char)) + "\n")
+                high_target_mol_char[-1] -= sum(high_target_mol_char)
+            # assigns charges to a molecule
+            high_target_pop_mol = rf.read_g_pos(high_pop_file)
+            for index, atom in enumerate(high_target_pop_mol):
+                atom.q = high_target_mol_char[index]
 
-                # assign charges to the rest of the cell
-                assign_charges(target_pop_mol, None, shell, None, max_bl)
+            # assign charges to the rest of the cell
+            assign_charges(target_pop_mol, None, shell, None, max_bl)
         else:
             # make a very big cell
             high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
@@ -351,7 +356,7 @@ if __name__ == '__main__':
 
     # to manually input the cluster
     if target_shell:
-        output_file.write("Reading the shell from: "+target_shell+"\n")
+        output_file.write("Reading the shell from: " + target_shell + "\n")
         shell = rf.read_pos(target_shell)
         target_mol_char = rf.read_g_char(low_pop_file, low_pop_method)[0]
         # correct charges if they are not perfectly neutral
@@ -388,7 +393,6 @@ if __name__ == '__main__':
         # write useful xyz
         ef.write_xyz("clust.xyz", clust)
         ef.write_xyz("shell.xyz", shell)
-
 
     if ewald:
         # Make inputs
