@@ -53,6 +53,7 @@ for mol_1_no,mol1 in enumerate(selected):
             else:
                 next
 
+print "Number of dimers: {}".format(len(dimers))
 ####### SELECT UNIQUE DIMERS
 connect_mats=[]
 for dim_no,dim_atom in enumerate(dimers):
@@ -68,7 +69,6 @@ for dim_no,dim_atom in enumerate(dimers):
     #connect_mats.append(np.sort(dim_cons, axis=None).reshape(dim_cons.shape))
     connect_mats.append(sorted(dim_cons))
 
-
 different=[]
 indexes=[]
 if len(connect_mats)==1: #dangerous!! Check it works
@@ -81,9 +81,8 @@ else:
                 different.append(j)
                 indexes.append(i)
 
-print len(different)
 unique_dims=[dimers[i] for i in indexes]
-print len(unique_dims)
+print "Number of unique dimers: {}\n".format(len(unique_dims))
 
 for dim_no,dim in enumerate(unique_dims):
         ef.write_xyz(str(sys.argv[1][:-4]+"_unique_"+str(dim_no)+".xyz"),dim)
@@ -91,4 +90,4 @@ for dim_no,dim in enumerate(unique_dims):
 alldims = [item for sublist in unique_dims for item in sublist]
 ef.write_xyz("alldims.xyz",alldims)
 end = time.time()
-print(end - start)
+print "Total time: {}s".format(round((end - start),2))
