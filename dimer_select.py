@@ -77,10 +77,9 @@ if len(connect_mats)==1: #dangerous!! Check it works
 else:
     for i,j in enumerate(connect_mats):
         for k,l in enumerate(connect_mats[i:]):
-            if j != l:
-                if j not in different:
-                    different.append(j)
-                    indexes.append(i)
+            if j != l and j not in different:
+                different.append(j)
+                indexes.append(i)
 
 print len(different)
 unique_dims=[dimers[i] for i in indexes]
