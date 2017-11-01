@@ -163,11 +163,17 @@ if __name__ == "__main__":
         unique_distances=[]
         for i,j in enumerate(distances):
             for k,l in enumerate(distances):
-                if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
-                    unique_distances.append(j)
-                    unique_distances.append(l)
-                    unique_dims.append(dimers[i])
-                    unique_dims.append(dimers[k])
+                if i != k:
+                    if i==0 and k==1:
+                        unique_distances.append(j)
+                        unique_distances.append(l)
+                        unique_dims.append(dimers[i])
+                        unique_dims.append(dimers[k])
+                    if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
+                        unique_distances.append(j)
+                        unique_distances.append(l)
+                        unique_dims.append(dimers[i])
+                        unique_dims.append(dimers[k])
 
 
     print "Number of unique dimers: {}".format(len(unique_dims))
