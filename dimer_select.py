@@ -158,8 +158,10 @@ if __name__ == "__main__":
                     unique_dims.append(dimers[i])
                     unique_dims.append(dimers[k])
 
+
     print "Number of unique dimers: {}".format(len(unique_dims))
 
+    # write the files
     for dim_no,dim in enumerate(unique_dims):
             outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
             print "Writing {}".format(outfile)
