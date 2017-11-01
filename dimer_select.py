@@ -6,7 +6,6 @@ The default output is called out.xyz but can be specified with -o
 
 """
 import time
-
 start = time.time()
 import sys
 import argparse
@@ -49,62 +48,68 @@ def make_dimers(selected):
     return dimers
 
 def differences(A,B):
-    print "difference:", A - B
-    print "SAD:", np.sum(np.abs(A - B))
-    print "SSD:", np.sum(np.square(A - B))
-    print "correlation:", np.corrcoef(np.array((A, B)))[0, 1]
+    difference=np.array(A) - np.array(B)
+    SAD=np.sum(np.abs(np.array(A) - np.array(B)))
+    SSD=np.sum(np.square(np.array(A) - np.array(B)))
+    correlation=np.corrcoef(np.array((A, B)))[0, 1]
+    """print "difference:", difference
+    print "SAD:", SAD
+    print "SSD:", SSD
+    print "correlation:",correlation"""
+    return float(SSD)
+
+def bond_distances(dimers):
+    connect_mats=[]
+    for dim_no,dim_atom in enumerate(dimers):
+        dim_cons=[]
+        for atom_no_A,atom_A in enumerate(dim_atom):
+            for atom_no_B,atom_B in enumerate(dim_atom[atom_no_A:]):
+                if atom_A!=atom_B:
+                    dim_cons.append(round(vector_distance((atom_A.x,atom_A.y,atom_A.z,atom_B.x,atom_B.y,atom_B.z)),0))
+        connect_mats.append(sorted(dim_cons))
+    return connect_mats
+
 
 in_f = sys.argv[1]
 
 atoms = rf.read_xyz(in_f)[-1]
 natoms= len(atoms)
+print "{} atoms".format(natoms)
 
 ##### SELECT MOLECULE
-print "{} atoms".format(natoms)
-print "Making molecules..."
+print "Generating molecules..."
 selected=make_molecules(atoms,1.7)
 print "{} molecules generated".format(len(selected))
 
 ###### SELECT DIMERS
-
-print "Making dimers..."
+print "Generating dimers..."
 dimers=make_dimers(selected)
 print "{} dimers generated".format(len(dimers))
 
 ####### SELECT UNIQUE DIMERS
 
-for i in range(8):
-    ef.write_xyz(sys.argv[1][:-4]+"dim-"+str(i)+".xyz",dimers[i])
 print "Finding unique dimers..."
-connect_mats=[]
-for dim_no,dim_atom in enumerate(dimers):
-    dim_cons=[]
-    for atom_no_A,atom_A in enumerate(dim_atom):
-        for atom_no_B,atom_B in enumerate(dim_atom[atom_no_A:]):
-            if atom_A!=atom_B:
-                dim_cons.append(round(vector_distance((atom_A.x,atom_A.y,atom_A.z,atom_B.x,atom_B.y,atom_B.z)),0))
-    connect_mats.append(sorted(dim_cons))
-differences(connect_mats[0],connect_mats[1])
-different=[]
-indexes=[]
-if len(connect_mats)==1: #dangerous!! Check it works
-    #ef.write_xyz("unique_dimer.xyz",dimers[0])
+distances=bond_distances(dimers)
+if len(distances)==1: #dangerous!! Check it works
+    ef.write_xyz(sys.argv[1][:-4]+"_unique.xyz",dimers[0])
     exit("One unique dimer found, writing to xyz")
 else:
-    for i,j in enumerate(connect_mats):
-        for k,l in enumerate(connect_mats[i:]):
-            if j != l and j not in different:
-                different.append(j)
-                indexes.append(i)
-print indexes
+    unique_dims=[]
+    unique_distances=[]
+    for i,j in enumerate(distances):
+        for k,l in enumerate(distances):
+            if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
+                unique_distances.append(j)
+                unique_distances.append(l)
+                unique_dims.append(dimers[i])
+                unique_dims.append(dimers[k])
+                print "{} {} : {}".format(i,k,differences(j,l))
 
-unique_dims=[dimers[i] for i in indexes]
 print "Number of unique dimers: {}\n".format(len(unique_dims))
 
 for dim_no,dim in enumerate(unique_dims):
         ef.write_xyz(str(sys.argv[1][:-4]+"_unique_"+str(dim_no)+".xyz"),dim)
-
 alldims = [item for sublist in unique_dims for item in sublist]
 ef.write_xyz("alldims.xyz",alldims)
 end = time.time()
-print "Total time: {}s".format(round((end - start),0))
+print "Total time: {}s".format(round((end - start),3))
