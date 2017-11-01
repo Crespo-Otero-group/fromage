@@ -17,15 +17,37 @@ from math import sqrt
 import numpy as np
 
 def vector_distance((x1,y1,z1,x2,y2,z2)):
+    """
+    Calculate the distances between two cartesian coordinates
+
+    Parameters
+    ----------
+    (x1,y1,z1,x2,y2,z2): hextuple of float of atomic coordinates
+    Returns
+    -------
+    dist: Float of distance in unites of coordinates
+    """
+    #calculate distance
     dist = sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2-z1)**2)
     return dist
 
 def make_molecules(atoms,bl):
+    """
+    Generate list of molecules based on bond length bl
+
+    Parameters
+    ----------
+    atoms: list of N atom objects
+    bl: bond length in unit of input file
+    Returns
+    -------
+    selected: list L of length M molecules, where each member of L is a list of atom objects
+    """
     selected=[]
     max_length=0
     for i,atom in enumerate(atoms):
         if atom not in [val for sublist in selected for val in sublist]:
-            molecule=ha.select(1.7,atoms,i) #creates a molecule
+            molecule=ha.select(bl,atoms,i) #creates a molecule
             if len(molecule)>max_length:
                 max_length=len(molecule)
                 selected=[]
@@ -35,81 +57,113 @@ def make_molecules(atoms,bl):
 
     return selected
 
-def make_dimers(selected):
+def make_dimers(selected,cd):
+    """
+    Generate a list of dimers based on centroid distances cd
+
+    Parameters
+    ----------
+    selected: list of M molecules containing N atom objects
+    cd: length between centroids of molecules
+    Returns
+    -------
+    dimers: list L of length D dimers, where each member of L is a list of 2N atom objects
+    """
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
         for mol_2_no,other_mol in enumerate(selected[mol_1_no:]):
             if mol1!=other_mol:
                 cent_1=ha.find_centroid(mol1)
                 cent_2=ha.find_centroid(other_mol)
-                if vector_distance(cent_1+cent_2) <7:
+                if vector_distance(cent_1+cent_2) <=cd:
+                    vector_distance(cent_1+cent_2)
                     new_mol=mol1+other_mol
                     dimers.append(new_mol)
     return dimers
 
 def differences(A,B):
-    difference=np.array(A) - np.array(B)
-    SAD=np.sum(np.abs(np.array(A) - np.array(B)))
+    """
+    Calulate the sum of squares difference between two lists, nominally of atomic distances
+
+    Parameters
+    ----------
+    A,B: lists of floats of bond distances
+    Returns
+    -------
+    SSD: float of sum of squares differences
+    """
     SSD=np.sum(np.square(np.array(A) - np.array(B)))
-    correlation=np.corrcoef(np.array((A, B)))[0, 1]
-    """print "difference:", difference
-    print "SAD:", SAD
-    print "SSD:", SSD
-    print "correlation:",correlation"""
     return float(SSD)
 
-def bond_distances(dimers):
-    connect_mats=[]
+def interatomic_distances(dimers):
+    """
+    Generate a list of the interatomic distances for each dimer in list of dimers
+
+    Parameters
+    ----------
+    dimers: list L of length D dimers, where each member of L is a list of 2N atom objects
+    Returns
+    -------
+    connections: list of connections per dimer
+    """
+    connections=[]
     for dim_no,dim_atom in enumerate(dimers):
         dim_cons=[]
         for atom_no_A,atom_A in enumerate(dim_atom):
             for atom_no_B,atom_B in enumerate(dim_atom[atom_no_A:]):
                 if atom_A!=atom_B:
                     dim_cons.append(round(vector_distance((atom_A.x,atom_A.y,atom_A.z,atom_B.x,atom_B.y,atom_B.z)),0))
-        connect_mats.append(sorted(dim_cons))
-    return connect_mats
+        connections.append(sorted(dim_cons))
+    return connections
 
+if __name__ == "__main__":
+    # parse the input
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i","--input", help="Input .xyz file")
+    parser.add_argument("-b", "--bond", help="Maximum length (in unites of input file) that qualifies as a bond",
+                        default=1.6, type=float)
+    parser.add_argument("-c","--centdist", help="Distance criterion (in unites of input file) to define a dimer, between the cetroids of two monomers",
+                        default=7.0, type=float)
+    user_input = sys.argv[1:]
+    args = parser.parse_args(user_input)
+    atoms = rf.read_xyz(args.input)[-1]
+    natoms= len(atoms)
+    print "{} atoms".format(natoms)
 
-in_f = sys.argv[1]
+    ##### SELECT MOLECULE
+    print "Generating molecules..."
+    selected=make_molecules(atoms,args.bond)
+    print "{} molecules generated".format(len(selected))
 
-atoms = rf.read_xyz(in_f)[-1]
-natoms= len(atoms)
-print "{} atoms".format(natoms)
+    ###### SELECT DIMERS
+    print "Generating dimers..."
+    dimers=make_dimers(selected,args.centdist)
+    print "{} dimers generated".format(len(dimers))
 
-##### SELECT MOLECULE
-print "Generating molecules..."
-selected=make_molecules(atoms,1.7)
-print "{} molecules generated".format(len(selected))
+    ####### SELECT UNIQUE DIMERS
 
-###### SELECT DIMERS
-print "Generating dimers..."
-dimers=make_dimers(selected)
-print "{} dimers generated".format(len(dimers))
+    print "Finding unique dimers..."
+    distances=interatomic_distances(dimers)
+    if len(distances)==1: #dangerous!! Check it works
+        ef.write_xyz(sys.argv[1][:-4]+"_unique.xyz",dimers[0])
+        exit("One unique dimer found, writing to xyz")
+    else:
+        unique_dims=[]
+        unique_distances=[]
+        for i,j in enumerate(distances):
+            for k,l in enumerate(distances):
+                if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
+                    unique_distances.append(j)
+                    unique_distances.append(l)
+                    unique_dims.append(dimers[i])
+                    unique_dims.append(dimers[k])
 
-####### SELECT UNIQUE DIMERS
+    print "Number of unique dimers: {}".format(len(unique_dims))
 
-print "Finding unique dimers..."
-distances=bond_distances(dimers)
-if len(distances)==1: #dangerous!! Check it works
-    ef.write_xyz(sys.argv[1][:-4]+"_unique.xyz",dimers[0])
-    exit("One unique dimer found, writing to xyz")
-else:
-    unique_dims=[]
-    unique_distances=[]
-    for i,j in enumerate(distances):
-        for k,l in enumerate(distances):
-            if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
-                unique_distances.append(j)
-                unique_distances.append(l)
-                unique_dims.append(dimers[i])
-                unique_dims.append(dimers[k])
-                print "{} {} : {}".format(i,k,differences(j,l))
+    for dim_no,dim in enumerate(unique_dims):
+            outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
+            print "Writing {}".format(outfile)
+            ef.write_xyz(outfile,dim)
 
-print "Number of unique dimers: {}\n".format(len(unique_dims))
-
-for dim_no,dim in enumerate(unique_dims):
-        ef.write_xyz(str(sys.argv[1][:-4]+"_unique_"+str(dim_no)+".xyz"),dim)
-alldims = [item for sublist in unique_dims for item in sublist]
-ef.write_xyz("alldims.xyz",alldims)
-end = time.time()
-print "Total time: {}s".format(round((end - start),3))
+    end = time.time()
+    print "Total time: {}s".format(round((end - start),3))
