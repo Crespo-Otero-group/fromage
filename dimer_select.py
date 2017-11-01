@@ -22,10 +22,12 @@ def vector_distance((x1,y1,z1,x2,y2,z2)):
 
     Parameters
     ----------
-    (x1,y1,z1,x2,y2,z2): hextuple of float of atomic coordinates
+    (x1,y1,z1,x2,y2,z2): hextuple of floats
+            atomic coordinates of atoms 1 and 2
     Returns
     -------
-    dist: Float of distance in unites of coordinates
+    dist: Float
+            distance in units of coordinates
     """
     #calculate distance
     dist = sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2-z1)**2)
@@ -37,11 +39,13 @@ def make_molecules(atoms,bl):
 
     Parameters
     ----------
-    atoms: list of N atom objects
-    bl: bond length in unit of input file
+    atoms: list of Atom objects
+    bl: float
+        Bond length in unit of input file
     Returns
     -------
-    selected: list L of length M molecules, where each member of L is a list of atom objects
+    selected: list of lists
+        List L of length M molecules, where each member of L is a list of atom objects
     """
     selected=[]
     max_length=0
@@ -63,11 +67,14 @@ def make_dimers(selected,cd):
 
     Parameters
     ----------
-    selected: list of M molecules containing N atom objects
-    cd: length between centroids of molecules
+    selected: list of lists
+        M molecules containing N atom objects
+    cd: float
+        Length between centroids of molecules
     Returns
     -------
-    dimers: list L of length D dimers, where each member of L is a list of 2N atom objects
+    dimers: list of lists
+        List L of length D dimers, where each member of L is a list of 2N atom objects
     """
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
@@ -87,10 +94,12 @@ def differences(A,B):
 
     Parameters
     ----------
-    A,B: lists of floats of bond distances
+    A,B: lists of floats
+        Bond distances in dimers
     Returns
     -------
-    SSD: float of sum of squares differences
+    SSD: float
+        Sum of squares differences
     """
     SSD=np.sum(np.square(np.array(A) - np.array(B)))
     return float(SSD)
@@ -101,10 +110,12 @@ def interatomic_distances(dimers):
 
     Parameters
     ----------
-    dimers: list L of length D dimers, where each member of L is a list of 2N atom objects
+    dimers: list of lists
+     List of L of length D dimers, where each member of L is a list of 2N atom objects
     Returns
     -------
-    connections: list of connections per dimer
+    connections: list
+        Connections per dimer
     """
     connections=[]
     for dim_no,dim_atom in enumerate(dimers):
