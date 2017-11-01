@@ -29,6 +29,9 @@ natoms= len(atoms)
 ##### SELECT MOLECULE
 selected=[]
 max_length=0
+
+print "{} atoms".format(natoms)
+print "Making molecules..."
 for i,atom in enumerate(atoms):
     if atom not in [val for sublist in selected for val in sublist]:
         molecule=ha.select(1.7,atoms,i) #creates a molecule
@@ -39,8 +42,11 @@ for i,atom in enumerate(atoms):
         elif len(molecule)==max_length:
             selected.append(molecule)
 
+print "{} molecules generated".format(len(selected))
 
 ###### SELECT DIMERS
+
+print "Making dimers..."
 dimers=[]
 for mol_1_no,mol1 in enumerate(selected):
     for mol_2_no,other_mol in enumerate(selected[mol_1_no:]):
@@ -53,8 +59,9 @@ for mol_1_no,mol1 in enumerate(selected):
             else:
                 next
 
-print "Number of dimers: {}".format(len(dimers))
+print "{} dimers generated".format(len(dimers))
 ####### SELECT UNIQUE DIMERS
+print "Finding unique dimers..."
 connect_mats=[]
 for dim_no,dim_atom in enumerate(dimers):
     #dim_cons=np.zeros((len(dim_atom),len(dim_atom)))
