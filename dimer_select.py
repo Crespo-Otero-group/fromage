@@ -51,7 +51,7 @@ def make_molecules(atoms,bl):
     max_length=0
     for i,atom in enumerate(atoms):
         if atom not in [val for sublist in selected for val in sublist]:
-            molecule=ha.select(bl,atoms,i) #creates a molecule
+            molecule=ha.select(bl,atoms[i:],0) #creates a molecule
             if len(molecule)>max_length:
                 max_length=len(molecule)
                 selected=[]
@@ -102,7 +102,8 @@ def differences(A,B):
         Sum of squares differences
     """
     SSD=np.sum(np.square(np.array(A) - np.array(B)))
-    return float(SSD)
+    return float(SSD)/len(A)
+
 
 def interatomic_distances(dimers):
     """
@@ -149,26 +150,46 @@ if __name__ == "__main__":
     ###### SELECT DIMERS
     print "Generating dimers..."
     dimers=make_dimers(selected,args.centdist)
-    print "{} dimers generated".format(len(dimers))
+    if len(dimers)==1:
+        ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
+        exit("One  dimer found, writing to xyz")
+    else:
+        print "{} dimers generated".format(len(dimers))
 
     ####### SELECT UNIQUE DIMERS
 
     print "Finding unique dimers..."
     distances=interatomic_distances(dimers)
-    if len(distances)==1: #dangerous!! Check it works
-        ef.write_xyz(sys.argv[1][:-4]+"_unique.xyz",dimers[0])
-        exit("One unique dimer found, writing to xyz")
-    else:
-        unique_dims=[]
-        unique_distances=[]
-        for i,j in enumerate(distances):
-            for k,l in enumerate(distances):
-                if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
+
+    evaluated=[]
+    unique_dims=[]
+    unique_distances=[]
+    diffs=[]
+    for i,j in enumerate(distances):
+        for k,l in enumerate(distances):
+            if i != k and (i,k) not in evaluated:
+                evaluated.append((i,k))
+                evaluated.append((k,i))
+                """if i==0 and k==1:
                     unique_distances.append(j)
                     unique_distances.append(l)
                     unique_dims.append(dimers[i])
                     unique_dims.append(dimers[k])
+"""
+                if differences(j,l)>0.1: #and (j not in unique_distances and l not in unique_distances):
 
+                    if j not in unique_distances:
+                        print differences(j,l)
+                        diffs.append(differences(j,l))
+                        unique_distances.append(j)
+                        unique_dims.append(dimers[i])
+
+                    if l not in unique_distances:
+                        print differences(j,l)
+                        diffs.append(differences(j,l))
+                        unique_distances.append(l)
+                        unique_dims.append(dimers[k])
+                    print len(unique_dims)
 
     print "Number of unique dimers: {}".format(len(unique_dims))
 
