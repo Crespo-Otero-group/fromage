@@ -161,35 +161,21 @@ if __name__ == "__main__":
     print "Finding unique dimers..."
     distances=interatomic_distances(dimers)
 
-    evaluated=[]
-    unique_dims=[]
-    unique_distances=[]
-    diffs=[]
-    for i,j in enumerate(distances):
-        for k,l in enumerate(distances):
-            if i != k and (i,k) not in evaluated:
-                evaluated.append((i,k))
-                evaluated.append((k,i))
-                """if i==0 and k==1:
-                    unique_distances.append(j)
-                    unique_distances.append(l)
-                    unique_dims.append(dimers[i])
-                    unique_dims.append(dimers[k])
-"""
-                if differences(j,l)>0.1: #and (j not in unique_distances and l not in unique_distances):
+    unique_dims = [dimers[0]]
+    unique_distances = [distances[0]]
 
-                    if j not in unique_distances:
-                        print differences(j,l)
-                        diffs.append(differences(j,l))
-                        unique_distances.append(j)
-                        unique_dims.append(dimers[i])
-
-                    if l not in unique_distances:
-                        print differences(j,l)
-                        diffs.append(differences(j,l))
-                        unique_distances.append(l)
-                        unique_dims.append(dimers[k])
-                    print len(unique_dims)
+    # filter out the unique dimers
+    for i,distance in enumerate(distances):
+        unique = True
+        for cross_check in unique_distances:
+            # if the distance array is already considered unique
+            if differences(distance,cross_check) < 0.1:
+                unique = False
+                break
+        # if it's still unique after the checks
+        if unique:
+            unique_dims.append(dimers[i])
+            unique_distances.append(distance)
 
     print "Number of unique dimers: {}".format(len(unique_dims))
 
