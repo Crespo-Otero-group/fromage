@@ -31,25 +31,22 @@ def select(max_r, atoms, label):
         The atoms belonging to the molecule which is selected
 
     """
-<<<<<<< Updated upstream
-    N = len(atoms)
-    M = np.zeros((N, N))
 
-    selected = [atoms[label]]
-||||||| merged common ancestors
-    selected = [atoms[label]]
-=======
     new_atoms = [atoms[label]]
-    selected = new_atom
->>>>>>> Stashed changes
+    selected = new_atoms
     n = True
     while n == True:
         n = False
-        for j in atoms:
-            if new_atom.dist(j.x, j.y, j.z) <= max_r and j not in selected:
-                new_atom = j
-                selected.append(new_atom)
-                n = True
+        old_atoms = new_atoms
+        new_atoms = []
+        for i in old_atoms:
+            for j in atoms:
+                # find atoms bonded to the newest atoms in the list
+                if i.dist(j.x, j.y, j.z) <= max_r and j not in selected:
+                    new_atoms.append(j)
+                    selected.append(j)
+                    # if no more atoms are found stop the loop
+                    n = True
 
     return selected
 
