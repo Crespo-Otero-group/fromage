@@ -51,7 +51,7 @@ def make_molecules(atoms,bl):
     max_length=0
     for i,atom in enumerate(atoms):
         if atom not in [val for sublist in selected for val in sublist]:
-            molecule=ha.select(bl,atoms,i) #creates a molecule
+            molecule=ha.select(bl,atoms[i:],0) #creates a molecule
             if len(molecule)>max_length:
                 max_length=len(molecule)
                 selected=[]
@@ -164,23 +164,33 @@ if __name__ == "__main__":
     evaluated=[]
     unique_dims=[]
     unique_distances=[]
+    diffs=[]
     for i,j in enumerate(distances):
         for k,l in enumerate(distances):
             if i != k and (i,k) not in evaluated:
                 evaluated.append((i,k))
                 evaluated.append((k,i))
-                if i==0 and k==1:
+                """if i==0 and k==1:
                     unique_distances.append(j)
                     unique_distances.append(l)
                     unique_dims.append(dimers[i])
                     unique_dims.append(dimers[k])
+"""
+                if differences(j,l)>0.1: #and (j not in unique_distances and l not in unique_distances):
 
-                elif differences(j,l)>0.1 and (j not in unique_distances and l not in unique_distances):
-                    unique_distances.append(j)
-                    unique_distances.append(l)
-                    unique_dims.append(dimers[i])
-                    unique_dims.append(dimers[k])
-    print len(evaluated)
+                    if j not in unique_distances:
+                        print differences(j,l)
+                        diffs.append(differences(j,l))
+                        unique_distances.append(j)
+                        unique_dims.append(dimers[i])
+
+                    if l not in unique_distances:
+                        print differences(j,l)
+                        diffs.append(differences(j,l))
+                        unique_distances.append(l)
+                        unique_dims.append(dimers[k])
+                    print len(unique_dims)
+
     print "Number of unique dimers: {}".format(len(unique_dims))
 
     # write the files
