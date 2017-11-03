@@ -31,17 +31,21 @@ def select(max_r, atoms, label):
         The atoms belonging to the molecule which is selected
 
     """
-    N = len(atoms)
-    M = np.zeros((N, N))
 
-    selected = [atoms[label]]
+    new_atoms = [atoms[label]]
+    selected = new_atoms
     n = True
     while n == True:
         n = False
-        for i in selected:
+        old_atoms = new_atoms
+        new_atoms = []
+        for i in old_atoms:
             for j in atoms:
+                # find atoms bonded to the newest atoms in the list
                 if i.dist(j.x, j.y, j.z) <= max_r and j not in selected:
+                    new_atoms.append(j)
                     selected.append(j)
+                    # if no more atoms are found stop the loop
                     n = True
 
     return selected

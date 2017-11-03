@@ -51,7 +51,7 @@ def make_molecules(atoms,bl):
     max_length=0
     for i,atom in enumerate(atoms):
         if atom not in [val for sublist in selected for val in sublist]:
-            molecule=ha.select(bl,atoms,i) #creates a molecule
+            molecule=ha.select(bl,atoms[i:],0) #creates a molecule
             if len(molecule)>max_length:
                 max_length=len(molecule)
                 selected=[]
@@ -102,7 +102,8 @@ def differences(A,B):
         Sum of squares differences
     """
     SSD=np.sum(np.square(np.array(A) - np.array(B)))
-    return float(SSD)
+    return float(SSD)/len(A)
+
 
 def interatomic_distances(dimers):
     """
@@ -149,26 +150,32 @@ if __name__ == "__main__":
     ###### SELECT DIMERS
     print "Generating dimers..."
     dimers=make_dimers(selected,args.centdist)
-    print "{} dimers generated".format(len(dimers))
+    if len(dimers)==1:
+        ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
+        exit("One  dimer found, writing to xyz")
+    else:
+        print "{} dimers generated".format(len(dimers))
 
     ####### SELECT UNIQUE DIMERS
 
     print "Finding unique dimers..."
     distances=interatomic_distances(dimers)
-    if len(distances)==1: #dangerous!! Check it works
-        ef.write_xyz(sys.argv[1][:-4]+"_unique.xyz",dimers[0])
-        exit("One unique dimer found, writing to xyz")
-    else:
-        unique_dims=[]
-        unique_distances=[]
-        for i,j in enumerate(distances):
-            for k,l in enumerate(distances):
-                if differences(j,l)>1 and (j not in unique_distances and l not in unique_distances):
-                    unique_distances.append(j)
-                    unique_distances.append(l)
-                    unique_dims.append(dimers[i])
-                    unique_dims.append(dimers[k])
 
+    unique_dims = [dimers[0]]
+    unique_distances = [distances[0]]
+
+    # filter out the unique dimers
+    for i,distance in enumerate(distances):
+        unique = True
+        for cross_check in unique_distances:
+            # if the distance array is already considered unique
+            if differences(distance,cross_check) < 0.1:
+                unique = False
+                break
+        # if it's still unique after the checks
+        if unique:
+            unique_dims.append(dimers[i])
+            unique_distances.append(distance)
 
     print "Number of unique dimers: {}".format(len(unique_dims))
 

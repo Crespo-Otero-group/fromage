@@ -102,6 +102,7 @@ If this is your intention, don't forget to use `density=current` to make sure th
 Once you have finished running `prepare_calculation.py`, you will end up with a few files:
   - `prep.out` which gives you information about how your preparation went. If the last line gives you an ending time, that is good news
   - `mol.init.xyz` will be the initial position of your molecule for the optimisation
+  - `fixed_cell.xyz` is the unit cell after any necessary transformations have been applied to complete important molecules
   - `clust.xyz` is the real system i.e. a cluster of molecules with `mol.init.xyz` in the middle
   - `shell.xyz` is the cluster of molecules without the central one
   - `.temp` files corresponding to all of the parallel calculations
