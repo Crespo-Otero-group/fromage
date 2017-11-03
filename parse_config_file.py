@@ -70,7 +70,7 @@ def parse_inputs(name="config"):
     inputs = complete_config(name)
 
     inputs["max_bl"] = float(inputs["max_bl"])
-    if type(inputs["atom_label"]):
+    if type(inputs["atom_label"]) == str:
         inputs["atom_label"] = [int(inputs["atom_label"]) - 1]
     else:
         label_atom = [int(i) - 1 for i in inputs["atom_label"]]
