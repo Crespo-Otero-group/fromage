@@ -226,36 +226,36 @@ if __name__ == '__main__':
     low_pop_method = inputs["low_pop_method"]
 
     # maximum bond length when defining a molecule
-    max_bl = float(inputs["max_bl"])
+    max_bl = inputs["max_bl"]
 
     # label of an atom which will be part of the quantum cluster
     # warning: [0,N-1], not [1,N]
     atom_label = inputs["atom_label"]
 
     # the number of checkpoints in region 1
-    nChk = int(inputs["nchk"])
+    nChk = inputs["nchk"]
 
     # the number of constrained charge atoms
     # i.e. atoms in regions 1 and 2
-    nAt = int(inputs["nat"])
+    nAt = inputs["nat"]
 
     # Ewald will multiply the unit cell in the direction
     # of the a, b or c vector 2N times (N positive and N negative)
-    aN = int(inputs["an"])
-    bN = int(inputs["bn"])
-    cN = int(inputs["cn"])
+    aN = inputs["an"]
+    bN = inputs["bn"]
+    cN = inputs["cn"]
 
     # the cluster will be of all molecules with atoms less than
     # clust_rad away from the centre of the central molecule
-    clust_rad = float(inputs["clust_rad"])
+    clust_rad = inputs["clust_rad"]
 
     # how many times the input cluster needs to be repeated along each vector
     # positively and negatively to be able to contain the cluster to select.
     # the supercluster ends up being (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times
     # bigger
-    traAN = int(inputs["traan"])
-    traBN = int(inputs["trabn"])
-    traCN = int(inputs["tracn"])
+    traAN = inputs["traan"]
+    traBN = inputs["trabn"]
+    traCN = inputs["tracn"]
 
     # use the self consistent version?
     self_consistent = inputs["self_consistent"]
@@ -264,10 +264,10 @@ if __name__ == '__main__':
     sc_temp = inputs["sc_temp"]
 
     # Self Consistent Ewald deviation tolerance
-    dev_tol = float(inputs["dev_tol"])
+    dev_tol = inputs["dev_tol"]
 
     # Ewald embedding, use 0 for false
-    ewald = bool(inputs["ewald"])
+    ewald = inputs["ewald"]
 
     # end config inputs
 
