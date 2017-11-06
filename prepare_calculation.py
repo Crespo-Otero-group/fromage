@@ -297,11 +297,6 @@ if __name__ == '__main__':
     ef.write_xyz("mol.init.xyz", mol)
     ef.write_xyz("fixed_cell.xyz", atoms)
 
-    # make a very big cell
-    mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
-    # get a cluster of atoms
-    clust = ha.make_cluster(mega, clust_rad, max_bl)
-
     # Self Consistent EWALD
     if self_consistent:
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
