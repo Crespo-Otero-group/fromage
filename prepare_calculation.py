@@ -278,7 +278,7 @@ if __name__ == '__main__':
     # read the input atoms
     atoms = rf.read_pos(cell_file)
     output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
-
+    output_file.flush()
     # the molecule of interest and the atoms which now contain
     # the full, unchopped molecule
     # NB: all objects in mol are also referenced inside atoms
@@ -300,6 +300,7 @@ if __name__ == '__main__':
     # Self Consistent EWALD
     if self_consistent:
         output_file.write("SELF CONSISTENT LOOP INITIATED\n")
+        output_file.flush()
         sc_loop = 0
         while True:
             dev = ewald_loop(atoms, mol)
@@ -311,14 +312,20 @@ if __name__ == '__main__':
 
     # Final (or only) Ewald
     if ewald:
+        output_file.write("EWALD START\n")
+        output_file.flush()
         run_ewald(name, mol, atoms, vectors, in_nAt=nAt,
                   in_aN=aN, in_bN=bN, in_cN=cN, in_nChk=nChk)
+        output_file.write("EWALD END\n")
+        output_file.flush()
+
         # read points output by Ewald
         points = rf.read_points(name + ".pts-tb")
 
     else:  # This means normal electrostatic embedding
         if target_shell:
             out_file.write("Reading the shell from: " + target_shell + "\n")
+            output_file.flush()
             high_shell = rf.read_pos(target_shell)
             high_target_mol_char = rf.read_g_char(
                 high_pop_file, high_pop_method)[0]
@@ -367,6 +374,10 @@ if __name__ == '__main__':
 
         # assign charges to the rest of the cell
         assign_charges(target_pop_mol, None, shell, None, max_bl)
+
+        # show full cluster
+        clust = shell + mol
+        ef.write_xyz("clust.xyz", clust)
     # to generate the cluster from radius
     else:
         # generate a shell of molecules with low level charges
