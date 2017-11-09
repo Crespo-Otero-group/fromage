@@ -308,7 +308,7 @@ def make_cluster(atoms, clust_rad, max_bl):
 
     # atoms in the cluster (seed_atoms + atoms to complete molecules)
     clust_atoms = []
-    for atom in seed_atoms:
+    for i,atom in enumerate(seed_atoms):
         if atom not in clust_atoms:
             mol2Add = select(max_bl, atoms, atoms.index(atom))
             for atom2Add in mol2Add:

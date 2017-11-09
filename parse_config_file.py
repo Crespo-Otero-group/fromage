@@ -70,17 +70,17 @@ def parse_inputs(name="config"):
     inputs = complete_config(name)
 
     inputs["max_bl"] = float(inputs["max_bl"])
-    if type(inputs["atom_label"]):
+    if type(inputs["atom_label"]) == str:
         inputs["atom_label"] = [int(inputs["atom_label"]) - 1]
     else:
-        label_atom = [int(i) - 1 for i in inputs["atom_label"]]
+        inputs["atom_label"] = [int(i) - 1 for i in inputs["atom_label"]]
     inputs["ewald"] = bool_cast(inputs["ewald"])
     inputs["nchk"] = int(inputs["nchk"])
     inputs["nat"] = int(inputs["nat"])
     inputs["an"] = int(inputs["an"])
     inputs["bn"] = int(inputs["bn"])
     inputs["cn"] = int(inputs["cn"])
-    inputs["clust_rad"] = int(inputs["clust_rad"])
+    inputs["clust_rad"] = float(inputs["clust_rad"])
     inputs["traan"] = int(inputs["traan"])
     inputs["trabn"] = int(inputs["trabn"])
     inputs["tracn"] = int(inputs["tracn"])
