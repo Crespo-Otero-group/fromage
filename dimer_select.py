@@ -61,7 +61,7 @@ def make_molecules(atoms,bl):
 
     return selected
 
-def make_dimers(selected,cd):
+def make_dimers_cd(selected,cd):
     """
     Generate a list of dimers based on centroid distances cd
 
@@ -88,7 +88,7 @@ def make_dimers(selected,cd):
                     dimers.append(new_mol)
     return dimers
 
-def make_dimers_contacts(selected,ad):
+def make_dimers_ad(selected,ad):
     """
     Generate a list of dimers based on intermolecular atomic distancead
 
@@ -97,7 +97,7 @@ def make_dimers_contacts(selected,ad):
     selected: list of lists
         M molecules containing N atom objects
     ad: float
-        Maximum ntermolecular atomic distance 
+        Maximum ntermolecular atomic distance
     Returns
     -------
     dimers: list of lists
@@ -186,10 +186,10 @@ if __name__ == "__main__":
     print "\n2. Generating dimers"
     if args.dimtype=="c":
         print "Using centroid distance of {}".format(args.centdist)
-        dimers=make_dimers(selected,args.centdist)
+        dimers=make_dimers_cd(selected,args.centdist)
     elif args.dimtype=="a":
         print "Using interatomic distance of {}".format(args.atomdist)
-        dimers=make_dimers_contacts(selected,args.atomdist)
+        dimers=make_dimers_contacts_ad(selected,args.atomdist)
     else:
         sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
 
