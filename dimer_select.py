@@ -87,9 +87,22 @@ def make_dimers(selected,cd):
                     new_mol=mol1+mol2
                     dimers.append(new_mol)
     return dimers
-def make_dimers_contacts(selected,contact):
-    #contact=5
-    print "using contacts..."
+
+def make_dimers_contacts(selected,ad):
+    """
+    Generate a list of dimers based on intermolecular atomic distancead
+
+    Parameters
+    ----------
+    selected: list of lists
+        M molecules containing N atom objects
+    ad: float
+        Maximum ntermolecular atomic distance 
+    Returns
+    -------
+    dimers: list of lists
+        List L of length D dimers, where each member of L is a list of 2N atom objects
+    """
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
         for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
