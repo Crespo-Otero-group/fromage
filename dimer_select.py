@@ -89,6 +89,7 @@ def make_dimers(selected,cd):
     return dimers
 def make_dimers_contacts(selected,contact):
     #contact=5
+    print "using contacts..."
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
         for mol_2_no,other_mol in enumerate(selected[mol_1_no:]):
@@ -166,8 +167,8 @@ if __name__ == "__main__":
 
     ###### SELECT DIMERS
     print "Generating dimers..."
-    dimers=make_dimers(selected,args.centdist)
-    #dimers=make_dimers_contacts(selected,3.5)
+    #dimers=make_dimers(selected,args.centdist)
+    dimers=make_dimers_contacts(selected,3.5)
     if len(dimers)==1:
         ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
         exit("One  dimer found, writing to xyz")
