@@ -77,14 +77,14 @@ def make_dimers(selected,cd):
         List L of length D dimers, where each member of L is a list of 2N atom objects
     """
     dimers=[]
-    for mol_1_no,mol1 in enumerate(selected):
-        for mol_2_no,other_mol in enumerate(selected[mol_1_no:]):
-            if mol1!=other_mol:
+    for mol_1_no, mol1 in enumerate(selected):
+        for mol_2_no, mol2 in enumerate(selected[mol_1_no:]):
+            if mol1!=mol2:
                 cent_1=ha.find_centroid(mol1)
-                cent_2=ha.find_centroid(other_mol)
+                cent_2=ha.find_centroid(mol2)
                 if vector_distance(cent_1+cent_2) <=cd:
                     vector_distance(cent_1+cent_2)
-                    new_mol=mol1+other_mol
+                    new_mol=mol1+mol2
                     dimers.append(new_mol)
     return dimers
 def make_dimers_contacts(selected,contact):
@@ -92,14 +92,14 @@ def make_dimers_contacts(selected,contact):
     print "using contacts..."
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
-        for mol_2_no,other_mol in enumerate(selected[mol_1_no:]):
-            if mol1!=other_mol:
+        for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
+            if mol1!=mol2:
                 for atom1 in mol1:
-                    for atom2 in other_mol:
+                    for atom2 in mol2:
                         x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
                         if vector_distance((x1,y1,z1,x2,y2,z2))<=contact:
-                            new_mol=mol1+other_mol
-                            dimers.append(new_mol)
+                            dimer=mol1+mol2
+                            dimers.append(dimer)
                             break
                     break
     return dimers
@@ -167,8 +167,8 @@ if __name__ == "__main__":
 
     ###### SELECT DIMERS
     print "Generating dimers..."
-    #dimers=make_dimers(selected,args.centdist)
-    dimers=make_dimers_contacts(selected,3.5)
+    dimers=make_dimers(selected,args.centdist)
+    #dimers=make_dimers_contacts(selected,3.5)
     if len(dimers)==1:
         ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
         exit("One  dimer found, writing to xyz")
