@@ -152,8 +152,12 @@ if __name__ == "__main__":
     parser.add_argument("-i","--input", help="Input .xyz file")
     parser.add_argument("-b", "--bond", help="Maximum length (in unites of input file) that qualifies as a bond",
                         default=1.6, type=float)
-    parser.add_argument("-c","--centdist", help="Distance criterion (in unites of input file) to define a dimer, between the cetroids of two monomers",
+    parser.add_argument("-dt", "--dimtype", help="Use centroid distance [C] or shortest atomic distances [A] to define a dimer",
+                        default=str("c"),type=str.lower)
+    parser.add_argument("-c","--centdist", help="Distance criterion (in units of input file) to define a dimer, between the cetroids of two monomers",
                         default=7.0, type=float)
+    parser.add_argument("-d","--atomdist",help="Distance criterion (in units of input file) to define a dimer, the maximum distance between atoms on each monomer",
+                        default=3.5, type=float)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     atoms = rf.read_xyz(args.input)[-1]
@@ -161,14 +165,21 @@ if __name__ == "__main__":
     print "{} atoms".format(natoms)
 
     ##### SELECT MOLECULE
-    print "Generating molecules..."
+    print "\n1. Generating molecules.\nMax bond length {}".format(args.bond)
     selected=make_molecules(atoms,args.bond)
     print "{} molecules generated".format(len(selected))
 
     ###### SELECT DIMERS
-    print "Generating dimers..."
-    dimers=make_dimers(selected,args.centdist)
-    #dimers=make_dimers_contacts(selected,3.5)
+    print "\n2. Generating dimers"
+    if args.dimtype=="c":
+        print "Using centroid distance of {}".format(args.centdist)
+        dimers=make_dimers(selected,args.centdist)
+    elif args.dimtype=="a":
+        print "Using interatomic distance of {}".format(args.atomdist)
+        dimers=make_dimers_contacts(selected,args.atomdist)
+    else:
+        sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
+
     if len(dimers)==1:
         ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
         exit("One  dimer found, writing to xyz")
@@ -177,7 +188,7 @@ if __name__ == "__main__":
 
     ####### SELECT UNIQUE DIMERS
 
-    print "Finding unique dimers..."
+    print "\n3. Finding unique dimers"
     distances=interatomic_distances(dimers)
 
     unique_dims = [dimers[0]]
@@ -205,4 +216,4 @@ if __name__ == "__main__":
             ef.write_xyz(outfile,dim)
 
     end = time.time()
-    print "Total time: {}s".format(round((end - start),3))
+    print "\nTotal time: {}s".format(round((end - start),3))
