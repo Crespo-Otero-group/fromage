@@ -228,7 +228,7 @@ if __name__ == "__main__":
             unique_distances.append(distance)
 
     print "Number of unique dimers: {}".format(len(unique_dims))
-
+    print [np.mean(i) for i in distances]
     # write the files
     for dim_no,dim in enumerate(unique_dims):
             outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
