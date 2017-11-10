@@ -181,6 +181,12 @@ if __name__ == "__main__":
     print "\n1. Generating molecules.\nMax bond length {}".format(args.bond)
     selected=make_molecules(atoms,args.bond)
     print "{} molecules generated".format(len(selected))
+    lengths=[]
+    for atom1 in selected[0]:
+        for atom2 in selected[0]:
+            x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
+            lengths.append(vector_distance((x1,y1,z1,x2,y2,z2)))
+    print "Min:{}\nMax:{}".format(min(lengths),max(lengths))
 
     ###### SELECT DIMERS
     print "\n2. Generating dimers"
@@ -192,8 +198,9 @@ if __name__ == "__main__":
         dimers=make_dimers_contacts_ad(selected,args.atomdist)
     else:
         sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
-
-    if len(dimers)==1:
+    if len(dimers)==0:
+        exit("No dimers found. Try adjusting the selection criteria.\nExiting")
+    elif len(dimers)==1:
         ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
         exit("One  dimer found, writing to xyz")
     else:
