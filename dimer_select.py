@@ -232,8 +232,11 @@ if __name__ == "__main__":
     print "Number of unique dimers: {}".format(len(unique_dims))
 
     from collections import Counter
-    for i in Counter([np.mean(i).round(1) for i in distances]).values():
-        print "{}%".format((i/len([np.mean(i).round(1) for i in distances]))*100)
+    means=[np.mean(i).round(1) for i in distances]
+    unique_means=Counter([np.mean(i).round(1) for i in distances]).values()
+    for i in unique_means:
+        print "{}%".format((i/len(means))*100)
+        
     # write the files
     for dim_no,dim in enumerate(unique_dims):
             outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
