@@ -162,7 +162,7 @@ def interatomic_distances(dimers):
 if __name__ == "__main__":
     # parse the input
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i","--input", help="Input .xyz file")
+    parser.add_argument("input", help="Input .xyz file",type=str)
     parser.add_argument("-b", "--bond", help="Maximum length (in unites of input file) that qualifies as a bond",
                         default=1.6, type=float)
     parser.add_argument("-dt", "--dimtype", help="Use centroid distance [C] or shortest atomic distances [A] to define a dimer",
