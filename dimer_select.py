@@ -5,6 +5,7 @@ Utility for selecting unique dimers from a .xyz file
 The unique dimers are written to separate output files, *_dimer_*.xyz
 
 """
+from __future__ import division
 import time
 start = time.time()
 import sys
@@ -15,6 +16,7 @@ import edit_file as ef
 import handle_atoms as ha
 from math import sqrt
 import numpy as np
+
 
 def vector_distance((x1,y1,z1,x2,y2,z2)):
     """
@@ -228,7 +230,10 @@ if __name__ == "__main__":
             unique_distances.append(distance)
 
     print "Number of unique dimers: {}".format(len(unique_dims))
-    print [np.mean(i) for i in distances]
+
+    from collections import Counter
+    for i in Counter([np.mean(i).round(1) for i in distances]).values():
+        print "{}%".format((i/len([np.mean(i).round(1) for i in distances]))*100)
     # write the files
     for dim_no,dim in enumerate(unique_dims):
             outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
