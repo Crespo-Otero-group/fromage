@@ -107,16 +107,21 @@ def make_dimers_ad(selected,ad):
     """
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
-        for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
-            if mol1!=mol2:
+        print "looping 1:"
+        for mol_2_no,mol2 in enumerate(selected):
+            print "looping 2:"
+            if mol_1_no!=mol_2_no:
                 for atom1 in mol1:
+                    print "looping a1:"
                     for atom2 in mol2:
+                        print "looping a2:"
                         x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
-                        if vector_distance((x1,y1,z1,x2,y2,z2))<=contact:
+                        if vector_distance((x1,y1,z1,x2,y2,z2))<=ad:
                             dimer=mol1+mol2
                             dimers.append(dimer)
-                            break
-                    break
+                print "breaking"
+                break
+#                    break
     return dimers
 
 def differences(A,B):
@@ -167,12 +172,10 @@ if __name__ == "__main__":
     parser.add_argument("input", help="Input .xyz file",type=str)
     parser.add_argument("-b", "--bond", help="Maximum length (in unites of input file) that qualifies as a bond",
                         default=1.6, type=float)
-    parser.add_argument("-dt", "--dimtype", help="Use centroid distance [C] or shortest atomic distances [A] to define a dimer",
+    parser.add_argument("-t", "--dimtype", help="Use centroid distance [C] or shortest atomic distances [A] to define a dimer",
                         default=str("c"),type=str.lower)
-    parser.add_argument("-c","--centdist", help="Distance criterion (in units of input file) to define a dimer, between the cetroids of two monomers",
-                        default=7.0, type=float)
-    parser.add_argument("-d","--atomdist",help="Distance criterion (in units of input file) to define a dimer, the maximum distance between atoms on each monomer",
-                        default=3.5, type=float)
+    parser.add_argument("-d","--dist",help="Distance criterion (in units of input file) to define a dimer",
+                        default=7, type=float)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     atoms = rf.read_xyz(args.input)[-1]
@@ -188,16 +191,16 @@ if __name__ == "__main__":
         for atom2 in selected[0]:
             x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
             lengths.append(vector_distance((x1,y1,z1,x2,y2,z2)))
-    print "Min:{}\nMax:{}".format(min(lengths),max(lengths))
+
 
     ###### SELECT DIMERS
     print "\n2. Generating dimers"
     if args.dimtype=="c":
-        print "Using centroid distance of {}".format(args.centdist)
-        dimers=make_dimers_cd(selected,args.centdist)
+        print "Using centroid distance of {}".format(args.dist)
+        dimers=make_dimers_cd(selected,args.dist)
     elif args.dimtype=="a":
-        print "Using interatomic distance of {}".format(args.atomdist)
-        dimers=make_dimers_contacts_ad(selected,args.atomdist)
+        print "Using intermolecular atomic distance of {}".format(args.dist)
+        dimers=make_dimers_ad(selected,args.dist)
     else:
         sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
     if len(dimers)==0:
@@ -208,35 +211,40 @@ if __name__ == "__main__":
     else:
         print "{} dimers generated".format(len(dimers))
 
+    for i,j in enumerate(dimers):
+        ef.write_xyz("alldimers"+str(i)+".xyz",j)
+
     ####### SELECT UNIQUE DIMERS
 
     print "\n3. Finding unique dimers"
     distances=interatomic_distances(dimers)
 
+    # Start a list of unique dimer geometries (unique_dims) coupled with the
+    # corresponding interatomic distances (unique_distances). Populate each with
+    # the first dimer. Each list is a list itself, containing the geometry (or distances)
+    # as the first element, with the number of occurances as the second element
+
     unique_dims = [dimers[0]]
-    unique_distances = [distances[0]]
+    unique_distances = [[distances[0],1]]
 
     # filter out the unique dimers
-    for i,distance in enumerate(distances):
+    for i,distance in enumerate(distances[1:]): # loop over all dimers
         unique = True
-        for cross_check in unique_distances:
+        for cross_check in unique_distances: # loop over dimers which are unique
             # if the distance array is already considered unique
-            if differences(distance,cross_check) < 0.1:
+            if differences(distance,cross_check[0]) < 0.1:
                 unique = False
+                cross_check[1]+=1 #Increase the number of occurances for that dimer configuration
                 break
         # if it's still unique after the checks
         if unique:
-            unique_dims.append(dimers[i])
-            unique_distances.append(distance)
+            unique_dims.append(dimers[i+1])
+            unique_distances.append([distance,1])
 
     print "Number of unique dimers: {}".format(len(unique_dims))
-### Ratios
-    from collections import Counter
-    means=[np.mean(i).round(1) for i in distances]
-    unique_means=Counter([np.mean(i).round(1) for i in distances]).values()
-    for i in unique_means:
-        print "{}%".format((i/len(means))*100)
-###
+    print "Ratio of dimers in input structure:"
+    for i,dimer in enumerate(unique_distances):
+        print "Dimer {}: {}/{} ({}%)".format(i,dimer[1],len(dimers),round(dimer[1]/len(dimers)*100,0))
     # write the files
     for dim_no,dim in enumerate(unique_dims):
             outfile=str(args.input[:-4])+"_dimer_"+str(dim_no)+".xyz"
