@@ -90,6 +90,13 @@ def make_dimers_cd(selected,cd):
                     dimers.append(new_mol)
     return dimers
 
+def loop_atoms(A,B,ad):
+    for atom1 in A:
+        for atom2 in B:
+            x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
+            if vector_distance((x1,y1,z1,x2,y2,z2))<=ad:
+                return A+B
+
 def make_dimers_ad(selected,ad):
     """
     Generate a list of dimers based on intermolecular atomic distancead
@@ -107,21 +114,14 @@ def make_dimers_ad(selected,ad):
     """
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
-        print "looping 1:"
-        for mol_2_no,mol2 in enumerate(selected):
-            print "looping 2:"
-            if mol_1_no!=mol_2_no:
-                for atom1 in mol1:
-                    print "looping a1:"
-                    for atom2 in mol2:
-                        print "looping a2:"
-                        x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
-                        if vector_distance((x1,y1,z1,x2,y2,z2))<=ad:
-                            dimer=mol1+mol2
-                            dimers.append(dimer)
-                print "breaking"
-                break
-#                    break
+        print "REFERENCE MOL"
+        for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
+            if mol1!=mol2:
+                print "LOOPED MOL"
+                dimer=loop_atoms(mol1,mol2,args.dist)
+                if dimer:
+                    print len(dimer)
+                    dimers.append(dimer)
     return dimers
 
 def differences(A,B):
