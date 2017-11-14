@@ -216,13 +216,11 @@ if __name__ == "__main__":
     if len(dimers)==0:
         exit("No dimers found. Try adjusting the selection criteria.\nExiting")
     elif len(dimers)==1:
-        ef.write_xyz(str(sys.argv[1][:-4])+"_unique.xyz",dimers[0])
-        exit("One  dimer found, writing to xyz")
+        outfile=str(args.input[:-4])+"_dimer_0.xyz"
+        ef.write_xyz(outfile,dimers[0])
+        exit("One  dimer found, writing {}.\nExiting".format(outfile))
     else:
         print "{} dimers generated".format(len(dimers))
-
-    for i,j in enumerate(dimers):
-        ef.write_xyz("alldimers"+str(i)+".xyz",j)
 
     ####### SELECT UNIQUE DIMERS
 
