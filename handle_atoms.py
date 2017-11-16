@@ -227,7 +227,7 @@ def center_mol(atoms):
         atom.translate(-c_x, -c_y, -c_z)
 
 
-def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
+def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi = False):
     """
     Make a bigger supercell out of an input cell.
 
@@ -237,6 +237,9 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
     input is 1,1,1 for a cubic unit cell, the output will be the original unit
     cell surrounded by 26 other unit cells forming a total 3x3x3 cube.
 
+    Alternatively, the multiplication can be centered around a corner of the
+    unit cell instead of the centre. In that case the supercluster ends up being
+    only (2*traAN)*(2*traBN)*(2*traCN)
     Parameters
     ----------
     atoms : list of Atom objects
@@ -245,7 +248,9 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
         positively and negatively
     vectors : 3x3 matrix
         Lattice vectors
-
+    alt_multi : bool
+        Determines the kind of multiplication. True is centre of the cell as
+        the origin, False is corner of the cell.
     Returns
     -------
     mega_cell : list of Atom objects
@@ -254,9 +259,14 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors):
     """
     mega_cell = []
 
-    traA = range(-traAN, traAN + 1)  # +1 because that is how range() works
-    traB = range(-traBN, traBN + 1)
-    traC = range(-traCN, traCN + 1)
+    if alt_multi:
+        traA = range(-traAN, traAN)  # +1 because that is how range() works
+        traB = range(-traBN, traBN)
+        traC = range(-traCN, traCN)
+    else:
+        traA = range(-traAN, traAN + 1)  # +1 because that is how range() works
+        traB = range(-traBN, traBN + 1)
+        traC = range(-traCN, traCN + 1)
 
     # multiplying the cell
     for i in traA:
