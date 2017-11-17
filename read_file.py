@@ -219,7 +219,7 @@ def read_points(in_name):
     return points
 
 
-def read_g_char(in_name, pop="ESP"):
+def read_g_char(in_name, pop="ESP",debug=False):
     """
     Read charges and energy from a Gaussian log file.
 
@@ -227,14 +227,20 @@ def read_g_char(in_name, pop="ESP"):
     ----------
     in_name : str
         Name of the file to read
-    pop : str
+    pop : str, optional
         Kind of charge to read, mulliken or esp
+    debug : bool, optional
+        Return extra energy information. Turn on with care
     Returns
     -------
     charges : list of floats
         Each partial charge value in the file
     energy : float
         Gaussian calculated energy in Hartree
+    char_ener : float
+        Self energy of the point charges
+    n_char : float
+        Nuclei-charge interaction energy
 
     """
     with open(in_name) as gauss_file:
@@ -260,7 +266,14 @@ def read_g_char(in_name, pop="ESP"):
             energy = float(line.split()[4])
         if "Total Energy" in line:
             energy = float(line.split()[4])
-    return charges, energy
+        if "Self energy of the charges" in line:
+            char_ener = float(line.split()[6])
+        if "Nuclei-charges interaction" in line:
+            n_char = float(line.split()[3])
+    if debug:
+        return charges, energy, char_ener, n_char
+    else:
+        return charges, energy
 
 
 def read_bader(in_name):
