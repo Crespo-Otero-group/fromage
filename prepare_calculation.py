@@ -117,7 +117,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
 
-    def ewald_loop(in_atoms, in_mol):
+    def ewald_loop(in_atoms, in_mol, damping):
         """A single iteration of the Ewald + Gaussian loop
 
         Beware! This function changes the charge values of in_atoms and by
@@ -127,9 +127,11 @@ if __name__ == '__main__':
         -----------
         in_atoms : list of Atom objects
             They should form a cell
-        in_mol: list of Atom objects
+        in_mol : list of Atom objects
             A list of atoms which are a part of in_atoms and form the quantum
             cluster
+        damping : float
+            Underrelaxation damping constant
         Returns:
         --------
         deviation : float
@@ -153,30 +155,44 @@ if __name__ == '__main__':
         ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
-        new_charges, new_energy = rf.read_g_char(
-            sc_name + ".log", high_pop_method)
-        max_char = max([abs(i) for i in new_charges])
+        intact_charges, new_energy, char_self, char_int = rf.read_g_char(
+            sc_name + ".log", high_pop_method,debug=True)
         # Correct charges if they are not perfectly neutral
-        if sum(new_charges) != 0.0:
-            new_charges[-1] -= sum(new_charges)
+        if sum(intact_charges) != 0.0:
+            # intact_charges[-1] -= sum(new_charges)
+            temp_correct = sum(intact_charges)/len(intact_charges)
+            intact_charges = [i-temp_correct for i in intact_charges]
+
 
         # Assign new charges to mol and then to atoms
         # NB: when the charges are assigned to atoms, degenerate atoms have an
         # averaged charge which is then reassigned to mol since mol is in atoms
         for index, atom in enumerate(mol):
-            atom.q = new_charges[index]
+            atom.q = intact_charges[index]
         assign_charges(mol, None, atoms, vectors, max_bl)
 
         # New charges in mol
-        new_charges = [atom.q for atom in mol]
+        intact_charges = [atom.q for atom in mol]
+
+        # Damp the change in charges
+        new_charges = [new*(1-damping) + old*damping for new,old in zip(intact_charges,old_charges)]
+        # correct charges again (due to damping)
+        if sum(new_charges) != 0.0:
+            temp_correct = sum(new_charges)/len(new_charges)
+            new_charges = [i-temp_correct for i in new_charges]
+        #assign damped charges
+        for index, atom in enumerate(mol):
+            atom.q = new_charges[index]
+        assign_charges(mol, None, atoms, vectors, max_bl)
 
         # Calculate deviation between initial and new charges
         deviation = sum([abs(i - j)
-                         for (i, j) in zip(new_charges, old_charges)]) / len(mol)
+                         for (i, j) in zip(intact_charges, old_charges)]) / len(mol)
+
         out_str = ("Iteration:", sc_loop, "Deviation:",
-                   deviation, "Energy:", new_energy)
+                   deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy-char_self)
         output_file.write(
-            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f}".format(*out_str)))
+            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str)))
         output_file.flush()
 
         return deviation
@@ -266,9 +282,11 @@ if __name__ == '__main__':
     # Self Consistent Ewald deviation tolerance
     dev_tol = inputs["dev_tol"]
 
-    # Ewald embedding, use 0 for false
+    # Ewald embedding
     ewald = inputs["ewald"]
 
+    # Damping factor for underrelaxed sc loop. Use 0 for no Damping
+    damping = damping["damping"]
     # end config inputs
 
     #-------------------------------------------------------------------------
@@ -303,7 +321,7 @@ if __name__ == '__main__':
         output_file.flush()
         sc_loop = 0
         while True:
-            dev = ewald_loop(atoms, mol)
+            dev = ewald_loop(atoms, mol, damping)
             # check convergence
             if dev < dev_tol:
                 output_file.write("Tolerance reached: " +

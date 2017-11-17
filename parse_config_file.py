@@ -21,7 +21,7 @@ def complete_config(name="config"):
         "low_pop_method": "ESP",
         "max_bl": "1.7",
         "atom_label": "1",
-        "ewald": "",  # gets cast to int then bool
+        "ewald": "", # becomes bool
         "nchk": "1000",
         "nat": "500",
         "an": "2",
@@ -31,9 +31,10 @@ def complete_config(name="config"):
         "traan": "2",
         "trabn": "2",
         "tracn": "2",
-        "self_consistent": "",  # gets cast to int then bool
+        "self_consistent": "",  # becomes bool
         "sc_temp": "sc_temp.template",
-        "dev_tol": "0.001"}
+        "dev_tol": "0.001",
+        "damping":"0.0"}
 
     usr_inputs = rf.read_config(name)
     inputs.update(usr_inputs)
@@ -89,5 +90,6 @@ def parse_inputs(name="config"):
     inputs["a_vec"] = np.array(inputs["a_vec"])
     inputs["b_vec"] = np.array(inputs["b_vec"])
     inputs["c_vec"] = np.array(inputs["c_vec"])
+    inputs["damping"] = float(inputs["damping"])
 
     return inputs
