@@ -111,6 +111,7 @@ if __name__ == '__main__':
             assign_charges(pop_mol, None, in_atoms, vectors, max_bl)
         return
 
+<<<<<<< HEAD
     output_file = open("prep.out", "w")
 
     # print start time
@@ -118,6 +119,9 @@ if __name__ == '__main__':
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
 
     def ewald_loop(in_atoms, in_mol, damping):
+=======
+    def ewald_loop(in_atoms, in_mol):
+>>>>>>> 3b98bc11558626f70c3c1da8a6be940ce187fb3c
         """A single iteration of the Ewald + Gaussian loop
 
         Beware! This function changes the charge values of in_atoms and by
@@ -196,6 +200,14 @@ if __name__ == '__main__':
         output_file.flush()
 
         return deviation
+
+
+    output_file = open("prep.out", "w")
+
+    # print start time
+    start_time = datetime.now()
+    output_file.write("STARTING TIME: " + str(start_time) + "\n")
+
 
     #-------------------------------------------------------------------------
     #-----------------------------READING INPUTS------------------------------

@@ -139,13 +139,17 @@ def sequence(in_pos):
         "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
     out_file.write(
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
-    if bool_ci == True:
+    if bool_ci:
         out_file.write(
             "Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
+    if bool_ci:
     out_file.write("Gap: {:>42.8f} eV\n".format(
-        (en_combo - scf_combo) * evconv))
+        (en_combo - en_combo_g) * evconv))
+    else:
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - scf_combo) * evconv))
     out_file.flush()
     return (en_out, gr_out)
 
