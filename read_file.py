@@ -616,5 +616,6 @@ def read_g_cas(in_name):
             if "Gradient of iVec State." == line.strip():
                 reading_e = True
 
-    # grad = np.array(grad)
+    grad_e = np.array(grad_e)
+    grad_g = np.array(grad_g)
     return energy_e, grad_e, energy_g, grad_g

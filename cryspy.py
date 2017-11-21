@@ -78,6 +78,9 @@ def sequence(in_pos):
         if bool_ci:
             mg = calc.Molcas_calc("mg")
 
+    if high_level.lower() == "gaussian_cas":
+        mh = calc.Gaussian_CAS_calc("mh")
+
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
     # the longest
@@ -86,7 +89,7 @@ def sequence(in_pos):
     rl_proc.wait()
     ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
     ml_proc.wait()
-    if bool_ci:
+    if bool_ci and high_level != "gaussian_cas":
         mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
         mg_proc.wait()
     mh_proc.wait()
@@ -94,10 +97,14 @@ def sequence(in_pos):
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
     ml_en_gr = ml.read_out(in_pos)
-    mh_en_gr = mh.read_out(in_pos)
-    if bool_ci:
-        mg_en_gr = mg.read_out(in_pos)
-
+    if high_level != "gaussian_cas":
+        mh_en_gr = mh.read_out(in_pos)
+        if bool_ci:
+            mg_en_gr = mg.read_out(in_pos)
+    else:
+        mh_en_gr = mh.read_out(in_pos)[0:2]
+        if bool_ci:
+            mg_en_gr = mh.read_out(in_pos)[2],mh.read_out(in_pos)[3],mh.read_out(in_pos)[2]
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
