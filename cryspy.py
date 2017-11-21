@@ -110,8 +110,6 @@ def sequence(in_pos):
 
         # Penalty function parameters and calculation
         alpha = 0.02
-        # sigma is called lambda in some papers but that is a bad variable name
-        # in Python
         e_mean = (en_combo + en_combo_g) / 2
         e_diff = en_combo - en_combo_g
         g_ij = e_diff**2 / (e_diff + alpha)
@@ -181,6 +179,8 @@ if __name__ == '__main__':
     bool_ci = bool(int(inputs["bool_ci"]))
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
+    # sigma is called lambda in some papers but that is a bad variable name
+    # in Python
     sigma = float(inputs["sigma"])
     # output
     out_file = open(out_file, "w", 1)
