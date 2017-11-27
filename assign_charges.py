@@ -79,9 +79,9 @@ def expand_connect(in_mat):
     """
     out_mat = np.copy(in_mat)
     for i, row in enumerate(in_mat):
-        # indeces of unconnected atoms
+        # indices of unconnected atoms
         dangles = []
-        # indeces of connected atoms
+        # indices of connected atoms
         connectors = []
         for j, element in enumerate(row):
             if element == 0 and j > i:
