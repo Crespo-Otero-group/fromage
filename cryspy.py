@@ -150,7 +150,7 @@ def sequence(in_pos):
             np.linalg.norm(gr_combo * evconv)))
     if bool_ci:
     	out_file.write("Gap: {:>42.8f} eV\n".format(
-            (en_combo - en_combo_g) * evconv))
+            (en_combo - scf_combo) * evconv))
     else:
         out_file.write("Gap: {:>42.8f} eV\n".format(
             (en_combo - scf_combo) * evconv))
