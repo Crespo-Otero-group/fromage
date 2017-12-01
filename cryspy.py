@@ -22,7 +22,6 @@ from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
 
-
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -79,7 +78,7 @@ def sequence(in_pos):
             mg = calc.Molcas_calc("mg")
 
     if high_level.lower() == "gaussian_cas":
-        mh = calc.Gaussian_CAS_calc("mh")
+        mh = calc.Gauss_CAS_calc("mh")
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
@@ -102,9 +101,9 @@ def sequence(in_pos):
         if bool_ci:
             mg_en_gr = mg.read_out(in_pos)
     else:
-        mh_en_gr = mh.read_out(in_pos)[0:2]
+        mh_en_gr = mh.read_out(in_pos)[0:3]
         if bool_ci:
-            mg_en_gr = mh.read_out(in_pos)[2],mh.read_out(in_pos)[3],mh.read_out(in_pos)[2]
+            mg_en_gr = (mh.read_out(in_pos)[2],mh.read_out(in_pos)[3],mh.read_out(in_pos)[2])
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
@@ -150,8 +149,8 @@ def sequence(in_pos):
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
     if bool_ci:
-    out_file.write("Gap: {:>42.8f} eV\n".format(
-        (en_combo - en_combo_g) * evconv))
+    	out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - en_combo_g) * evconv))
     else:
         out_file.write("Gap: {:>42.8f} eV\n".format(
             (en_combo - scf_combo) * evconv))

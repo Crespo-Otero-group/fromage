@@ -148,7 +148,7 @@ class Gauss_calc(Calc):
 
         return (energy, gradients, scf_energy)
 
-class Gauss_calc(Calc):
+class Gauss_CAS_calc(Calc):
     """
     Calculation with Gaussian 09 for CAS calculations
     """
@@ -202,8 +202,8 @@ class Gauss_calc(Calc):
 
         energy_e, grad_e, energy_g, grad_g = rf.read_g_cas(self.calc_name + ".log")
         # fix gradients units to Hartree/Angstrom
-        grad_e = gradients_e * bohrconv
-        grad_g = gradients_g * bohrconv
+        grad_e = grad_e * bohrconv
+        grad_g = grad_g * bohrconv
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
