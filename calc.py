@@ -148,6 +148,72 @@ class Gauss_calc(Calc):
 
         return (energy, gradients, scf_energy)
 
+class Gauss_CAS_calc(Calc):
+    """
+    Calculation with Gaussian 09 for CAS calculations
+    """
+
+    def run(self, atoms):
+        """
+        Write a Gaussian input file and return a subprocess.Popen
+
+        Parameters
+        ----------
+        atoms : list of Atom objects
+            Atoms to be calculated with Gaussian
+        Returns
+        -------
+        proc : subprocess.Popen object
+            the object should have a .wait() method
+        """
+        ef.write_gauss(self.calc_name, self.calc_name + ".com",
+                       atoms, [], self.calc_name + ".temp")
+        proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
+
+        return proc
+
+    def read_out(self, positions, in_mol=None, in_shell=None):
+        """
+        Analyse a Gaussian .chk file while printing geometry updates
+
+        To update the geom files, include in_mol and in_shell
+
+        Parameters
+        ----------
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
+        in_mol : list of Atom objects, optional
+            Atoms in the inner region
+        in_shell : list of Atom objects, optional
+            Atoms in the middle region
+        Returns
+        -------
+        energy : float
+            Energy calculated by Gaussian in Hartree
+        gradients : list of floats
+            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+        scf_energy : float
+            The ground state energy in Hartree
+
+        """
+        # stdout=FNULL to not have to read the output of formchk
+        FNULL = open(os.devnull, 'w')
+
+        energy_e, grad_e, energy_g, grad_g = rf.read_g_cas(self.calc_name + ".log")
+        # fix gradients units to Hartree/Angstrom
+        grad_e = grad_e * bohrconv
+        grad_g = grad_g * bohrconv
+        # update the geometry log
+        if in_mol != None:
+            self.update_geom(positions, in_mol, in_shell)
+
+        # truncate gradients if too long
+        grad_e = grad_e[:len(positions)]
+        grad_g = grad_g[:len(positions)]
+
+        return (energy_e, grad_e, energy_g, grad_g)
+
 
 class Turbo_calc(Calc):
     """

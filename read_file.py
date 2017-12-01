@@ -219,7 +219,7 @@ def read_points(in_name):
     return points
 
 
-def read_g_char(in_name, pop="ESP",debug=False):
+def read_g_char(in_name, pop="ESP", debug=False):
     """
     Read charges and energy from a Gaussian log file.
 
@@ -567,3 +567,55 @@ def read_molcas(in_name):
     if not ex_energy:
         ex_energy = gr_energy
     return ex_energy, grad, gr_energy
+
+
+def read_g_cas(in_name):
+    """
+    Read a Gaussian .log file for CAS calculations
+
+    Returns the total energy, and gradients for two states
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    energy_e : float
+        Gaussian total calculated energy in Hartree for the excited state
+    grad_e : list of floats
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the excited state
+    energy_g : float
+        Gaussian total calculated energy in Hartree for the ground state
+    grad_g : list of floats
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the ground state
+
+    """
+    with open(in_name) as data:
+        lines = data.readlines()
+    grad_g = []
+    grad_e = []
+    reading = False
+    for line in lines:
+        if line.strip():
+            if line.strip()[0].isalpha():
+                reading_e = False
+                reading_g = False
+            if "( 1)     EIGENVALUE" in line:
+                energy_g = float(line.split()[3])
+            if "( 2)     EIGENVALUE" in line:
+                energy_e = float(line.split()[3])
+            if reading_g:
+                for num in line.split():
+                    grad_g.append(float(num))
+            if reading_e:
+                for num in line.split():
+                    grad_e.append(float(num))
+            if "Gradient of iOther State" == line.strip():
+                reading_g = True
+            if "Gradient of iVec State." == line.strip():
+                reading_e = True
+
+    grad_e = np.array(grad_e)
+    grad_g = np.array(grad_g)
+    return energy_e, grad_e, energy_g, grad_g
