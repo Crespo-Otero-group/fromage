@@ -294,7 +294,7 @@ if __name__ == '__main__':
     ewald = inputs["ewald"]
 
     # Damping factor for underrelaxed sc loop. Use 0 for no Damping
-    damping = damping["damping"]
+    damping = inputs["damping"]
     # end config inputs
 
     #-------------------------------------------------------------------------
