@@ -339,7 +339,8 @@ class Molcas_calc(Calc):
         """
         Analyse a Molcas .input file while printing geometry updates
 
-        To update the geom files, include in_mol and in_shell
+        To update the geom files, include in_mol and in_shell. Also removes
+        molcas.*
 
         Parameters
         ----------
@@ -374,4 +375,6 @@ class Molcas_calc(Calc):
         gradients = gradients[:len(positions)]
 
         os.chdir(self.here)
+        subprocess.call("rm -r molcas.*",shell=True)
+
         return (energy, gradients, scf_energy)
