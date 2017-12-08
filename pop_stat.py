@@ -4,6 +4,7 @@
 import read_file as rf
 import argparse
 import sys
+import numpy as np
 
 def main(in_log, kind):
     charges, energy = rf.read_g_char(in_log,pop=kind)
@@ -14,6 +15,7 @@ def main(in_log, kind):
     print("{:}{:20.6f}".format("Maximum charge",maxi))
     print("{:}{:20.6f}".format("Minimum charge",mini))
     print("{:}{:10.6f}".format("Averagre absolute charge",avg))
+    print("{:}{:20.6f}".format("Std. deviation",np.std(charges)))
     print("{:}{:21.6f}".format("Energy (a.u.)",energy))
 
 
