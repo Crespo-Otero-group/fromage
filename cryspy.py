@@ -84,13 +84,14 @@ def sequence(in_pos):
     # at the same time. This order is optimised for the mh calculation being
     # the longest
     mh_proc = mh.run(ha.array2atom(mol_atoms, in_pos))
-    rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
-    rl_proc.wait()
-    ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
-    ml_proc.wait()
     if bool_ci and high_level != "gaussian_cas":
         mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
+    rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
+    rl_proc.wait()
+    if bool_ci and high_level != "gaussian_cas":
         mg_proc.wait()
+    ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
+    ml_proc.wait()
     mh_proc.wait()
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)

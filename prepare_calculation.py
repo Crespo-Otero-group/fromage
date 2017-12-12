@@ -192,7 +192,7 @@ if __name__ == '__main__':
         out_str = ("Iteration:", sc_loop, "Deviation:",
                    deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy-char_self)
         output_file.write(
-            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str)))
+            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str)))
         output_file.flush()
 
         return deviation
