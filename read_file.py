@@ -162,7 +162,7 @@ def read_cp2k(in_name, pop="ESP"):
         start_tag = "Mulliken Population Analysis"
         char_pos = 4
         line_test = lambda x: x.split()[0].isdigit()
-    if pop.lower() == "esp":
+    if pop.lower() == "esp" or pop.lower() == "resp":
         start_tag = " RESP charges:"
         char_pos = 3
         line_test = lambda x: (x.split()[0] == "RESP" and len(x.split()) == 4)
@@ -250,7 +250,7 @@ def read_g_char(in_name, pop="ESP", debug=False):
     if pop.lower() == "mulliken":
         last_mull = len(content) - 1 - \
             content[::-1].index(" Mulliken charges:\n")
-    elif pop.lower() == "esp":
+    elif pop.lower() == "esp" or pop.lower() == "resp":
         last_mull = len(content) - 1 - \
             content[::-1].index(" ESP charges:\n")
     charges = []
