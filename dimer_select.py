@@ -253,7 +253,7 @@ if __name__ == "__main__":
         print "Using van der Waals radii to generate dimers"
         dimers=make_dimers_vdw(selected)
     else:
-        sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
+        sys.exit("Please choose 'C', or 'A', or 'vdw'. Run --help for more info.\nExiting...")
     if len(dimers)==0:
         exit("No dimers found. Try adjusting the selection criteria.\nExiting")
     elif len(dimers)==1:
