@@ -90,6 +90,43 @@ def make_dimers_cd(selected,cd):
                     dimers.append(new_mol)
     return dimers
 
+def vdw_radii(atoms):
+    from mendeleev import element
+    radii={}
+    for atom in atoms:
+        radii[atom]=(element(atom1.elem).vdw_radius)/100
+    return radii
+
+def make_dimers_vdw(selected):
+    """
+    Generate a list of dimers based on van der waals radii of closest atoms
+
+    Parameters
+    ----------
+    selected: list of lists
+    M molecules containing N atom objects
+    Returns
+    -------
+    dimers: list of lists
+    List L of length D dimers, where each member of L is a list of 2N atom objects
+    """
+    vdw_rads=vdw_radii(np.unique([atom for molecule in selected for atom in molecule]))
+    dimers=[]
+    for mol_1_no,mol1 in enumerate(selected):
+        for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
+            if mol1!=mol2:
+                for atom1 in mol1:
+                    for atom2 in mol2:
+                        vdw1=vdw_rads[atom1]
+                        vdw2=vdw_rads[atom2]
+                        x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
+                        if vector_distance((x1,y1,z1,x2,y2,z2))<=vdw1+vdw2+1.5:
+                            dimer=mol1+mol2
+                            dimers.append(dimer)
+                            break
+
+    return dimers
+
 def loop_atoms(mol_1,mol_2,ad):
     """
     Generate a dimer based on intermolecular atomic distances between two molecules
@@ -182,7 +219,7 @@ if __name__ == "__main__":
     parser.add_argument("input", help="Input .xyz file",type=str)
     parser.add_argument("-b", "--bond", help="Maximum length (in unites of input file) that qualifies as a bond",
                         default=1.6, type=float)
-    parser.add_argument("-t", "--dimtype", help="Use centroid distance [C] or shortest atomic distances [A] to define a dimer",
+    parser.add_argument("-t", "--dimtype", help="Use centroid distance [C], or shortest atomic distances [A], or van der waals distances [vdw] to define a dimer",
                         default=str("c"),type=str.lower)
     parser.add_argument("-d","--dist",help="Distance criterion (in units of input file) to define a dimer",
                         default=7, type=float)
@@ -190,6 +227,7 @@ if __name__ == "__main__":
     args = parser.parse_args(user_input)
     atoms = rf.read_xyz(args.input)[-1]
     natoms= len(atoms)
+
     print "{} atoms".format(natoms)
 
     ##### SELECT MOLECULE
@@ -211,6 +249,9 @@ if __name__ == "__main__":
     elif args.dimtype=="a":
         print "Using intermolecular atomic distance of {}".format(args.dist)
         dimers=make_dimers_ad(selected,args.dist)
+    elif args.dimtype=="vdw":
+        print "Using van der Waals radii to generate dimers"
+        dimers=make_dimers_vdw(selected)
     else:
         sys.exit("Please choose 'C' or 'A'. Run --help for more info.\nExiting...")
     if len(dimers)==0:
