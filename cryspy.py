@@ -22,7 +22,6 @@ from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
 
-
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -78,26 +77,34 @@ def sequence(in_pos):
         if bool_ci:
             mg = calc.Molcas_calc("mg")
 
+    if high_level.lower() == "gaussian_cas":
+        mh = calc.Gauss_CAS_calc("mh")
+
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
     # the longest
     mh_proc = mh.run(ha.array2atom(mol_atoms, in_pos))
+    if bool_ci and high_level != "gaussian_cas":
+        mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
     rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
     rl_proc.wait()
+    if bool_ci and high_level != "gaussian_cas":
+        mg_proc.wait()
     ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
     ml_proc.wait()
-    if bool_ci:
-        mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
-        mg_proc.wait()
     mh_proc.wait()
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
     ml_en_gr = ml.read_out(in_pos)
-    mh_en_gr = mh.read_out(in_pos)
-    if bool_ci:
-        mg_en_gr = mg.read_out(in_pos)
-
+    if high_level != "gaussian_cas":
+        mh_en_gr = mh.read_out(in_pos)
+        if bool_ci:
+            mg_en_gr = mg.read_out(in_pos)
+    else:
+        mh_en_gr = mh.read_out(in_pos)[0:3]
+        if bool_ci:
+            mg_en_gr = (mh.read_out(in_pos)[2],mh.read_out(in_pos)[3],mh.read_out(in_pos)[2])
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
@@ -110,8 +117,6 @@ def sequence(in_pos):
 
         # Penalty function parameters and calculation
         alpha = 0.02
-        # sigma is called lambda in some papers but that is a bad variable name
-        # in Python
         e_mean = (en_combo + en_combo_g) / 2
         e_diff = en_combo - en_combo_g
         g_ij = e_diff**2 / (e_diff + alpha)
@@ -139,13 +144,17 @@ def sequence(in_pos):
         "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
     out_file.write(
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
-    if bool_ci == True:
+    if bool_ci:
         out_file.write(
             "Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
-    out_file.write("Gap: {:>42.8f} eV\n".format(
-        (en_combo - scf_combo) * evconv))
+    if bool_ci:
+    	out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - scf_combo) * evconv))
+    else:
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - scf_combo) * evconv))
     out_file.flush()
     return (en_out, gr_out)
 
@@ -177,6 +186,8 @@ if __name__ == '__main__':
     bool_ci = bool(int(inputs["bool_ci"]))
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
+    # sigma is called lambda in some papers but that is a bad variable name
+    # in Python
     sigma = float(inputs["sigma"])
     # output
     out_file = open(out_file, "w", 1)

@@ -162,7 +162,7 @@ def read_cp2k(in_name, pop="ESP"):
         start_tag = "Mulliken Population Analysis"
         char_pos = 4
         line_test = lambda x: x.split()[0].isdigit()
-    if pop.lower() == "esp":
+    if pop.lower() == "esp" or pop.lower() == "resp":
         start_tag = " RESP charges:"
         char_pos = 3
         line_test = lambda x: (x.split()[0] == "RESP" and len(x.split()) == 4)
@@ -219,7 +219,7 @@ def read_points(in_name):
     return points
 
 
-def read_g_char(in_name, pop="ESP"):
+def read_g_char(in_name, pop="ESP", debug=False):
     """
     Read charges and energy from a Gaussian log file.
 
@@ -227,14 +227,20 @@ def read_g_char(in_name, pop="ESP"):
     ----------
     in_name : str
         Name of the file to read
-    pop : str
+    pop : str, optional
         Kind of charge to read, mulliken or esp
+    debug : bool, optional
+        Return extra energy information. Turn on with care
     Returns
     -------
     charges : list of floats
         Each partial charge value in the file
     energy : float
         Gaussian calculated energy in Hartree
+    char_ener : float
+        Self energy of the point charges
+    n_char : float
+        Nuclei-charge interaction energy
 
     """
     with open(in_name) as gauss_file:
@@ -244,7 +250,7 @@ def read_g_char(in_name, pop="ESP"):
     if pop.lower() == "mulliken":
         last_mull = len(content) - 1 - \
             content[::-1].index(" Mulliken charges:\n")
-    elif pop.lower() == "esp":
+    elif pop.lower() == "esp" or pop.lower() == "resp":
         last_mull = len(content) - 1 - \
             content[::-1].index(" ESP charges:\n")
     charges = []
@@ -260,7 +266,14 @@ def read_g_char(in_name, pop="ESP"):
             energy = float(line.split()[4])
         if "Total Energy" in line:
             energy = float(line.split()[4])
-    return charges, energy
+        if "Self energy of the charges" in line:
+            char_ener = float(line.split()[6])
+        if "Nuclei-charges interaction" in line:
+            n_char = float(line.split()[3])
+    if debug:
+        return charges, energy, char_ener, n_char
+    else:
+        return charges, energy
 
 
 def read_bader(in_name):
@@ -554,3 +567,55 @@ def read_molcas(in_name):
     if not ex_energy:
         ex_energy = gr_energy
     return ex_energy, grad, gr_energy
+
+
+def read_g_cas(in_name):
+    """
+    Read a Gaussian .log file for CAS calculations
+
+    Returns the total energy, and gradients for two states
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    energy_e : float
+        Gaussian total calculated energy in Hartree for the excited state
+    grad_e : list of floats
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the excited state
+    energy_g : float
+        Gaussian total calculated energy in Hartree for the ground state
+    grad_g : list of floats
+        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the ground state
+
+    """
+    with open(in_name) as data:
+        lines = data.readlines()
+    grad_g = []
+    grad_e = []
+    reading = False
+    for line in lines:
+        if line.strip():
+            if line.strip()[0].isalpha():
+                reading_e = False
+                reading_g = False
+            if "( 1)     EIGENVALUE" in line:
+                energy_g = float(line.split()[3])
+            if "( 2)     EIGENVALUE" in line:
+                energy_e = float(line.split()[3])
+            if reading_g:
+                for num in line.split():
+                    grad_g.append(float(num))
+            if reading_e:
+                for num in line.split():
+                    grad_e.append(float(num))
+            if "Gradient of iOther State" == line.strip():
+                reading_g = True
+            if "Gradient of iVec State." == line.strip():
+                reading_e = True
+
+    grad_e = np.array(grad_e)
+    grad_g = np.array(grad_g)
+    return energy_e, grad_e, energy_g, grad_g
