@@ -90,13 +90,6 @@ def make_dimers_cd(selected,cd):
                     dimers.append(new_mol)
     return dimers
 
-def vdw_radii(atoms):
-    from mendeleev import element
-    radii={}
-    for atom in atoms:
-        radii[atom]=(element(atom1.elem).vdw_radius)/100
-    return radii
-
 def make_dimers_vdw(selected):
     """
     Generate a list of dimers based on van der waals radii of closest atoms
@@ -104,23 +97,20 @@ def make_dimers_vdw(selected):
     Parameters
     ----------
     selected: list of lists
-    M molecules containing N atom objects
+        M molecules containing N atom objects
     Returns
     -------
     dimers: list of lists
-    List L of length D dimers, where each member of L is a list of 2N atom objects
+        List L of length D dimers, where each member of L is a list of 2N atom objects
     """
-    vdw_rads=vdw_radii(np.unique([atom for molecule in selected for atom in molecule]))
     dimers=[]
     for mol_1_no,mol1 in enumerate(selected):
         for mol_2_no,mol2 in enumerate(selected[mol_1_no:]):
             if mol1!=mol2:
                 for atom1 in mol1:
                     for atom2 in mol2:
-                        vdw1=vdw_rads[atom1]
-                        vdw2=vdw_rads[atom2]
                         x1,y1,z1,x2,y2,z2=atom1.x,atom1.y,atom1.z,atom2.x,atom2.y,atom2.z
-                        if vector_distance((x1,y1,z1,x2,y2,z2))<=vdw1+vdw2+1.5:
+                        if vector_distance((x1,y1,z1,x2,y2,z2))<=atom1.vdw+atom2.vdw+1.5: #1.5 like Graeme Day does
                             dimer=mol1+mol2
                             dimers.append(dimer)
                             break
