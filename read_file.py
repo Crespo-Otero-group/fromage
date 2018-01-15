@@ -6,6 +6,8 @@ outside of this file for clarity.
 """
 import sys
 import numpy as np
+import atom as at
+import periodic as per
 from atom import Atom
 
 
@@ -463,8 +465,8 @@ def read_g_pos(in_name):
     atoms = []
     for line in content[ori_line + 5:dist_line - 1]:
         line_bits = [float(i) for i in line.split()]
-        atom_to_add = Atom("", line_bits[3], line_bits[4], line_bits[5], 0)
-        atom_to_add.num_to_elem(line_bits[1])
+        symbol = per.num_to_elem(line_bits[1])
+        atom_to_add = Atom(symbol, line_bits[3], line_bits[4], line_bits[5], 0)
         atoms.append(atom_to_add)
     return atoms
 

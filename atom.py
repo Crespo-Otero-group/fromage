@@ -1,6 +1,7 @@
 """Defines the Atom object"""
 
 import numpy as np
+import periodic as per
 from collections import Counter
 
 
@@ -22,6 +23,12 @@ class Atom(object):
         function which takes the connectivity matrix as argument
     kind : tuple
         Tuple of (atom element,connectivity). This defines the kind of atom
+    total_e : int
+        Atomic number
+    valence : int
+        Number of valence electrons
+    vdw : float
+        Van der Waals radius in Angstrom
 
     """
 
@@ -53,6 +60,12 @@ class Atom(object):
         except ValueError:
             print("Some coordinates or charges cannot be cast to float!")
 
+        table = per.periodic
+        self.at_num = table[self.elem.lower()]["at_num"]
+        self.valence_e = table[self.elem.lower()]["valence_e"]
+        self.vdw = table[self.elem.lower()]["vdw"]
+
+
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z, self.q)
@@ -78,10 +91,14 @@ class Atom(object):
         """Return a string of the atom in xyz format"""
         return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z)
 
+    def dist2(self, x1, y1, z1):
+        """Return distance squared of the atom from a point"""
+        r = (self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2
+        return r
+
     def dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
-        r = np.sqrt((self.x - x1) ** 2 + (self.y - y1)
-                    ** 2 + (self.z - z1) ** 2)
+        r = np.sqrt(self.dist2(x1, y1, z1))
         return r
 
     def dist_lat(self, x1, y1, z1, aVec, bVec, cVec):
@@ -152,45 +169,6 @@ class Atom(object):
         self.x += x1
         self.y += y1
         self.z += z1
-        return
-
-    def electrons(self):
-        # TODO: add more elements. This is only used with Bader so not
-        # important
-        total = 0
-        valence = 0
-
-        element = self.elem.lower()
-        if element == "h":
-            total = 1
-            valence = 1
-        elif element == "c":
-            total = 6
-            valence = 4
-        elif element == "n":
-            total = 7
-            valence = 5
-        elif element == "o":
-            total = 8
-            valence = 6
-
-        return (valence, total)
-
-    periodic = [("H", 1), ("C", 6), ("N", 7), ("O", 8)]
-
-    def num_to_elem(self, num):
-        """
-        Sets the element symbol according to input atomic number
-
-        Parameters
-        ----------
-        num : int
-            Atomic number of the element
-        """
-        periodic = [("H", 1), ("C", 6), ("N", 7), ("O", 8)]
-        for element in periodic:
-            if num == element[1]:
-                self.elem = element[0]
         return
 
     def set_connectivity(self, in_atoms, in_row):
