@@ -156,13 +156,12 @@ if __name__ == '__main__':
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
-            sc_name + ".log", high_pop_method,debug=True)
+            sc_name + ".log", high_pop_method, debug=True)
         # Correct charges if they are not perfectly neutral
         if sum(intact_charges) != 0.0:
             # intact_charges[-1] -= sum(new_charges)
-            temp_correct = sum(intact_charges)/len(intact_charges)
-            intact_charges = [i-temp_correct for i in intact_charges]
-
+            temp_correct = sum(intact_charges) / len(intact_charges)
+            intact_charges = [i - temp_correct for i in intact_charges]
 
         # Assign new charges to mol and then to atoms
         # NB: when the charges are assigned to atoms, degenerate atoms have an
@@ -175,12 +174,13 @@ if __name__ == '__main__':
         intact_charges = [atom.q for atom in mol]
 
         # Damp the change in charges
-        new_charges = [new*(1-damping) + old*damping for new,old in zip(intact_charges,old_charges)]
+        new_charges = [new * (1 - damping) + old * damping for new,
+                       old in zip(intact_charges, old_charges)]
         # correct charges again (due to damping)
         if sum(new_charges) != 0.0:
-            temp_correct = sum(new_charges)/len(new_charges)
-            new_charges = [i-temp_correct for i in new_charges]
-        #assign damped charges
+            temp_correct = sum(new_charges) / len(new_charges)
+            new_charges = [i - temp_correct for i in new_charges]
+        # assign damped charges
         for index, atom in enumerate(mol):
             atom.q = new_charges[index]
         assign_charges(mol, None, atoms, vectors, max_bl)
@@ -190,20 +190,18 @@ if __name__ == '__main__':
                          for (i, j) in zip(intact_charges, old_charges)]) / len(mol)
 
         out_str = ("Iteration:", sc_loop, "Deviation:",
-                   deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy-char_self)
+                   deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy - char_self)
         output_file.write(
             ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str)))
         output_file.flush()
 
         return deviation
 
-
     output_file = open("prep.out", "w")
 
     # print start time
     start_time = datetime.now()
     output_file.write("STARTING TIME: " + str(start_time) + "\n")
-
 
     #-------------------------------------------------------------------------
     #-----------------------------READING INPUTS------------------------------

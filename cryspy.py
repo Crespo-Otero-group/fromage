@@ -22,6 +22,7 @@ from atom import Atom
 from scipy.optimize import minimize
 from datetime import datetime
 
+
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -104,7 +105,8 @@ def sequence(in_pos):
     else:
         mh_en_gr = mh.read_out(in_pos)[0:3]
         if bool_ci:
-            mg_en_gr = (mh.read_out(in_pos)[2],mh.read_out(in_pos)[3],mh.read_out(in_pos)[2])
+            mg_en_gr = (mh.read_out(in_pos)[2], mh.read_out(
+                in_pos)[3], mh.read_out(in_pos)[2])
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
@@ -150,7 +152,7 @@ def sequence(in_pos):
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
             np.linalg.norm(gr_combo * evconv)))
     if bool_ci:
-    	out_file.write("Gap: {:>42.8f} eV\n".format(
+        out_file.write("Gap: {:>42.8f} eV\n".format(
             (en_combo - scf_combo) * evconv))
     else:
         out_file.write("Gap: {:>42.8f} eV\n".format(
@@ -171,7 +173,7 @@ if __name__ == '__main__':
         "bool_ci": "0",
         "high_level": "gaussian",
         "low_level": "gaussian",
-        "sigma":"3.5"}
+        "sigma": "3.5"}
 
     inputs = def_inputs.copy()
 

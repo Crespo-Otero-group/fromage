@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """Functions useful for manipulating atom connectivity.
 
 The original use of these functions is to allow for assign_charges to work and

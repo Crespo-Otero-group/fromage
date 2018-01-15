@@ -449,7 +449,7 @@ def write_cube(in_name, origin, vectors, x_num, y_num, z_num, atoms, vals, comme
 
     nums = [x_num, y_num, z_num]
     xyz_lines = ["{:6d} {:10.6f} {:10.6f} {:10.6f}\n".format(
-        nums[i], vectors[i][0]* bohrconv, vectors[i][1]* bohrconv, vectors[i][2]* bohrconv) for i in list(range(3))]
+        nums[i], vectors[i][0] * bohrconv, vectors[i][1] * bohrconv, vectors[i][2] * bohrconv) for i in list(range(3))]
     out_file.write(xyz_lines[0] + xyz_lines[1] + xyz_lines[2])
 
     # Atoms

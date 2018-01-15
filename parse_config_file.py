@@ -10,8 +10,8 @@ import numpy as np
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
-        "name":"cryspy_calc",
-        "target_shell":"",
+        "name": "cryspy_calc",
+        "target_shell": "",
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
         "high_pop_file": "cp2k.out",
@@ -21,7 +21,7 @@ def complete_config(name="config"):
         "low_pop_method": "ESP",
         "max_bl": "1.7",
         "atom_label": "1",
-        "ewald": "", # becomes bool
+        "ewald": "",  # becomes bool
         "nchk": "1000",
         "nat": "500",
         "an": "2",
@@ -34,7 +34,7 @@ def complete_config(name="config"):
         "self_consistent": "",  # becomes bool
         "sc_temp": "sc_temp.template",
         "dev_tol": "0.001",
-        "damping":"0.0"}
+        "damping": "0.0"}
 
     usr_inputs = rf.read_config(name)
     inputs.update(usr_inputs)

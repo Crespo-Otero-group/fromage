@@ -101,14 +101,13 @@ class CubeGrid(object):
     def vdw_vol(self, mol):
         """Give each point in the grid a value of 1 if it is inside the vdw
         radius of one of the atoms in the molecule"""
-        
+
         for point in self.grid:
             for atom in mol:
                 if atom.dist2(*point[:3]) < atom.vdw**2:
                     point[3] = 1
                     break
         return
-
 
     def out_cube(self, file_name, atoms):
         """Write a cube file with the current state of the grid"""
@@ -122,8 +121,8 @@ class CubeGrid(object):
         filled = 0
         for entry in self.grid:
             if entry[3] != 0:
-                filled +=1
+                filled += 1
 
         vox_vol = np.linalg.det(self.vectors)
 
-        return filled*vox_vol
+        return filled * vox_vol

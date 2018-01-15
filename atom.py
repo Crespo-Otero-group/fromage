@@ -65,7 +65,6 @@ class Atom(object):
         self.valence_e = table[self.elem.lower()]["valence_e"]
         self.vdw = table[self.elem.lower()]["vdw"]
 
-
         # to string methods to be used mainly for debugging and .qc file
     def __repr__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z, self.q)

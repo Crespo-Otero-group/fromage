@@ -148,6 +148,7 @@ class Gauss_calc(Calc):
 
         return (energy, gradients, scf_energy)
 
+
 class Gauss_CAS_calc(Calc):
     """
     Calculation with Gaussian 09 for CAS calculations
@@ -200,7 +201,8 @@ class Gauss_CAS_calc(Calc):
         # stdout=FNULL to not have to read the output of formchk
         FNULL = open(os.devnull, 'w')
 
-        energy_e, grad_e, energy_g, grad_g = rf.read_g_cas(self.calc_name + ".log")
+        energy_e, grad_e, energy_g, grad_g = rf.read_g_cas(
+            self.calc_name + ".log")
         # fix gradients units to Hartree/Angstrom
         grad_e = grad_e * bohrconv
         grad_g = grad_g * bohrconv
@@ -375,6 +377,6 @@ class Molcas_calc(Calc):
         gradients = gradients[:len(positions)]
 
         os.chdir(self.here)
-        subprocess.call("rm -r molcas.*",shell=True)
+        subprocess.call("rm -r molcas.*", shell=True)
 
         return (energy, gradients, scf_energy)
