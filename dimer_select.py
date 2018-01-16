@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Utility for selecting unique dimers from a .xyz file
 
@@ -16,6 +16,7 @@ import edit_file as ef
 import handle_atoms as ha
 from math import sqrt
 import numpy as np
+import fdist as fd
 
 
 def vector_distance(x1, y1, z1, x2, y2, z2):
@@ -32,7 +33,7 @@ def vector_distance(x1, y1, z1, x2, y2, z2):
             distance in units of coordinates
     """
     # calculate distance
-    dist = sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
+    dist = sqrt(fd.dist2(x1, y1, z1, x2, y2, z2))
     return dist
 
 
