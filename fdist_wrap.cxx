@@ -3035,7 +3035,7 @@ namespace swig {
 
 
 #define SWIG_FILE_WITH_INIT
-#include "fidst.hpp"
+#include "fdist.hpp"
 
 
 SWIGINTERN int

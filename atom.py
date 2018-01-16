@@ -3,7 +3,7 @@
 import numpy as np
 import periodic as per
 from collections import Counter
-
+import fdist as fd
 
 class Atom(object):
     """
@@ -92,7 +92,9 @@ class Atom(object):
 
     def dist2(self, x1, y1, z1):
         """Return distance squared of the atom from a point"""
-        r = (self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2
+        # Use for no C++ version
+#        r = (self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2
+        r = fd.dist2(self.x,self.y,self.z,x1,y1,z1)
         return r
 
     def dist(self, x1, y1, z1):
