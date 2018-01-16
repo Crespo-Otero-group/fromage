@@ -24,7 +24,12 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
     export PATH=/path/to/dir/cryspy:$PATH
     export PYTHONPATH=/path/to/dir/cryspy$PYTHONPATH
     ```
+  2. Compile
 
+    ```bash
+    swig -c++ -python fdist.i
+    python setup.py build_exp --inplace
+    ```
      Voilà!
 
 The main two modules in cryspy are `prepare_calculation.py` and `cryspy.py`. The former produces template files and geometry files to be used in the latter for geometry optimisation or minimal energy conical intersection (MECI) search. Following the standard ONIOM nomenclature, the central system which is only treated at the high level of theory is called the 'model' system. The whole system is called the 'real' system. As such the three parallel calculations which are carried out are called `mh` for `model high`, `ml` for `model low`, `rl` for `real low`. For MECI search, an additional calculation of the high level region for the ground state gradients is necessary and is labeled `mg`.
