@@ -348,7 +348,7 @@ if __name__ == '__main__':
 
     else:  # This means normal electrostatic embedding
         if target_shell:
-            out_file.write("Reading the shell from: " + target_shell + "\n")
+            output_file.write("Reading the shell from: " + target_shell + "\n")
             output_file.flush()
             high_shell = rf.read_pos(target_shell)
             high_target_mol_char = rf.read_g_char(
@@ -364,7 +364,7 @@ if __name__ == '__main__':
                 atom.q = high_target_mol_char[index]
 
             # assign charges to the rest of the cell
-            assign_charges(target_pop_mol, None, shell, None, max_bl)
+            assign_charges(high_target_pop_mol, None, shell, None, max_bl)
         else:
             # make a very big cell
             high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)

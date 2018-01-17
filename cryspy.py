@@ -87,10 +87,9 @@ def sequence(in_pos):
     mh_proc = mh.run(ha.array2atom(mol_atoms, in_pos))
     if bool_ci and high_level != "gaussian_cas":
         mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
+        mg_proc.wait()
     rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
     rl_proc.wait()
-    if bool_ci and high_level != "gaussian_cas":
-        mg_proc.wait()
     ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
     ml_proc.wait()
     mh_proc.wait()
