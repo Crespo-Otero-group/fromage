@@ -226,6 +226,7 @@ def center_mol(atoms):
     for atom in atoms:
         atom.translate(-c_x, -c_y, -c_z)
 
+    return
 
 def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     """

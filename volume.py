@@ -22,7 +22,7 @@ class CubeGrid(object):
 
     """
 
-    def __init__(self, vectors, x_num, y_num, z_num, origin=np.array([0.0, 0.0, 0.0])):
+    def __init__(self, vectors=np.zeros((3, 3)), x_num=1, y_num=1, z_num=1, origin=np.array([0.0, 0.0, 0.0])):
         try:
             self.vectors = np.array(vectors)
         except ValueError:
@@ -57,6 +57,29 @@ class CubeGrid(object):
                     count += 1
         return
 
+    def grid_from_point(self, x, y, z, res=10, box=np.array([[20.0, 0.0, 0.0], [0.0, 20.0, 0.0], [0.0, 0.0, 20.0]])):
+        """Generate a grid from its centre , box dimension, and resolution
+
+        Parameters
+        ----------
+        x, y, z : floats
+            Centre of the grid
+        res : int
+            number of voxels per side of the box
+        box : 3x3 numpy array
+            The three vectors defining the bounding box for the parallelepiped
+
+        """
+        # Find centre of box
+        cen = (box[0] + box[1] + box[2]) / 2
+        self.origin = np.array([x, y, z]) - cen
+        self.vectors = box / res
+        self.x_num = self.y_num = self.z_num = res
+        self.dimension = self.x_num * self.y_num * self.z_num
+        self.grid = np.zeros((self.dimension, 4))
+
+        return
+
     def proximity(self, mol, rest, scaled=True):
         """
         Give each point in the grid a value of 1 if it is closest to the molecule
@@ -67,9 +90,9 @@ class CubeGrid(object):
 
         Parameters
         ----------
-        mol : list of Atom objects
+        mol: list of Atom objects
             The central molecule which we want to enclose in the grid
-        rest : list of Atom objects
+        rest: list of Atom objects
             The rest of the atoms
 
         """
@@ -92,10 +115,9 @@ class CubeGrid(object):
                     close_to_mol = False
             if close_to_mol:
                 point[3] = 1
+            else:
+                point[3] = 0
 
-        # if shift_orig:
-        #     self.origin = self.origin + \
-        #         (self.vectors[0] + self.vectors[0] + self.vectors[0]) / 2
         return
 
     def vdw_vol(self, mol):
@@ -103,10 +125,42 @@ class CubeGrid(object):
         radius of one of the atoms in the molecule"""
 
         for point in self.grid:
+            # empty grid first
+            point[3] = 0
             for atom in mol:
                 if atom.dist2(*point[:3]) < atom.vdw**2:
                     point[3] = 1
                     break
+        return
+
+    def subtract_grid(self, in_grid):
+        """
+        Remove the results of another grid from the current grid.
+
+        Parameters
+        ----------
+        in_grid : numpy N x 4 array
+            Same dimensions as self.grid
+
+        """
+
+        for i,j in zip(self.grid,in_grid):
+            i[3] -= j[3]
+        return
+
+    def add_grid(self, in_grid):
+        """
+        Add the results of another grid to the current grid.
+
+        Parameters
+        ----------
+        in_grid : numpy N x 4 array
+            Same dimensions as self.grid
+
+        """
+
+        for i,j in zip(self.grid,in_grid):
+            i[3] += j[3]
         return
 
     def out_cube(self, file_name, atoms):
@@ -114,7 +168,6 @@ class CubeGrid(object):
         values = np.array([point[3] for point in self.grid])
         ef.write_cube(file_name, self.origin, self.vectors, self.x_num,
                       self.y_num, self.z_num, atoms, values)
-
         return
 
     def volume(self):

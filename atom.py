@@ -1,7 +1,7 @@
 """Defines the Atom object"""
 
 import numpy as np
-import periodic as per
+import per_table as per
 from collections import Counter
 import fdist as fd
 

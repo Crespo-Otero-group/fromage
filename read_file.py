@@ -7,7 +7,7 @@ outside of this file for clarity.
 import sys
 import numpy as np
 import atom as at
-import periodic as per
+import per_table as per
 from atom import Atom
 
 
