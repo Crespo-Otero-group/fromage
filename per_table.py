@@ -7,7 +7,7 @@ This module contains the information from the periodic table
 # Lower case symbol, symbol, atomic number, number of valence electrons,
 # vdw radius in Angstrom
 periodic_list = [("", "", 0, 0, 0.0),
-                 ("h", "H", 1, 1, 1.1),
+                 ("h", "H", 1, 1, 1.2),
                  ("c", "C", 6, 4, 1.7),
                  ("n", "N", 7, 5, 1.55),
                  ("o", "O", 8, 6, 1.52),
