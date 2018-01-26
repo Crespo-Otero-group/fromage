@@ -18,13 +18,13 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
    git clone https://github.research.its.qmul.ac.uk/btx156/cryspy.git
   ```
 
-  1. Add the installation directory to your system path by adding the following to your `.bashrc` or `.bash_profile`:
+  3. Add the installation directory to your system path by adding the following to your `.bashrc` or `.bash_profile`:
 
   ```bash
   export PATH=/path/to/dir/cryspy:$PATH
   export PYTHONPATH=/path/to/dir/cryspy$PYTHONPATH
   ```
-  2. Compile
+  4. Compile
 
   ```bash
   swig -c++ -python fdist.i
