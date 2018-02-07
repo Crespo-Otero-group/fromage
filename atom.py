@@ -99,7 +99,8 @@ class Atom(object):
 
     def dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
-        r = np.sqrt(self.dist2(x1, y1, z1))
+        #r = np.sqrt(self.dist2(x1, y1, z1))
+        r = fd.dist(self.x,self.y,self.z,x1,y1,z1)
         return r
 
     def dist_lat(self, x1, y1, z1, aVec, bVec, cVec):

@@ -97,15 +97,23 @@ def sequence(in_pos):
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
     ml_en_gr = ml.read_out(in_pos)
-    if high_level != "gaussian_cas":
-        mh_en_gr = mh.read_out(in_pos)
-        if bool_ci:
-            mg_en_gr = mg.read_out(in_pos)
-    else:
+
+    if high_level == "gaussian_cas":
         mh_en_gr = mh.read_out(in_pos)[0:3]
         if bool_ci:
             mg_en_gr = (mh.read_out(in_pos)[2], mh.read_out(
                 in_pos)[3], mh.read_out(in_pos)[2])
+    elif high_level == "molcas":
+        mh_en_gr = mh.read_out(in_pos)
+        if bool_ci:
+            # in molcas the first read out is S_1, gr, S_0 even if the target
+            # state is 0
+            mg_en_gr = mg.read_out(in_pos)[::-1]
+    else:
+        mh_en_gr = mh.read_out(in_pos)
+        if bool_ci:
+            mg_en_gr = mg.read_out(in_pos)
+
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
@@ -147,15 +155,12 @@ def sequence(in_pos):
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
     if bool_ci:
         out_file.write(
-            "Penalty function value: {:>23.8f} eV\n".format(en_combo * evconv))
+            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
         out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
-            np.linalg.norm(gr_combo * evconv)))
-    if bool_ci:
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            (en_combo - scf_combo) * evconv))
-    else:
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            (en_combo - scf_combo) * evconv))
+            np.linalg.norm(gr_out * evconv)))
+
+    out_file.write("Gap: {:>42.8f} eV\n".format(
+        (en_combo - scf_combo) * evconv))
     out_file.flush()
     return (en_out, gr_out)
 

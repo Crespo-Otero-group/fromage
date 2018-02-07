@@ -244,6 +244,7 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     Parameters
     ----------
     atoms : list of Atom objects
+        Atoms in the cell
     traAN,traBN,traCN : ints
         Number of times the cell should be multiplied in each cell direction,
         positively and negatively

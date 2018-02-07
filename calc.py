@@ -63,7 +63,7 @@ class Calc(object):
             geom_m_file.write(str(len(in_mol)) + "\n")
             geom_m_file.write(self.calc_name + "\n")
             for atom in ha.array2atom(in_mol, positions):
-                atom_str = "{:>6} {:10.9f} {:10.6f} {:10.9f}".format(
+                atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_m_file.write(atom_str)
         # the inner and middle regions
@@ -72,11 +72,11 @@ class Calc(object):
                 str((len(positions) / 3) + len(in_shell)) + "\n")
             geom_c_file.write(self.calc_name + "\n")
             for atom in ha.array2atom(in_mol, positions):
-                atom_str = "{:>6} {:10.9f} {:10.6f} {:10.9f}".format(
+                atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_c_file.write(atom_str)
             for atom in in_shell:
-                atom_str = "{:>6} {:10.9f} {:10.9f} {:10.9f}".format(
+                atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_c_file.write(atom_str)
         return
