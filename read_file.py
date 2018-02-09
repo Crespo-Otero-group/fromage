@@ -195,7 +195,7 @@ def read_points(in_name):
     """
     Read point charges from an in-house Ewald.c output.
 
-    The modified version of Ewald.c is needed. The extension is .pts-tb
+    The modified version of Ewald.c is needed. The extension is .pts-cry
 
     Parameters
     ----------

@@ -149,7 +149,7 @@ if __name__ == '__main__':
         run_ewald(sc_name, mol, atoms, vectors, in_nAt=nAt,
                   in_aN=aN, in_bN=bN, in_cN=cN, in_nChk=nChk)
         # read points output by Ewald
-        sc_points = rf.read_points(sc_name + ".pts-tb")
+        sc_points = rf.read_points(sc_name + ".pts-cry")
 
         # Calculate new charges
         ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
@@ -344,7 +344,7 @@ if __name__ == '__main__':
         output_file.flush()
 
         # read points output by Ewald
-        points = rf.read_points(name + ".pts-tb")
+        points = rf.read_points(name + ".pts-cry")
 
     else:  # This means normal electrostatic embedding
         if target_shell:
