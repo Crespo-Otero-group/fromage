@@ -1,4 +1,4 @@
-_fdist*
-fdist_wrap.cxx
-fdist.py
-build
+cryspy/fdist/_fdist*
+cryspy/fdist/fdist_wrap.cxx
+cryspy/fdist/fdist.py
+cryspy/fdist/build
