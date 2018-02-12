@@ -3,9 +3,9 @@
 This contains all of the default settings and may raise warnings and exceptions
 if contradictory features are included.
 """
-import read_file as rf
 import numpy as np
 
+from cryspy.io import read_file as rf
 
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""

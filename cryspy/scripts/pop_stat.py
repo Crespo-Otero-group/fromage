@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """Give basic information on a Gaussian population analysis
 """
-import read_file as rf
 import argparse
 import sys
 import numpy as np
 
+from cryspy.io import read_file as rf
 
 def main(in_log, kind):
     charges, energy = rf.read_g_char(in_log, pop=kind)

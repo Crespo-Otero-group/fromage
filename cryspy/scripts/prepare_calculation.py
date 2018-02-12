@@ -17,14 +17,16 @@ And receive
 import subprocess
 import os
 import numpy as np
-import read_file as rf
-import edit_file as ef
-import handle_atoms as ha
-import parse_config_file as pcf
-from assign_charges import assign_charges
-from atom import Atom
 from datetime import datetime
 from copy import copy
+
+from cryspy.io import read_file as rf
+from cryspy.io import edit_file as ef
+from cryspy.io import parse_config_file as pcf
+from cryspy.utils import handle_atoms as ha
+from cryspy.utils import atom import Atom
+from cryspy.scripts assign_charges import assign_charges
+
 
 
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):

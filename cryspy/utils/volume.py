@@ -1,5 +1,6 @@
 import numpy as np
-import edit_file as ef
+
+import cryspy.io.edit_file as ef
 
 
 class CubeGrid(object):

@@ -9,9 +9,10 @@ pick_mol.py input_file.xyz 7 13 42
 """
 import sys
 import argparse
-import read_file as rf
-import edit_file as ef
-import handle_atoms as ha
+
+from cryspy.io import read_file as rf
+from cryspy.io import edit_file as ef
+from cryspy.utils import handle_atoms as ha
 
 
 def picker(in_name, out_name, labels, max_bl):

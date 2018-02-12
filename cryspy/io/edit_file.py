@@ -2,8 +2,9 @@
 
 import numpy as np
 import os
-from atom import Atom
 from random import randint
+
+from cryspy.utils.atom import Atom
 
 
 def write_cp2k(in_name, file_name, vectors, atoms, temp_name):

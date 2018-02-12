@@ -2,15 +2,22 @@
 
 from distutils.core import setup, Extension
 
-fdist_module = Extension('_fdist', sources=['fdist_wrap.cxx', 'fdist.cpp'],)
+fdist_module = Extension('cryspy.fdist._fdist', sources=['cryspy/fdist/fdist_wrap.cxx', 'cryspy/fdist/fdist.cpp'],)
 
 setup(name='cryspy',
-      version='0.9',
-      author='Miguel Rivera, Michael Dommett',
-      author_email='m.rivera@qmul.ac.uk',
-      scripts=['assign_charges', 'cryspy', 'dimer_select',
-               'pick_mol', 'pop_stat', 'prepare_calculation'],
+      version='1.0',
+      author='Miguel Rivera, Michael Dommett, Rachel Crespo-Otero',
+      author_email='r.crespo-otero@qmul.ac.uk',
       ext_modules=[fdist_module],
-      py_modules=['assign_charges', 'atom', 'calc', 'cryspy', 'dimer_select', 'edit_file', 'fdist', 'handle_atoms',
-                  'parse_config_file', 'periodic', 'pick_mol', 'pop_stat', 'prepare_calculation', 'read_file', 'volume'],
+      packages=['cryspy',
+                'cryspy.fdist',
+                'cryspy.io',
+                'cryspy.scripts',
+                'cryspy.utils'],
+      scripts=['cryspy.scripts.assign_charges',
+               'cryspy.scripts.cryspy',
+               'cryspy.scripts.dimer_select',
+               'cryspy.scripts.pick_mol',
+               'cryspy.scripts.pop_stat',
+               'cryspy.scripts.prepare_calculation'],
       )

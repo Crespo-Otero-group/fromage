@@ -1,8 +1,9 @@
 """Some functions to handle lists of atoms
 """
 import numpy as np
-from atom import Atom
 from copy import copy
+
+from cryspy.utils.atom import Atom
 
 
 def select(max_r, atoms, label):

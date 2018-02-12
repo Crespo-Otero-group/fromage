@@ -17,10 +17,11 @@ Includes options for Mulliken or RESP and ouptut file names.
 
 import numpy as np
 import sys
-import read_file as rf
 import argparse
-from atom import Atom
 from collections import Counter
+
+from cryspy.io import read_file as rf
+from cryspy.utils.atom import Atom
 
 
 def detect_1_connect(in_atoms, vectors, max_BL):

@@ -7,12 +7,13 @@ the same way from the main program regardless of which program it is.
 As such if any clunky code is necessary due to an external program's specific
 preferences, it should be contained here in its Calc object member methods.
 """
-
-import edit_file as ef
-import read_file as rf
-import handle_atoms as ha
 import subprocess
 import os
+
+from cryspy.io import edit_file as ef
+from cryspy.io import read_file as rf
+from cryspy.utils import handle_atoms as ha
+
 
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 

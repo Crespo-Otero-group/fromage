@@ -1,9 +1,10 @@
 """Defines the Atom object"""
 
 import numpy as np
-import per_table as per
 from collections import Counter
-import fdist as fd
+
+from cryspy.utils import per_table as per
+from cryspy.fdist import fdist as fd
 
 class Atom(object):
     """

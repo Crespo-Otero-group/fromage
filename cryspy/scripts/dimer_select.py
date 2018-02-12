@@ -5,19 +5,21 @@ Utility for selecting unique dimers from a .xyz file
 The unique dimers are written to separate output files, *_dimer_*.xyz
 
 """
+
 from __future__ import division
-import time
-start = time.time()
 import sys
 import argparse
-import assign_charges as ac
-import read_file as rf
-import edit_file as ef
-import handle_atoms as ha
-from math import sqrt
+import time
 import numpy as np
-import fdist as fd
+from math import sqrt
 
+from cryspy.scripts import assign_charges as ac
+from cryspy.io import read_file as rf
+from cryspy.io import edit_file as ef
+from cryspy.utils import handle_atoms as ha
+from cryspy.fdist import fdist as fd
+
+start = time.time()
 
 def vector_distance(x1, y1, z1, x2, y2, z2):
     """

@@ -14,13 +14,14 @@ reaching this module
 import numpy as np
 import subprocess
 import os
-import read_file as rf
-import edit_file as ef
-import handle_atoms as ha
-import calc
-from atom import Atom
-from scipy.optimize import minimize
 from datetime import datetime
+from scipy.optimize import minimize
+
+from cryspy.io import read_file as rf
+from cryspy.io import edit_file as ef
+from cryspy.utils import handle_atoms as ha
+from cryspy.utils import calc
+from cryspy.utils.atom import Atom
 
 
 def sequence(in_pos):

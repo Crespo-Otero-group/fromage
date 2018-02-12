@@ -6,9 +6,10 @@ outside of this file for clarity.
 """
 import sys
 import numpy as np
-import atom as at
-import per_table as per
-from atom import Atom
+
+from cryspy.utils import atom as at
+from cryspy.utils import per_table as per
+from cryspy.utils.atom import Atom
 
 
 def read_vasp(in_name):
