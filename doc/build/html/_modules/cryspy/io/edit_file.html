@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cryspy.io.edit_file &mdash; cryspy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="cryspy 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cryspy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_overview.html">1. cryspy Overview</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cryspy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>cryspy.io.edit_file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cryspy.io.edit_file</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions for creating files needed for other software&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+
+<span class="kn">from</span> <span class="nn">cryspy.utils.atom</span> <span class="k">import</span> <span class="n">Atom</span>
+
+
+<div class="viewcode-block" id="write_cp2k"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_cp2k">[docs]</a><span class="k">def</span> <span class="nf">write_cp2k</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">temp_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a cp2k input file from a template.</span>
+
+<span class="sd">    To use this, first make a template file with the name as XXX__NAME__XXX,</span>
+<span class="sd">    the vectors as XXX__AVEC__XXX, XXX__BVEC__XXX and XXX__CVEC__XXX and the</span>
+<span class="sd">    positions as XXX__POS__XXX.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : string</span>
+<span class="sd">        Project name</span>
+<span class="sd">    file_name : string</span>
+<span class="sd">        Name of the cp2k input file</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms in the system</span>
+<span class="sd">    temp_name : string</span>
+<span class="sd">        Name of the template file</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">temp_content</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># strings for each lattice vector</span>
+    <span class="n">aVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">bVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">cVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">cp2k_in</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_content</span><span class="p">:</span>
+
+        <span class="c1"># writes the name of the calculation at the top of the file</span>
+        <span class="k">if</span> <span class="s2">&quot;XXX__NAME__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__NAME__XXX&quot;</span><span class="p">,</span> <span class="n">in_name</span><span class="p">))</span>
+
+        <span class="c1"># replace the tags with the coordinates of lattice vectors</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__AVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__AVEC__XXX&quot;</span><span class="p">,</span> <span class="n">aVec</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__BVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__BVEC__XXX&quot;</span><span class="p">,</span> <span class="n">bVec</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__CVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__CVEC__XXX&quot;</span><span class="p">,</span> <span class="n">cVec</span><span class="p">))</span>
+
+        <span class="c1"># writes atomic coordinates</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__POS__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="n">line_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line_str</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if no tag is found</span>
+            <span class="n">cp2k_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="n">cp2k_in</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_xyz"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_xyz">[docs]</a><span class="k">def</span> <span class="nf">write_xyz</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write an xyz file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : string</span>
+<span class="sd">        Name of the xyz file. Include the file extension, e.g. &quot;molecule.xyz&quot;</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atms to write</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">in_name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">xyz_str</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_uc"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_uc">[docs]</a><span class="k">def</span> <span class="nf">write_uc</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">aN</span><span class="p">,</span> <span class="n">bN</span><span class="p">,</span> <span class="n">cN</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a .uc file for Ewald.c.</span>
+
+<span class="sd">    .uc files are written in fractional coordinates instead of Cartesian</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : string</span>
+<span class="sd">        Name of the file to be written</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    aN,bN,cN : ints</span>
+<span class="sd">        Number of times each lattice vector should be multiplied</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Unit cell atoms for the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">line1</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">aN</span><span class="p">]</span>
+    <span class="n">line2</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">bN</span><span class="p">]</span>
+    <span class="n">line3</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">cN</span><span class="p">]</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">line1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">line2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">line3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># transpose to get the transformation matrix</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+    <span class="c1"># inverse transformation matrix</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="c1"># change of basis transformation</span>
+        <span class="n">dir_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
+        <span class="n">frac_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">dir_pos</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">frac_pos</span><span class="p">:</span>
+            <span class="c1"># if the coordinate is negative</span>
+            <span class="k">if</span> <span class="n">coord</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># translate it to the range [0,1]</span>
+                <span class="n">frac_pos</span><span class="p">[</span><span class="n">frac_pos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">coord</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">coord</span>
+        <span class="n">str_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.10f}</span><span class="s2"> </span><span class="si">{:&gt;6}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">frac_pos</span> <span class="o">+</span> <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">q</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">str_line</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_qc"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_qc">[docs]</a><span class="k">def</span> <span class="nf">write_qc</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+    <span class="s2">&quot;Write a .qc file for Ewald.c.&quot;</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">str_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">str_line</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_ew_in"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_ew_in">[docs]</a><span class="k">def</span> <span class="nf">write_ew_in</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">nChk</span><span class="p">,</span> <span class="n">nAt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write an input file for Ewald.c.</span>
+
+<span class="sd">    Remember to include and pre or post fixes to the file name. Following the</span>
+<span class="sd">    convention from the paper, it would be something like &quot;in.ewald.somename&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : string</span>
+<span class="sd">        Name of the project</span>
+<span class="sd">    file_name : string</span>
+<span class="sd">        Name of the input file to write</span>
+<span class="sd">    nChk : int</span>
+<span class="sd">        Number of random checkpoints in zone 1</span>
+<span class="sd">    nAt : int</span>
+<span class="sd">        Number of fixed charge atoms in zone 1+2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">((</span><span class="n">file_name</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">in_name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">nChk</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">nAt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_seed"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_seed">[docs]</a><span class="k">def</span> <span class="nf">write_seed</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Write a seedfile for Ewald.c&quot;&quot;&quot;</span>
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;seedfile&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">seed1</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span> <span class="o">-</span> <span class="mi">86</span><span class="p">)</span>
+    <span class="n">seed2</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span> <span class="o">-</span> <span class="mi">250</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seed1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed2</span><span class="p">))</span></div>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="write_gauss"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_gauss">[docs]</a><span class="k">def</span> <span class="nf">write_gauss</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">temp_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a Gaussian input file.</span>
+
+<span class="sd">    A template file needs to be prepared which has the name as XXX__NAME__XXX,</span>
+<span class="sd">    the positions as XXX__POS__XXX and the (optional) charges as</span>
+<span class="sd">    XXX__CHARGES__XXX.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Project name</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the Gaussian input file to be written</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms to be calculated with Gaussian</span>
+<span class="sd">    points : list of Atom objects or None</span>
+<span class="sd">        The Atom objects should have a charge. If there is no XXX__CHARGES__XXX</span>
+<span class="sd">        in the template file, this doesn&#39;t matter and can be None</span>
+<span class="sd">    temp_name : str</span>
+<span class="sd">        Name of the template file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">temp_content</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;XXX__NAME__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__NAME__XXX&quot;</span><span class="p">,</span> <span class="n">in_name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__POS__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="n">atomStr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atomStr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__CHARGES__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+                <span class="n">point_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">point_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_g_temp"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_g_temp">[docs]</a><span class="k">def</span> <span class="nf">write_g_temp</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">fixed_atoms</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">temp_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a Gaussian input template file.</span>
+
+<span class="sd">    This serves to generate templates for write_gauss. That&#39;s right, you are</span>
+<span class="sd">    going to need to make templates for your templates files so that you can</span>
+<span class="sd">    generate inputs while you generate inputs. In this case a XXX__POS__XXX tag</span>
+<span class="sd">    should be included and won&#39;t be overwritten.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Project name</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the Gaussian input file to be written</span>
+<span class="sd">    fixed_atoms : list of Atom objects</span>
+<span class="sd">        Atoms to be calculated with Gaussian with the -1 tag which makes them</span>
+<span class="sd">        fixed in space</span>
+<span class="sd">    points : list of Atom objects or None</span>
+<span class="sd">        The Atom objects should have a charge. If there is no XXX__CHARGES__XXX</span>
+<span class="sd">        in the template file, this doesn&#39;t matter and can be None</span>
+<span class="sd">    temp_name : str</span>
+<span class="sd">        Name of the template file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">temp_content</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;XXX__NAME__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__NAME__XXX&quot;</span><span class="p">,</span> <span class="n">in_name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__FIX__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">fixed_atoms</span><span class="p">:</span>
+                <span class="n">atomStr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> -1 </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atomStr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__CHARGES__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+                <span class="n">point_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">point_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">outFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="edit_vasp_pos"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.edit_vasp_pos">[docs]</a><span class="k">def</span> <span class="nf">edit_vasp_pos</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Overwrite vasp POSCAR file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the VASP file</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms to be written in the POSCAR file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span> <span class="o">+</span> <span class="s2">&quot;.vasp&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vaspFile</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">vaspFile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">outFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span> <span class="o">+</span> <span class="s2">&quot;.new.vasp&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;Cartesian&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">atomStr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">outFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atomStr</span><span class="p">)</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_qe"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_qe">[docs]</a><span class="k">def</span> <span class="nf">write_qe</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">temp_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a Quantum Espresso (QE) input file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Project name</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the QE input file</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms to be calculated with QE</span>
+<span class="sd">    temp_name : str</span>
+<span class="sd">        Name of the template file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">temp_content</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># strings for each lattice vector</span>
+    <span class="n">aVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">bVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">cVec</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">qe_in</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_content</span><span class="p">:</span>
+
+        <span class="c1"># writes the name of the calculation at the top of the file</span>
+        <span class="k">if</span> <span class="s2">&quot;XXX__NAME__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__NAME__XXX&quot;</span><span class="p">,</span> <span class="n">in_name</span><span class="p">))</span>
+
+        <span class="c1"># replace the tags with the coordinates of lattice vectors</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__AVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__AVEC__XXX&quot;</span><span class="p">,</span> <span class="n">aVec</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__BVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__BVEC__XXX&quot;</span><span class="p">,</span> <span class="n">bVec</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__CVEC__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__CVEC__XXX&quot;</span><span class="p">,</span> <span class="n">cVec</span><span class="p">))</span>
+
+        <span class="c1"># writes atomic coordinates</span>
+        <span class="k">elif</span> <span class="s2">&quot;XXX__POS__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="n">line_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&lt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line_str</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if no tag is found</span>
+            <span class="n">qe_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">qe_in</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_pp"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_pp">[docs]</a><span class="k">def</span> <span class="nf">write_pp</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">temp_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a Quantum Espresso .pp file</span>
+
+<span class="sd">    This is a file for PP.x calculations which generate things like cube files</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Project name</span>
+<span class="sd">    file_name : str</span>
+<span class="sd">        Name of the .pp file. Include the extension e.g. &quot;example.pp&quot;</span>
+<span class="sd">    temp_name :</span>
+<span class="sd">        Name of the template file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+        <span class="n">temp_content</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">pp_in</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_content</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="s2">&quot;XXX__NAME__XXX&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">pp_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;XXX__NAME__XXX&quot;</span><span class="p">,</span> <span class="n">in_name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pp_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">pp_in</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_coord"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_coord">[docs]</a><span class="k">def</span> <span class="nf">write_coord</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a Turbomole coord file</span>
+
+<span class="sd">    The written units are in Bohr but we conserve Angstrom units in this program</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_atoms : Atom objects</span>
+<span class="sd">        Atoms to write</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bohrconv</span> <span class="o">=</span> <span class="mf">1.88973</span>
+    <span class="n">coord_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;coord&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">coord_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;$coord</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">in_atoms</span><span class="p">:</span>
+        <span class="n">form_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:&gt;6}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="n">coord_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">form_string</span><span class="p">)</span>
+    <span class="n">coord_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;$end</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="write_cube"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.edit_file.write_cube">[docs]</a><span class="k">def</span> <span class="nf">write_cube</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">x_num</span><span class="p">,</span> <span class="n">y_num</span><span class="p">,</span> <span class="n">z_num</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a file in cube format</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the output file</span>
+<span class="sd">    origin : numpy array of length 3</span>
+<span class="sd">        Origin if the cube grid</span>
+<span class="sd">    vectors : 3x3 numpy array</span>
+<span class="sd">        Vectors defining a voxel</span>
+<span class="sd">    x_num, y_num, z_num : ints</span>
+<span class="sd">        Numbers of voxels along each edge</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms to include in the cube file</span>
+<span class="sd">    vals : numpy array</span>
+<span class="sd">        The values to be entered at each voxel in the order x1, y1, z1, x1, y1, z2 etc.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bohrconv</span> <span class="o">=</span> <span class="mf">1.88973</span>
+
+    <span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Header</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Cube file generated by cryspy, units in Angstrom</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">comment</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">orig_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:6d}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">)</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">orig_line</span><span class="p">)</span>
+
+    <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_num</span><span class="p">,</span> <span class="n">y_num</span><span class="p">,</span> <span class="n">z_num</span><span class="p">]</span>
+    <span class="n">xyz_lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{:6d}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))]</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xyz_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">xyz_lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xyz_lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1"># Atoms</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">atom_line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:3d}{:10.6f}{:10.6f}{:10.6f}{:10.6f}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">at_num</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">at_num</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">bohrconv</span><span class="p">)</span>
+        <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atom_line</span><span class="p">)</span>
+
+    <span class="c1"># Values</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+        <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">6</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</div>
+    <span class="k">return</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -33,7 +33,7 @@ def sequence(in_pos):
     arrays of floats. As a result some variables in this function are defined
     elsewhere in the module which is a necessary evil.
 
-    Parameter
+    Parameters
     ----------
     in_pos : list of floats
         Input coordinates in array form
@@ -43,6 +43,7 @@ def sequence(in_pos):
         Combined energy or penalty function value in Hartree
     gr_out : list of floats
         Gradients of en_out in Hartree/Angstrom
+
     References
     ----------
     Levine, B. G., Coe, J. D. & Martinez, T. J. Optimizing conical intersections

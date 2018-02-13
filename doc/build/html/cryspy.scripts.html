@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cryspy.scripts package &mdash; cryspy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="cryspy 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cryspy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">cryspy.scripts package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.assign_charges">cryspy.scripts.assign_charges module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.dimer_select">cryspy.scripts.dimer_select module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.pick_mol">cryspy.scripts.pick_mol module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.pop_stat">cryspy.scripts.pop_stat module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.prepare_calculation">cryspy.scripts.prepare_calculation module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts.run_cryspy">cryspy.scripts.run_cryspy module</a></li>
+<li><a class="reference internal" href="#module-cryspy.scripts">Module contents</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cryspy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>cryspy.scripts package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cryspy.scripts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cryspy-scripts-package">
+<h1>cryspy.scripts package<a class="headerlink" href="#cryspy-scripts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cryspy.scripts.assign_charges">
+<span id="cryspy-scripts-assign-charges-module"></span><h2>cryspy.scripts.assign_charges module<a class="headerlink" href="#module-cryspy.scripts.assign_charges" title="Permalink to this headline">¶</a></h2>
+<p>Functions useful for manipulating atom connectivity.</p>
+<p>The original use of these functions is to allow for assign_charges to work and
+be able to give a molecule, cluster or periodic cell of atoms the same charges as another
+molecule, cluster or periodic cell.</p>
+<p>Includes a utility to read a molecule xyz file, a population analysis in g09 and
+a target cluster xyz to assign the charges to the cluster.</p>
+<p>Usage:
+assign_charges.py mol.log clust.xyz</p>
+<p>Includes options for Mulliken or RESP and ouptut file names.</p>
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.assign_charges">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">assign_charges</code><span class="sig-paren">(</span><em>char_atoms</em>, <em>char_vectors</em>, <em>unchar_atoms</em>, <em>unchar_vectors</em>, <em>bl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#assign_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.assign_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign charges from one list of atoms to another list of atoms.</p>
+<p>This is based on the connectivity of the charged atoms, as defined by a
+maximum bond length. The function works for periodic or non periodic systems
+in the input and the output. The uncharged atoms are changed and there is no
+output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>char_atoms</strong> (<em>list of Atom objects</em>) – Atoms which already have assigned charge</li>
+<li><strong>char_vectors</strong> (<em>3x3 array-like or None</em>) – Lattice vectors of the input system if it is periodic. If not use None</li>
+<li><strong>unchar_atoms</strong> (<em>list of Atom objects</em>) – Atoms which need charges assigned to them</li>
+<li><strong>unchar_vectors</strong> (<em>3x3 array-like or None</em>) – See char_vectors</li>
+<li><strong>bl</strong> (<em>float</em>) – Maximum distance between atoms which constitutes a bond</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.charged_kinds">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">charged_kinds</code><span class="sig-paren">(</span><em>in_atoms</em>, <em>in_kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#charged_kinds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.charged_kinds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get charged atom kinds from charged atoms and kinds.</p>
+<p>For each kind of atom to be charged, goes through the list of atoms and
+makes an average of the partial atomic charge of atoms of that type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>in_atoms</strong> (<em>list of Atom objects</em>) – The atoms should be charged and some of them at least should be of the
+relevant kind</li>
+<li><strong>in_kinds</strong> (<em>list of tuples</em>) – The tuples are of the form (a,b) where a is an element string (like ‘C’)
+and b is a frozenset of ((element string,order of connection),amount of
+connections). (a,b) is known as an atom kind</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>q_kinds</strong> – Each tuple is now (average charge,kind). This tuple is known as a
+charged kind</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of tuples</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.complete_expand">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">complete_expand</code><span class="sig-paren">(</span><em>in_mat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#complete_expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.complete_expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand a matrix until it stops expanding.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.detect_1_connect">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">detect_1_connect</code><span class="sig-paren">(</span><em>in_atoms</em>, <em>vectors</em>, <em>max_BL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#detect_1_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.detect_1_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a matrix of first connectivities of a list of atoms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>in_atoms</strong> (<em>list of Atom objects</em>) – Atoms which need their connectivity detected</li>
+<li><strong>vectors</strong> (<em>3x3 array-like or None</em>) – Lattice vectors of the system if it is periodic. If not use None</li>
+<li><strong>max_BL</strong> (<em>float</em>) – Maximum length between atoms which counts as a bond in the
+connectivity matrix</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cnct</strong> – The matrix where each row and each column correspond to one atom. If the
+two atoms are bonded or the same, the matrix element is 1. Otherwise it
+is 0</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy matrix</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.expand_connect">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">expand_connect</code><span class="sig-paren">(</span><em>in_mat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#expand_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.expand_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand a connectivity matrix</p>
+<p>For one atom, checks which other atoms are connected to it (connectors) and
+which are not (dangles). Then for each dangle checks if it has connectors in
+common with the original atom and if so assigns that matrix element the
+smallest combination of connectors.</p>
+<dl class="docutils">
+<dt>in_mat <span class="classifier-delimiter">:</span> <span class="classifier">2-d array-like</span></dt>
+<dd>Connectivity matrix to be expanded</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>out_mat</strong> – Once-expanded connectivity matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">2-d array-like</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.assign_charges.main">
+<code class="descclassname">cryspy.scripts.assign_charges.</code><code class="descname">main</code><span class="sig-paren">(</span><em>in_xyz</em>, <em>in_log</em>, <em>target</em>, <em>output</em>, <em>bond</em>, <em>kind</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/assign_charges.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.assign_charges.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts.dimer_select">
+<span id="cryspy-scripts-dimer-select-module"></span><h2>cryspy.scripts.dimer_select module<a class="headerlink" href="#module-cryspy.scripts.dimer_select" title="Permalink to this headline">¶</a></h2>
+<p>Utility for selecting unique dimers from a .xyz file</p>
+<p>The unique dimers are written to separate output files, <em>_dimer_</em>.xyz</p>
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.differences">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">differences</code><span class="sig-paren">(</span><em>A</em>, <em>B</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calulate the sum of squares difference between two lists, nominally of atomic distances</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A,B</strong> (<em>lists of floats</em>) – Bond distances in dimers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>SSD</strong> – Sum of squares differences</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.interatomic_distances">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">interatomic_distances</code><span class="sig-paren">(</span><em>dimers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#interatomic_distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.interatomic_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a list of the interatomic distances for each dimer in list of dimers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dimers</strong> (<em>list of lists</em>) – List of L of length D dimers, where each member of L is a list of 2N atom objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>connections</strong> – Connections per dimer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.loop_atoms">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">loop_atoms</code><span class="sig-paren">(</span><em>mol_1</em>, <em>mol_2</em>, <em>ad</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#loop_atoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.loop_atoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a dimer based on intermolecular atomic distances between two molecules</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mol_1</strong> (<em>list of atom objects</em>)</li>
+<li><strong>mol_2</strong> (<em>list of atom objects</em>)</li>
+<li><strong>ad</strong> (<em>float</em>) – Maximum ntermolecular atomic distance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mol1+mol2</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of atom objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.make_dimers_ad">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">make_dimers_ad</code><span class="sig-paren">(</span><em>molecules</em>, <em>ad</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#make_dimers_ad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.make_dimers_ad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a list of dimers based on intermolecular atomic distancead</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>molecules</strong> (<em>list of lists</em>) – M molecules containing N atom objects</li>
+<li><strong>ad</strong> (<em>float</em>) – Maximum ntermolecular atomic distance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dimers</strong> – List L of length D dimers, where each member of L is a list of 2N atom objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of lists</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.make_dimers_cd">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">make_dimers_cd</code><span class="sig-paren">(</span><em>molecules</em>, <em>cd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#make_dimers_cd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.make_dimers_cd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a list of dimers based on centroid distances cd</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>molecules</strong> (<em>list of lists</em>) – M molecules containing N atom objects</li>
+<li><strong>cd</strong> (<em>float</em>) – Length between centroids of molecules</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dimers</strong> – List L of length D dimers, where each member of L is a list of 2N atom objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of lists</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.make_dimers_vdw">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">make_dimers_vdw</code><span class="sig-paren">(</span><em>molecules</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#make_dimers_vdw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.make_dimers_vdw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a list of dimers based on van der waals radii of closest atoms</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>molecules</strong> (<em>list of lists</em>) – M molecules containing N atom objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>dimers</strong> – List L of length D dimers, where each member of L is a list of 2N atom objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of lists</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.make_molecules">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">make_molecules</code><span class="sig-paren">(</span><em>atoms</em>, <em>bl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#make_molecules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.make_molecules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate list of molecules based on bond length bl</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>atoms</strong> (<em>list of Atom objects</em>)</li>
+<li><strong>bl</strong> (<em>float</em>) – Bond length in unit of input file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>molecules</strong> – List L of length M molecules, where each member of L is a list of atom objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of lists</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.scripts.dimer_select.vector_distance">
+<code class="descclassname">cryspy.scripts.dimer_select.</code><code class="descname">vector_distance</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em>, <em>x2</em>, <em>y2</em>, <em>z2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/dimer_select.html#vector_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.dimer_select.vector_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the distances between two cartesian coordinates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>(x1,y1,z1,x2,y2,z2)</strong> (<em>hextuple of floats</em>) – atomic coordinates of atoms 1 and 2</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>dist</strong> – distance in units of coordinates</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts.pick_mol">
+<span id="cryspy-scripts-pick-mol-module"></span><h2>cryspy.scripts.pick_mol module<a class="headerlink" href="#module-cryspy.scripts.pick_mol" title="Permalink to this headline">¶</a></h2>
+<p>Utility for selecting molecules from a .xyz file</p>
+<p>The default output is called out.xyz but can be specified with -o</p>
+<p>Usage:
+pick_mol.py input_file.xyz 7 13 42</p>
+<dl class="function">
+<dt id="cryspy.scripts.pick_mol.picker">
+<code class="descclassname">cryspy.scripts.pick_mol.</code><code class="descname">picker</code><span class="sig-paren">(</span><em>in_name</em>, <em>out_name</em>, <em>labels</em>, <em>max_bl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/pick_mol.html#picker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.pick_mol.picker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pick out molecules from an xyz file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Name of the .xyz input file</li>
+<li><strong>out_name</strong> (<em>str</em>) – Name of the .xyz output file</li>
+<li><strong>labels</strong> (<em>list of ints</em>) – Labels of the atoms in the molecules to select (array starts at 0)</li>
+<li><strong>max_bl</strong> (<em>float</em>) – Maximun distance in Angstrom that constitutes a bond</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts.pop_stat">
+<span id="cryspy-scripts-pop-stat-module"></span><h2>cryspy.scripts.pop_stat module<a class="headerlink" href="#module-cryspy.scripts.pop_stat" title="Permalink to this headline">¶</a></h2>
+<p>Give basic information on a Gaussian population analysis</p>
+<dl class="function">
+<dt id="cryspy.scripts.pop_stat.main">
+<code class="descclassname">cryspy.scripts.pop_stat.</code><code class="descname">main</code><span class="sig-paren">(</span><em>in_log</em>, <em>kind</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/pop_stat.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.pop_stat.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts.prepare_calculation">
+<span id="cryspy-scripts-prepare-calculation-module"></span><h2>cryspy.scripts.prepare_calculation module<a class="headerlink" href="#module-cryspy.scripts.prepare_calculation" title="Permalink to this headline">¶</a></h2>
+<p>This module is a tool to prepare template and input files for cryspy.</p>
+<p>You will need:
+- config file
+- .xyz file of a unit cell
+- cp2k or gaussian output files for a population analysis at high level and low
+level
+- .template files for ml, mh, mg, rl calculations</p>
+<p>And receive
+- .temp files for ml, mh, mg, rl
+- mol.init.xyz containing the selected molecule(s)
+- clust.xyz containing the full molecular cluster
+- shell.xyz containing the cluster without the selected molecule(s)</p>
+<dl class="function">
+<dt id="cryspy.scripts.prepare_calculation.run_ewald">
+<code class="descclassname">cryspy.scripts.prepare_calculation.</code><code class="descname">run_ewald</code><span class="sig-paren">(</span><em>in_name</em>, <em>in_mol</em>, <em>in_atoms</em>, <em>in_vectors</em>, <em>in_nAt=500</em>, <em>in_aN=2</em>, <em>in_bN=2</em>, <em>in_cN=2</em>, <em>in_nChk=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/prepare_calculation.html#run_ewald"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.prepare_calculation.run_ewald" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an Ewald calculation in the working directory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Name of the calculation</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects</em>) – Atoms which constitute the quantum cluster</li>
+<li><strong>in_atoms</strong> (<em>list of Atom objects</em>) – Atoms in the unit cell</li>
+<li><strong>in_vectors</strong> (<em>3x3 numpy matrix</em>) – Lattice vectors</li>
+<li><strong>in_nAt</strong> (<em>int</em>) – Amount of atoms with fixed charge</li>
+<li><strong>in_aN, in_bN, in_cN</strong> (<em>ints</em>) – Amount of multiplications in postitive and negative directions of the unit cell</li>
+<li><strong>in_nChk</strong> (<em>int</em>) – Number of random sampling points in the qc</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts.run_cryspy">
+<span id="cryspy-scripts-run-cryspy-module"></span><h2>cryspy.scripts.run_cryspy module<a class="headerlink" href="#module-cryspy.scripts.run_cryspy" title="Permalink to this headline">¶</a></h2>
+<p>Minimises the energy or the gap penalty function of a molecule in a cluster.</p>
+<p>Template files are needed as well as an xyz file for the molecule and another
+one for the surrounding molecules. Overall the use of subprocess is ugly as it
+is repeated 3 or 4 times but it was found to handle memory better than Pool
+when interfacing with Gaussian.</p>
+<p>Energy units are Hartree inside the program but are printed in eV. Distances are
+kept as Angstrom throughout and are converted from Bohr if necessary before
+reaching this module</p>
+<dl class="function">
+<dt id="cryspy.scripts.run_cryspy.sequence">
+<code class="descclassname">cryspy.scripts.run_cryspy.</code><code class="descname">sequence</code><span class="sig-paren">(</span><em>in_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/scripts/run_cryspy.html#sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.scripts.run_cryspy.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run Gaussian calculations in parallel and write and return results</p>
+<p>This function is designed to work with the scipy.optimise.minimize function.
+This is why it can only receive one array of floats as input and return two
+arrays of floats. As a result some variables in this function are defined
+elsewhere in the module which is a necessary evil.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_pos</strong> (<em>list of floats</em>) – Input coordinates in array form</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>en_out</strong> (<em>float</em>) – Combined energy or penalty function value in Hartree</li>
+<li><strong>gr_out</strong> (<em>list of floats</em>) – Gradients of en_out in Hartree/Angstrom</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<p>Levine, B. G., Coe, J. D. &amp; Martinez, T. J. Optimizing conical intersections
+without derivative coupling vectors: Application to multistate
+multireference second-order perturbation theory (MS-CASPT2).
+J. Phys. Chem. B 112, 405-413 (2008).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.scripts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cryspy.scripts" title="Permalink to this headline">¶</a></h2>
+<p>Scripts</p>
+<p>All of the executable files in cryspy.</p>
+<div class="section" id="modules">
+<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>assign_charges</dt>
+<dd>Contains all of the routines for determining the connectivity of a group
+of atoms. Uses a gaussian.log file to ‘populate’ a .xyz file</dd>
+<dt>dimer_select</dt>
+<dd>Selects unique dimers from a .xyz file and writes them out</dd>
+<dt>pick_mol</dt>
+<dd>Extracts single moleculs from a .xyz file by one of their constituent
+atom’s labels</dd>
+<dt>pop_stat</dt>
+<dd>General statistical analysis of a population analysis from Gaussian</dd>
+<dt>prepare_calculation</dt>
+<dd>Generates all of the necessary initial files for a cryspy optimisation.
+This may include several calls to Ewald, which needs to be in the $PATH</dd>
+<dt>run_cryspy</dt>
+<dd>Geometry optimisation via energy minimisation or penatly function of the
+gap</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -242,6 +242,7 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     Alternatively, the multiplication can be centered around a corner of the
     unit cell instead of the centre. In that case the supercluster ends up being
     only (2*traAN)*(2*traBN)*(2*traCN)
+
     Parameters
     ----------
     atoms : list of Atom objects

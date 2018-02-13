@@ -1,7 +1,7 @@
-cryspy0.9
-=========
+cryspy
+======
 
 .. toctree::
    :maxdepth: 4
 
-   cryspy0.9
+   cryspy

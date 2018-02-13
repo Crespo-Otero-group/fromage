@@ -417,7 +417,7 @@ def read_config(in_name):
     """
     Read a cryspy config file.
 
-    Parameter
+    Parameters
     ----------
     in_name : str
         Name of the file to read
@@ -452,6 +452,7 @@ def read_g_pos(in_name):
     -------
     atoms : list of Atom objects
         Atomic positions at the beginning of the file for a single point .log
+
     """
     with open(in_name) as gauss_file:
         content = gauss_file.readlines()

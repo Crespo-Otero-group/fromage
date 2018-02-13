@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # cryspy documentation build configuration file, created by
-# sphinx-quickstart on Fri Feb  9 17:14:51 2018.
+# sphinx-quickstart on Tue Feb 13 10:35:39 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -31,12 +31,12 @@ sys.path.insert(0, os.path.abspath('.'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon']
+    'sphinx.ext.napoleon',]
 
-napoleon_use_param=False
-napoleon_use_ivar=False
+napoleon_google_docstring = False
+napoleon_use_param = False
+napoleon_use_ivar = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

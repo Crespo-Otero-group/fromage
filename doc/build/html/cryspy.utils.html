@@ -1,0 +1,1057 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cryspy.utils package &mdash; cryspy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="cryspy 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cryspy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">cryspy.utils package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils.atom">cryspy.utils.atom module</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils.calc">cryspy.utils.calc module</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils.handle_atoms">cryspy.utils.handle_atoms module</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils.per_table">cryspy.utils.per_table module</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils.volume">cryspy.utils.volume module</a></li>
+<li><a class="reference internal" href="#module-cryspy.utils">Module contents</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cryspy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>cryspy.utils package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cryspy.utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cryspy-utils-package">
+<h1>cryspy.utils package<a class="headerlink" href="#cryspy-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cryspy.utils.atom">
+<span id="cryspy-utils-atom-module"></span><h2>cryspy.utils.atom module<a class="headerlink" href="#module-cryspy.utils.atom" title="Permalink to this headline">¶</a></h2>
+<p>Defines the Atom object</p>
+<dl class="class">
+<dt id="cryspy.utils.atom.Atom">
+<em class="property">class </em><code class="descclassname">cryspy.utils.atom.</code><code class="descname">Atom</code><span class="sig-paren">(</span><em>elemIn='H'</em>, <em>xIn=0.0</em>, <em>yIn=0.0</em>, <em>zIn=0.0</em>, <em>qIn=0.0</em>, <em>num=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object representing an atom.</p>
+<p>Sometimes also used to represent point charges as atoms of element “point”.
+Several functions are present like translate or find_centroid.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">x,y,z</code></dt>
+<dd><p><em>floats</em> – Cartesian coordinates</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.q">
+<code class="descname">q</code><a class="headerlink" href="#cryspy.utils.atom.Atom.q" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Partial atomic charge</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.connectivity">
+<code class="descname">connectivity</code><a class="headerlink" href="#cryspy.utils.atom.Atom.connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>frozenset of tuples</em> – The set is ((atom kind,connectivity order),amount) and is set via a
+function which takes the connectivity matrix as argument</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.kind">
+<code class="descname">kind</code><a class="headerlink" href="#cryspy.utils.atom.Atom.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> – Tuple of (atom element,connectivity). This defines the kind of atom</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.total_e">
+<code class="descname">total_e</code><a class="headerlink" href="#cryspy.utils.atom.Atom.total_e" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Atomic number</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.valence">
+<code class="descname">valence</code><a class="headerlink" href="#cryspy.utils.atom.Atom.valence" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Number of valence electrons</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.atom.Atom.vdw">
+<code class="descname">vdw</code><a class="headerlink" href="#cryspy.utils.atom.Atom.vdw" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Van der Waals radius in Angstrom</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.dist">
+<code class="descname">dist</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return distance of the atom from a point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.dist2">
+<code class="descname">dist2</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.dist2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.dist2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return distance squared of the atom from a point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.dist_lat">
+<code class="descname">dist_lat</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em>, <em>aVec</em>, <em>bVec</em>, <em>cVec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.dist_lat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.dist_lat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the shortest distance to a point in a periodic system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x1,y1,z1</strong> (<em>floats</em>) – Cartesian coordinates of the target point</li>
+<li><strong>aVec,bVec,cVec</strong> (<em>3x1 array-likes</em>) – Unit cell vectors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>rMin</strong> (<em>float</em>) – Minimal distance to the point</li>
+<li><strong>x3,y3,z3</strong> (<em>floats</em>) – Coordinates of the closest image to the point</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.set_connectivity">
+<code class="descname">set_connectivity</code><span class="sig-paren">(</span><em>in_atoms</em>, <em>in_row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.set_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.set_connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the connectivity and the kind of the atom.</p>
+<p>This function needs a row of a connectivity matrix which can be obtained
+with functions from assign_charges.py</p>
+<p>Check the constructor at the top of this file for more info on connectivity
+and kind.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_atoms</strong> (<em>list of atoms</em>) – Atoms in the system of which this atom is a part</li>
+<li><strong>in_row</strong> (<em>1-d array-like</em>) – The row of the connectivity matrix of in_atoms which corresponds to
+this atom</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate the atom by some vector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.translated">
+<code class="descname">translated</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>z1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.translated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.translated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new atom which is a translated copy.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.very_close">
+<code class="descname">very_close</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.very_close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.very_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if two atoms are very close together</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.atom.Atom.xyz_str">
+<code class="descname">xyz_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/atom.html#Atom.xyz_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.atom.Atom.xyz_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string of the atom in xyz format</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.utils.calc">
+<span id="cryspy-utils-calc-module"></span><h2>cryspy.utils.calc module<a class="headerlink" href="#module-cryspy.utils.calc" title="Permalink to this headline">¶</a></h2>
+<p>Defines the Calc objects which are used to run calculations</p>
+<p>The purpose of the concrete classes is to handle all of the specificities of
+each program so as to be able to call a calculation and read its output in
+the same way from the main program regardless of which program it is.</p>
+<p>As such if any clunky code is necessary due to an external program’s specific
+preferences, it should be contained here in its Calc object member methods.</p>
+<dl class="class">
+<dt id="cryspy.utils.calc.Calc">
+<em class="property">class </em><code class="descclassname">cryspy.utils.calc.</code><code class="descname">Calc</code><span class="sig-paren">(</span><em>calc_name_in=None</em>, <em>in_here='/home/miguel/Scripts/cryspy0.9/doc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract class for calculation objects</p>
+<dl class="attribute">
+<dt id="cryspy.utils.calc.Calc.calc_name">
+<code class="descname">calc_name</code><a class="headerlink" href="#cryspy.utils.calc.Calc.calc_name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Name of the calculation, typically rl, ml, mh or mg</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Calc.read_out">
+<code class="descname">read_out</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol=None</em>, <em>in_shell=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Calc.read_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Calc.read_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the output of the calculation and sometimes updates the geom_*.xyz files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Calc.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Calc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Calc.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all of the variable inputs necessary for one calculations</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Calc.update_geom">
+<code class="descname">update_geom</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol</em>, <em>in_shell</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Calc.update_geom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Calc.update_geom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the geom_mol.xyz and geom_cluster.xyz files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>positions</strong> (<em>list of floats</em>) – List of atomic coordinates</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects</em>) – Atoms in the inner region</li>
+<li><strong>in_shell</strong> (<em>list of Atom objects</em>) – Atoms in the middle region</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cryspy.utils.calc.Gauss_CAS_calc">
+<em class="property">class </em><code class="descclassname">cryspy.utils.calc.</code><code class="descname">Gauss_CAS_calc</code><span class="sig-paren">(</span><em>calc_name_in=None</em>, <em>in_here='/home/miguel/Scripts/cryspy0.9/doc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_CAS_calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_CAS_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cryspy.utils.calc.Calc" title="cryspy.utils.calc.Calc"><code class="xref py py-class docutils literal notranslate"><span class="pre">cryspy.utils.calc.Calc</span></code></a></p>
+<p>Calculation with Gaussian 09 for CAS calculations</p>
+<dl class="method">
+<dt id="cryspy.utils.calc.Gauss_CAS_calc.read_out">
+<code class="descname">read_out</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol=None</em>, <em>in_shell=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_CAS_calc.read_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_CAS_calc.read_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyse a Gaussian .chk file while printing geometry updates</p>
+<p>To update the geom files, include in_mol and in_shell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>positions</strong> (<em>list of floats</em>) – List of atomic coordinates, important for truncation of gradients
+if too many are calculated</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects, optional</em>) – Atoms in the inner region</li>
+<li><strong>in_shell</strong> (<em>list of Atom objects, optional</em>) – Atoms in the middle region</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Energy calculated by Gaussian in Hartree</li>
+<li><strong>gradients</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – The ground state energy in Hartree</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Gauss_CAS_calc.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_CAS_calc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_CAS_calc.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Gaussian input file and return a subprocess.Popen</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>proc</strong> – the object should have a .wait() method</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">subprocess.Popen object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cryspy.utils.calc.Gauss_calc">
+<em class="property">class </em><code class="descclassname">cryspy.utils.calc.</code><code class="descname">Gauss_calc</code><span class="sig-paren">(</span><em>calc_name_in=None</em>, <em>in_here='/home/miguel/Scripts/cryspy0.9/doc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cryspy.utils.calc.Calc" title="cryspy.utils.calc.Calc"><code class="xref py py-class docutils literal notranslate"><span class="pre">cryspy.utils.calc.Calc</span></code></a></p>
+<p>Calculation with Gaussian 09</p>
+<dl class="method">
+<dt id="cryspy.utils.calc.Gauss_calc.read_out">
+<code class="descname">read_out</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol=None</em>, <em>in_shell=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_calc.read_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_calc.read_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyse a Gaussian .chk file while printing geometry updates</p>
+<p>To update the geom files, include in_mol and in_shell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>positions</strong> (<em>list of floats</em>) – List of atomic coordinates, important for truncation of gradients
+if too many are calculated</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects, optional</em>) – Atoms in the inner region</li>
+<li><strong>in_shell</strong> (<em>list of Atom objects, optional</em>) – Atoms in the middle region</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Energy calculated by Gaussian in Hartree</li>
+<li><strong>gradients</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – The ground state energy in Hartree</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Gauss_calc.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Gauss_calc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Gauss_calc.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Gaussian input file and return a subprocess.Popen</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>proc</strong> – the object should have a .wait() method</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">subprocess.Popen object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cryspy.utils.calc.Molcas_calc">
+<em class="property">class </em><code class="descclassname">cryspy.utils.calc.</code><code class="descname">Molcas_calc</code><span class="sig-paren">(</span><em>calc_name_in=None</em>, <em>in_here='/home/miguel/Scripts/cryspy0.9/doc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Molcas_calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Molcas_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cryspy.utils.calc.Calc" title="cryspy.utils.calc.Calc"><code class="xref py py-class docutils literal notranslate"><span class="pre">cryspy.utils.calc.Calc</span></code></a></p>
+<p>Calculation with Molcas 8.0</p>
+<dl class="method">
+<dt id="cryspy.utils.calc.Molcas_calc.read_out">
+<code class="descname">read_out</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol=None</em>, <em>in_shell=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Molcas_calc.read_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Molcas_calc.read_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyse a Molcas .input file while printing geometry updates</p>
+<p>To update the geom files, include in_mol and in_shell. Also removes
+molcas.*</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>positions</strong> (<em>list of floats</em>) – List of atomic coordinates, important for truncation of gradients
+if too many are calculated</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects, optional</em>) – Atoms in the inner region. Include to write geom files</li>
+<li><strong>in_shell</strong> (<em>list of Atom objects, optional</em>) – Atoms in the middle region. Include to write geom files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Energy calculated by Gaussian in Hartree</li>
+<li><strong>gradients</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – The ground state energy in Hartree</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Molcas_calc.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Molcas_calc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Molcas_calc.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Molcas input file and return a subprocess.Popen</p>
+<p>Make sure the input file is called [name of calculation].input
+e.g. mh.input and the geometry file in Gateway is called geom.xyz</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>proc</strong> – the object should have a .wait() method</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">subprocess.Popen object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cryspy.utils.calc.Turbo_calc">
+<em class="property">class </em><code class="descclassname">cryspy.utils.calc.</code><code class="descname">Turbo_calc</code><span class="sig-paren">(</span><em>calc_name_in=None</em>, <em>in_here='/home/miguel/Scripts/cryspy0.9/doc'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Turbo_calc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Turbo_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cryspy.utils.calc.Calc" title="cryspy.utils.calc.Calc"><code class="xref py py-class docutils literal notranslate"><span class="pre">cryspy.utils.calc.Calc</span></code></a></p>
+<p>Calculation with Turbomole 7.0</p>
+<dl class="method">
+<dt id="cryspy.utils.calc.Turbo_calc.read_out">
+<code class="descname">read_out</code><span class="sig-paren">(</span><em>positions</em>, <em>in_mol=None</em>, <em>in_shell=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Turbo_calc.read_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Turbo_calc.read_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyse a Turbomole ricc2.out file while printing geometry updates</p>
+<p>To update the geom files, include in_mol and in_shell</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>positions</strong> (<em>list of floats</em>) – List of atomic coordinates, important for truncation of gradients
+if too many are calculated</li>
+<li><strong>in_mol</strong> (<em>list of Atom objects, optional</em>) – Atoms in the inner region. Include to write geom files</li>
+<li><strong>in_shell</strong> (<em>list of Atom objects, optional</em>) – Atoms in the middle region. Include to write geom files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Energy calculated by Gaussian in Hartree</li>
+<li><strong>gradients</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – The ground state energy in Hartree</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.calc.Turbo_calc.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/calc.html#Turbo_calc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.calc.Turbo_calc.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Turbomole coord file and return a subprocess.Popen</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>proc</strong> – the object should have a .wait() method</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">subprocess.Popen object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.utils.handle_atoms">
+<span id="cryspy-utils-handle-atoms-module"></span><h2>cryspy.utils.handle_atoms module<a class="headerlink" href="#module-cryspy.utils.handle_atoms" title="Permalink to this headline">¶</a></h2>
+<p>Some functions to handle lists of atoms</p>
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.array2atom">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">array2atom</code><span class="sig-paren">(</span><em>template</em>, <em>pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#array2atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.array2atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
+objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>template</strong> (<em>list of Atom objects</em>) – A list of the same length of the desired one used to determine the
+elements of the atoms</li>
+<li><strong>pos</strong> (<em>list of floats</em>) – List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out_atoms</strong> – Resulting atoms</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of Atom objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.center_mol">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">center_mol</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#center_mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.center_mol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate molecules to center</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.complete_mol">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">complete_mol</code><span class="sig-paren">(</span><em>max_r</em>, <em>atoms</em>, <em>label</em>, <em>vectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#complete_mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.complete_mol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a cell and completes one molecule.</p>
+<p>The objective is to end up with a unit cell where the molecule of interest
+is complete. The rest of the atoms of the cell can remain intact. Note that
+the input atoms are transformed and are the same as are present in the
+output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_r</strong> (<em>float</em>) – Maximum distance which is considered a bond</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Cluster of atoms which from which a molecule needs to be extracted</li>
+<li><strong>label</strong> (<em>int</em>) – The number of the atom from which the molecule is generated. Note that
+it is the Python label, so starting from 0, unlike the label in most
+chemistry software which counts from 1</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>full_mol_trans</strong> (<em>list of Atom objects</em>) – The now complete molecule</li>
+<li><em>atoms</em> – The cell with the completed molecule. NB the Atom objects of the completed molecule
+reference the same objects as full_mol_trans</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.find_centroid">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">find_centroid</code><span class="sig-paren">(</span><em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#find_centroid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.find_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the centroid of a list of atoms.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.make_cluster">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">make_cluster</code><span class="sig-paren">(</span><em>atoms</em>, <em>clust_rad</em>, <em>max_bl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#make_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.make_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a cluster of molecules from a cluster of atoms.</p>
+<p>Make sure the input cluster of atoms is large enough to contain the
+desired cluster of molecules. You can generate a large cluster of atoms with
+make_mega_cell. The molecules are defined as any with atoms falling within
+a certain radius of the origin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – A large cluster of atoms</li>
+<li><strong>clust_rad</strong> (<em>float</em>) – Radius determining the initial atoms of the cluster of molecules. These
+atoms are then the seed for full molecules</li>
+<li><strong>max_bl</strong> (<em>float</em>) – Maximum distance which counts as a bond</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>clust_atoms</strong> – A list of atoms which form a cluster of molecules</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of Atom objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.make_mega_cell">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">make_mega_cell</code><span class="sig-paren">(</span><em>atoms</em>, <em>traAN</em>, <em>traBN</em>, <em>traCN</em>, <em>vectors</em>, <em>alt_multi=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#make_mega_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.make_mega_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a bigger supercell out of an input cell.</p>
+<p>The cell is multiplied positively and negatively through each lattice
+vector so that the supercluster ends up being
+(1+2*traAN)*(1+2*traBN)*(1+2*traCN) times larger. For example if the
+input is 1,1,1 for a cubic unit cell, the output will be the original unit
+cell surrounded by 26 other unit cells forming a total 3x3x3 cube.</p>
+<p>Alternatively, the multiplication can be centered around a corner of the
+unit cell instead of the centre. In that case the supercluster ends up being
+only (2*traAN)*(2*traBN)*(2*traCN)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms in the cell</li>
+<li><strong>traAN,traBN,traCN</strong> (<em>ints</em>) – Number of times the cell should be multiplied in each cell direction,
+positively and negatively</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+<li><strong>alt_multi</strong> (<em>bool</em>) – Determines the kind of multiplication. True is centre of the cell as
+the origin, False is corner of the cell.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mega_cell</strong> – The resulting supercell</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of Atom objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.multi_select">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">multi_select</code><span class="sig-paren">(</span><em>max_r</em>, <em>atoms</em>, <em>labels</em>, <em>vectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#multi_select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.multi_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select multiple molecules in a periodic system</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_r</strong> (<em>float</em>) – Maximum distance which is considered a bond</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Cluster of atoms which from which molecules needs to be extracted</li>
+<li><strong>labels</strong> (<em>ints</em>) – The numbers of the atom from which the molecules are generated. Note
+that it is the Python label, so starting from 0, unlike the label in
+most chemistry software which counts from 1</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>selected</strong> (<em>list of Atom objects</em>) – The atoms belonging to the molecules which are selected</li>
+<li><strong>selected_img</strong> (<em>list of Atom objects</em>) – The atoms belonging to the molecules which are selected with certain
+atoms translated so that the molecules are fully connected without
+periodic boundaries</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.select">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">select</code><span class="sig-paren">(</span><em>max_r</em>, <em>atoms</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a molecule out of a list of atoms.</p>
+<p>The function puts a labelled atom in a list of selected atoms. It then
+checks for nearby atoms to the selected atoms. If any are found and are not
+already selected, they are added to the list. The loop ends when it is
+executed and not atoms are added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_r</strong> (<em>float</em>) – Maximum distance which is considered a bond</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Cluster of atoms which from which a molecule needs to be extracted</li>
+<li><strong>label</strong> (<em>int</em>) – The number of the atom from which the molecule is generated. Note that
+it is the Python label, so starting from 0, unlike the label in most
+chemistry software which counts from 1</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>selected</strong> – The atoms belonging to the molecule which is selected</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of Atom objects</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.utils.handle_atoms.select_per">
+<code class="descclassname">cryspy.utils.handle_atoms.</code><code class="descname">select_per</code><span class="sig-paren">(</span><em>max_r</em>, <em>atoms</em>, <em>label</em>, <em>vectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/handle_atoms.html#select_per"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.handle_atoms.select_per" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a molecule out of a list of atoms in a periodic system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>max_r</strong> (<em>float</em>) – Maximum distance which is considered a bond</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Cluster of atoms which from which a molecule needs to be extracted</li>
+<li><strong>label</strong> (<em>int</em>) – The number of the atom from which the molecule is generated. Note that
+it is the Python label, so starting from 0, unlike the label in most
+chemistry software which counts from 1</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>selected</strong> (<em>list of Atom objects</em>) – The atoms belonging to the molecule which is selected</li>
+<li><strong>selected_img</strong> (<em>list of Atom objects</em>) – The atoms belonging to the molecule which is selected with certain
+atoms translated so that the molecule is fully connected without
+periodic boundaries</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.utils.per_table">
+<span id="cryspy-utils-per-table-module"></span><h2>cryspy.utils.per_table module<a class="headerlink" href="#module-cryspy.utils.per_table" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the information from the periodic table</p>
+<dl class="function">
+<dt id="cryspy.utils.per_table.num_to_elem">
+<code class="descclassname">cryspy.utils.per_table.</code><code class="descname">num_to_elem</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/per_table.html#num_to_elem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.per_table.num_to_elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the element symbol according to input atomic number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num</strong> (<em>int</em>) – Atomic number of the element</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.utils.volume">
+<span id="cryspy-utils-volume-module"></span><h2>cryspy.utils.volume module<a class="headerlink" href="#module-cryspy.utils.volume" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cryspy.utils.volume.CubeGrid">
+<em class="property">class </em><code class="descclassname">cryspy.utils.volume.</code><code class="descname">CubeGrid</code><span class="sig-paren">(</span><em>vectors=array([[0., 0., 0.],        [0., 0., 0.],        [0., 0., 0.]]), x_num=1, y_num=1, z_num=1, origin=array([0., 0., 0.])</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A grid of voxels with attached values for each one</p>
+<p>The grid starts at the origin and propagates in a parallelepiped</p>
+<dl class="attribute">
+<dt id="cryspy.utils.volume.CubeGrid.vectors">
+<code class="descname">vectors</code><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>3x3 numpy array</em> – The three vectors defining the shape of one voxel in Bohr</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">x_num, y_num, z_num</code></dt>
+<dd><p><em>ints</em> – Length of the parallelepiped in units of voxels</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.volume.CubeGrid.origin">
+<code class="descname">origin</code><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy array of length 3</em> – Origin of the parallelepiped in Bohr</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cryspy.utils.volume.CubeGrid.grid">
+<code class="descname">grid</code><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy array of x_num * y_num * z_num * x 4 dimension</em> – This determines a value and position at each point in space which is
+the origin of a voxel. The format is [[x1,y1,z1,val],[x1,y1,z2,val],…]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.add_grid">
+<code class="descname">add_grid</code><span class="sig-paren">(</span><em>in_grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.add_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.add_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the results of another grid to the current grid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_grid</strong> (<em>numpy N x 4 array</em>) – Same dimensions as self.grid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.grid_from_point">
+<code class="descname">grid_from_point</code><span class="sig-paren">(</span><em>x, y, z, res=10, box=array([[20.,  0.,  0.],        [ 0., 20.,  0.],        [ 0.,  0., 20.]])</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.grid_from_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.grid_from_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a grid from its centre , box dimension, and resolution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x, y, z</strong> (<em>floats</em>) – Centre of the grid</li>
+<li><strong>res</strong> (<em>int</em>) – number of voxels per side of the box</li>
+<li><strong>box</strong> (<em>3x3 numpy array</em>) – The three vectors defining the bounding box for the parallelepiped</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.out_cube">
+<code class="descname">out_cube</code><span class="sig-paren">(</span><em>file_name</em>, <em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.out_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.out_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a cube file with the current state of the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.proximity">
+<code class="descname">proximity</code><span class="sig-paren">(</span><em>mol</em>, <em>rest</em>, <em>scaled=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.proximity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.proximity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Give each point in the grid a value of 1 if it is closest to the molecule</p>
+<p>As a side effect, the origin is translated by half a voxel so that the
+centre of each voxel corresponds to its value as opposed to the origin of
+each voxel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mol</strong> (<em>list of Atom objects</em>) – The central molecule which we want to enclose in the grid</li>
+<li><strong>rest</strong> (<em>list of Atom objects</em>) – The rest of the atoms</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.set_grid_coord">
+<code class="descname">set_grid_coord</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.set_grid_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.set_grid_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the coordinates of the voxel origins on the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.subtract_grid">
+<code class="descname">subtract_grid</code><span class="sig-paren">(</span><em>in_grid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.subtract_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.subtract_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the results of another grid from the current grid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_grid</strong> (<em>numpy N x 4 array</em>) – Same dimensions as self.grid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.vdw_vol">
+<code class="descname">vdw_vol</code><span class="sig-paren">(</span><em>mol</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.vdw_vol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.vdw_vol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Give each point in the grid a value of 1 if it is inside the vdw
+radius of one of the atoms in the molecule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cryspy.utils.volume.CubeGrid.volume">
+<code class="descname">volume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/utils/volume.html#CubeGrid.volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.utils.volume.CubeGrid.volume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cryspy.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utilities</p>
+<p>API supporting the callable scripts in cryspy</p>
+<div class="section" id="modules">
+<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>atom</dt>
+<dd>Defines the Atom object which represents a single point in space with
+a label, position and potentially a charge and connectivity</dd>
+<dt>calc</dt>
+<dd>Defines different Calc classes which run different electronic structure
+programs</dd>
+<dt>handle_atoms</dt>
+<dd>Manipulates lists of Atom objects</dd>
+<dt>per_table</dt>
+<dd>Data from the periodic table</dd>
+<dt>volume</dt>
+<dd>Tools for the calculation of vdW spheres and Voronoi volumes in a
+molecular crystal</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

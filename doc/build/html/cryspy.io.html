@@ -1,0 +1,860 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cryspy.io package &mdash; cryspy 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="cryspy 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cryspy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">cryspy.io package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cryspy.io.edit_file">cryspy.io.edit_file module</a></li>
+<li><a class="reference internal" href="#module-cryspy.io.parse_config_file">cryspy.io.parse_config_file module</a></li>
+<li><a class="reference internal" href="#module-cryspy.io.read_file">cryspy.io.read_file module</a></li>
+<li><a class="reference internal" href="#module-cryspy.io">Module contents</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cryspy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>cryspy.io package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cryspy.io.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cryspy-io-package">
+<h1>cryspy.io package<a class="headerlink" href="#cryspy-io-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cryspy.io.edit_file">
+<span id="cryspy-io-edit-file-module"></span><h2>cryspy.io.edit_file module<a class="headerlink" href="#module-cryspy.io.edit_file" title="Permalink to this headline">¶</a></h2>
+<p>Functions for creating files needed for other software</p>
+<dl class="function">
+<dt id="cryspy.io.edit_file.edit_vasp_pos">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">edit_vasp_pos</code><span class="sig-paren">(</span><em>in_name</em>, <em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#edit_vasp_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.edit_vasp_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite vasp POSCAR file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Name of the VASP file</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be written in the POSCAR file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_coord">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_coord</code><span class="sig-paren">(</span><em>in_atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Turbomole coord file</p>
+<p>The written units are in Bohr but we conserve Angstrom units in this program</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_atoms</strong> (<em>Atom objects</em>) – Atoms to write</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_cp2k">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_cp2k</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>vectors</em>, <em>atoms</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_cp2k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_cp2k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a cp2k input file from a template.</p>
+<p>To use this, first make a template file with the name as XXX__NAME__XXX,
+the vectors as XXX__AVEC__XXX, XXX__BVEC__XXX and XXX__CVEC__XXX and the
+positions as XXX__POS__XXX.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>string</em>) – Project name</li>
+<li><strong>file_name</strong> (<em>string</em>) – Name of the cp2k input file</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms in the system</li>
+<li><strong>temp_name</strong> (<em>string</em>) – Name of the template file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_cube">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_cube</code><span class="sig-paren">(</span><em>in_name</em>, <em>origin</em>, <em>vectors</em>, <em>x_num</em>, <em>y_num</em>, <em>z_num</em>, <em>atoms</em>, <em>vals</em>, <em>comment=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a file in cube format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the output file</li>
+<li><strong>origin</strong> (<em>numpy array of length 3</em>) – Origin if the cube grid</li>
+<li><strong>vectors</strong> (<em>3x3 numpy array</em>) – Vectors defining a voxel</li>
+<li><strong>x_num, y_num, z_num</strong> (<em>ints</em>) – Numbers of voxels along each edge</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to include in the cube file</li>
+<li><strong>vals</strong> (<em>numpy array</em>) – The values to be entered at each voxel in the order x1, y1, z1, x1, y1, z2 etc.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_ew_in">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_ew_in</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>nChk</em>, <em>nAt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_ew_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_ew_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an input file for Ewald.c.</p>
+<p>Remember to include and pre or post fixes to the file name. Following the
+convention from the paper, it would be something like “in.ewald.somename”</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>string</em>) – Name of the project</li>
+<li><strong>file_name</strong> (<em>string</em>) – Name of the input file to write</li>
+<li><strong>nChk</strong> (<em>int</em>) – Number of random checkpoints in zone 1</li>
+<li><strong>nAt</strong> (<em>int</em>) – Number of fixed charge atoms in zone 1+2</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_g_temp">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_g_temp</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>fixed_atoms</em>, <em>points</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_g_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_g_temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Gaussian input template file.</p>
+<p>This serves to generate templates for write_gauss. That’s right, you are
+going to need to make templates for your templates files so that you can
+generate inputs while you generate inputs. In this case a XXX__POS__XXX tag
+should be included and won’t be overwritten.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Project name</li>
+<li><strong>file_name</strong> (<em>str</em>) – Name of the Gaussian input file to be written</li>
+<li><strong>fixed_atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian with the -1 tag which makes them
+fixed in space</li>
+<li><strong>points</strong> (<em>list of Atom objects or None</em>) – The Atom objects should have a charge. If there is no XXX__CHARGES__XXX
+in the template file, this doesn’t matter and can be None</li>
+<li><strong>temp_name</strong> (<em>str</em>) – Name of the template file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_gauss">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_gauss</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>atoms</em>, <em>points</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Gaussian input file.</p>
+<p>A template file needs to be prepared which has the name as XXX__NAME__XXX,
+the positions as XXX__POS__XXX and the (optional) charges as
+XXX__CHARGES__XXX.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Project name</li>
+<li><strong>file_name</strong> (<em>str</em>) – Name of the Gaussian input file to be written</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</li>
+<li><strong>points</strong> (<em>list of Atom objects or None</em>) – The Atom objects should have a charge. If there is no XXX__CHARGES__XXX
+in the template file, this doesn’t matter and can be None</li>
+<li><strong>temp_name</strong> (<em>str</em>) – Name of the template file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_pp">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_pp</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_pp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_pp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Quantum Espresso .pp file</p>
+<p>This is a file for PP.x calculations which generate things like cube files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Project name</li>
+<li><strong>file_name</strong> (<em>str</em>) – Name of the .pp file. Include the extension e.g. “example.pp”</li>
+<li><strong>temp_name</strong> – Name of the template file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_qc">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_qc</code><span class="sig-paren">(</span><em>in_name</em>, <em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_qc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_qc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a .qc file for Ewald.c.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_qe">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_qe</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>vectors</em>, <em>atoms</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_qe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_qe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Quantum Espresso (QE) input file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>str</em>) – Project name</li>
+<li><strong>file_name</strong> (<em>str</em>) – Name of the QE input file</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with QE</li>
+<li><strong>temp_name</strong> (<em>str</em>) – Name of the template file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_seed">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_seed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a seedfile for Ewald.c</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_uc">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_uc</code><span class="sig-paren">(</span><em>in_name</em>, <em>vectors</em>, <em>aN</em>, <em>bN</em>, <em>cN</em>, <em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_uc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_uc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a .uc file for Ewald.c.</p>
+<p>.uc files are written in fractional coordinates instead of Cartesian</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>string</em>) – Name of the file to be written</li>
+<li><strong>vectors</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+<li><strong>aN,bN,cN</strong> (<em>ints</em>) – Number of times each lattice vector should be multiplied</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Unit cell atoms for the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.edit_file.write_xyz">
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_xyz</code><span class="sig-paren">(</span><em>in_name</em>, <em>atoms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an xyz file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>in_name</strong> (<em>string</em>) – Name of the xyz file. Include the file extension, e.g. “molecule.xyz”</li>
+<li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atms to write</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.io.parse_config_file">
+<span id="cryspy-io-parse-config-file-module"></span><h2>cryspy.io.parse_config_file module<a class="headerlink" href="#module-cryspy.io.parse_config_file" title="Permalink to this headline">¶</a></h2>
+<p>Reads the user’s config inputs</p>
+<p>This contains all of the default settings and may raise warnings and exceptions
+if contradictory features are included.</p>
+<dl class="function">
+<dt id="cryspy.io.parse_config_file.bool_cast">
+<code class="descclassname">cryspy.io.parse_config_file.</code><code class="descname">bool_cast</code><span class="sig-paren">(</span><em>in_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/parse_config_file.html#bool_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.parse_config_file.bool_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts string to bool avoiding some traps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.parse_config_file.complete_config">
+<code class="descclassname">cryspy.io.parse_config_file.</code><code class="descname">complete_config</code><span class="sig-paren">(</span><em>name='config'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/parse_config_file.html#complete_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.parse_config_file.complete_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write default parameters for config and update with user inputs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.parse_config_file.isfloat">
+<code class="descclassname">cryspy.io.parse_config_file.</code><code class="descname">isfloat</code><span class="sig-paren">(</span><em>in_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/parse_config_file.html#isfloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.parse_config_file.isfloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a string can be cast to float</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.parse_config_file.parse_inputs">
+<code class="descclassname">cryspy.io.parse_config_file.</code><code class="descname">parse_inputs</code><span class="sig-paren">(</span><em>name='config'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/parse_config_file.html#parse_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.parse_config_file.parse_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the string values of the diciontary to the appropriate types</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.io.read_file">
+<span id="cryspy-io-read-file-module"></span><h2>cryspy.io.read_file module<a class="headerlink" href="#module-cryspy.io.read_file" title="Permalink to this headline">¶</a></h2>
+<p>Functions to read files from different pieces of chemistry
+softare. Most of these functions return lists of Atom objects.
+When it comes to energy and gradient values, the units generally
+the same as in the file being read. Keep further unit conversion
+outside of this file for clarity.</p>
+<dl class="function">
+<dt id="cryspy.io.read_file.read_bader">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_bader</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_bader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_bader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read charges from a Bader program output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>charges</strong> – Charges in file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of floats</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_config">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_config</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a cryspy config file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>settings</strong> – A dictionary with the keywords and the user inputs as strings</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_cp2k">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_cp2k</code><span class="sig-paren">(</span><em>in_name</em>, <em>pop='ESP'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_cp2k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_cp2k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the charges and energy in a cp2k output file.</p>
+<p>Uses CP2K 4.1 formats. Choose between Mulliken, Hirshfeld or RESP charges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>in_name</strong> (<em>str</em>) – Name of the file to read</li>
+<li><strong>pop</strong> (<em>str</em>) – Kind of charge to read: mulliken, esp or hirshfeld</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>charges</strong> (<em>list of floats</em>) – Each partial charge value in the file</li>
+<li><strong>energy</strong> (<em>float</em>) – CP2K calculated energy (Kohn-Sham or otherwise) in Hartree</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_fchk">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_fchk</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_fchk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_fchk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Gaussian .fchk.</p>
+<p>Returns the total energy, gradients and ground state energy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Gaussian total calculated energy in Hartree</li>
+<li><strong>grad</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – Gaussian ground state calculated energy in Hartree</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_g_cas">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_g_cas</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_g_cas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_g_cas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Gaussian .log file for CAS calculations</p>
+<p>Returns the total energy, and gradients for two states</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>energy_e</strong> (<em>float</em>) – Gaussian total calculated energy in Hartree for the excited state</li>
+<li><strong>grad_e</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the excited state</li>
+<li><strong>energy_g</strong> (<em>float</em>) – Gaussian total calculated energy in Hartree for the ground state</li>
+<li><strong>grad_g</strong> (<em>list of floats</em>) – The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the ground state</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_g_char">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_g_char</code><span class="sig-paren">(</span><em>in_name</em>, <em>pop='ESP'</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_g_char"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_g_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read charges and energy from a Gaussian log file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>in_name</strong> (<em>str</em>) – Name of the file to read</li>
+<li><strong>pop</strong> (<em>str, optional</em>) – Kind of charge to read, mulliken or esp</li>
+<li><strong>debug</strong> (<em>bool, optional</em>) – Return extra energy information. Turn on with care</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>charges</strong> (<em>list of floats</em>) – Each partial charge value in the file</li>
+<li><strong>energy</strong> (<em>float</em>) – Gaussian calculated energy in Hartree</li>
+<li><strong>char_ener</strong> (<em>float</em>) – Self energy of the point charges</li>
+<li><strong>n_char</strong> (<em>float</em>) – Nuclei-charge interaction energy</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_g_pos">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_g_pos</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_g_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_g_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read positions from a Gaussian log file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>atoms</strong> – Atomic positions at the beginning of the file for a single point .log</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of Atom objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_gauss">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_gauss</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read atoms in a Gaussian input file.</p>
+<p>The format is quite strict, better modify this function before using it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>atoms</strong> – Last set of atoms in the file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of Atom objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_molcas">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_molcas</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_molcas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_molcas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read energies and gradients from a Molcas .log file with 2 roots.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>ex_energy</strong> (<em>float</em>) – Excited state energy in Hartree if any, otherwise the ground state energy</li>
+<li><strong>grad</strong> (<em>numpy array of floats</em>) – Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr</li>
+<li><strong>gr_energy</strong> (<em>float</em>) – Ground state energy in Hartree</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_points">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_points</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read point charges from an in-house Ewald.c output.</p>
+<p>The modified version of Ewald.c is needed. The extension is .pts-cry</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>points</strong> – Point charges in the file. They have element “point”</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of Atom ojects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_pos">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_pos</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the last or only set of atomic positions in a file</p>
+<p>Currently only .xyz files as they are the most common. To implement more
+types, extend this function by parsing the extension but always return the
+same. read_pos is to be preferred over read_xyz when only one set of
+coordinates is relevant.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The last or only set of atomic positions in the file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">atom_step = list of Atom objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_qe">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_qe</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_qe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_qe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the final positions of a QE calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>atoms</strong> – Last set of atoms in the file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of Atom objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_ricc2">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_ricc2</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_ricc2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_ricc2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read energies and gradients from a Turbomole ricc2.out file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>energy</strong> (<em>float</em>) – Excited state energy in Hartree if any, otherwise the ground state energy</li>
+<li><strong>grad</strong> (<em>numpy array of floats</em>) – Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr</li>
+<li><strong>scf_energy</strong> (<em>float</em>) – Ground state energy in Hartree</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_vasp">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_vasp</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_vasp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_vasp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read VASP POSCAR-like file.</p>
+<p>The real use of this function is to handle one file which contains both
+coordinates and vectors. The actual VASP program is not used anywhere else.
+Make sure the “lattice constant” scaling is set to 1.0, “selective dynamics”
+is not enabled and the file is in Cartesian coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>M</strong> (<em>3x3 matrix</em>) – Lattice vectors</li>
+<li><strong>atoms</strong> (<em>list of Atom types</em>) – Atoms in the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cryspy.io.read_file.read_xyz">
+<code class="descclassname">cryspy.io.read_file.</code><code class="descname">read_xyz</code><span class="sig-paren">(</span><em>in_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/read_file.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.read_file.read_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a .xyz file.</p>
+<p>Works for files containing several configurations e.g. a relaxation
+trajectory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_name</strong> (<em>str</em>) – Name of the file to read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Each element of the list represents a configuration of atoms</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">atom_step = list of lists of Atom objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cryspy.io">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cryspy.io" title="Permalink to this headline">¶</a></h2>
+<p>Input and Output</p>
+<p>Writes, edits and reads all sorts of files for interfacing with electronic
+structure and analysis codes.</p>
+<div class="section" id="modules">
+<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>edit_file</dt>
+<dd>Writes and edits external files</dd>
+<dt>parse_config_file</dt>
+<dd>Interprets the config file for preparing .temp files</dd>
+<dt>read_file</dt>
+<dd>Reads files, converting them into Atom objects when appropriate</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
