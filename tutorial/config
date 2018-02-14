@@ -1,0 +1,23 @@
+name HPP
+a_vec        8.9638004303         0.0000000000         0.0000000000
+b_vec        0.0000000000        10.5200004578         0.0000000000
+c_vec       -3.8748910079         0.0000000000        10.7924653741
+cell_file cell.xyz
+high_pop_program gaussian
+high_pop_file high_pop.log
+high_pop_method ESP
+low_pop_program gaussian
+low_pop_file low_pop.log
+low_pop_method ESP
+max_bl 1.9
+label_atom 1
+nChk 1000
+nAt 500
+aN 2
+bN 2
+cN 2
+clust_rad 7
+traAN 3
+traBN 3
+traCN 3
+ewald true
