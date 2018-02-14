@@ -2,3 +2,4 @@ cryspy/fdist/_fdist*
 cryspy/fdist/fdist_wrap.cxx
 cryspy/fdist/fdist.py
 cryspy/fdist/build
+.swp
