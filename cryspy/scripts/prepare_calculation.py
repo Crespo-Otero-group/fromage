@@ -154,7 +154,7 @@ if __name__ == '__main__':
         sc_points = rf.read_points(sc_name + ".pts-cry")
 
         # Calculate new charges
-        ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
+        ef.write_gauss(sc_name + ".com", mol, sc_points, sc_temp, proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -428,17 +428,17 @@ if __name__ == '__main__':
 
     if ewald:
         # Make inputs
-        ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
-        ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
-        ef.write_g_temp("mh", "mh.temp", [], points, "mh.template")
-        ef.write_g_temp("mg", "mg.temp", [], points,
+        ef.write_g_temp("rl.temp", shell, [], "rl.template")
+        ef.write_g_temp("ml.temp", [], shell, "ml.template")
+        ef.write_g_temp("mh.temp", [], points, "mh.template")
+        ef.write_g_temp("mg.temp", [], points,
                         "mg.template")  # only useful for CI
     else:
         # Make inputs
-        ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
-        ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
-        ef.write_g_temp("mh", "mh.temp", [], high_shell, "mh.template")
-        ef.write_g_temp("mg", "mg.temp", [], high_shell,
+        ef.write_g_temp("rl.temp", shell, [], "rl.template")
+        ef.write_g_temp("ml.temp", [], shell, "ml.template")
+        ef.write_g_temp("mh.temp", [], high_shell, "mh.template")
+        ef.write_g_temp("mg.temp", [], high_shell,
                         "mg.template")  # only useful for CI
     end_time = datetime.now()
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")

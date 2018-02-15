@@ -79,13 +79,13 @@ def write_xyz(in_name, atoms):
     atoms : list of Atom objects
         Atms to write
     """
-    outFile = open(in_name, "w")
-    outFile.write(str(len(atoms)) + "\n")
-    outFile.write(in_name + "\n")
+    out_file = open(in_name, "w")
+    out_file.write(str(len(atoms)) + "\n")
+    out_file.write(in_name + "\n")
 
     for atom in atoms:
-        outFile.write(atom.xyz_str() + "\n")
-    outFile.close()
+        out_file.write(atom.xyz_str() + "\n")
+    out_file.close()
     return
 
 
@@ -110,10 +110,10 @@ def write_uc(in_name, vectors, aN, bN, cN, atoms):
     line1 = vectors[0].tolist() + [aN]
     line2 = vectors[1].tolist() + [bN]
     line3 = vectors[2].tolist() + [cN]
-    outFile = open(in_name, "w")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
-    outFile.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
+    out_file = open(in_name, "w")
+    out_file.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line1) + "\n")
+    out_file.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line2) + "\n")
+    out_file.write("{:10.6f} {:10.6f} {:10.6f} {:10d}".format(*line3) + "\n")
 
     # transpose to get the transformation matrix
     M = np.transpose(vectors)
@@ -131,19 +131,19 @@ def write_uc(in_name, vectors, aN, bN, cN, atoms):
                 frac_pos[frac_pos.index(coord)] = 1 + coord
         str_line = "{:10.6f} {:10.6f} {:10.6f} {:10.10f} {:>6}".format(
             *frac_pos + [atom.q] + [atom.elem]) + "\n"
-        outFile.write(str_line)
-    outFile.close()
+        out_file.write(str_line)
+    out_file.close()
     return
 
 
 def write_qc(in_name, atoms):
     "Write a .qc file for Ewald.c."
-    outFile = open(in_name, "w")
+    out_file = open(in_name, "w")
     for atom in atoms:
         str_line = "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
             atom.elem, atom.x, atom.y, atom.z, atom.q) + "\n"
-        outFile.write(str_line)
-    outFile.close()
+        out_file.write(str_line)
+    out_file.close()
     return
 
 
@@ -166,25 +166,25 @@ def write_ew_in(in_name, file_name, nChk, nAt):
         Number of fixed charge atoms in zone 1+2
 
     """
-    outFile = open((file_name), "w")
-    outFile.write(in_name + "\n")
-    outFile.write(str(nChk) + "\n")
-    outFile.write(str(nAt) + "\n")
-    outFile.write("0\n")
-    outFile.close()
+    out_file = open((file_name), "w")
+    out_file.write(in_name + "\n")
+    out_file.write(str(nChk) + "\n")
+    out_file.write(str(nAt) + "\n")
+    out_file.write("0\n")
+    out_file.close()
     return
 
 
 def write_seed():
     """Write a seedfile for Ewald.c"""
-    outFile = open("seedfile", "w")
+    out_file = open("seedfile", "w")
     seed1 = randint(1, 2**31 - 86)
     seed2 = randint(1, 2**31 - 250)
-    outFile.write(str(seed1) + " " + str(seed2))
-    outFile.close()
+    out_file.write(str(seed1) + " " + str(seed2))
+    out_file.close()
 
 
-def write_gauss(in_name, file_name, atoms, points, temp_name):
+def write_gauss(file_name, atoms, points, temp_name, proj_name = 'gaussian'):
     """
     Write a Gaussian input file.
 
@@ -194,8 +194,6 @@ def write_gauss(in_name, file_name, atoms, points, temp_name):
 
     Parameters
     ----------
-    in_name : str
-        Project name
     file_name : str
         Name of the Gaussian input file to be written
     atoms : list of Atom objects
@@ -205,40 +203,41 @@ def write_gauss(in_name, file_name, atoms, points, temp_name):
         in the template file, this doesn't matter and can be None
     temp_name : str
         Name of the template file
+    proj_name : str
+        Project name, default 'gaussian'
 
     """
     with open(temp_name) as temp_file:
         temp_content = temp_file.readlines()
 
-    outFile = open(file_name, "w")
+    out_file = open(file_name, "w")
 
     for line in temp_content:
         if "XXX__NAME__XXX" in line:
-            outFile.write(line.replace("XXX__NAME__XXX", in_name))
+            out_file.write(line.replace("XXX__NAME__XXX", proj_name))
         elif "XXX__POS__XXX" in line:
             for atom in atoms:
                 atomStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
-                outFile.write(atomStr)
+                out_file.write(atomStr)
         elif "XXX__CHARGES__XXX" in line:
             for point in points:
                 point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
                     point.x, point.y, point.z, point.q) + "\n"
-                outFile.write(point_str)
+                out_file.write(point_str)
         else:
-            outFile.write(line)
-    outFile.close()
+            out_file.write(line)
+    out_file.close()
     return
 
 
-def write_g_temp(in_name, file_name, fixed_atoms, points, temp_name):
+def write_g_temp(file_name, fixed_atoms, points, temp_name, proj_name='gaussian'):
     """
     Write a Gaussian input template file.
 
-    This serves to generate templates for write_gauss. That's right, you are
-    going to need to make templates for your templates files so that you can
-    generate inputs while you generate inputs. In this case a XXX__POS__XXX tag
-    should be included and won't be overwritten.
+    This serves to generate templates for write_gauss. You need a .template file
+    which will generate a .temp file to be used in calculation. In this case a XXX__POS__XXX tag
+    should be included in .template and won't be overwritten.
 
     Parameters
     ----------
@@ -254,29 +253,32 @@ def write_g_temp(in_name, file_name, fixed_atoms, points, temp_name):
         in the template file, this doesn't matter and can be None
     temp_name : str
         Name of the template file
+    pro_name : str
+        Project name. Default 'gaussian'
+
 
     """
     with open(temp_name) as temp_file:
         temp_content = temp_file.readlines()
 
-    outFile = open(file_name, "w")
+    out_file = open(file_name, "w")
 
     for line in temp_content:
         if "XXX__NAME__XXX" in line:
-            outFile.write(line.replace("XXX__NAME__XXX", in_name))
+            out_file.write(line.replace("XXX__NAME__XXX", proj_name))
         elif "XXX__FIX__XXX" in line:
             for atom in fixed_atoms:
                 atomStr = "{:>6} -1 {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
-                outFile.write(atomStr)
+                out_file.write(atomStr)
         elif "XXX__CHARGES__XXX" in line:
             for point in points:
                 point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
                     point.x, point.y, point.z, point.q) + "\n"
-                outFile.write(point_str)
+                out_file.write(point_str)
         else:
-            outFile.write(line)
-    outFile.close()
+            out_file.write(line)
+    out_file.close()
     return
 
 
@@ -295,16 +297,16 @@ def edit_vasp_pos(in_name, atoms):
     with open(in_name + ".vasp") as vaspFile:
         content = vaspFile.readlines()
 
-    outFile = open(in_name + ".new.vasp", "w")
+    out_file = open(in_name + ".new.vasp", "w")
 
     for line in content:
-        outFile.write(line)
+        out_file.write(line)
         if "Cartesian" in line:
             break
     for atom in atoms:
         atomStr = "{:10.6f} {:10.6f} {:10.6f}".format(
             atom.x, atom.y, atom.z) + "\n"
-        outFile.write(atomStr)
+        out_file.write(atomStr)
     return
 
 

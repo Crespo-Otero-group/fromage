@@ -1,9 +1,9 @@
-%chk=XXX__NAME__XXX.chk
+%chk=gck.chk
 %mem=5GB
 %nproc=1
 #hf/STO-3G symmetry=none charge force
 
-XXX__NAME__XXX
+rl
 
 0 1
 XXX__POS__XXX

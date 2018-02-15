@@ -101,9 +101,14 @@ class Gauss_calc(Calc):
         proc : subprocess.Popen object
             the object should have a .wait() method
         """
-        ef.write_gauss(self.calc_name, self.calc_name + ".com",
-                       atoms, [], self.calc_name + ".temp")
+
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+
+        ef.write_gauss(self.calc_name+".com",atoms, [], self.calc_name + ".temp")
         proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
+
+        os.chdir(self.here)
 
         return proc
 
@@ -132,12 +137,13 @@ class Gauss_calc(Calc):
             The ground state energy in Hartree
 
         """
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+
         # stdout=FNULL to not have to read the output of formchk
         FNULL = open(os.devnull, 'w')
-        subprocess.call("formchk " + self.calc_name +
-                        ".chk", stdout=FNULL, shell=True)
-        energy, gradients_b, scf_energy = rf.read_fchk(
-            self.calc_name + ".fchk")
+        subprocess.call("formchk gck.chk", stdout=FNULL, shell=True)
+        energy, gradients_b, scf_energy = rf.read_fchk("gck.fchk")
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
@@ -146,6 +152,8 @@ class Gauss_calc(Calc):
 
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
+
+        os.chdir(self.here)
 
         return (energy, gradients, scf_energy)
 
@@ -168,9 +176,14 @@ class Gauss_CAS_calc(Calc):
         proc : subprocess.Popen object
             the object should have a .wait() method
         """
-        ef.write_gauss(self.calc_name, self.calc_name + ".com",
-                       atoms, [], self.calc_name + ".temp")
+
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+
+        ef.write_gauss(self.calc_name + ".com", atoms, [], self.calc_name + ".temp")
         proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
+
+        os.chdir(self.here)
 
         return proc
 
@@ -199,6 +212,10 @@ class Gauss_CAS_calc(Calc):
             The ground state energy in Hartree
 
         """
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+
+
         # stdout=FNULL to not have to read the output of formchk
         FNULL = open(os.devnull, 'w')
 
@@ -214,6 +231,8 @@ class Gauss_CAS_calc(Calc):
         # truncate gradients if too long
         grad_e = grad_e[:len(positions)]
         grad_g = grad_g[:len(positions)]
+
+        os.chdir(self.here)
 
         return (energy_e, grad_e, energy_g, grad_g)
 
@@ -378,6 +397,8 @@ class Molcas_calc(Calc):
         gradients = gradients[:len(positions)]
 
         os.chdir(self.here)
-        subprocess.call("rm -r molcas.*", shell=True)
+
+        #for large molcas wavefunction information
+        subprocess.call("rm -rf molcas.*", shell=True)
 
         return (energy, gradients, scf_energy)
