@@ -36,6 +36,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="cryspy 1.0 documentation" href="index.html"/>
+        <link rel="next" title="1. ONIOM cluster models" href="cluster_models.html"/>
         <link rel="prev" title="4. License" href="license.html"/> 
 
   
@@ -89,10 +90,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">General:</span></p>
+              <p class="caption"><span class="caption-text">General</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">2. Glossary and nomenclature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">2. Glossary reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">5. Tutorial</a><ul>
@@ -102,6 +103,12 @@
 </li>
 </ul>
 </li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">2. Structure manipulation in cryspy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">3. Analysis</a></li>
 </ul>
 
             
@@ -167,29 +174,34 @@
             
   <div class="section" id="tutorial">
 <h1>5. Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
-<p>This tutorial will guide you step by step through the geometry optimisation of the
-(2-hydroxyphenyl)propenone crystal using the Self-Consistent Ewald Cluster (SCEEC) model. Wherever
-relevant, we will indicate which steps to replace if you wish to use the Ewald Embedded Model (EEC)
-non-self-consistently or a traditional electrostatic embedding model which we call the Embedded
-Cluster (EC) model.</p>
-<p>We have provided the necessary input files in the <code class="code docutils literal notranslate"><span class="pre">tutorial</span></code> directory. We follow the ONIOM
-nomenclature for the different regions of the embedded cluster. In other words the whole cluster is
-the “real” system while the central molecule(s) is(are) called the “model” system. We abbreviate the
-principal components involved in the ONIOM method as <code class="code docutils literal notranslate"><span class="pre">mh</span></code> for the model system at a high level
-of theory, <code class="code docutils literal notranslate"><span class="pre">ml</span></code> for the model system at a low level of theory and <code class="code docutils literal notranslate"><span class="pre">rl</span></code> for the real
-system at a low level of theory. For the location of conical intersections, a fourth calculation is
-typically involved, <code class="code docutils literal notranslate"><span class="pre">mg</span></code>, which indicates the real system at the high level of theory but in
-the ground state.</p>
+<p>This tutorial will guide you step by step through the geometry optimisation of
+the (2-hydroxyphenyl)propenone crystal using the Self-Consistent Ewald Cluster
+(SCEEC) model. Wherever relevant, we will indicate which steps to replace if you
+wish to use the Ewald Embedded Model (EEC) non-self-consistently or a
+traditional electrostatic embedding model which we call the Embedded Cluster
+(EC) model.</p>
+<p>We have provided the necessary input files in the <code class="code docutils literal notranslate"><span class="pre">tutorial</span></code> directory. We
+follow the ONIOM nomenclature for the different regions of the embedded cluster.
+In other words the whole cluster is the “real” system while the central
+molecule(s) is(are) called the “model” system. We abbreviate the principal
+components involved in the ONIOM method as <code class="code docutils literal notranslate"><span class="pre">mh</span></code> for the model system at a
+high level of theory, <code class="code docutils literal notranslate"><span class="pre">ml</span></code> for the model system at a low level of theory
+and <code class="code docutils literal notranslate"><span class="pre">rl</span></code> for the real system at a low level of theory. For the location of
+conical intersections, a fourth calculation is typically involved, <code class="code docutils literal notranslate"><span class="pre">mg</span></code>,
+which indicates the real system at the high level of theory but in the ground
+state.</p>
 <div class="section" id="calculation-set-up">
 <h2>5.1. Calculation set up<a class="headerlink" href="#calculation-set-up" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="necessary-input-files">
 <h3>5.1.1. Necessary input files<a class="headerlink" href="#necessary-input-files" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><code class="code docutils literal notranslate"><span class="pre">cell.xyz</span></code>: A file containting the optimised positions of the atoms in the unit cell</li>
+<li><code class="code docutils literal notranslate"><span class="pre">cell.xyz</span></code>: A file containting the optimised positions of the atoms in
+the unit cell</li>
 <li><code class="code docutils literal notranslate"><span class="pre">config</span></code>: The cryspy configuration file, described below</li>
-<li><code class="code docutils literal notranslate"><span class="pre">high_pop.log</span></code>: A Gaussian output file of a population analysis for one molecule using the
-high level of theory (in this case PBE 6-31G*)</li>
-<li><code class="code docutils literal notranslate"><span class="pre">low_pop.log</span></code>: The same but for the low level of theory (here, HF STO-3G)</li>
+<li><code class="code docutils literal notranslate"><span class="pre">high_pop.log</span></code>: A Gaussian output file of a population analysis for one
+molecule using the high level of theory (in this case PBE 6-31G*)</li>
+<li><code class="code docutils literal notranslate"><span class="pre">low_pop.log</span></code>: The same but for the low level of theory (here, HF
+STO-3G)</li>
 <li><code class="code docutils literal notranslate"><span class="pre">*.template</span></code>: The template files for your upcoming ONIOM calculation</li>
 </ul>
 </div>
@@ -205,6 +217,8 @@ high level of theory (in this case PBE 6-31G*)</li>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cluster_models.html" class="btn btn-neutral float-right" title="1. ONIOM cluster models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="license.html" class="btn btn-neutral" title="4. License" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

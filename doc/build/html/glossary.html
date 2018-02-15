@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. Glossary and nomenclature &mdash; cryspy 1.0 documentation</title>
+  <title>2. Glossary reference &mdash; cryspy 1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="cryspy 1.0 documentation" href="index.html"/>
         <link rel="next" title="3. Contact" href="contact.html"/>
-        <link rel="prev" title="1. Program overview" href="overview.html"/> 
+        <link rel="prev" title="1. Program overview and install" href="overview.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -90,10 +90,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">General:</span></p>
+              <p class="caption"><span class="caption-text">General</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Glossary and nomenclature</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Glossary reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cluster-models">2.1. Cluster models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calculations">2.2. Calculations</a></li>
 </ul>
@@ -101,6 +101,12 @@
 <li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">5. Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">2. Structure manipulation in cryspy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">3. Analysis</a></li>
 </ul>
 
             
@@ -145,7 +151,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>2. Glossary and nomenclature</li>
+      <li>2. Glossary reference</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,46 +170,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="glossary-and-nomenclature">
-<h1>2. Glossary and nomenclature<a class="headerlink" href="#glossary-and-nomenclature" title="Permalink to this headline">¶</a></h1>
-<p>Throughout this documentation, we employ terms and abbreviations which may not be immediately clear
-to the new user. Herein is a compiled list of important terms accompanied by brief descriptions.
-Furthur discussion for many of these terms is included in the user documentation.</p>
+  <div class="section" id="glossary-reference">
+<h1>2. Glossary reference<a class="headerlink" href="#glossary-reference" title="Permalink to this headline">¶</a></h1>
+<p>Throughout this documentation, we employ terms and abbreviations which may not
+be immediately clear to the new user. Herein is a compiled list of important
+terms accompanied by brief descriptions.  Furthur discussion for many of these
+terms is included in the user documentation.</p>
 <div class="section" id="cluster-models">
 <h2>2.1. Cluster models<a class="headerlink" href="#cluster-models" title="Permalink to this headline">¶</a></h2>
-<p>In order to take into account the environmental energetical contributions to an excited molecule
-inside a crystal, we offer several kinds of non-intrusive embedding methods:</p>
+<p>In order to take into account the environmental energetical contributions to an
+excited molecule inside a crystal, we offer several kinds of non-intrusive
+embedding methods:</p>
 <ul class="simple">
-<li><strong>ONIOM</strong>: Our own N-layered Integrated mlecular Orbital and Molecular mechanics. An extrapolative
-embedding paradigm[dapprich1999]</li>
-<li><strong>EC</strong>: Embedded Cluster. The application of the ONIOM method with electrostatic embedding to a
-cluster of molecules taken from their crystalline positions</li>
-<li><strong>EEC</strong>: Ewald Embedded Cluster. Similar to EC but using an electrostatic embedding scheme aimed
-at reproducing the Ewald potential of the crystal</li>
-<li><strong>SCEEC</strong>: Self-Consistent Ewald Embedded Scheme. The EEC model where the embedding charges are
-computed self consistently in the excited state</li>
+<li><strong>ONIOM</strong>: Our own N-layered Integrated mlecular Orbital and Molecular
+mechanics. An extrapolative embedding paradigm[dapprich1999]</li>
+<li><strong>EC</strong>: Embedded Cluster. The application of the ONIOM method with
+electrostatic embedding to a cluster of molecules taken from their crystalline
+positions</li>
+<li><strong>EEC</strong>: Ewald Embedded Cluster. Similar to EC but using an electrostatic
+embedding scheme aimed at reproducing the Ewald potential of the crystal</li>
+<li><strong>SCEEC</strong>: Self-Consistent Ewald Embedded Scheme. The EEC model where the
+embedding charges are computed self consistently in the excited state</li>
 </ul>
 </div>
 <div class="section" id="calculations">
 <h2>2.2. Calculations<a class="headerlink" href="#calculations" title="Permalink to this headline">¶</a></h2>
-<p>In the expression of the 2-level ONIOM energy, the system under scrutiny is partitioned into two
-regions:</p>
+<p>In the expression of the 2-level ONIOM energy, the system under scrutiny is
+partitioned into two regions:</p>
 <ul class="simple">
 <li><strong>model system</strong>: The central molecule(s) whose properties are under scrutiny</li>
-<li><strong>real system</strong>: The complete cluster of molecules taken from their crystalline positions,
-including and surrounding the model system</li>
+<li><strong>real system</strong>: The complete cluster of molecules taken from their
+crystalline positions, including and surrounding the model system</li>
 </ul>
 <p>By nature, 2-level ONIOM combines two levels of theory:</p>
 <ul class="simple">
-<li><strong>high level</strong>: A level of theory which describes the required properties of the model system. In
-photochemistry this will often be an excited state method</li>
-<li><strong>low level</strong>: A less computationally expensive level of theory than the high level. This will
-typically be a ground state method</li>
+<li><strong>high level</strong>: A level of theory which describes the required properties of
+the model system. In photochemistry this will often be an excited state method</li>
+<li><strong>low level</strong>: A less computationally expensive level of theory than the high
+level. This will typically be a ground state method</li>
 </ul>
-<p>When optimising the geometry of a molecule using one of the cluster models, a few concurrent
-calculations must be carried out.</p>
+<p>When optimising the geometry of a molecule using one of the cluster models, a
+few concurrent calculations must be carried out.</p>
 <ul class="simple">
-<li><strong>component calculation</strong>: wrgoino</li>
+<li><strong>mh</strong>: Model system high level calculation</li>
+<li><strong>ml</strong>: Model system low level calculation</li>
+<li><strong>rl</strong>: Real system low level calculation</li>
+<li><strong>mg</strong>: Model system calculation in the ground state of the high level</li>
 </ul>
 </div>
 </div>
@@ -221,7 +233,7 @@ calculations must be carried out.</p>
         <a href="contact.html" class="btn btn-neutral float-right" title="3. Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="overview.html" class="btn btn-neutral" title="1. Program overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="overview.html" class="btn btn-neutral" title="1. Program overview and install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
