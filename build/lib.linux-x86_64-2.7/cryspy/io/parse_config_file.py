@@ -7,6 +7,7 @@ import numpy as np
 
 from cryspy.io import read_file as rf
 
+
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
@@ -34,7 +35,8 @@ def complete_config(name="config"):
         "self_consistent": "",  # becomes bool
         "sc_temp": "sc_temp.template",
         "dev_tol": "0.001",
-        "damping": "0.0"}
+        "damping": "0.0",
+        "print_tweak":""}
 
     usr_inputs = rf.read_config(name)
     inputs.update(usr_inputs)
@@ -91,5 +93,6 @@ def parse_inputs(name="config"):
     inputs["b_vec"] = np.array(inputs["b_vec"])
     inputs["c_vec"] = np.array(inputs["c_vec"])
     inputs["damping"] = float(inputs["damping"])
+    inputs["print_tweak"] = bool_cast(inputs["print_tweak"])
 
     return inputs

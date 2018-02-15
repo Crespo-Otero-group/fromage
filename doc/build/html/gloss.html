@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. Glossary reference &mdash; cryspy 1.0 documentation</title>
+  <title>2. Essential glossary &mdash; cryspy 1.0 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="cryspy 1.0 documentation" href="index.html"/>
-        <link rel="next" title="3. Contact" href="contact.html"/>
+        <link rel="next" title="3. Tutorial" href="tutorial.html"/>
         <link rel="prev" title="1. Program overview and install" href="overview.html"/> 
 
   
@@ -93,14 +93,14 @@
               <p class="caption"><span class="caption-text">General</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Glossary reference</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Essential glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cluster-models">2.1. Cluster models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calculations">2.2. Calculations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">3. Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">5. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">5. Contact</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -151,13 +151,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>2. Glossary reference</li>
+      <li>2. Essential glossary</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/glossary.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/gloss.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,8 +170,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="glossary-reference">
-<h1>2. Glossary reference<a class="headerlink" href="#glossary-reference" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="essential-glossary">
+<span id="gloss"></span><h1>2. Essential glossary<a class="headerlink" href="#essential-glossary" title="Permalink to this headline">¶</a></h1>
 <p>Throughout this documentation, we employ terms and abbreviations which may not
 be immediately clear to the new user. Herein is a compiled list of important
 terms accompanied by brief descriptions.  Furthur discussion for many of these
@@ -181,42 +181,55 @@ terms is included in the user documentation.</p>
 <p>In order to take into account the environmental energetical contributions to an
 excited molecule inside a crystal, we offer several kinds of non-intrusive
 embedding methods:</p>
-<ul class="simple">
-<li><strong>ONIOM</strong>: Our own N-layered Integrated mlecular Orbital and Molecular
-mechanics. An extrapolative embedding paradigm[dapprich1999]</li>
-<li><strong>EC</strong>: Embedded Cluster. The application of the ONIOM method with
+<dl class="glossary docutils">
+<dt id="term-oniom">ONIOM</dt>
+<dd>Our own N-layered Integrated mlecular Orbital and Molecular
+mechanics. An extrapolative (subtractive) embedding paradigm for multilevel
+calculations</dd>
+<dt id="term-ec">EC</dt>
+<dd>Embedded Cluster. The application of the ONIOM method with
 electrostatic embedding to a cluster of molecules taken from their crystalline
-positions</li>
-<li><strong>EEC</strong>: Ewald Embedded Cluster. Similar to EC but using an electrostatic
-embedding scheme aimed at reproducing the Ewald potential of the crystal</li>
-<li><strong>SCEEC</strong>: Self-Consistent Ewald Embedded Scheme. The EEC model where the
-embedding charges are computed self consistently in the excited state</li>
-</ul>
+positions</dd>
+<dt id="term-eec">EEC</dt>
+<dd>Ewald Embedded Cluster. Similar to EC but using an electrostatic
+embedding scheme aimed at reproducing the Ewald potential of the crystal</dd>
+<dt id="term-sceec">SCEEC</dt>
+<dd>Self-Consistent Ewald Embedded Scheme. The EEC model where the
+embedding charges are computed self consistently in the excited state</dd>
+</dl>
 </div>
 <div class="section" id="calculations">
 <h2>2.2. Calculations<a class="headerlink" href="#calculations" title="Permalink to this headline">¶</a></h2>
 <p>In the expression of the 2-level ONIOM energy, the system under scrutiny is
 partitioned into two regions:</p>
-<ul class="simple">
-<li><strong>model system</strong>: The central molecule(s) whose properties are under scrutiny</li>
-<li><strong>real system</strong>: The complete cluster of molecules taken from their
-crystalline positions, including and surrounding the model system</li>
-</ul>
+<dl class="glossary docutils">
+<dt id="term-model-system">Model system</dt>
+<dd>The central molecule(s) whose properties are under scrutiny</dd>
+<dt id="term-real-system">Real system</dt>
+<dd>The complete cluster of molecules taken from their
+crystalline positions, including and surrounding the model system</dd>
+</dl>
 <p>By nature, 2-level ONIOM combines two levels of theory:</p>
-<ul class="simple">
-<li><strong>high level</strong>: A level of theory which describes the required properties of
-the model system. In photochemistry this will often be an excited state method</li>
-<li><strong>low level</strong>: A less computationally expensive level of theory than the high
-level. This will typically be a ground state method</li>
-</ul>
+<dl class="glossary docutils">
+<dt id="term-high-level">High level</dt>
+<dd>A level of theory which describes the required properties of
+the model system. In photochemistry this will often be an excited state method</dd>
+<dt id="term-low-level">Low level</dt>
+<dd>A less computationally expensive level of theory than the high
+level. This will typically be a ground state method</dd>
+</dl>
 <p>When optimising the geometry of a molecule using one of the cluster models, a
 few concurrent calculations must be carried out.</p>
-<ul class="simple">
-<li><strong>mh</strong>: Model system high level calculation</li>
-<li><strong>ml</strong>: Model system low level calculation</li>
-<li><strong>rl</strong>: Real system low level calculation</li>
-<li><strong>mg</strong>: Model system calculation in the ground state of the high level</li>
-</ul>
+<dl class="glossary docutils">
+<dt id="term-mh">mh</dt>
+<dd>Model system high level calculation</dd>
+<dt id="term-ml">ml</dt>
+<dd>Model system low level calculation</dd>
+<dt id="term-rl">rl</dt>
+<dd>Real system low level calculation</dd>
+<dt id="term-mg">mg</dt>
+<dd>Model system calculation in the ground state of the high level</dd>
+</dl>
 </div>
 </div>
 
@@ -230,7 +243,7 @@ few concurrent calculations must be carried out.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contact.html" class="btn btn-neutral float-right" title="3. Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="3. Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="overview.html" class="btn btn-neutral" title="1. Program overview and install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -92,10 +92,10 @@
               <p class="caption"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">2. Glossary reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">3. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">5. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -196,7 +196,6 @@
 <span class="kn">from</span> <span class="nn">cryspy.scripts.assign_charges</span> <span class="k">import</span> <span class="n">assign_charges</span>
 
 
-
 <div class="viewcode-block" id="run_ewald"><a class="viewcode-back" href="../../../cryspy.scripts.html#cryspy.scripts.prepare_calculation.run_ewald">[docs]</a><span class="k">def</span> <span class="nf">run_ewald</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_atoms</span><span class="p">,</span> <span class="n">in_vectors</span><span class="p">,</span> <span class="n">in_nAt</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">in_aN</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_bN</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_cN</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_nChk</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform an Ewald calculation in the working directory</span>
@@ -283,9 +282,6 @@
 
     <span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;prep.out&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 
-    <span class="c1"># print start time</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;STARTING TIME: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">ewald_loop</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">damping</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A single iteration of the Ewald + Gaussian loop</span>
@@ -322,7 +318,8 @@
         <span class="n">sc_points</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_points</span><span class="p">(</span><span class="n">sc_name</span> <span class="o">+</span> <span class="s2">&quot;.pts-cry&quot;</span><span class="p">)</span>
 
         <span class="c1"># Calculate new charges</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="n">sc_name</span><span class="p">,</span> <span class="n">sc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">sc_points</span><span class="p">,</span> <span class="n">sc_temp</span><span class="p">)</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="n">sc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">sc_points</span><span class="p">,</span>
+                       <span class="n">os</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="n">sc_temp</span><span class="p">),</span> <span class="n">proj_name</span><span class="o">=</span><span class="n">sc_name</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;g09 &quot;</span> <span class="o">+</span> <span class="n">sc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">intact_charges</span><span class="p">,</span> <span class="n">new_energy</span><span class="p">,</span> <span class="n">char_self</span><span class="p">,</span> <span class="n">char_int</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_g_char</span><span class="p">(</span>
@@ -463,6 +460,10 @@
 
     <span class="c1"># Damping factor for underrelaxed sc loop. Use 0 for no Damping</span>
     <span class="n">damping</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;damping&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Print the cell with the complete model system at the origin?</span>
+    <span class="n">print_tweak</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;print_tweak&quot;</span><span class="p">]</span>
+
     <span class="c1"># end config inputs</span>
 
     <span class="c1">#-------------------------------------------------------------------------</span>
@@ -489,7 +490,15 @@
 
     <span class="c1"># write useful xyz and new cell</span>
     <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;mol.init.xyz&quot;</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
-    <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;fixed_cell.xyz&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">print_tweak</span><span class="p">:</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;tweaked_cell.xyz&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+
+    <span class="c1"># Ewald section</span>
+    <span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">ew_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s1">&#39;ewald&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ew_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ew_path</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">ew_path</span><span class="p">)</span>
 
     <span class="c1"># Self Consistent EWALD</span>
     <span class="k">if</span> <span class="n">self_consistent</span><span class="p">:</span>
@@ -550,6 +559,9 @@
                 <span class="k">if</span> <span class="n">good_append</span><span class="p">:</span>
                     <span class="n">high_shell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_i</span><span class="p">)</span>
 
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
+    <span class="c1"># End of Ewald section</span>
+
     <span class="c1"># to manually input the cluster</span>
     <span class="k">if</span> <span class="n">target_shell</span><span class="p">:</span>
         <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Reading the shell from: &quot;</span> <span class="o">+</span> <span class="n">target_shell</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -569,9 +581,6 @@
         <span class="c1"># assign charges to the rest of the cell</span>
         <span class="n">assign_charges</span><span class="p">(</span><span class="n">target_pop_mol</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_bl</span><span class="p">)</span>
 
-        <span class="c1"># show full cluster</span>
-        <span class="n">clust</span> <span class="o">=</span> <span class="n">shell</span> <span class="o">+</span> <span class="n">mol</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;clust.xyz&quot;</span><span class="p">,</span> <span class="n">clust</span><span class="p">)</span>
     <span class="c1"># to generate the cluster from radius</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># generate a shell of molecules with low level charges</span>
@@ -591,23 +600,45 @@
             <span class="k">if</span> <span class="n">good_append</span><span class="p">:</span>
                 <span class="n">shell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_i</span><span class="p">)</span>
         <span class="c1"># write useful xyz</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;clust.xyz&quot;</span><span class="p">,</span> <span class="n">clust</span><span class="p">)</span>
         <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;shell.xyz&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="p">)</span>
 
+    <span class="c1"># Make inputs</span>
+    <span class="n">mh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s1">&#39;mh&#39;</span><span class="p">)</span>
+    <span class="n">ml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s1">&#39;ml&#39;</span><span class="p">)</span>
+    <span class="n">rl_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s1">&#39;rl&#39;</span><span class="p">)</span>
+    <span class="n">mg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s1">&#39;mg&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mh_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mh_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ml_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ml_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">rl_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">rl_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mg_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mg_path</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">rl_path</span><span class="p">)</span>
+    <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;rl.temp&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span> <span class="p">[],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;rl.template&quot;</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">ml_path</span><span class="p">)</span>
+    <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;ml.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">shell</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;ml.template&quot;</span><span class="p">))</span>
+
     <span class="k">if</span> <span class="n">ewald</span><span class="p">:</span>
-        <span class="c1"># Make inputs</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;rl&quot;</span><span class="p">,</span> <span class="s2">&quot;rl.temp&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;rl.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;ml&quot;</span><span class="p">,</span> <span class="s2">&quot;ml.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">shell</span><span class="p">,</span> <span class="s2">&quot;ml.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mh&quot;</span><span class="p">,</span> <span class="s2">&quot;mh.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">points</span><span class="p">,</span> <span class="s2">&quot;mh.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mg&quot;</span><span class="p">,</span> <span class="s2">&quot;mg.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">points</span><span class="p">,</span>
-                        <span class="s2">&quot;mg.template&quot;</span><span class="p">)</span>  <span class="c1"># only useful for CI</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">mh_path</span><span class="p">)</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mh.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">points</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;mh.template&quot;</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">mg_path</span><span class="p">)</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mg.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">points</span><span class="p">,</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;mg.template&quot;</span><span class="p">))</span>  <span class="c1"># only useful for CI</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Make inputs</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;rl&quot;</span><span class="p">,</span> <span class="s2">&quot;rl.temp&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;rl.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;ml&quot;</span><span class="p">,</span> <span class="s2">&quot;ml.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">shell</span><span class="p">,</span> <span class="s2">&quot;ml.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mh&quot;</span><span class="p">,</span> <span class="s2">&quot;mh.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">high_shell</span><span class="p">,</span> <span class="s2">&quot;mh.template&quot;</span><span class="p">)</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mg&quot;</span><span class="p">,</span> <span class="s2">&quot;mg.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">high_shell</span><span class="p">,</span>
-                        <span class="s2">&quot;mg.template&quot;</span><span class="p">)</span>  <span class="c1"># only useful for CI</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">mh_path</span><span class="p">)</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mh.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">high_shell</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;mh.template&quot;</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">mg_path</span><span class="p">)</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_g_temp</span><span class="p">(</span><span class="s2">&quot;mg.temp&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">high_shell</span><span class="p">,</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span><span class="s2">&quot;mg.template&quot;</span><span class="p">))</span>  <span class="c1"># only useful for CI</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">here</span><span class="p">)</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ELAPSED TIME: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ENDING TIME: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>

@@ -69,7 +69,7 @@ def expand_connect(in_mat):
     smallest combination of connectors.
 
     Parameter
-    ----------
+    ---------
     in_mat : 2-d array-like
         Connectivity matrix to be expanded
 
@@ -163,7 +163,7 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
     in the input and the output. The uncharged atoms are changed and there is no
     output.
 
-    Parameters:
+    Parameters
     ----------
     char_atoms : list of Atom objects
         Atoms which already have assigned charge
