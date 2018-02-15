@@ -6,6 +6,7 @@ from collections import Counter
 from cryspy.utils import per_table as per
 from cryspy.fdist import fdist as fd
 
+
 class Atom(object):
     """
     Object representing an atom.
@@ -95,13 +96,13 @@ class Atom(object):
         """Return distance squared of the atom from a point"""
         # Use for no C++ version
 #        r = (self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2
-        r = fd.dist2(self.x,self.y,self.z,x1,y1,z1)
+        r = fd.dist2(self.x, self.y, self.z, x1, y1, z1)
         return r
 
     def dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
         #r = np.sqrt(self.dist2(x1, y1, z1))
-        r = fd.dist(self.x,self.y,self.z,x1,y1,z1)
+        r = fd.dist(self.x, self.y, self.z, x1, y1, z1)
         return r
 
     def dist_lat(self, x1, y1, z1, aVec, bVec, cVec):

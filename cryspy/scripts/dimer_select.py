@@ -21,6 +21,7 @@ from cryspy.fdist import fdist as fd
 
 start = time.time()
 
+
 def vector_distance(x1, y1, z1, x2, y2, z2):
     """
     Calculate the distances between two cartesian coordinates
@@ -53,11 +54,12 @@ def make_molecules(atoms, bl):
     molecules: list of lists
         List L of length M molecules, where each member of L is a list of atom objects
     """
-    molecules = [] # list of molecules
-    max_length = 0 # number of atoms in a molecule
+    molecules = []  # list of molecules
+    max_length = 0  # number of atoms in a molecule
     for i, atom in enumerate(atoms):
         if atom not in [val for sublist in molecules for val in sublist]:
-            molecule = ha.select(bl, atoms[i:], 0)  # creates a molecule if atom not already in molecules list
+            # creates a molecule if atom not already in molecules list
+            molecule = ha.select(bl, atoms[i:], 0)
             if len(molecule) > max_length:
                 max_length = len(molecule)
                 molecules = []
@@ -89,7 +91,7 @@ def make_dimers_cd(molecules, cd):
             if mol1 != mol2:
                 cent_1 = ha.find_centroid(mol1)
                 cent_2 = ha.find_centroid(mol2)
-                if vector_distance(cent_1[0],cent_1[1],cent_1[2],cent_2[0],cent_2[1],cent_2[2]) <= cd:
+                if vector_distance(cent_1[0], cent_1[1], cent_1[2], cent_2[0], cent_2[1], cent_2[2]) <= cd:
                     new_mol = mol1 + mol2
                     dimers.append(new_mol)
     return dimers
@@ -110,11 +112,13 @@ def make_dimers_vdw(molecules):
     """
     dimers = []
     for mol_1_no, mol1 in enumerate(molecules):
-        for mol_2_no, mol2 in enumerate(molecules[mol_1_no:]): # loop over atoms in another molecule
+        # loop over atoms in another molecule
+        for mol_2_no, mol2 in enumerate(molecules[mol_1_no:]):
             if mol1 != mol2:
                 for atom1 in mol1:
                     for atom2 in mol2:
-                        if vector_distance(atom1.x, atom1.y, atom1.z, atom2.x, atom2.y, atom2.z) <= atom1.vdw + atom2.vdw + 1.5: # vdw distances + 1.5 damping factor, as per Day et al.
+                        # vdw distances + 1.5 damping factor, as per Day et al.
+                        if vector_distance(atom1.x, atom1.y, atom1.z, atom2.x, atom2.y, atom2.z) <= atom1.vdw + atom2.vdw + 1.5:
                             dimer = mol1 + mol2
                             dimers.append(dimer)
                             break
@@ -204,7 +208,8 @@ def interatomic_distances(dimers):
         for atom_no_A, atom_A in enumerate(dim_atom):
             for atom_no_B, atom_B in enumerate(dim_atom[atom_no_A:]):
                 if atom_A != atom_B:
-                    dim_cons.append(round(vector_distance(atom_A.x, atom_A.y, atom_A.z, atom_B.x, atom_B.y, atom_B.z), 0))
+                    dim_cons.append(round(vector_distance(
+                        atom_A.x, atom_A.y, atom_A.z, atom_B.x, atom_B.y, atom_B.z), 0))
         connections.append(sorted(dim_cons))
     return connections
 
@@ -290,7 +295,8 @@ if __name__ == "__main__":
     print("Number of unique dimers: {}".format(len(unique_dims)))
     print("Ratio of dimers in input structure:")
     for i, dimer in enumerate(unique_distances):
-        print("Dimer {}: {}/{} ({}%)".format(i, dimer[1], len(dimers), round(dimer[1] / len(dimers) * 100, 0)))
+        print("Dimer {}: {}/{} ({}%)".format(i,
+                                             dimer[1], len(dimers), round(dimer[1] / len(dimers) * 100, 0)))
     # write the files
     for dim_no, dim in enumerate(unique_dims):
         outfile = str(args.input[:-4]) + "_dimer_" + str(dim_no) + ".xyz"

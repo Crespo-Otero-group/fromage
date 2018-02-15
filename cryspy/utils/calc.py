@@ -105,7 +105,8 @@ class Gauss_calc(Calc):
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
 
-        ef.write_gauss(self.calc_name+".com",atoms, [], self.calc_name + ".temp")
+        ef.write_gauss(self.calc_name + ".com", atoms,
+                       [], self.calc_name + ".temp")
         proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
@@ -180,7 +181,8 @@ class Gauss_CAS_calc(Calc):
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
 
-        ef.write_gauss(self.calc_name + ".com", atoms, [], self.calc_name + ".temp")
+        ef.write_gauss(self.calc_name + ".com", atoms,
+                       [], self.calc_name + ".temp")
         proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
@@ -214,7 +216,6 @@ class Gauss_CAS_calc(Calc):
         """
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
-
 
         # stdout=FNULL to not have to read the output of formchk
         FNULL = open(os.devnull, 'w')
@@ -398,7 +399,7 @@ class Molcas_calc(Calc):
 
         os.chdir(self.here)
 
-        #for large molcas wavefunction information
+        # for large molcas wavefunction information
         subprocess.call("rm -rf molcas.*", shell=True)
 
         return (energy, gradients, scf_energy)

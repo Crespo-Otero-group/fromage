@@ -229,6 +229,7 @@ def center_mol(atoms):
 
     return
 
+
 def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     """
     Make a bigger supercell out of an input cell.

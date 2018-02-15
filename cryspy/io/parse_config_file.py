@@ -7,6 +7,7 @@ import numpy as np
 
 from cryspy.io import read_file as rf
 
+
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {

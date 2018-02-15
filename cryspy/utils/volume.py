@@ -145,7 +145,7 @@ class CubeGrid(object):
 
         """
 
-        for i,j in zip(self.grid,in_grid):
+        for i, j in zip(self.grid, in_grid):
             i[3] -= j[3]
         return
 
@@ -160,7 +160,7 @@ class CubeGrid(object):
 
         """
 
-        for i,j in zip(self.grid,in_grid):
+        for i, j in zip(self.grid, in_grid):
             i[3] += j[3]
         return
 

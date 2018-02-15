@@ -184,7 +184,7 @@ def write_seed():
     out_file.close()
 
 
-def write_gauss(file_name, atoms, points, temp_name, proj_name = 'gaussian'):
+def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian'):
     """
     Write a Gaussian input file.
 

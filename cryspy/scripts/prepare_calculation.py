@@ -28,7 +28,6 @@ from cryspy.utils.atom import Atom
 from cryspy.scripts.assign_charges import assign_charges
 
 
-
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
     """
     Perform an Ewald calculation in the working directory
@@ -154,7 +153,8 @@ if __name__ == '__main__':
         sc_points = rf.read_points(sc_name + ".pts-cry")
 
         # Calculate new charges
-        ef.write_gauss(sc_name + ".com", mol, sc_points, sc_temp, proj_name=sc_name)
+        ef.write_gauss(sc_name + ".com", mol, sc_points,
+                       sc_temp, proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
