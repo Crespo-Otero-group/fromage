@@ -19,8 +19,14 @@ paradigm, making it ideal for integration with other scripts.
    :caption: General:
 
    overview
+   glossary
    contact
    license
+   tutorial
+
+
+
+
 
 Indices and tables
 ==================

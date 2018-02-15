@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; cryspy 1.0 documentation</title>
+  <title>5. Tutorial &mdash; cryspy 1.0 documentation</title>
   
 
   
@@ -34,8 +34,9 @@
   
         <link rel="index" title="Index"
               href="genindex.html"/>
-        <link rel="search" title="Search" href="#"/>
-    <link rel="top" title="cryspy 1.0 documentation" href="index.html"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="cryspy 1.0 documentation" href="index.html"/>
+        <link rel="prev" title="4. License" href="license.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -71,7 +72,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -89,12 +90,18 @@
             
             
               <p class="caption"><span class="caption-text">General:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">2. Glossary and nomenclature</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">5. Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calculation-set-up">5.1. Calculation set up</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#necessary-input-files">5.1.1. Necessary input files</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
             
@@ -139,10 +146,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Search</li>
+      <li>5. Tutorial</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -154,19 +165,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="tutorial">
+<h1>5. Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will guide you step by step through the geometry optimisation of the
+(2-hydroxyphenyl)propenone crystal using the Self-Consistent Ewald Cluster (SCEEC) model. Wherever
+relevant, we will indicate which steps to replace if you wish to use the Ewald Embedded Model (EEC)
+non-self-consistently or a traditional electrostatic embedding model which we call the Embedded
+Cluster (EC) model.</p>
+<p>We have provided the necessary input files in the <code class="code docutils literal notranslate"><span class="pre">tutorial</span></code> directory. We follow the ONIOM
+nomenclature for the different regions of the embedded cluster. In other words the whole cluster is
+the “real” system while the central molecule(s) is(are) called the “model” system. We abbreviate the
+principal components involved in the ONIOM method as <code class="code docutils literal notranslate"><span class="pre">mh</span></code> for the model system at a high level
+of theory, <code class="code docutils literal notranslate"><span class="pre">ml</span></code> for the model system at a low level of theory and <code class="code docutils literal notranslate"><span class="pre">rl</span></code> for the real
+system at a low level of theory. For the location of conical intersections, a fourth calculation is
+typically involved, <code class="code docutils literal notranslate"><span class="pre">mg</span></code>, which indicates the real system at the high level of theory but in
+the ground state.</p>
+<div class="section" id="calculation-set-up">
+<h2>5.1. Calculation set up<a class="headerlink" href="#calculation-set-up" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="necessary-input-files">
+<h3>5.1.1. Necessary input files<a class="headerlink" href="#necessary-input-files" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="code docutils literal notranslate"><span class="pre">cell.xyz</span></code>: A file containting the optimised positions of the atoms in the unit cell</li>
+<li><code class="code docutils literal notranslate"><span class="pre">config</span></code>: The cryspy configuration file, described below</li>
+<li><code class="code docutils literal notranslate"><span class="pre">high_pop.log</span></code>: A Gaussian output file of a population analysis for one molecule using the
+high level of theory (in this case PBE 6-31G*)</li>
+<li><code class="code docutils literal notranslate"><span class="pre">low_pop.log</span></code>: The same but for the low level of theory (here, HF STO-3G)</li>
+<li><code class="code docutils literal notranslate"><span class="pre">*.template</span></code>: The template files for your upcoming ONIOM calculation</li>
+</ul>
+</div>
+</div>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
            <div class="articleComments">
@@ -174,6 +203,13 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="license.html" class="btn btn-neutral" title="4. License" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -212,7 +248,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -228,14 +263,7 @@
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>

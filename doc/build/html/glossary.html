@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>3. Contact &mdash; cryspy 1.0 documentation</title>
+  <title>2. Glossary and nomenclature &mdash; cryspy 1.0 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="cryspy 1.0 documentation" href="index.html"/>
-        <link rel="next" title="4. License" href="license.html"/>
-        <link rel="prev" title="2. Glossary and nomenclature" href="glossary.html"/> 
+        <link rel="next" title="3. Contact" href="contact.html"/>
+        <link rel="prev" title="1. Program overview" href="overview.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -93,8 +93,12 @@
               <p class="caption"><span class="caption-text">General:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">2. Glossary and nomenclature</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Contact</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Glossary and nomenclature</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cluster-models">2.1. Cluster models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculations">2.2. Calculations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">5. Tutorial</a></li>
 </ul>
@@ -141,13 +145,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>3. Contact</li>
+      <li>2. Glossary and nomenclature</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/contact.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/glossary.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -160,21 +164,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="contact">
-<h1>3. Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h1>
-<p>cryspy is developed Queen Mary University of London by the Crespo-Otero group. For technical
-questions or requests, please join our <a class="reference external" href="https://groups.google.com/d/forum/cryspy">Google group</a>.</p>
-<p>For anything else, you may contact:</p>
-<dl class="docutils">
-<dt><strong>Dr. Rachel Crespo-Otero</strong></dt>
-<dd><div class="first last line-block">
-<div class="line"><a class="reference external" href="mailto:r&#46;crespo-otero&#37;&#52;&#48;qmul&#46;ac&#46;uk">r<span>&#46;</span>crespo-otero<span>&#64;</span>qmul<span>&#46;</span>ac<span>&#46;</span>uk</a></div>
-<div class="line">Queen Mary University of London</div>
-<div class="line">Mile End Road, London</div>
-<div class="line">E14NS</div>
+  <div class="section" id="glossary-and-nomenclature">
+<h1>2. Glossary and nomenclature<a class="headerlink" href="#glossary-and-nomenclature" title="Permalink to this headline">¶</a></h1>
+<p>Throughout this documentation, we employ terms and abbreviations which may not be immediately clear
+to the new user. Herein is a compiled list of important terms accompanied by brief descriptions.
+Furthur discussion for many of these terms is included in the user documentation.</p>
+<div class="section" id="cluster-models">
+<h2>2.1. Cluster models<a class="headerlink" href="#cluster-models" title="Permalink to this headline">¶</a></h2>
+<p>In order to take into account the environmental energetical contributions to an excited molecule
+inside a crystal, we offer several kinds of non-intrusive embedding methods:</p>
+<ul class="simple">
+<li><strong>ONIOM</strong>: Our own N-layered Integrated mlecular Orbital and Molecular mechanics. An extrapolative
+embedding paradigm[dapprich1999]</li>
+<li><strong>EC</strong>: Embedded Cluster. The application of the ONIOM method with electrostatic embedding to a
+cluster of molecules taken from their crystalline positions</li>
+<li><strong>EEC</strong>: Ewald Embedded Cluster. Similar to EC but using an electrostatic embedding scheme aimed
+at reproducing the Ewald potential of the crystal</li>
+<li><strong>SCEEC</strong>: Self-Consistent Ewald Embedded Scheme. The EEC model where the embedding charges are
+computed self consistently in the excited state</li>
+</ul>
 </div>
-</dd>
-</dl>
+<div class="section" id="calculations">
+<h2>2.2. Calculations<a class="headerlink" href="#calculations" title="Permalink to this headline">¶</a></h2>
+<p>In the expression of the 2-level ONIOM energy, the system under scrutiny is partitioned into two
+regions:</p>
+<ul class="simple">
+<li><strong>model system</strong>: The central molecule(s) whose properties are under scrutiny</li>
+<li><strong>real system</strong>: The complete cluster of molecules taken from their crystalline positions,
+including and surrounding the model system</li>
+</ul>
+<p>By nature, 2-level ONIOM combines two levels of theory:</p>
+<ul class="simple">
+<li><strong>high level</strong>: A level of theory which describes the required properties of the model system. In
+photochemistry this will often be an excited state method</li>
+<li><strong>low level</strong>: A less computationally expensive level of theory than the high level. This will
+typically be a ground state method</li>
+</ul>
+<p>When optimising the geometry of a molecule using one of the cluster models, a few concurrent
+calculations must be carried out.</p>
+<ul class="simple">
+<li><strong>component calculation</strong>: wrgoino</li>
+</ul>
+</div>
 </div>
 
 
@@ -187,10 +218,10 @@ questions or requests, please join our <a class="reference external" href="https
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="license.html" class="btn btn-neutral float-right" title="4. License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="contact.html" class="btn btn-neutral float-right" title="3. Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="glossary.html" class="btn btn-neutral" title="2. Glossary and nomenclature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="overview.html" class="btn btn-neutral" title="1. Program overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
