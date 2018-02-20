@@ -32,7 +32,8 @@ sys.path.insert(0, os.path.abspath('.'))
 # ones.
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',]
+    'sphinx.ext.napoleon',
+    'sphinx.ext.mathjax']
 
 napoleon_google_docstring = False
 napoleon_use_param = False

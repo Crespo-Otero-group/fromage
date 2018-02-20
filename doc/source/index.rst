@@ -31,6 +31,7 @@ scripts.
    :caption: Documentation
 
    cluster_models
+   pop
    structure_manipulation
    analysis
 

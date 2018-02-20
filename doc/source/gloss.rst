@@ -36,6 +36,15 @@ embedding methods:
     Self-Consistent Ewald Embedded Scheme. The EEC model where the
     embedding charges are computed self consistently in the excited state
 
+  Mechanical embedding
+    ONIOM embedding where no point charges are included and the intersystem
+    electrostatic interaction is purely at low level
+
+  Electrostatic embedding
+    ONIOM embedding where the point charges from the surrounding cluster are
+    included in the Hamiltonian of the high level of theory to be treat
+    Coulombic terms in the excited state
+
 Calculations
 ============
 
