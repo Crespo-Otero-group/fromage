@@ -92,10 +92,10 @@
               <p class="caption"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">2. Glossary reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">3. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">5. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -175,6 +175,7 @@
 
 <span class="kn">from</span> <span class="nn">cryspy.io</span> <span class="k">import</span> <span class="n">read_file</span> <span class="k">as</span> <span class="n">rf</span>
 
+
 <div class="viewcode-block" id="complete_config"><a class="viewcode-back" href="../../../cryspy.io.html#cryspy.io.parse_config_file.complete_config">[docs]</a><span class="k">def</span> <span class="nf">complete_config</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write default parameters for config and update with user inputs&quot;&quot;&quot;</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
@@ -202,7 +203,8 @@
         <span class="s2">&quot;self_consistent&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># becomes bool</span>
         <span class="s2">&quot;sc_temp&quot;</span><span class="p">:</span> <span class="s2">&quot;sc_temp.template&quot;</span><span class="p">,</span>
         <span class="s2">&quot;dev_tol&quot;</span><span class="p">:</span> <span class="s2">&quot;0.001&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;damping&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">}</span>
+        <span class="s2">&quot;damping&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;print_tweak&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
 
     <span class="n">usr_inputs</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_config</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">inputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">usr_inputs</span><span class="p">)</span>
@@ -259,6 +261,7 @@
     <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;b_vec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;b_vec&quot;</span><span class="p">])</span>
     <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;c_vec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;c_vec&quot;</span><span class="p">])</span>
     <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;damping&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;damping&quot;</span><span class="p">])</span>
+    <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;print_tweak&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bool_cast</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;print_tweak&quot;</span><span class="p">])</span>
 </div>
     <span class="k">return</span> <span class="n">inputs</span>
 </pre></div>

@@ -1,4 +1,4 @@
-Glossary reference
+Essential glossary
 #########################
 
 Throughout this documentation, we employ terms and abbreviations which may not
@@ -14,18 +14,24 @@ In order to take into account the environmental energetical contributions to an
 excited molecule inside a crystal, we offer several kinds of non-intrusive
 embedding methods:
 
-* **ONIOM**: Our own N-layered Integrated mlecular Orbital and Molecular
-  mechanics. An extrapolative embedding paradigm[dapprich1999]
+.. glossary::
 
-* **EC**: Embedded Cluster. The application of the ONIOM method with
-  electrostatic embedding to a cluster of molecules taken from their crystalline
-  positions
+  ONIOM
+    Our own N-layered Integrated mlecular Orbital and Molecular
+    mechanics. An extrapolative embedding paradigm[dapprich1999]
 
-* **EEC**: Ewald Embedded Cluster. Similar to EC but using an electrostatic
-  embedding scheme aimed at reproducing the Ewald potential of the crystal
+  EC
+    Embedded Cluster. The application of the ONIOM method with
+    electrostatic embedding to a cluster of molecules taken from their crystalline
+    positions
 
-* **SCEEC**: Self-Consistent Ewald Embedded Scheme. The EEC model where the
-  embedding charges are computed self consistently in the excited state
+  EEC
+    Ewald Embedded Cluster. Similar to EC but using an electrostatic
+    embedding scheme aimed at reproducing the Ewald potential of the crystal
+
+  SCEEC
+    Self-Consistent Ewald Embedded Scheme. The EEC model where the
+    embedding charges are computed self consistently in the excited state
 
 Calculations
 ============

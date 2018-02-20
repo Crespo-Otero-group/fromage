@@ -28,7 +28,6 @@ from cryspy.utils.atom import Atom
 from cryspy.scripts.assign_charges import assign_charges
 
 
-
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
     """
     Perform an Ewald calculation in the working directory
@@ -115,9 +114,6 @@ if __name__ == '__main__':
 
     output_file = open("prep.out", "w")
 
-    # print start time
-    start_time = datetime.now()
-    output_file.write("STARTING TIME: " + str(start_time) + "\n")
 
     def ewald_loop(in_atoms, in_mol, damping):
         """A single iteration of the Ewald + Gaussian loop
@@ -154,7 +150,8 @@ if __name__ == '__main__':
         sc_points = rf.read_points(sc_name + ".pts-cry")
 
         # Calculate new charges
-        ef.write_gauss(sc_name, sc_name + ".com", mol, sc_points, sc_temp)
+        ef.write_gauss(sc_name + ".com", mol, sc_points,
+                       sc_temp, proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -295,6 +292,10 @@ if __name__ == '__main__':
 
     # Damping factor for underrelaxed sc loop. Use 0 for no Damping
     damping = inputs["damping"]
+
+    # Print the cell with the complete model system at the origin?
+    print_tweak = inputs["print_tweak"]
+
     # end config inputs
 
     #-------------------------------------------------------------------------
@@ -321,7 +322,15 @@ if __name__ == '__main__':
 
     # write useful xyz and new cell
     ef.write_xyz("mol.init.xyz", mol)
-    ef.write_xyz("fixed_cell.xyz", atoms)
+    if print_tweak:
+        ef.write_xyz("tweaked_cell.xyz", atoms)
+
+    # Ewald section
+    here = os.getcwd()
+    ew_path = os.path.join(here,'ewald')
+    if not os.path.exists(ew_path):
+        os.makedirs(ew_path)
+    os.chdir(ew_path)
 
     # Self Consistent EWALD
     if self_consistent:
@@ -382,6 +391,9 @@ if __name__ == '__main__':
                 if good_append:
                     high_shell.append(atom_i)
 
+    os.chdir(here)
+    # End of Ewald section
+
     # to manually input the cluster
     if target_shell:
         output_file.write("Reading the shell from: " + target_shell + "\n")
@@ -401,9 +413,6 @@ if __name__ == '__main__':
         # assign charges to the rest of the cell
         assign_charges(target_pop_mol, None, shell, None, max_bl)
 
-        # show full cluster
-        clust = shell + mol
-        ef.write_xyz("clust.xyz", clust)
     # to generate the cluster from radius
     else:
         # generate a shell of molecules with low level charges
@@ -423,23 +432,45 @@ if __name__ == '__main__':
             if good_append:
                 shell.append(atom_i)
         # write useful xyz
-        ef.write_xyz("clust.xyz", clust)
         ef.write_xyz("shell.xyz", shell)
 
+    # Make inputs
+    mh_path = os.path.join(here,'mh')
+    ml_path = os.path.join(here,'ml')
+    rl_path = os.path.join(here,'rl')
+    mg_path = os.path.join(here,'mg')
+
+    if not os.path.exists(mh_path):
+        os.makedirs(mh_path)
+
+    if not os.path.exists(ml_path):
+        os.makedirs(ml_path)
+
+    if not os.path.exists(rl_path):
+        os.makedirs(rl_path)
+
+    if not os.path.exists(mg_path):
+        os.makedirs(mg_path)
+
+    os.chdir(rl_path)
+    ef.write_g_temp("rl.temp", shell, [], os.path.join(here,"rl.template"))
+    os.chdir(ml_path)
+    ef.write_g_temp("ml.temp", [], shell, os.path.join(here,"ml.template"))
+
     if ewald:
-        # Make inputs
-        ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
-        ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
-        ef.write_g_temp("mh", "mh.temp", [], points, "mh.template")
-        ef.write_g_temp("mg", "mg.temp", [], points,
-                        "mg.template")  # only useful for CI
+        os.chdir(mh_path)
+        ef.write_g_temp("mh.temp", [], points, os.path.join(here,"mh.template"))
+        os.chdir(mg_path)
+        ef.write_g_temp("mg.temp", [], points,
+                        os.path.join(here,"mg.template"))  # only useful for CI
     else:
         # Make inputs
-        ef.write_g_temp("rl", "rl.temp", shell, [], "rl.template")
-        ef.write_g_temp("ml", "ml.temp", [], shell, "ml.template")
-        ef.write_g_temp("mh", "mh.temp", [], high_shell, "mh.template")
-        ef.write_g_temp("mg", "mg.temp", [], high_shell,
-                        "mg.template")  # only useful for CI
+        os.chdir(mh_path)
+        ef.write_g_temp("mh.temp", [], high_shell, os.path.join(here,"mh.template"))
+        os.chdir(mg_path)
+        ef.write_g_temp("mg.temp", [], high_shell,
+                        os.path.join(here,"mg.template"))  # only useful for CI
+    os.chdir(here)
     end_time = datetime.now()
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
     output_file.write("ENDING TIME: " + str(end_time) + "\n")

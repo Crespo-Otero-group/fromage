@@ -20,10 +20,10 @@ scripts.
    :caption: General
 
    overview
-   glossary
-   contact
-   license
+   gloss
    tutorial
+   license
+   contact
 
 .. toctree::
    :maxdepth: 2

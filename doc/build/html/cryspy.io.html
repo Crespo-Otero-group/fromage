@@ -88,9 +88,19 @@
               
             
             
-              <p class="caption"><span class="caption-text">General:</span></p>
+              <p class="caption"><span class="caption-text">General</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro_feat.html">1. Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">3. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">5. Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">2. Structure manipulation in cryspy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">3. Analysis</a></li>
 </ul>
 
             
@@ -265,12 +275,11 @@ convention from the paper, it would be something like “in.ewald.somename”</p
 
 <dl class="function">
 <dt id="cryspy.io.edit_file.write_g_temp">
-<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_g_temp</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>fixed_atoms</em>, <em>points</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_g_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_g_temp" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_g_temp</code><span class="sig-paren">(</span><em>file_name</em>, <em>fixed_atoms</em>, <em>points</em>, <em>temp_name</em>, <em>proj_name='gaussian'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_g_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_g_temp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Gaussian input template file.</p>
-<p>This serves to generate templates for write_gauss. That’s right, you are
-going to need to make templates for your templates files so that you can
-generate inputs while you generate inputs. In this case a XXX__POS__XXX tag
-should be included and won’t be overwritten.</p>
+<p>This serves to generate templates for write_gauss. You need a .template file
+which will generate a .temp file to be used in calculation. In this case a XXX__POS__XXX tag
+should be included in .template and won’t be overwritten.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -283,6 +292,7 @@ fixed in space</li>
 <li><strong>points</strong> (<em>list of Atom objects or None</em>) – The Atom objects should have a charge. If there is no XXX__CHARGES__XXX
 in the template file, this doesn’t matter and can be None</li>
 <li><strong>temp_name</strong> (<em>str</em>) – Name of the template file</li>
+<li><strong>pro_name</strong> (<em>str</em>) – Project name. Default ‘gaussian’</li>
 </ul>
 </td>
 </tr>
@@ -292,7 +302,7 @@ in the template file, this doesn’t matter and can be None</li>
 
 <dl class="function">
 <dt id="cryspy.io.edit_file.write_gauss">
-<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_gauss</code><span class="sig-paren">(</span><em>in_name</em>, <em>file_name</em>, <em>atoms</em>, <em>points</em>, <em>temp_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_gauss" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">cryspy.io.edit_file.</code><code class="descname">write_gauss</code><span class="sig-paren">(</span><em>file_name</em>, <em>atoms</em>, <em>points</em>, <em>temp_name</em>, <em>proj_name='gaussian'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cryspy/io/edit_file.html#write_gauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cryspy.io.edit_file.write_gauss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Gaussian input file.</p>
 <p>A template file needs to be prepared which has the name as XXX__NAME__XXX,
 the positions as XXX__POS__XXX and the (optional) charges as
@@ -302,12 +312,12 @@ XXX__CHARGES__XXX.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>in_name</strong> (<em>str</em>) – Project name</li>
 <li><strong>file_name</strong> (<em>str</em>) – Name of the Gaussian input file to be written</li>
 <li><strong>atoms</strong> (<em>list of Atom objects</em>) – Atoms to be calculated with Gaussian</li>
 <li><strong>points</strong> (<em>list of Atom objects or None</em>) – The Atom objects should have a charge. If there is no XXX__CHARGES__XXX
 in the template file, this doesn’t matter and can be None</li>
 <li><strong>temp_name</strong> (<em>str</em>) – Name of the template file</li>
+<li><strong>proj_name</strong> (<em>str</em>) – Project name, default ‘gaussian’</li>
 </ul>
 </td>
 </tr>

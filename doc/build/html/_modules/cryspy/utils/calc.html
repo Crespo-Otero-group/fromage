@@ -92,10 +92,10 @@
               <p class="caption"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">2. Glossary reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">3. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">5. Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -269,9 +269,15 @@
 <span class="sd">        proc : subprocess.Popen object</span>
 <span class="sd">            the object should have a .wait() method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span>
-                       <span class="n">atoms</span><span class="p">,</span> <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
+
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span>
+                       <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
         <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s2">&quot;g09 &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
 </div>
         <span class="k">return</span> <span class="n">proc</span>
 
@@ -300,12 +306,13 @@
 <span class="sd">            The ground state energy in Hartree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
         <span class="c1"># stdout=FNULL to not have to read the output of formchk</span>
         <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;formchk &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span>
-                        <span class="s2">&quot;.chk&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_fchk</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.fchk&quot;</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;formchk gck.chk&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_fchk</span><span class="p">(</span><span class="s2">&quot;gck.fchk&quot;</span><span class="p">)</span>
         <span class="c1"># fix gradients units to Hartree/Angstrom</span>
         <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
         <span class="c1"># update the geometry log</span>
@@ -314,6 +321,8 @@
 
         <span class="c1"># truncate gradients if too long</span>
         <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
 </div></div>
         <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
 
@@ -336,9 +345,15 @@
 <span class="sd">        proc : subprocess.Popen object</span>
 <span class="sd">            the object should have a .wait() method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span>
-                       <span class="n">atoms</span><span class="p">,</span> <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
+
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span>
+                       <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
         <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s2">&quot;g09 &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
 </div>
         <span class="k">return</span> <span class="n">proc</span>
 
@@ -367,6 +382,9 @@
 <span class="sd">            The ground state energy in Hartree</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
         <span class="c1"># stdout=FNULL to not have to read the output of formchk</span>
         <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 
@@ -382,6 +400,8 @@
         <span class="c1"># truncate gradients if too long</span>
         <span class="n">grad_e</span> <span class="o">=</span> <span class="n">grad_e</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
         <span class="n">grad_g</span> <span class="o">=</span> <span class="n">grad_g</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
 </div></div>
         <span class="k">return</span> <span class="p">(</span><span class="n">energy_e</span><span class="p">,</span> <span class="n">grad_e</span><span class="p">,</span> <span class="n">energy_g</span><span class="p">,</span> <span class="n">grad_g</span><span class="p">)</span>
 
@@ -546,7 +566,9 @@
         <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;rm -r molcas.*&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># for large molcas wavefunction information</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;rm -rf molcas.*&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </div></div>
         <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
 </pre></div>
