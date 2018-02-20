@@ -102,10 +102,23 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#geometry-optimisation">3.2. Geometry optimisation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ground-state-geometry-optimisation">3.2.1. Ground state geometry optimisation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ground-state">3.2.1. Ground state</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id1">3.2.1.1. Input</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id2">3.2.1.2. Execution</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3">3.2.1.3. Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vertical-excitation">3.2.1.4. Vertical excitation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#first-excited-state">3.2.2. First excited state</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">3.2.2.1. Input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">3.2.2.2. Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">3.2.2.3. Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#meci">3.2.3. MECI</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">3.2.3.1. Input</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">3.2.3.2. Execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">3.2.3.3. Output</a></li>
 </ul>
 </li>
 </ul>
@@ -189,20 +202,20 @@
 with cryspy. This page is meant to function as a standalone but for a refresher
 on the abbreviations used, visit the <a class="reference internal" href="gloss.html#gloss"><span class="std std-ref">glossary</span></a>. Everything discussed
 herein is elaborated upon in the rest of the documentation.</p>
-<p>The model calculation used here is the investigation of the emission properties
-of the (2-hydroxyphenyl)propenone (HP) crystal using the Ewald Embedded Cluster
+<p>The example for this tutorial is the investigation of the emission properties of
+the (2-hydroxyphenyl)propenone (HP) crystal using the Ewald Embedded Cluster
 model (EEC) and Gaussian.  This will involve calculating the geometries and
-associated energies of the ground state, first excited state and S:sub:<cite>1</cite> -
-S:sub:<cite>0</cite> Minimal Energy Conical Intersection (MECI).</p>
+associated energies of the ground state, first excited state and S<sub>1</sub> -
+S<sub>0</sub> Minimal Energy Conical Intersection (MECI).</p>
 <p>The necessary input files are in the <code class="docutils literal notranslate"><span class="pre">tutorial</span></code> directory. We
 follow the ONIOM nomenclature for the different regions of the embedded cluster.
-In other words the whole cluster is the “real” system while the central
-molecule is called the “model” system. We abbreviate the principal
-calculations involved in the ONIOM method as <code class="docutils literal notranslate"><span class="pre">mh</span></code> for the model system at a
-high level of theory, <code class="docutils literal notranslate"><span class="pre">ml</span></code> for the model system at a low level of theory
-and <code class="docutils literal notranslate"><span class="pre">rl</span></code> for the real system at a low level of theory. For the location of
+In other words the whole cluster is the <a class="reference internal" href="gloss.html#term-real-system"><span class="xref std std-term">“real system”</span></a> and the central
+molecule is called the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">“model system”</span></a>. We abbreviate the principal
+calculations involved in the ONIOM method as <code class="docutils literal notranslate"><span class="pre">mh</span></code> for the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a> at a
+high level of theory, <code class="docutils literal notranslate"><span class="pre">ml</span></code> for the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model</span></a> system at a low level of theory
+and <code class="docutils literal notranslate"><span class="pre">rl</span></code> for the <a class="reference internal" href="gloss.html#term-real-system"><span class="xref std std-term">real system</span></a> at a low level of theory. For the location of
 conical intersections, a fourth calculation is typically involved, <code class="docutils literal notranslate"><span class="pre">mg</span></code>,
-which indicates the real system at the high level of theory but in the ground
+which indicates the <cite>real system&lt;Real system&gt;</cite> at the high level of theory but in the ground
 state.</p>
 <p>To follow along, start from the <code class="docutils literal notranslate"><span class="pre">tutorial</span></code> directory.</p>
 <div class="section" id="calculation-set-up">
@@ -212,9 +225,9 @@ all of the necessary files needed for geometry optimisation.</p>
 <div class="section" id="input">
 <h3>3.1.1. Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
 <p>Make a directory where the preparatory calculation will take place:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir prep
-cp * prep
-<span class="nb">cd</span> prep
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir opt_1/
+cp * opt_1/
+<span class="nb">cd</span> opt_1/
 </pre></div>
 </div>
 <p>The input files that you have just copied are:</p>
@@ -245,7 +258,7 @@ STO-3G)</dd>
 <li><dl class="first docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">*.template</span></code></dt>
 <dd>The template files for your upcoming ONIOM calculation.
-this is includes <code class="docutils literal notranslate"><span class="pre">mh.template</span></code>, <code class="docutils literal notranslate"><span class="pre">ml.template</span></code>, <code class="docutils literal notranslate"><span class="pre">rl.template</span></code>
+This is includes <code class="docutils literal notranslate"><span class="pre">mh.template</span></code>, <code class="docutils literal notranslate"><span class="pre">ml.template</span></code>, <code class="docutils literal notranslate"><span class="pre">rl.template</span></code>
 and <code class="docutils literal notranslate"><span class="pre">mg.template</span></code>. Note that the checkpoint file name is <code class="docutils literal notranslate"><span class="pre">gck.chk</span></code>
 in all cases and that the levels of theory match those of the population log
 files</dd>
@@ -273,12 +286,12 @@ calculation</dd>
 </li>
 <li><dl class="first docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code></dt>
-<dd>The initial position of the model system</dd>
+<dd>The initial position of the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a></dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">shell.xyz</span></code></dt>
-<dd>The molecules surrounding the model system</dd>
+<dd>The molecules surrounding the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a></dd>
 </dl>
 </li>
 <li><dl class="first docutils">
@@ -299,10 +312,10 @@ not important for this tutorial</dd>
 <div class="section" id="geometry-optimisation">
 <h2>3.2. Geometry optimisation<a class="headerlink" href="#geometry-optimisation" title="Permalink to this headline">¶</a></h2>
 <p>We will calculate the geometries and associated energies of the ground state,
-first excited state and S:sub:<cite>1</cite> - S:sub:<cite>0</cite> Minimal Energy Conical
+first excited state and S<sub>1</sub> - S<sub>0</sub> Minimal Energy Conical
 Intersection (MECI).</p>
-<div class="section" id="ground-state-geometry-optimisation">
-<h3>3.2.1. Ground state geometry optimisation<a class="headerlink" href="#ground-state-geometry-optimisation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ground-state">
+<h3>3.2.1. Ground state<a class="headerlink" href="#ground-state" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id1">
 <h4>3.2.1.1. Input<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <p>These are all the files needed for the geometry optimisation. Most of them
@@ -314,9 +327,21 @@ were already generated from the previous step.</p>
 optimisation</dd>
 </dl>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">shell.xyz</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">mh</span> <span class="pre">ml</span> <span class="pre">rl</span></code> directories containting their respective <code class="docutils literal notranslate"><span class="pre">.temp</span></code> files</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code></dt>
+<dd>See above</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">shell.xyz</span></code></dt>
+<dd>See above</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">mh/</span> <span class="pre">ml/</span> <span class="pre">rl/</span></code></dt>
+<dd>Directories containting their respective <code class="docutils literal notranslate"><span class="pre">.temp</span></code> files</dd>
+</dl>
+</li>
 </ul>
 </div>
 <div class="section" id="id2">
@@ -327,12 +352,125 @@ combination of methods used, <code class="docutils literal notranslate"><span cl
 to adapt the memory requested in all three <code class="docutils literal notranslate"><span class="pre">.temp</span></code> files to match the capacity
 of your system.</p>
 <p>When this is ready, submit your job with the command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_cryspypy
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_cryspy.py
 </pre></div>
 </div>
+<p>On the command line or in your job queue.</p>
 </div>
 <div class="section" id="id3">
 <h4>3.2.1.3. Output<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>You can expect this calculation to take a few days depending on your
+computational resources. The convergence criterion of the optimisation is very
+strict by default so it is up to the user’s judgement whether they wish to abort
+the calculation once they have achieved a satisfactory precision.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">cryspy.out</span></code></dt>
+<dd>The main output file. This contains information about the energies and
+gradients at each step of the optimisation</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">geom_mol.xyz</span></code></dt>
+<dd>The positions of the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a> throughtout the optimisation</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">geom_clust.xyz</span></code></dt>
+<dd>The position of the real system throughout the optimisation. Only the
+<a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a> will change</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="vertical-excitation">
+<h4>3.2.1.4. Vertical excitation<a class="headerlink" href="#vertical-excitation" title="Permalink to this headline">¶</a></h4>
+<p>To calculate the vertical excitation energy called for example <code class="docutils literal notranslate"><span class="pre">exci/</span></code>, make a
+new directory and copy the <code class="docutils literal notranslate"><span class="pre">mh.com</span></code> file to it (it should now contain the
+optimised geometry):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir exci/
+cp mh.com exci/
+<span class="nb">cd</span> exci/
+</pre></div>
+</div>
+<p>Then edit the <code class="docutils literal notranslate"><span class="pre">mh.com</span></code> file to remove the <code class="docutils literal notranslate"><span class="pre">force</span></code> keyword and add
+<code class="docutils literal notranslate"><span class="pre">td(nstates=5,root=1)</span></code>.
+Now run Gaussian (or use a submission script):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>g09 mh.com
+</pre></div>
+</div>
+<p>This will give the excitation energies of the first
+five excited states, easily accessible with a judicious <code class="docutils literal notranslate"><span class="pre">grep</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>grep <span class="s1">&#39;Excited State&#39;</span> mh.log
+</pre></div>
+</div>
+<p>TODO: show output</p>
+</div>
+</div>
+<div class="section" id="first-excited-state">
+<h3>3.2.2. First excited state<a class="headerlink" href="#first-excited-state" title="Permalink to this headline">¶</a></h3>
+<p>We now wish to optimise the geometry of the molecule in the first excited state.
+The procedure will be almost identical to the one for the ground state
+optimisation but with an added keyword to <code class="docutils literal notranslate"><span class="pre">mh.temp</span></code>.</p>
+<div class="section" id="id4">
+<h4>3.2.2.1. Input<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>First, copy the whole <code class="docutils literal notranslate"><span class="pre">opt_1</span></code> directory to conserve the ground state data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ../../
+cp -r opt_1/ opt_2/
+<span class="nb">cd</span> opt_2
+</pre></div>
+</div>
+<p>Now edit the file <code class="docutils literal notranslate"><span class="pre">mh/mh.temp</span></code> to add the keyword <code class="docutils literal notranslate"><span class="pre">td(nstates=1,root=1)</span></code>.</p>
+<p>And edit your <code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code> to match the last geometry in <code class="docutils literal notranslate"><span class="pre">geom_mol.xyz</span></code>
+from your <code class="docutils literal notranslate"><span class="pre">opt_1/</span></code> directory.</p>
+</div>
+<div class="section" id="id5">
+<h4>3.2.2.2. Execution<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>As usual, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run-cryspy.py
+</pre></div>
+</div>
+<p>Or submit it to your job scheduler.</p>
+</div>
+<div class="section" id="id6">
+<h4>3.2.2.3. Output<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>This should typically take longer than your ground state calculation if you have
+succeeded in setting it up in a way that the limiting calculation is <code class="docutils literal notranslate"><span class="pre">mh</span></code>.</p>
+<p>As described above, you will receive <code class="docutils literal notranslate"><span class="pre">cryspy.out</span></code>, <code class="docutils literal notranslate"><span class="pre">geom_mol.xyz</span></code> and
+<code class="docutils literal notranslate"><span class="pre">geom_clust.xyz</span></code>.</p>
+</div>
+</div>
+<div class="section" id="meci">
+<h3>3.2.3. MECI<a class="headerlink" href="#meci" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h4>3.2.3.1. Input<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>One final time, copy the whole directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ..
+cp -r opt_2/ opt_3/
+<span class="nb">cd</span> opt_3/
+</pre></div>
+</div>
+<p>Edit the <code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code> file with the final geometry of
+<code class="docutils literal notranslate"><span class="pre">opt_2/geom_mol.xyz</span></code>.</p>
+<p>And in <code class="docutils literal notranslate"><span class="pre">cryspy.in</span></code>, add a line at the bottom <code class="docutils literal notranslate"><span class="pre">bool_ci</span> <span class="pre">1</span></code>. This turns on MECI
+search. Keep in mind that this calculation will use <code class="docutils literal notranslate"><span class="pre">mg</span></code> so change the memory
+requested in all of your <code class="docutils literal notranslate"><span class="pre">.temp</span></code> files accordingly.</p>
+</div>
+<div class="section" id="id8">
+<h4>3.2.3.2. Execution<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>Again:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run-cryspy.py
+</pre></div>
+</div>
+<p>And wait a few days.</p>
+</div>
+<div class="section" id="id9">
+<h4>3.2.3.3. Output<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>The usual <code class="docutils literal notranslate"><span class="pre">cryspy.out</span></code>, <code class="docutils literal notranslate"><span class="pre">geom_mol.xyz</span></code> and <code class="docutils literal notranslate"><span class="pre">geom_clust.xyz</span></code> will be
+generated.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cryspy.out</span></code> will contain different information, pertaining to the value and
+gradients of the penalty function which is being minimised instead of the
+energy.</p>
 </div>
 </div>
 </div>
