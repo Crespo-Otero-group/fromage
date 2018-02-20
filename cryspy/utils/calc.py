@@ -60,6 +60,8 @@ class Calc(object):
         in_shell : list of Atom objects
             Atoms in the middle region
         """
+	subdir = os.getcwd()
+	os.chdir(self.here)
         with open("geom_mol.xyz", "a") as geom_m_file:
             geom_m_file.write(str(len(in_mol)) + "\n")
             geom_m_file.write(self.calc_name + "\n")
@@ -80,6 +82,7 @@ class Calc(object):
                 atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_c_file.write(atom_str)
+	os.chdir(subdir)
         return
 
 

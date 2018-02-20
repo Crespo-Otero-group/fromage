@@ -11,4 +11,4 @@ Module
     fdist
         Contains _fdist and _fdist2 for fast distance calculations
 """
-from cryspy.fdist import fdist
+#from cryspy.fdist import fdist

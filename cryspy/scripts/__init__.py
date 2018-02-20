@@ -23,4 +23,4 @@ Modules
         gap
 
 """
-from cryspy.scripts import *
+#from cryspy.scripts import *

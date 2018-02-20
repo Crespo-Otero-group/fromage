@@ -19,4 +19,4 @@ Modules
         Tools for the calculation of vdW spheres and Voronoi volumes in a
         molecular crystal
 """
-from cryspy.utils import *
+#from cryspy.utils import *
