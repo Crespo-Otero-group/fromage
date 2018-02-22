@@ -58,7 +58,7 @@ atom label of on of the constituent atoms. Something similar can often easily be
 achieved by a visual program such as Chemcraft or VESTA, however this has the
 advantage of working through a terminal if it becomes necessary:
 
-.. code-block::
+.. code-block:: bash
 
    pick_mol.py clust.xyz 7 13 42
 
