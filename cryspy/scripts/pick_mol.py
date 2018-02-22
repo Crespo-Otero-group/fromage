@@ -6,6 +6,7 @@ The default output is called out.xyz but can be specified with -o
 
 Usage:
 pick_mol.py input_file.xyz 7 13 42
+
 """
 import sys
 import argparse

@@ -34,6 +34,7 @@ scripts.
    pop
    input
    structure_manipulation
+   script
    analysis
 
 References and indices

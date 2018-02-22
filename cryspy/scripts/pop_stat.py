@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-"""Give basic information on a Gaussian population analysis
+"""
+Give basic information on a Gaussian population analysis
+
+Usage:
+
+pop_stat.py mol.log
+
 """
 import argparse
 import sys
