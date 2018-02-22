@@ -265,7 +265,7 @@ def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     mega_cell = []
 
     if alt_multi:
-        traA = range(-traAN, traAN)  # +1 because that is how range() works
+        traA = range(-traAN, traAN)
         traB = range(-traBN, traBN)
         traC = range(-traCN, traCN)
     else:

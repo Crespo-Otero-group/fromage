@@ -237,8 +237,8 @@ if __name__ == '__main__':
     # name of the Gaussian log or cp2k file with population information
     high_pop_file = inputs["high_pop_file"]
 
-    # kind of population in the Gaussian  or cp2k file 0:Mulliken 1:ESP 2:
-    # Hirshfeld
+    # kind of population in the Gaussian  or cp2k file: mulliken, esp or
+    # hirshfeld
     high_pop_method = inputs["high_pop_method"]
 
     # Low level points specifications
@@ -378,7 +378,7 @@ if __name__ == '__main__':
             assign_charges(high_target_pop_mol, None, shell, None, max_bl)
         else:
             # make a very big cell
-            high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors)
+            high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=True)
             # get a cluster of atoms
             high_clust = ha.make_cluster(high_mega, clust_rad, max_bl)
             # make a list of shell atoms
@@ -419,7 +419,7 @@ if __name__ == '__main__':
         low_atoms = [copy(i) for i in atoms]
         populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
         # make a very big cell
-        mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors)
+        mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors, alt_multi=True)
         # get a cluster of atoms
         clust = ha.make_cluster(mega, clust_rad, max_bl)
         # make a list of shell atoms

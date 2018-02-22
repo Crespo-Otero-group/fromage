@@ -89,3 +89,10 @@ few concurrent calculations must be carried out.
   mg
     Model system calculation in the ground state of the high level
 
+General photochemistry
+======================
+
+.. glossary::
+
+  MECI
+  Minimum Energy Conical intersection
