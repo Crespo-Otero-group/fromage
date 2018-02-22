@@ -32,6 +32,7 @@ scripts.
 
    cluster_models
    pop
+   input
    structure_manipulation
    analysis
 
