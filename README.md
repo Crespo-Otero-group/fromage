@@ -28,7 +28,7 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
 
   ```bash
   swig -c++ -python fdist.i
-  python setup.py build_ext --inplace
+  sudo python setup.py build_ext --inplace install
   ```
   Voilà!
 
