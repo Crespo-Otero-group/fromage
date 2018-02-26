@@ -14,21 +14,18 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
 2. Clone this repository to wherever you want to install it:
 
   ```bash
-   cd /path/to/dir
+   cd /path/to/dir/
    git clone https://github.research.its.qmul.ac.uk/btx156/cryspy.git
+   cd cryspy/
   ```
 
-  3. Add the installation directory to your system path by adding the following to your `.bashrc` or `.bash_profile`:
+3. Compile
 
   ```bash
-  export PATH=/path/to/dir/cryspy:$PATH
-  export PYTHONPATH=/path/to/dir/cryspy$PYTHONPATH
-  ```
-  4. Compile
-
-  ```bash
+  cd cryspy/fdist/
   swig -c++ -python fdist.i
-  python setup.py build_ext --inplace
+  cd ../../
+  sudo python setup.py build_ext --inplace install
   ```
   Voilà!
 
