@@ -1,7 +1,7 @@
 Input file description
 ######################
 
-cryspy uses input files at two points of its execution. During the preparatory
+**cryspy** uses input files at two points of its execution. During the preparatory
 calculation (using `prepare_calculation.py`), the `config` file is required.
 During the actual geometry optimisation (`run_cryspy.py`), the file `cryspy.in`
 is read if present.
@@ -9,7 +9,7 @@ is read if present.
 config file
 ===========
 
-All cryspy input files follow the same input structure. The order of the
+All **cryspy** input files follow the same input structure. The order of the
 keywords is irrelevant and blank lines are ignored. The keyword is stated and
 then its value(s) after any number of whitespaces. Therefore:
 
@@ -62,7 +62,7 @@ low_pop_method
   The method of population analysis. "Mulliken" or "ESP". Default: ``ESP``
 
 max_bl
-  The distance between two atoms in Angsrom below which cryspy will consider the
+  The distance between two atoms in Angsrom below which **cryspy** will consider the
   atoms to be bonded together. Default: ``1.7``
 
 atom_label

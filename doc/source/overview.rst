@@ -30,17 +30,17 @@ Installation
 
 .. code-block:: bash
 
-   cd /path/to/dir
+   cd /path/to/dir/
    git clone https://github.research.its.qmul.ac.uk/btx156/cryspy.git
-
+   cd cryspy/
 2. Compile
 
 .. code-block:: bash
 
-  cd cryspy/fdist
+  cd cryspy/fdist/
   swig -c++ -python fdist.i
-  cd ../..
-  python setup.py build_ext --inplace install
+  cd ../../
+  sudo python setup.py build_ext --inplace install
 
 Voilà!
 

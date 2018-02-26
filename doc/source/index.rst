@@ -6,7 +6,7 @@
 cryspy
 ==================================
 
-cryspy is a library designed to support the manipulation and optimisation of
+**cryspy** is a library designed to support the manipulation and optimisation of
 molecular crystal structures. It provides an interface between popular
 electronic structure programs for cross-program ONIOM-style calculations. A
 suite of analysis tools is also included to calculate excitonic couplings,
@@ -35,7 +35,6 @@ scripts.
    input
    structure_manipulation
    script
-   analysis
 
 References and indices
 ======================

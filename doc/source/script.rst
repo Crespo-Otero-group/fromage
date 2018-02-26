@@ -71,4 +71,3 @@ Diabatization
 =============
 
 TODO
-or VESTA

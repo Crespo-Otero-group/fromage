@@ -2,9 +2,9 @@ Tutorial
 ########
 
 This tutorial will guide you step by step through a typical calculation done
-with cryspy. This page is meant to function as a standalone but for a refresher
-on the abbreviations used, visit the :ref:`glossary<gloss>`. Everything discussed
-herein is elaborated upon in the rest of the documentation.
+with **cryspy**. This page is meant to function as a standalone but for a refresher
+on the abbreviations used, visit the :ref:`glossary<gloss>`. Everything
+discussed herein is elaborated upon in the rest of the documentation.
 
 The example for this tutorial is the investigation of the emission properties of
 the (2-hydroxyphenyl)propenone (HP) crystal using the Ewald Embedded Cluster
@@ -12,16 +12,17 @@ model (EEC) and Gaussian.  This will involve calculating the geometries and
 associated energies of the ground state, first excited state and S\ :sub:`1` -
 S\ :sub:`0` Minimal Energy Conical Intersection (MECI).
 
-The necessary input files are in the ``tutorial`` directory. We
-follow the ONIOM nomenclature for the different regions of the embedded cluster.
-In other words the whole cluster is the :term:`"real system"<Real system>` and the central
-molecule is called the \ :term:`"model system"<Model system>`\ . We abbreviate the principal
-calculations involved in the ONIOM method as ``mh`` for the :term:`model system<Model system>` at a
-high level of theory, ``ml`` for the :term:`model<Model system>` system at a low level of theory
-and ``rl`` for the :term:`real system<Real system>` at a low level of theory. For the location of
-conical intersections, a fourth calculation is typically involved, ``mg``,
-which indicates the `real system<Real system>` at the high level of theory but in the ground
-state.
+The necessary input files are in the ``tutorial`` directory. We follow the ONIOM
+nomenclature for the different regions of the embedded cluster.  In other words
+the whole cluster is the :term:`"real system"<Real system>` and the central
+molecule is called the \ :term:`"model system"<Model system>`\ . We abbreviate
+the principal calculations involved in the ONIOM method as ``mh`` for the
+:term:`model system<Model system>` at a high level of theory, ``ml`` for the
+:term:`model<Model system>` system at a low level of theory and ``rl`` for the
+:term:`real system<Real system>` at a low level of theory. For the location of
+conical intersections, a fourth calculation is typically involved, ``mg``, which
+indicates the :term:`model system<Model system>` at the high level of theory but
+in the ground state.
 
 Calculation set up
 ==================
@@ -38,7 +39,7 @@ Make a directory where the preparatory calculation will take place:
 
   mkdir opt_1/
   cd opt_1/
-  cp -r path/to/cryspy/tutorial/* .
+  cp path/to/cryspy/tutorial/* .
 
 The input files that you have just copied are:
 
@@ -47,7 +48,7 @@ The input files that you have just copied are:
     the unit cell
 
 * ``config``
-    The cryspy configuration file, described below
+    The **cryspy** configuration file, described below
 
 * ``high_pop.log``
     A Gaussian output file of a population analysis for one
@@ -67,7 +68,7 @@ The input files that you have just copied are:
 Execution
 ---------
 
-If your installation was successful, all of the cryspy scripts should be in your
+If your installation was successful, all of the **cryspy** scripts should be in your
 system path already. In that case, running the program simply involves typing:
 
 .. code-block:: bash
@@ -89,11 +90,11 @@ After a few minutes, you will be greeted with a series of outputs:
 * ``shell.xyz``
     The molecules surrounding the :term:`model system<Model system>`
 
-* ``mh ml rl mg``
+* ``mh/ ml/ rl/ mg/``
     Directories containing a ``.temp`` file each. For
-    example ``mh`` contains ``mh.temp``
+    example ``mh/`` contains ``mh.temp``
 
-* ``ewald``
+* ``ewald/``
     The directory where the ewald calculation is run. The outputs in here are
     not important for this tutorial
 
@@ -130,7 +131,7 @@ were already generated from the previous step.
 Execution
 ^^^^^^^^^
 
-An important part of calculations in cryspy is the assignement of memory to each
+An important part of calculations in **cryspy** is the assignement of memory to each
 component calculation. Some times, depending on the system size and the
 combination of methods used, ``rl`` will need more memory than ``mh``. Make sure
 to adapt the memory requested in all three ``.temp`` files to match the capacity
@@ -162,6 +163,9 @@ the calculation once they have achieved a satisfactory precision.
 * ``geom_clust.xyz``
     The position of the real system throughout the optimisation. Only the
     :term:`model system<Model system>` will change
+
+``geom_mol.xyz`` should show very slight rearrangement of the molecule since its
+Gaussian-optimised ground state geometry is close its crystal.
 
 Vertical excitation
 ^^^^^^^^^^^^^^^^^^^
@@ -237,6 +241,9 @@ succeeded in setting it up in a way that the limiting calculation is ``mh``.
 As described above, you will receive ``cryspy.out``, ``geom_mol.xyz`` and
 ``geom_clust.xyz``.
 
+This time, you should be able to see the excited state proton transfer in
+``geom_mol.xyz`` as the optimised structure is in keto form.
+
 MECI
 ----
 
@@ -278,6 +285,7 @@ generated.
 ``cryspy.out`` will contain different information, pertaining to the value and
 gradients of the penalty function which is being minimised instead of the
 energy.
+
 
 
 

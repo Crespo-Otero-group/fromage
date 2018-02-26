@@ -1,7 +1,7 @@
 Structure manipulation in cryspy
 ################################
 
-As well as offering cluster model geometry optimisation, cryspy can be used as a
+As well as offering cluster model geometry optimisation, **cryspy** can be used as a
 library for the manipulation of molecular structures using Python. The main
 vehicle for this is the Atom objects.
 

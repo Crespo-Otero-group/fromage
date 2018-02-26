@@ -1,7 +1,7 @@
 Contact
 #######
 
-cryspy is developed at Queen Mary University of London by the Crespo-Otero group. For technical
+**cryspy** is developed at Queen Mary University of London by the Crespo-Otero group. For technical
 questions or requests, please join our `Google group <https://groups.google.com/d/forum/cryspy>`_.
 
 For anything else, you may contact:
