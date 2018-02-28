@@ -144,8 +144,7 @@ if __name__ == '__main__':
         old_charges = [atom.q for atom in mol]
 
         # Calculate new charges
-        ef.write_gauss(sc_name + ".com", mol, in_shell,
-                       os.join(here,sc_temp), proj_name=sc_name)
+        ef.write_gauss(sc_name + ".com", mol, in_shell, sc_temp, proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -226,7 +225,7 @@ if __name__ == '__main__':
 
         # Calculate new charges
         ef.write_gauss(sc_name + ".com", mol, sc_points,
-                       os.join(here,sc_temp), proj_name=sc_name)
+                       os.path.join(here,sc_temp), proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -402,26 +401,28 @@ if __name__ == '__main__':
 
     # Ewald section
     here = os.getcwd()
-    ew_path = os.path.join(here,'ewald')
-    if not os.path.exists(ew_path):
-        os.makedirs(ew_path)
-    os.chdir(ew_path)
 
-    # Self Consistent EWALD
-    if self_consistent:
-        output_file.write("SELF CONSISTENT LOOP INITIATED\n")
-        output_file.flush()
-        sc_loop = 0
-        while True:
-            dev = ewald_loop(atoms, mol, damping)
-            # check convergence
-            if dev < dev_tol:
-                output_file.write("Tolerance reached: " +
-                                  str(dev) + " < " + str(dev_tol) + "\n")
-                break
-
-    # Final (or only) Ewald
     if ewald:
+
+        ew_path = os.path.join(here,'ewald')
+        if not os.path.exists(ew_path):
+            os.makedirs(ew_path)
+        os.chdir(ew_path)
+
+        # Self Consistent EWALD
+        if self_consistent:
+            output_file.write("SELF CONSISTENT LOOP INITIATED\n")
+            output_file.flush()
+            sc_loop = 0
+            while True:
+                dev = ewald_loop(atoms, mol, damping)
+                # check convergence
+                if dev < dev_tol:
+                    output_file.write("Tolerance reached: " +
+                                      str(dev) + " < " + str(dev_tol) + "\n")
+                    break
+
+        # Final (or only) Ewald
         output_file.write("EWALD START\n")
         output_file.flush()
         run_ewald(name, mol, atoms, vectors, in_nAt=nAt,
