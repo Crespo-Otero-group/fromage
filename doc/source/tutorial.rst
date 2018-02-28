@@ -195,7 +195,15 @@ five excited states, easily accessible with a judicious ``grep``:
 
   grep 'Excited State' mh.log
 
-TODO: show output
+The output will look like this:
+
+.. code-block:: bash
+
+  Excited State   1:      Singlet-?Sym    4.1338 eV  299.93 nm  f=0.6373  <S**2>=0.000
+  Excited State   2:      Singlet-?Sym    4.3687 eV  283.80 nm  f=0.0068  <S**2>=0.000
+  Excited State   3:      Singlet-?Sym    4.5466 eV  272.70 nm  f=0.0760  <S**2>=0.000
+  Excited State   4:      Singlet-?Sym    5.4041 eV  229.43 nm  f=0.0318  <S**2>=0.000
+  Excited State   5:      Singlet-?Sym    5.8322 eV  212.59 nm  f=0.0431  <S**2>=0.000
 
 First excited state
 -------------------

@@ -33,6 +33,7 @@ Installation
    cd /path/to/dir/
    git clone https://github.research.its.qmul.ac.uk/btx156/cryspy.git
    cd cryspy/
+
 2. Compile
 
 .. code-block:: bash
