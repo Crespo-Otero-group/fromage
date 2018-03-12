@@ -623,3 +623,52 @@ def read_g_cas(in_name):
     grad_e = np.array(grad_e)
     grad_g = np.array(grad_g)
     return energy_e, grad_e, energy_g, grad_g
+
+
+def read_g_dens(in_file, total_ci=False):
+    """
+    Read the density matrix from a gaussian fchk file
+
+    Parameters
+    ----------
+    in_file : str
+        Name of the file to read
+    total_ci : bool optional
+        If true, reads the total CI (excited state for e.g. TD-DFT) density.
+        Otherwise it will only read the ground state density.
+    Returns
+    -------
+    dens_mat : numpy matrix
+        The density matrix
+
+    """
+    if total_ci:
+        keyword = "Total CI Density"
+    else:
+        keyword = "Total SCF Density"
+
+    with open(in_file) as to_read:
+        lines = to_read.readlines()
+    reading = False
+
+    entries = []
+    for line in lines:
+        if line[0].isalpha():
+            reading = False
+        if reading == True:
+            for num in [float(i) for i in line.split()]:
+                entries.append(num)
+        if keyword in line:
+            reading = True
+
+    nat = int((-1 + np.sqrt(1 + 8 * len(entries))) / 2)
+
+    dens_mat = np.zeros((nat,nat))
+
+    count = 0
+    for i in range(nat):
+        for j in range(i+1):
+            dens_mat[i][j]=entries[count]
+            count += 1
+
+    return dens_mat
