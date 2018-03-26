@@ -648,25 +648,25 @@ def read_g_dens(in_file, total_ci=False):
         keyword = "Total SCF Density"
 
     with open(in_file) as to_read:
-        lines = to_read.readlines()
-    reading = False
+        reading = False
+        entries = []
+        for line in to_read:
+            if line[0].isalpha():
+                reading = False
+            if reading == True:
+                for num in [float(i) for i in line.split()]:
+                    entries.append(num)
+            if keyword in line:
+                reading = True
 
-    entries = []
-    for line in lines:
-        if line[0].isalpha():
-            reading = False
-        if reading == True:
-            for num in [float(i) for i in line.split()]:
-                entries.append(num)
-        if keyword in line:
-            reading = True
+    # there are (N^2+N)/2 entries in the half of an N x N matrix, the number of
+    # the number of orbitals is therefore:
+    n_orb = int((-1 + np.sqrt(1 + 8 * len(entries))) / 2)
 
-    nat = int((-1 + np.sqrt(1 + 8 * len(entries))) / 2)
-
-    dens_mat = np.zeros((nat,nat))
+    dens_mat = np.zeros((n_orb,n_orb))
 
     count = 0
-    for i in range(nat):
+    for i in range(n_orb):
         for j in range(i+1):
             dens_mat[i][j]=entries[count]
             count += 1
