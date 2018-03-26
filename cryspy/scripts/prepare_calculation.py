@@ -287,14 +287,17 @@ if __name__ == '__main__':
     name = inputs["name"]
 
     # lattice vectors
-    a_vec = inputs["a_vec"]
-    b_vec = inputs["b_vec"]
-    c_vec = inputs["c_vec"]
-
     vectors = np.zeros((3, 3))
-    vectors[0] = a_vec
-    vectors[1] = b_vec
-    vectors[2] = c_vec
+    # specified in config
+    if all(len(i) == 3 for i in [inputs["a_vec"],inputs["b_vec"],inputs["c_vec"]]):
+        a_vec = inputs["a_vec"]
+        b_vec = inputs["b_vec"]
+        c_vec = inputs["c_vec"]
+        vectors[0] = a_vec
+        vectors[1] = b_vec
+        vectors[2] = c_vec
+    else: # from external file
+    vectors = rf.read_vectors(inputs["vectors_file"])
 
     output_file.write("Vectors read in config:\n")
     output_file.write(str(vectors) + "\n")

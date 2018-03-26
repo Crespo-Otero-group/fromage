@@ -663,12 +663,37 @@ def read_g_dens(in_file, total_ci=False):
     # the number of orbitals is therefore:
     n_orb = int((-1 + np.sqrt(1 + 8 * len(entries))) / 2)
 
-    dens_mat = np.zeros((n_orb,n_orb))
+    dens_mat = np.zeros((n_orb, n_orb))
 
     count = 0
     for i in range(n_orb):
-        for j in range(i+1):
-            dens_mat[i][j]=entries[count]
+        for j in range(i + 1):
+            dens_mat[i][j] = entries[count]
             count += 1
 
     return dens_mat
+
+
+def read_vectors(in_file):
+    """
+    Read a set of unit cell vectors from a formatted vector file
+
+    Parameters
+    ----------
+    in_file : str
+        Input file name
+    Returns
+    -------
+    vectors : 3 x 3 numpy array
+        Unit cell vectors where vector a is vectors[0], b is vectors[1], c is
+        vectors[2]
+
+    """
+    vectors = np.zeros((3,3))
+
+    with open(in_file) as data:
+        lines = data.readlines()
+        for count in range(3):
+            vectors[count] = [float(i) for i in lines[count].split()]
+            
+    return vectors

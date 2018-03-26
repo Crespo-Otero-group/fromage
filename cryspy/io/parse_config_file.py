@@ -28,6 +28,10 @@ def complete_config(name="config"):
         "an": "2",
         "bn": "2",
         "cn": "2",
+        "a_vec": "",
+        "b_vec": "",
+        "c_vec": "",
+        "vectors_file":"",
         "clust_rad": "5",
         "traan": "2",
         "trabn": "2",
@@ -89,9 +93,9 @@ def parse_inputs(name="config"):
     inputs["tracn"] = int(inputs["tracn"])
     inputs["self_consistent"] = bool_cast(inputs["self_consistent"])
     inputs["dev_tol"] = float(inputs["dev_tol"])
-    inputs["a_vec"] = np.array(inputs["a_vec"])
-    inputs["b_vec"] = np.array(inputs["b_vec"])
-    inputs["c_vec"] = np.array(inputs["c_vec"])
+    inputs["a_vec"] = np.array([float(i) for i in inputs["a_vec"]])
+    inputs["b_vec"] = np.array([float(i) for i in inputs["b_vec"]])
+    inputs["c_vec"] = np.array([float(i) for i in inputs["c_vec"]])
     inputs["damping"] = float(inputs["damping"])
     inputs["print_tweak"] = bool_cast(inputs["print_tweak"])
 

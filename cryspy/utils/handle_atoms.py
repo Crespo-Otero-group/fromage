@@ -160,9 +160,38 @@ def multi_select(max_r, atoms, labels, vectors):
     return selected_mols, selected_img_mols
 
 
+def make_molecules(atoms, bl):
+    """
+    Generate list of molecules based on bond length bl
+
+    Parameters
+    ----------
+    atoms: list of Atom objects
+    bl: float
+        Bond length in unit of input file
+    Returns
+    -------
+    molecules: list of lists
+        List L of length M molecules, where each member of L is a list of atom objects
+    """
+    molecules = []  # list of molecules
+    max_length = 0  # number of atoms in a molecule
+    for i, atom in enumerate(atoms):
+        if atom not in [val for sublist in molecules for val in sublist]:
+            # creates a molecule if atom not already in molecules list
+            molecule = ha.select(bl, atoms[i:], 0)
+            if len(molecule) > max_length:
+                max_length = len(molecule)
+                molecules = []
+                molecules.append(molecule)
+            elif len(molecule) == max_length:
+                molecules.append(molecule)
+    return molecules
+
+
 def complete_mol(max_r, atoms, label, vectors):
     """
-    Takes a cell and completes one molecule.
+    Take a cell and complete one molecule.
 
     The objective is to end up with a unit cell where the molecule of interest
     is complete. The rest of the atoms of the cell can remain intact. Note that
@@ -208,6 +237,8 @@ def complete_mol(max_r, atoms, label, vectors):
     for atom in full_mol_trans:
         atoms.append(atom)
     return full_mol_trans, atoms
+
+def complete_cell(atoms, vectors, max_bl=1.7):
 
 
 def find_centroid(atoms):

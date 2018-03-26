@@ -40,36 +40,6 @@ def vector_distance(x1, y1, z1, x2, y2, z2):
     return dist
 
 
-def make_molecules(atoms, bl):
-    """
-    Generate list of molecules based on bond length bl
-
-    Parameters
-    ----------
-    atoms: list of Atom objects
-    bl: float
-        Bond length in unit of input file
-    Returns
-    -------
-    molecules: list of lists
-        List L of length M molecules, where each member of L is a list of atom objects
-    """
-    molecules = []  # list of molecules
-    max_length = 0  # number of atoms in a molecule
-    for i, atom in enumerate(atoms):
-        if atom not in [val for sublist in molecules for val in sublist]:
-            # creates a molecule if atom not already in molecules list
-            molecule = ha.select(bl, atoms[i:], 0)
-            if len(molecule) > max_length:
-                max_length = len(molecule)
-                molecules = []
-                molecules.append(molecule)
-            elif len(molecule) == max_length:
-                molecules.append(molecule)
-
-    return molecules
-
-
 def make_dimers_cd(molecules, cd):
     """
     Generate a list of dimers based on centroid distances cd
@@ -232,7 +202,7 @@ if __name__ == "__main__":
 
     # SELECT MOLECULE
     print("\n1. Generating molecules.\nMax bond length {}".format(args.bond))
-    molecules = make_molecules(atoms, args.bond)
+    molecules = ha.make_molecules(atoms, args.bond)
     print("{} molecules generated".format(len(molecules)))
     lengths = []
     for atom1 in molecules[0]:
