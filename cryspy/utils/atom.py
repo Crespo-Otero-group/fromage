@@ -147,8 +147,7 @@ class Atom(object):
                     x2 = x1 + trans1[0] + trans2[0] + trans3[0]
                     y2 = y1 + trans1[1] + trans2[1] + trans3[1]
                     z2 = z1 + trans1[2] + trans2[2] + trans3[2]
-                    r = np.sqrt((self.x - x2) ** 2 + (self.y - y2)
-                                ** 2 + (self.z - z2) ** 2)
+                    r = fd.dist(self.x, self.y, self.z, x2, y2, z2)
                     # if this particular translation of the point is the closest
                     # to the atom so far
                     if r < rMin:

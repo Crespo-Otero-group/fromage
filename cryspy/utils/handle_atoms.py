@@ -118,7 +118,7 @@ def multi_select(max_r, atoms, labels, vectors):
         Maximum distance which is considered a bond
     atoms : list of Atom objects
         Cluster of atoms which from which molecules needs to be extracted
-    labels : ints
+    labels : list of ints
         The numbers of the atom from which the molecules are generated. Note
         that it is the Python label, so starting from 0, unlike the label in
         most chemistry software which counts from 1
@@ -179,7 +179,7 @@ def make_molecules(atoms, bl):
     for i, atom in enumerate(atoms):
         if atom not in [val for sublist in molecules for val in sublist]:
             # creates a molecule if atom not already in molecules list
-            molecule = ha.select(bl, atoms[i:], 0)
+            molecule = select(bl, atoms[i:], 0)
             if len(molecule) > max_length:
                 max_length = len(molecule)
                 molecules = []
@@ -204,7 +204,7 @@ def complete_mol(max_r, atoms, label, vectors):
         Maximum distance which is considered a bond
     atoms : list of Atom objects
         Cluster of atoms which from which a molecule needs to be extracted
-    label : int
+    label : list of ints
         The number of the atom from which the molecule is generated. Note that
         it is the Python label, so starting from 0, unlike the label in most
         chemistry software which counts from 1
@@ -215,7 +215,7 @@ def complete_mol(max_r, atoms, label, vectors):
     -------
     full_mol_trans : list of Atom objects
         The now complete molecule
-    atoms :
+    atoms : list of Atom objects
         The cell with the completed molecule. NB the Atom objects of the completed molecule
         reference the same objects as full_mol_trans
 
@@ -238,7 +238,42 @@ def complete_mol(max_r, atoms, label, vectors):
         atoms.append(atom)
     return full_mol_trans, atoms
 
+
 def complete_cell(atoms, vectors, max_bl=1.7):
+    """
+    Return a cell where atoms have been translated to complete all molecules of
+    the cell
+
+    Parameters
+    ----------
+    atoms : list of Atom objects
+        The input truncated unit cell
+    vectors : 3 x 3 numpy array
+        The unit cell vectors
+    max_bl : float
+        The maximum interatomic distance which is considered a bond
+    Returns
+    -------
+    out_cell : list of Atom objects
+        The new untruncated cell
+    full_mol_l : list of lists of Atom objects
+        Each molecule in the untruncated cell
+
+    """
+    full_mol_l = []
+
+    while len(atoms) != 0:
+        full_mol, cell = complete_mol(max_bl, atoms, [0], vectors)
+        full_mol_l.append(full_mol)
+        atoms = cell
+        for atom in full_mol:
+            if atom in atoms:
+                atoms.remove(atom)
+
+    out_cell = []
+    for mol in full_mol_l:
+        out_cell.extend(mol)
+    return out_cell, full_mol_l
 
 
 def find_centroid(atoms):

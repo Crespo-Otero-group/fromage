@@ -36,7 +36,9 @@ def vector_distance(x1, y1, z1, x2, y2, z2):
             distance in units of coordinates
     """
     # calculate distance
-    dist = sqrt(fd.dist2(x1, y1, z1, x2, y2, z2))
+    #dist = sqrt(fd.dist2(x1, y1, z1, x2, y2, z2))
+    dist = fd.dist(x1, y1, z1, x2, y2, z2)
+
     return dist
 
 
