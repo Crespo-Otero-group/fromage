@@ -73,7 +73,7 @@ def main(in_xyz, vectors_file, output, max_r, print_mono):
                 # get all of the interatomic distances across the dimer using the
                 # shortest lattice distance
                 for pair in it.product(mol_i, mol_j):
-                    dimer_distances.append(pair[0].adist_lat(pair[1].x, pair[1].y, pair[
+                    dimer_distances.append(pair[0].dist_lat(pair[1].x, pair[1].y, pair[
                                            1].z, vectors[0], vectors[1], vectors[2], order=2)[0])
                     dimer_distances.sort()
                 identity.append(dimer_distances)
