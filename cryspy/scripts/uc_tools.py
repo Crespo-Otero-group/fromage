@@ -91,12 +91,13 @@ def main(in_xyz, vectors_file, output, max_r, print_mono):
             sep_mol_id = [mols_ids[0]]
             for mol_i, id_i in mols_ids[1:]:
                 comp = compare_id(mols_ids[0][1], id_i)
+                print(comp)
                 # if the identities being compared don't have the same dimension,
                 # the comparison will return None. This implies that the molecules
                 # are not equivalent. This case only happens in crystals with
                 # different monomers
                 if comp:
-                    if comp < 0.0001:
+                    if comp < 0.001:
                         sep_mol_id.append((mol_i, id_i))
                         mols_ids.remove((mol_i, id_i))
             del mols_ids[0]
