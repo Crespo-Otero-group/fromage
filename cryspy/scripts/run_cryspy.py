@@ -180,7 +180,8 @@ if __name__ == '__main__':
         "bool_ci": "0",
         "high_level": "gaussian",
         "low_level": "gaussian",
-        "sigma": "3.5"}
+        "sigma": "3.5",
+        "gtol": 1e-5}
 
     inputs = def_inputs.copy()
 
@@ -195,6 +196,7 @@ if __name__ == '__main__':
     bool_ci = bool(int(inputs["bool_ci"]))
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
+    gtol = inputs["gtol"]
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
     sigma = float(inputs["sigma"])
@@ -229,7 +231,7 @@ if __name__ == '__main__':
     atoms_array = np.array(atoms_array)
 
     res = minimize(sequence, atoms_array, jac=True,
-                   options={'disp': True})
+                   options={'disp': True,'gtol'=gtol})
 
     out_file.write("DONE\n")
     end_time = datetime.now()
