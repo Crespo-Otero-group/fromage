@@ -168,6 +168,13 @@ class Atom(object):
         outAtom = Atom(self.elem, xout, yout, zout, self.q)
         return outAtom
 
+    def v_translated(self, vec_trans):
+        "Return a new atom which is a translated copy."
+        old_pos = np.array([self.x,self.y,self.z])
+        new_pos = old_pos+vec_trans
+        outAtom = Atom(self.elem, new_pos[0], new_pos[1], new_pos[2], self.q)
+        return outAtom
+
     def translate(self, x1, y1, z1):
         "Translate the atom by some vector."
         self.x += x1

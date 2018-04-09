@@ -68,7 +68,7 @@ def write_cp2k(in_name, file_name, vectors, atoms, temp_name):
     return
 
 
-def write_xyz(in_name, atoms):
+def write_xyz(in_name, atoms, char=False):
     """
     Write an xyz file.
 
@@ -78,13 +78,19 @@ def write_xyz(in_name, atoms):
         Name of the xyz file. Include the file extension, e.g. "molecule.xyz"
     atoms : list of Atom objects
         Atms to write
+    char : optional bool
+        Write the charge of the atom in the 4th column
+
     """
     out_file = open(in_name, "w")
     out_file.write(str(len(atoms)) + "\n")
     out_file.write(in_name + "\n")
 
     for atom in atoms:
-        out_file.write(atom.xyz_str() + "\n")
+        if char:
+            out_file.write(str(atom) + "\n")
+        else:
+            out_file.write(atom.xyz_str() + "\n")
     out_file.close()
     return
 
@@ -468,3 +474,20 @@ def write_cube(in_name, origin, vectors, x_num, y_num, z_num, atoms, vals, comme
             out_file.write("\n")
 
     return
+
+def write_lat_vec(in_name,vectors):
+    """
+    Write vectors to a file
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file
+    vectors : 3 x 3 numpy array
+        Lattice vectors
+
+    """
+    out_file = open(in_name,"w")
+    for line in [0,1,2]:
+        out_file.write("{:15.11f}{:15.11f}{:15.11f}\n".format(vectors[line][0],vectors[line][1],vectors[line][2]))
+    out_file.close()

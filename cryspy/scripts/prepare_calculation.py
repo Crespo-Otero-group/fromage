@@ -297,7 +297,7 @@ if __name__ == '__main__':
         vectors[1] = b_vec
         vectors[2] = c_vec
     else: # from external file
-    vectors = rf.read_vectors(inputs["vectors_file"])
+        vectors = rf.read_vectors(inputs["vectors_file"])
 
     output_file.write("Vectors read in config:\n")
     output_file.write(str(vectors) + "\n")

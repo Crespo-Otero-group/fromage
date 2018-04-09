@@ -295,6 +295,36 @@ def center_mol(atoms):
 
     return
 
+def supercell(atoms, vectors, trans):
+    """
+    Make a supercell of I x J x K
+
+    Parameters
+    ----------
+    atoms : list of Atom objects
+        Input cell atoms
+    vectors : 3 x 3 numpy array
+        Lattice vectors
+    trans : numpy array of length 3
+        Multiplications of the primitive cell
+    Returns
+    -------
+    supercell : list of Atom objects
+        New supercell of Atoms
+    out_vec : 3 x 3 numpy array
+        The lattice vectors of the new cell
+
+    """
+    cart = [0,1,2]
+    supercell=copy(atoms)
+    for comp in cart:
+        if trans[comp] != 1:
+            for mult in range(trans[comp])[1:]:
+                new_atoms = [i.v_translated(mult*vectors[comp]) for i in supercell]
+                supercell += new_atoms
+    out_vec = (vectors.T*trans.transpose()).T
+    return supercell, out_vec
+
 
 def make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=False):
     """

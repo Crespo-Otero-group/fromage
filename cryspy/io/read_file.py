@@ -695,5 +695,4 @@ def read_vectors(in_file):
         lines = data.readlines()
         for count in range(3):
             vectors[count] = [float(i) for i in lines[count].split()]
-            
     return vectors

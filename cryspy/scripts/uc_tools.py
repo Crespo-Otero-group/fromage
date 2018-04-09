@@ -49,13 +49,24 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, output, max_r, print_mono):
+def main(in_xyz, vectors_file, complete, output, max_r, print_mono, trans):
     vectors = rf.read_vectors(vectors_file)
     atoms = rf.read_pos(in_xyz)
 
-    # get the modified (uncropped) unit cell
-    mod_cell, mols = ha.complete_cell(atoms, vectors, max_bl=max_r)
-    ef.write_xyz(output, mod_cell)
+    if print_mono and not complete:
+        print("-c is required for -m")
+        return
+    if complete:
+        # get the modified (uncropped) unit cell
+        mod_cell, mols = ha.complete_cell(atoms, vectors, max_bl=max_r)
+        ef.write_xyz(output, mod_cell)
+    else:
+        mod_cell = copy(atoms)
+
+    if trans:
+        new_atoms,new_vec = ha.supercell(mod_cell, vectors, np.array(trans))
+        ef.write_xyz("supercell_out.xyz",new_atoms)
+        ef.write_lat_vec("supercell_vectors",new_vec)
 
     if print_mono:
         identities = []
@@ -124,9 +135,11 @@ if __name__ == '__main__':
         "-o", "--output", help="Name of the output file", default="out_cell.xyz", type=str)
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
                         default=1.7, type=float)
-    parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers", action="store_true", default=False)
+    parser.add_argument("-c", "--complete", help="Complete the molecules in the cell", action="store_true")
+    parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c", action="store_true")
+    parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.output, args.bond, args.mono)
+    main(args.in_xyz, args.vectors, args.complete, args.output, args.bond, args.mono, args.translations)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
