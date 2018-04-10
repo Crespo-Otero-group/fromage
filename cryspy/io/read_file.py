@@ -684,7 +684,7 @@ def read_vectors(in_file):
         Input file name
     Returns
     -------
-    vectors : 3 x 3 numpy array
+    vectors : 3 x 3 numpy array or just 3 x 1
         Unit cell vectors where vector a is vectors[0], b is vectors[1], c is
         vectors[2]
 
@@ -693,6 +693,10 @@ def read_vectors(in_file):
 
     with open(in_file) as data:
         lines = data.readlines()
-        for count in range(3):
-            vectors[count] = [float(i) for i in lines[count].split()]
+        if len(lines) > 2:
+            for count in range(3):
+                vectors[count] = [float(i) for i in lines[count].split()]
+        else:
+            vectors = np.array([float(i) for i in lines[0].split()])
     return vectors
+
