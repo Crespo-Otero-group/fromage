@@ -295,6 +295,22 @@ def center_mol(atoms):
 
     return
 
+def translate_atoms(atoms, vector):
+    """
+    Translate some atoms by a vector
+
+    Parameters
+    ----------
+    atoms : list of Atom objects
+        Untranslated atoms
+    vector : 3 x 1 numpy array
+        Translation vector
+    
+    """
+    for atom in atoms:
+        atom.v_translate(vector)
+    return
+
 def supercell(atoms, vectors, trans):
     """
     Make a supercell of I x J x K

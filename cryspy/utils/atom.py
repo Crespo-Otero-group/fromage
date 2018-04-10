@@ -160,7 +160,7 @@ class Atom(object):
         return rMin, x3, y3, z3
 
     def translated(self, x1, y1, z1):
-        "Return a new atom which is a translated copy."
+        """Return a new atom which is a translated copy."""
         xout, yout, zout = self.x, self.y, self.z
         xout += x1
         yout += y1
@@ -169,17 +169,24 @@ class Atom(object):
         return outAtom
 
     def v_translated(self, vec_trans):
-        "Return a new atom which is a translated copy."
+        """Return a new atom which is a translated copy."""
         old_pos = np.array([self.x,self.y,self.z])
         new_pos = old_pos+vec_trans
         outAtom = Atom(self.elem, new_pos[0], new_pos[1], new_pos[2], self.q)
         return outAtom
 
     def translate(self, x1, y1, z1):
-        "Translate the atom by some vector."
+        """Translate the atom by some vector."""
         self.x += x1
         self.y += y1
         self.z += z1
+        return
+
+    def v_translate(self, vec_trans):
+        """Translate the atom by some vector."""
+        self.x += vec_trans[0]
+        self.y += vec_trans[1]
+        self.z += vec_trans[2]
         return
 
     def set_connectivity(self, in_atoms, in_row):

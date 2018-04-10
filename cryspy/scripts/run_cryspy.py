@@ -181,7 +181,8 @@ if __name__ == '__main__':
         "high_level": "gaussian",
         "low_level": "gaussian",
         "sigma": "3.5",
-        "gtol": 1e-5}
+        "gtol": 1e-5,
+        "single_point":"0"}
 
     inputs = def_inputs.copy()
 
@@ -197,6 +198,7 @@ if __name__ == '__main__':
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
     gtol = inputs["gtol"]
+    single_point = bool(int(inputs["single_point"]))
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
     sigma = float(inputs["sigma"])
@@ -229,9 +231,10 @@ if __name__ == '__main__':
 
     # make the list into an array
     atoms_array = np.array(atoms_array)
-
-    res = minimize(sequence, atoms_array, jac=True,
-                   options={'disp': True,'gtol'=gtol})
+    if single_point:
+        sequence(atoms_array)
+    else:
+        res = minimize(sequence, atoms_array, jac=True, options={'disp': True,'gtol'=gtol})
 
     out_file.write("DONE\n")
     end_time = datetime.now()

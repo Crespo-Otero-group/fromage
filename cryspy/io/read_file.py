@@ -684,19 +684,13 @@ def read_vectors(in_file):
         Input file name
     Returns
     -------
-    vectors : 3 x 3 numpy array or just 3 x 1
+    vectors : 3 x 3 numpy array
         Unit cell vectors where vector a is vectors[0], b is vectors[1], c is
         vectors[2]
 
     """
-    vectors = np.zeros((3,3))
-
-    with open(in_file) as data:
-        lines = data.readlines()
-        if len(lines) > 2:
-            for count in range(3):
-                vectors[count] = [float(i) for i in lines[count].split()]
-        else:
-            vectors = np.array([float(i) for i in lines[0].split()])
+    vectors = np.loadtxt(in_file)
+    if len(vectors) != 3:
+        raise ValueError("The lattice vector file does not have 3 vectors")
     return vectors
 
