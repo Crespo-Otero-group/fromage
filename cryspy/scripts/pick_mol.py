@@ -10,13 +10,14 @@ pick_mol.py input_file.xyz 7 13 42
 """
 import sys
 import argparse
+from copy import copy
 
 from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
 from cryspy.utils import handle_atoms as ha
 
 
-def picker(in_name, out_name, labels, max_bl):
+def picker(in_name, out_name, labels, max_bl, reverse=False):
     """
     Pick out molecules from an xyz file
 
@@ -46,6 +47,15 @@ def picker(in_name, out_name, labels, max_bl):
             raise ValueError("Atom " + str(label) + " was already selected!")
 
         selected += mol
+
+    # to print out the non specified atoms
+    if reverse:
+        to_remove = [copy(i) for i in selected]
+        selected = []
+        for atom in atoms:
+            if atom not in to_remove:
+                selected.append(atom)
+
     ef.write_xyz(out_name, selected)
 
 if __name__ == "__main__":
@@ -59,6 +69,7 @@ if __name__ == "__main__":
                         default=[0], type=int, nargs='*')
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond",
                         default=1.6, type=float)
+    parser.add_argument("-r", "--reverse", help="Print all atoms except selected molecules", action="store_true")
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
 
@@ -66,4 +77,4 @@ if __name__ == "__main__":
     new_labels = [a - 1 for a in args.labels]
 
     # call the main function
-    picker(args.input, args.output, new_labels, args.bond)
+    picker(args.input, args.output, new_labels, args.bond, reverse=args.reverse)
