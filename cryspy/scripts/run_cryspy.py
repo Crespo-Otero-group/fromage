@@ -234,7 +234,7 @@ if __name__ == '__main__':
     if single_point:
         sequence(atoms_array)
     else:
-        res = minimize(sequence, atoms_array, jac=True, options={'disp': True,'gtol'=gtol})
+        res = minimize(sequence, atoms_array, jac=True, options={'disp': True,'gtol':gtol})
 
     out_file.write("DONE\n")
     end_time = datetime.now()
