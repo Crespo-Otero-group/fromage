@@ -131,10 +131,10 @@ def write_uc(in_name, vectors, aN, bN, cN, atoms):
         dir_pos = [atom.x, atom.y, atom.z]
         frac_pos = np.dot(U, dir_pos).tolist()
         for coord in frac_pos:
-            # if the coordinate is negative
-            if coord < 0:
+            # if the coordinate is out of range
+            if coord < 0 or coord > 1:
                 # translate it to the range [0,1]
-                frac_pos[frac_pos.index(coord)] = 1 + coord
+                frac_pos[frac_pos.index(coord)] = coord % 1
         str_line = "{:10.6f} {:10.6f} {:10.6f} {:10.10f} {:>6}".format(
             *frac_pos + [atom.q] + [atom.elem]) + "\n"
         out_file.write(str_line)
