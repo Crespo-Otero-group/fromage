@@ -11,9 +11,7 @@ import sys
 import argparse
 import time
 import numpy as np
-from math import sqrt
 
-from cryspy.scripts import assign_charges as ac
 from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
 from cryspy.utils import handle_atoms as ha
@@ -156,7 +154,6 @@ def differences(A, B):
     SSD: float
         Sum of squares differences
     """
-    dimers = []
     SSD = np.sum(np.square(np.array(A) - np.array(B)))
     return float(SSD) / len(A)
 

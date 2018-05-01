@@ -133,7 +133,7 @@ def read_pos(in_name):
         The last or only set of atomic positions in the file
 
     """
-    atoms = read_xyz(in_name)[-0]
+    atoms = read_xyz(in_name)[-1]
 
     return atoms
 

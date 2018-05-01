@@ -454,7 +454,7 @@ if __name__ == '__main__':
                 atom.q = high_target_mol_char[index]
 
             # assign charges to the rest of the cell
-            assign_charges(high_target_pop_mol, None, shell, None, max_bl)
+            assign_charges(high_target_pop_mol, None, high_shell, None, max_bl)
         else:
             # make a very big cell
             high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=True)
