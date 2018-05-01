@@ -527,6 +527,34 @@ def read_ricc2(in_name):
     return energy, grad, scf_energy
 
 
+def read_tbgrad(in_name):
+    """
+    Read energy gradients from a Turbomole gradient file
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    energy : float
+        Total SCF energy in Hartree
+    grad : numpy array
+        Energy gradients of the form x1, y1, z1, x2, ... in Hartree/Bohr
+
+    """
+    grad = []
+    with open(in_name) as data:
+        for line in data:
+            sline = line.split()
+            if "SCF energy" in line:
+                energy = float(sline[6])
+            if len(sline) == 3 and sline[0] != "$grad":
+                for number in sline:
+                    grad.append(float(number.replace("D","E")))
+
+    return energy, grad
+
 def read_molcas(in_name):
     """
     Read energies and gradients from a Molcas .log file with 2 roots.

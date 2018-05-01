@@ -53,35 +53,11 @@ def sequence(in_pos):
 
     """
     # initialise calculation objects
-    if low_level.lower() == "gaussian":
-        rl = calc.Gauss_calc("rl")
-        ml = calc.Gauss_calc("ml")
-
-    if low_level.lower() == "turbomole":
-        rl = calc.Turbo_calc("rl")
-        ml = calc.Turbo_calc("ml")
-
-    if low_level.lower() == "molcas":
-        rl = calc.Molcas_calc("rl")
-        ml = calc.Molcas_calc("ml")
-
-    if high_level.lower() == "gaussian":
-        mh = calc.Gauss_calc("mh")
-        if bool_ci:
-            mg = calc.Gauss_calc("mg")
-
-    if high_level.lower() == "turbomole":
-        mh = calc.Turbo_calc("mh")
-        if bool_ci:
-            mg = calc.Turbo_calc("mg")
-
-    if high_level.lower() == "molcas":
-        mh = calc.Molcas_calc("mh")
-        if bool_ci:
-            mg = calc.Molcas_calc("mg")
-
-    if high_level.lower() == "gaussian_cas":
-        mh = calc.Gauss_CAS_calc("mh")
+    rl = calc.setup_calc("rl",low_level)
+    ml = calc.setup_calc("ml",low_level)
+    mh = calc.setup_calc("mh",high_level)
+    if bool_ci:
+        mg = calc.setup_calc("mg",high_level)
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
