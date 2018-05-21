@@ -5,6 +5,11 @@ from copy import copy
 
 from cryspy.utils.atom import Atom
 
+def try_ismol(to_test):
+    """ Raise exception if the argument is not a Mol object"""
+    if not isinstance(to_test, Mol):
+        raise TypeError("Cannot cast " + type(to_test).__name__ + " and Mol object")
+
 class Mol(object):
     """
     Object representing a list of atoms.
@@ -23,7 +28,11 @@ class Mol(object):
         Lattice vectors of the unit cell
 
     """
-    def __init__(self, in_atoms, max_bl=1.7, vectors=np.zeros((3,3))):
+
+    def __init__(self, in_atoms, max_bl=1.7, vectors=np.zeros((3, 3))):
+        # In case the user feeds a lone atom:
+        if isinstance(in_atoms, Atom):
+            in_atoms = [in_atoms]
         self.atoms = in_atoms
         self.max_bl = max_bl
         self.vectors = vectors
@@ -48,20 +57,41 @@ class Mol(object):
             out_str += atom.__str__() + "\n"
         return out_str
 
-    def append(self,element):
+    # list-y behaviour
+    def append(self, element):
         self.atoms.append(element)
 
-    def extend(self,element):
-        self.atoms.extend(element)
+    def extend(self, other_mol):
+        self.atoms.extend(other_mol.atoms)
 
     def insert(self, i, element):
-        self.atoms.insert(i,element)
+        self.atoms.insert(i, element)
 
     def remove(self, element):
         self.atoms.remove(element)
 
+    def pop(self, i=-1):
+        return self.atoms.pop(i)
+
+    def clear(self):
+        self.atoms.clear()
+
+    def count(self, element):
+        return self.atoms.count()
+
+    def __add__(self, other_mol):
+        try_ismol(other_mol)
+        return (Mol(copy(self).atoms + other_mol.atoms))
+
+    def __len__(self):
+        return len(self.atoms)
+
     def __str__(self):
         return self.__repr__()
+
+    def __eq__(self, other):
+        return self.atoms == other.atoms
+
     # def select(self, label):
     #     """
     #     Return a molecule out of the current Mol.
@@ -102,4 +132,4 @@ class Mol(object):
     #
     #     return selected
 
-    next = __next__ # For Python 2.X
+    next = __next__  # For Python 2.X
