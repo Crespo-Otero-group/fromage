@@ -105,9 +105,9 @@ class Atom(object):
         r = fd.dist(self.x, self.y, self.z, x1, y1, z1)
         return r
 
-    def dist_at_general(self, other_atom, dist_type):
+    def dist_at_general(self, dist_type, other_atom):
         """Return interatomic distance"""
-        r = dist_type(other_atom(other_atom.x, other_atom.y, other_atom.x))
+        r = dist_type(other_atom.x, other_atom.y, other_atom.z)
         return r
 
     def dist_at(self, other_atom):
@@ -118,6 +118,11 @@ class Atom(object):
     def dist_at2(self, other_atom):
         """Return interatomic distance"""
         r = self.dist_at_general(self.dist2, other_atom)
+        return r
+
+    def smart_dist_at(self, other_atom):
+        """Return the overlap between vdw radii"""
+        r = self.vdw + other_atom.vdw - self.dist_at(other_atom)
         return r
     
     def dist_lat (self, x1, y1, z1, aVec, bVec, cVec, order = 1):
@@ -133,7 +138,7 @@ class Atom(object):
         order : positive int
             The amount of translations to be considered. Order 1 considers a
             translation by -1, 0 and 1 of each lattice vector and all resulting
-            combination. Order 2 is [-2, -1, 0, 1, 2] and so on
+            combination. Order 2 is [-2, -1, 0, 1, 2] and so onzx
 
         Returns
         -------
