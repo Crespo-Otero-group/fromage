@@ -105,7 +105,22 @@ class Atom(object):
         r = fd.dist(self.x, self.y, self.z, x1, y1, z1)
         return r
 
-    def dist_lat(self, x1, y1, z1, aVec, bVec, cVec, order = 1):
+    def dist_at_general(self, other_atom, dist_type):
+        """Return interatomic distance"""
+        r = dist_type(other_atom(other_atom.x, other_atom.y, other_atom.x))
+        return r
+
+    def dist_at(self, other_atom):
+        """Return interatomic distance"""
+        r = self.dist_at_general(self.dist, other_atom)
+        return r
+
+    def dist_at2(self, other_atom):
+        """Return interatomic distance"""
+        r = self.dist_at_general(self.dist2, other_atom)
+        return r
+    
+    def dist_lat (self, x1, y1, z1, aVec, bVec, cVec, order = 1):
         """
         Find the shortest distance to a point in a periodic system.
 
@@ -132,8 +147,7 @@ class Atom(object):
         in_pos = np.array([x1,y1,z1])
         vectors = np.array([aVec,bVec,cVec])
         multipliers = np.arange(-order,order+1)
-        # null vector
-        nVec = (0, 0, 0)
+
         # sets comprised of the ranges of lattice vector values
         aSet = [i*vectors[0] for i in multipliers]
         bSet = [i*vectors[1] for i in multipliers]
