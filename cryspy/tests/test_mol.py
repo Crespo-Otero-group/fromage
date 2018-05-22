@@ -5,7 +5,7 @@ from cryspy.utils.mol import Mol
 
 @pytest.fixture
 def at_list():
-    """Returns a water dimer atom list"""
+    """Return a water dimer atom list"""
     out_list = rf.read_pos("h2o_dimer.xyz")
     return out_list
 
