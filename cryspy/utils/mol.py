@@ -81,7 +81,7 @@ class Mol(object):
 
     def __add__(self, other_mol):
         try_ismol(other_mol)
-        return (Mol(copy(self).atoms + other_mol.atoms))
+        return Mol(copy(self).atoms + other_mol.atoms, max_bl = self.max_bl, vectors = self.vectors)
 
     def __len__(self):
         return len(self.atoms)
