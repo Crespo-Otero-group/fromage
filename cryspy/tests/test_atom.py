@@ -18,8 +18,8 @@ def h_at():
 
 def test_dist_to_atom(c_at, h_at):
     """Distance to atom is implemented"""
-    assert c_at.dist_at(h_at) == 1.3
+    assert c_at.dist_at(h_at) == approx(1.3)
 
 def test_smart_atom_distance(c_at, h_at):
     """Smart distance is implemented"""
-    approx(c_at.smart_dist_at(h_at), 1.92)
+    assert c_at.smart_dist_at(h_at) == approx(1.92)
