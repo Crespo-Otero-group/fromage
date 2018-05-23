@@ -27,8 +27,18 @@ def h2o_dimer(at_list):
 @pytest.fixture
 def hc1_quad():
     """Return a HC1 quadrimer"""
-    out_mo = Mol(rf.read_xyz("hc1_quad.xyz")[-1])
+    out_mo = Mol(rf.read_pos("hc1_quad.xyz"))
     return out_mo
+
+@pytest.fixture
+def hc1_cell():
+    """Return an HC1 cell"""
+    cell = Mol(rf.read_pos("hc1_cell.xyz"))
+    vectors = [[12.1199998856, 0.0, 0.0],
+            [0.0, 10.2849998474, 0.0],
+            [-5.4720203118, 0.0, 11.2441994632]]
+    cell.vectors = vectors
+    return cell
 
 @pytest.fixture
 def newat():
@@ -75,3 +85,13 @@ def test_multiselect_hc1_quad(hc1_quad):
     mol.write_xyz("hi.xyz")
     assert len(mol) == 74
 
+def test_per_select_hc1_cell(hc1_cell):
+    """Check that periodic select gets all atoms"""
+    selected = hc1_cell.per_select(0)
+    assert len(selected) == 37
+
+def test_per_select_complete(hc1_cell):
+    """Check that periodic select completes the molecule"""
+    selected = hc1_cell.per_select(0)
+    new_sel = selected.select(0)
+    assert len(selected, new_sel)
