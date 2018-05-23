@@ -158,7 +158,7 @@ class Mol(object):
     #         The atoms belonging to the molecule which is selected with certain
     #         atoms translated so that the molecule is fully connected without
     #         periodic boundaries
-    #     selected : Mol object
+    #     selected_old : Mol object (optional)
     #         The atoms belonging to the molecule which is selected before
     #         translations
     #
@@ -178,16 +178,22 @@ class Mol(object):
     #     # atoms are translated back to form a molecule
     #     selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
     #
+    #     remaining = deepcopy(self)
+    #     for atom in selected:
+    #         if atom in remaining:
+    #             remaining.remove(atom)
+    #
+    #     old_atoms = deepcopy(selected)
+    #
     #     # While there are atoms to add
     #     cont = True
     #     while cont == True:
     #         cont = False
-    #         for i in selected_img:
-    #             for j in self.atoms:
+    #         for selected in selected:
+    #             for other_atom in remaining:
     #                 # contains the distance from the point or image and the
     #                 # coordinates of the point or image
-    #                 gamma = i.dist_lat(j.x, j.y, j.z, vectors[
-    #                     0], vectors[1], vectors[2])
+    #                 gamma = selected.per_dist()
     #
     #                 # if the atom is close enough to be part of the molecule
     #                 # and is not already part of the molecule

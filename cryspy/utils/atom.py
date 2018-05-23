@@ -180,7 +180,7 @@ class Atom(object):
 
     def per_dist(self, other_atom, vectors, order=1, old_pos=False):
         """
-        Find the shortest distance to a point in a periodic system.
+        Find the shortest distance to another atom in a periodic system.
 
         Parameters
         ----------
@@ -197,7 +197,7 @@ class Atom(object):
         -------
         r_min : float
             Minimal distance to the point
-        at_img : floats
+        at_img : floats (optional)
              Closest image of the atom being targeted
 
         """
@@ -223,11 +223,44 @@ class Atom(object):
                             print("WARNING: the closest periodic image is ill-defined")
                         r_min = r
                         at_img = tmp_img_atom
-        if old_pos == True:
+        if old_pos:
             return r_min, at_img
         else:
             return r_min
 
+    def per_lap(self, other_atom, vectors, order=1, old_pos=False):
+        """
+        Find the vdw overlap distance to another atom in a periodic system
+
+        Parameters
+        ----------
+        other_atom : Atom object
+            The atom which to which the distance is being calculated
+        vectors : 3 x 3 numpy array
+            Unit cell vectors
+        order : positive int
+            The amount of translations to be considered. Order 1 considers a
+            translation by -1, 0 and 1 of each lattice vector and all resulting
+            combination. Order 2 is [-2, -1, 0, 1, 2] and so onzx
+
+        Returns
+        -------
+        r_min : float
+            Minimal distance to the point
+        at_img : floats (optional)
+             Closest image of the atom being targeted
+
+        """
+
+        r_min, at_img = self.per_dist(other_atom, vectors, order=order, old_pos = True)
+
+        lap_out = self.vdw + other_atom.vdw - r_min
+
+        if old_pos:
+            return lap_out, at_img
+        else:
+            return lap_out
+        
     def translated(self, x1, y1, z1):
         """Return a new atom which is a translated copy."""
         xout, yout, zout = self.x, self.y, self.z
