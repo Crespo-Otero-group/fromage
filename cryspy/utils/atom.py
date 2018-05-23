@@ -178,6 +178,56 @@ class Atom(object):
                         z3 = img_pos[2]
         return rMin, x3, y3, z3
 
+    def per_dist(self, other_atom, vectors, order=1, old_pos=False):
+        """
+        Find the shortest distance to a point in a periodic system.
+
+        Parameters
+        ----------
+        other_atom : Atom object
+            The atom which to which the distance is being calculated
+        vectors : 3 x 3 numpy array
+            Unit cell vectors
+        order : positive int
+            The amount of translations to be considered. Order 1 considers a
+            translation by -1, 0 and 1 of each lattice vector and all resulting
+            combination. Order 2 is [-2, -1, 0, 1, 2] and so onzx
+
+        Returns
+        -------
+        r_min : float
+            Minimal distance to the point
+        at_img : floats
+             Closest image of the atom being targeted
+
+        """
+        multipliers = np.arange(-order,order+1)
+
+        # sets comprised of the ranges of lattice vector values
+        a_set = [i*vectors[0] for i in multipliers]
+        b_set = [i*vectors[1] for i in multipliers]
+        c_set = [i*vectors[2] for i in multipliers]
+
+        # minimum r distance
+        r_min = float("inf")
+
+        # loop over all possible translations of the input point
+        for trans_a in a_set:
+            for trans_b in b_set:
+                for trans_c in c_set:
+                    cell_origin = trans_a + trans_b + trans_c
+                    tmp_img_atom = other_atom.v_translated(cell_origin)
+                    r = self.dist_at(tmp_img_atom)
+                    if r <= r_min:
+                        if r == r_min:
+                            print("WARNING: the closest periodic image is ill-defined")
+                        r_min = r
+                        at_img = tmp_img_atom
+        if old_pos == True:
+            return r_min, at_img
+        else:
+            return r_min
+
     def translated(self, x1, y1, z1):
         """Return a new atom which is a translated copy."""
         xout, yout, zout = self.x, self.y, self.z

@@ -1,6 +1,8 @@
 import pytest
-import cryspy.io.read_file as rf
 from pytest import approx
+import numpy as np
+
+import cryspy.io.read_file as rf
 from cryspy.utils.atom import Atom
 from cryspy.utils.mol import Mol
 
@@ -23,3 +25,9 @@ def test_dist_to_atom(c_at, h_at):
 def test_at_lap(c_at, h_at):
     """Atom vdw overlap works"""
     assert c_at.at_lap(h_at) == approx(1.92)
+
+def test_per_dist(c_at, h_at):
+    vectors=np.array([[1.0, 0.0, 0.0],
+                     [0.0, 1.0, 0.0],
+                     [0.0, 0.0, 1.0]])
+    assert c_at.per_dist(h_at,vectors) == approx(0.3)
