@@ -88,6 +88,7 @@ class Mol(object):
         self.atoms[index] = value
 
     def write_xyz(self, name):
+        """Write an xyz file of the Mol"""
         ef.write_xyz(name, self.atoms)
 
     def select(self, labels):
@@ -95,7 +96,8 @@ class Mol(object):
         Return a molecule out of the current Mol.
 
         The function returns a new Mol of selected atoms atoms. The selection is
-        done by measuring by how much adjacent vdw spheres overlap.
+        done by measuring by how much adjacent vdw spheres overlap. The returned
+        Mol's attributes are new objects obtained via a deep copy.
 
         Parameters
         ----------
@@ -123,6 +125,8 @@ class Mol(object):
                 remaining.remove(atom)
 
         old_atoms = deepcopy(selected)
+
+        # While there are atoms to add
         cont = True
         while cont:
             cont = False
@@ -133,6 +137,6 @@ class Mol(object):
                         new_atoms.append(rem)
                         selected.append(rem)
                         remaining.remove(rem)
-                        cont = True
+                        cont = True # An atom was added so continue loop
             old_atoms = new_atoms
         return selected
