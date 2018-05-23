@@ -120,11 +120,11 @@ class Atom(object):
         r = self.dist_at_general(self.dist2, other_atom)
         return r
 
-    def smart_dist_at(self, other_atom):
+    def at_lap(self, other_atom):
         """Return the overlap between vdw radii"""
         r = self.vdw + other_atom.vdw - self.dist_at(other_atom)
         return r
-    
+
     def dist_lat (self, x1, y1, z1, aVec, bVec, cVec, order = 1):
         """
         Find the shortest distance to a point in a periodic system.

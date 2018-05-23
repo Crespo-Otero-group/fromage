@@ -20,6 +20,6 @@ def test_dist_to_atom(c_at, h_at):
     """Distance to atom is implemented"""
     assert c_at.dist_at(h_at) == approx(1.3)
 
-def test_smart_atom_distance(c_at, h_at):
-    """Smart distance is implemented"""
-    assert c_at.smart_dist_at(h_at) == approx(1.92)
+def test_at_lap(c_at, h_at):
+    """Atom vdw overlap works"""
+    assert c_at.at_lap(h_at) == approx(1.92)

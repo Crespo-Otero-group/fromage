@@ -1,1 +1,3 @@
-{}
+{
+  "cryspy/tests/test_atom.py::test_smart_atom_distance": true
+}
