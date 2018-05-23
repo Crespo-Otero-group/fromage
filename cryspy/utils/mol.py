@@ -140,3 +140,62 @@ class Mol(object):
                         cont = True # An atom was added so continue loop
             old_atoms = new_atoms
         return selected
+    # 
+    # def per_select(self, labels, old_pos=False):
+    #     """
+    #     Select a molecule out of a Mol in a periodic system.
+    #
+    #     Parameters
+    #     ----------
+    #     label : int or list of ints
+    #         The number of the atoms from which the molecules are generated.
+    #     old_pos : bool
+    #         Option to print the selected molecule at its original coordinates
+    #
+    #     Returns
+    #     -------
+    #     selected_img : Mol object
+    #         The atoms belonging to the molecule which is selected with certain
+    #         atoms translated so that the molecule is fully connected without
+    #         periodic boundaries
+    #     selected : Mol object
+    #         The atoms belonging to the molecule which is selected before
+    #         translations
+    #
+    #     """
+    #
+    #     # Make sure that labels is a list
+    #     if isinstance(labels, int):
+    #         labels = [labels]
+    #
+    #     # Check for duplicate labels
+    #     if len(labels) > len(set(labels)):
+    #         raise TypeError("Some labels are repeated")
+    #
+    #     # list of selected atoms from the unit cell
+    #     selected = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+    #     # list of selected atoms where the periodic image
+    #     # atoms are translated back to form a molecule
+    #     selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+    #
+    #     # While there are atoms to add
+    #     cont = True
+    #     while cont == True:
+    #         cont = False
+    #         for i in selected_img:
+    #             for j in self.atoms:
+    #                 # contains the distance from the point or image and the
+    #                 # coordinates of the point or image
+    #                 gamma = i.dist_lat(j.x, j.y, j.z, vectors[
+    #                     0], vectors[1], vectors[2])
+    #
+    #                 # if the atom is close enough to be part of the molecule
+    #                 # and is not already part of the molecule
+    #                 if gamma[0] <= max_r and j not in selected:
+    #                     selected.append(j)
+    #                     k = copy(j)
+    #                     k.x, k.y, k.z = gamma[1:]
+    #                     selected_img.append(k)
+    #                     cont = True # An atom was added so continue loop
+    #
+    #     return selected, selected_img
