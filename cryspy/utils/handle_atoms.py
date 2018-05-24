@@ -290,6 +290,7 @@ def center_mol(atoms):
 
     return
 
+
 def translate_atoms(atoms, vector):
     """
     Translate some atoms by a vector
@@ -305,6 +306,7 @@ def translate_atoms(atoms, vector):
     for atom in atoms:
         atom.v_translate(vector)
     return
+
 
 def supercell(atoms, vectors, trans):
     """
@@ -326,14 +328,15 @@ def supercell(atoms, vectors, trans):
         The lattice vectors of the new cell
 
     """
-    cart = [0,1,2]
-    supercell=copy(atoms)
+    cart = [0, 1, 2]
+    supercell = copy(atoms)
     for comp in cart:
         if trans[comp] != 1:
             for mult in range(trans[comp])[1:]:
-                new_atoms = [i.v_translated(mult*vectors[comp]) for i in supercell]
+                new_atoms = [i.v_translated(mult * vectors[comp])
+                             for i in supercell]
                 supercell += new_atoms
-    out_vec = (vectors.T*trans.transpose()).T
+    out_vec = (vectors.T * trans.transpose()).T
     return supercell, out_vec
 
 

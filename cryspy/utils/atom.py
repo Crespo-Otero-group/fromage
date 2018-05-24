@@ -66,8 +66,9 @@ class Atom(object):
         self.at_num = table[self.elem.lower()]["at_num"]
         self.valence_e = table[self.elem.lower()]["valence_e"]
         self.vdw = table[self.elem.lower()]["vdw"]
-        self.my_pos = np.array([self.x,self.y,self.z])
+        self.my_pos = np.array([self.x, self.y, self.z])
         # to string methods to be used mainly for debugging and .qc file
+
     def __repr__(self):
         return "{:>6} {:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z, self.q)
 
@@ -125,7 +126,7 @@ class Atom(object):
         r = self.vdw + other_atom.vdw - self.dist_at(other_atom)
         return r
 
-    def dist_lat (self, x1, y1, z1, aVec, bVec, cVec, order = 1):
+    def dist_lat(self, x1, y1, z1, aVec, bVec, cVec, order=1):
         """
         Find the shortest distance to a point in a periodic system.
 
@@ -149,14 +150,14 @@ class Atom(object):
 
         """
 
-        in_pos = np.array([x1,y1,z1])
-        vectors = np.array([aVec,bVec,cVec])
-        multipliers = np.arange(-order,order+1)
+        in_pos = np.array([x1, y1, z1])
+        vectors = np.array([aVec, bVec, cVec])
+        multipliers = np.arange(-order, order + 1)
 
         # sets comprised of the ranges of lattice vector values
-        aSet = [i*vectors[0] for i in multipliers]
-        bSet = [i*vectors[1] for i in multipliers]
-        cSet = [i*vectors[2] for i in multipliers]
+        aSet = [i * vectors[0] for i in multipliers]
+        bSet = [i * vectors[1] for i in multipliers]
+        cSet = [i * vectors[2] for i in multipliers]
 
         # minimum r distance
         rMin = float("inf")
@@ -166,8 +167,8 @@ class Atom(object):
             for trans2 in bSet:
                 for trans3 in cSet:
                     img_pos = in_pos + trans1 + trans2 + trans3
-                    #r=np.linalg.norm(self.my_pos-img_pos)
-                    r=self.dist(img_pos[0], img_pos[1], img_pos[2])
+                    # r=np.linalg.norm(self.my_pos-img_pos)
+                    r = self.dist(img_pos[0], img_pos[1], img_pos[2])
                     # if this particular translation of the point is the closest
                     # to the atom so far
                     if r < rMin:
@@ -201,12 +202,12 @@ class Atom(object):
              Closest image of the atom being targeted
 
         """
-        multipliers = np.arange(-order,order+1)
+        multipliers = np.arange(-order, order + 1)
 
         # sets comprised of the ranges of lattice vector values
-        a_set = [i*vectors[0] for i in multipliers]
-        b_set = [i*vectors[1] for i in multipliers]
-        c_set = [i*vectors[2] for i in multipliers]
+        a_set = [i * vectors[0] for i in multipliers]
+        b_set = [i * vectors[1] for i in multipliers]
+        c_set = [i * vectors[2] for i in multipliers]
 
         # minimum r distance
         r_min = float("inf")
@@ -259,7 +260,8 @@ class Atom(object):
 
         """
 
-        r_min, at_img = self.per_dist(other_atom, vectors, order=order, new_pos = True)
+        r_min, at_img = self.per_dist(
+            other_atom, vectors, order=order, new_pos=True)
 
         lap_out = self.vdw + other_atom.vdw - r_min
 
@@ -279,8 +281,8 @@ class Atom(object):
 
     def v_translated(self, vec_trans):
         """Return a new atom which is a translated copy."""
-        old_pos = np.array([self.x,self.y,self.z])
-        new_pos = old_pos+vec_trans
+        old_pos = np.array([self.x, self.y, self.z])
+        new_pos = old_pos + vec_trans
         outAtom = Atom(self.elem, new_pos[0], new_pos[1], new_pos[2], self.q)
         return outAtom
 

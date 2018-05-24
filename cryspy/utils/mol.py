@@ -7,10 +7,13 @@ from copy import deepcopy
 from cryspy.utils.atom import Atom
 import cryspy.io.edit_file as ef
 
+
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
     if not isinstance(to_test, Mol):
-        raise TypeError("Cannot cast " + type(to_test).__name__ + " and Mol object")
+        raise TypeError("Cannot cast " +
+                        type(to_test).__name__ + " and Mol object")
+
 
 class Mol(object):
     """
@@ -73,7 +76,7 @@ class Mol(object):
 
     def __add__(self, other_mol):
         try_ismol(other_mol)
-        return Mol(deepcopy(self).atoms + other_mol.atoms, min_lap = self.min_lap, vectors = self.vectors)
+        return Mol(deepcopy(self).atoms + other_mol.atoms, min_lap=self.min_lap, vectors=self.vectors)
 
     def __len__(self):
         return len(self.atoms)
@@ -84,7 +87,7 @@ class Mol(object):
     def __getitem__(self, index):
         return self.atoms[index]
 
-    def __setitem__(self,index,value):
+    def __setitem__(self, index, value):
         self.atoms[index] = value
 
     def write_xyz(self, name):
@@ -118,7 +121,8 @@ class Mol(object):
         if len(labels) > len(set(labels)):
             raise TypeError("Some labels are repeated")
 
-        selected = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+        selected = Mol(deepcopy([self[i] for i in labels]),
+                       min_lap=self.min_lap, vectors=self.vectors)
         remaining = deepcopy(self)
         for atom in selected:
             if atom in remaining:
@@ -137,7 +141,7 @@ class Mol(object):
                         new_atoms.append(rem)
                         selected.append(rem)
                         remaining.remove(rem)
-                        cont = True # An atom was added so continue loop
+                        cont = True  # An atom was added so continue loop
             old_atoms = new_atoms
         return selected
 
@@ -173,10 +177,12 @@ class Mol(object):
             raise TypeError("Some labels are repeated")
 
         # Mol of selected atoms from the unit cell
-        selected_old = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+        selected_old = Mol(deepcopy(
+            [self[i] for i in labels]), min_lap=self.min_lap, vectors=self.vectors)
         # Mol of selected atoms where the periodic image
         # atoms are translated back to form a molecule
-        selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+        selected_img = Mol(deepcopy(
+            [self[i] for i in labels]), min_lap=self.min_lap, vectors=self.vectors)
 
         remaining = deepcopy(self)
         for atom in selected_old:
@@ -194,14 +200,15 @@ class Mol(object):
                 for rem in remaining:
                     # contains the distance from the point or image and the
                     # coordinates of the point or image
-                    vdw_overlap, per_img = old.per_lap(rem, self.vectors, new_pos=True)
+                    vdw_overlap, per_img = old.per_lap(
+                        rem, self.vectors, new_pos=True)
                     # if the atom is close enough to be part of the molecule
                     if vdw_overlap >= self.min_lap:
                         new_atoms.append(per_img)
                         selected_old.append(rem)
                         selected_img.append(per_img)
                         remaining.remove(rem)
-                        cont = True # An atom was added so continue loop
+                        cont = True  # An atom was added so continue loop
                 old_atoms = new_atoms
 
         if old_pos:
@@ -221,7 +228,6 @@ class Mol(object):
                 remaining.remove(atom)
         return molecules
 
-
     def complete_mol(self, labels):
         """
         Take a cell and complete certain molecules
@@ -238,7 +244,7 @@ class Mol(object):
         new_cell : Mol object
             The cell with the completed molecule
         """
-        new_mol, scattered_mol = self.per_select(labels, old_pos = True)
+        new_mol, scattered_mol = self.per_select(labels, old_pos=True)
         new_cell = deepcopy([a for a in self.atoms if a not in scattered_mol])
 
         for atom in new_mol:
