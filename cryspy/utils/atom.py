@@ -178,7 +178,7 @@ class Atom(object):
                         z3 = img_pos[2]
         return rMin, x3, y3, z3
 
-    def per_dist(self, other_atom, vectors, order=1, old_pos=False):
+    def per_dist(self, other_atom, vectors, order=1, new_pos=False):
         """
         Find the shortest distance to another atom in a periodic system.
 
@@ -211,24 +211,32 @@ class Atom(object):
         # minimum r distance
         r_min = float("inf")
 
+        # is the minimal distance unique?
+        unique = True
+
         # loop over all possible translations of the input point
         for trans_a in a_set:
             for trans_b in b_set:
                 for trans_c in c_set:
                     cell_origin = trans_a + trans_b + trans_c
+                    print(cell_origin)
                     tmp_img_atom = other_atom.v_translated(cell_origin)
                     r = self.dist_at(tmp_img_atom)
                     if r <= r_min:
+                        if r < r_min:
+                            unique = True
                         if r == r_min:
-                            print("WARNING: the closest periodic image is ill-defined")
+                            unique = False
                         r_min = r
                         at_img = tmp_img_atom
-        if old_pos:
+        if not unique:
+            print("WARNING: the closest periodic image is ill-defined")
+        if new_pos:
             return r_min, at_img
         else:
             return r_min
 
-    def per_lap(self, other_atom, vectors, order=1, old_pos=False):
+    def per_lap(self, other_atom, vectors, order=1, new_pos=False):
         """
         Find the vdw overlap distance to another atom in a periodic system
 
@@ -252,11 +260,11 @@ class Atom(object):
 
         """
 
-        r_min, at_img = self.per_dist(other_atom, vectors, order=order, old_pos = True)
+        r_min, at_img = self.per_dist(other_atom, vectors, order=order, new_pos = True)
 
         lap_out = self.vdw + other_atom.vdw - r_min
 
-        if old_pos:
+        if new_pos:
             return lap_out, at_img
         else:
             return lap_out
