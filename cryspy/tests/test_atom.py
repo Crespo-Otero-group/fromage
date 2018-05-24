@@ -38,3 +38,7 @@ def test_per_dist(c_at, o_at, vectors):
 
 def test_per_lap(c_at, o_at, vectors):
     assert c_at.per_lap(o_at,vectors) == approx(2.92)
+
+def test_per_lap_img(c_at, o_at, vectors):
+    r, new_at = c_at.per_lap(o_at,vectors,new_pos=True)
+    assert o_at != new_at
