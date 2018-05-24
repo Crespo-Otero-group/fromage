@@ -289,7 +289,7 @@ def find_centroid(atoms):
 
 def center_mol(atoms):
     """Translate molecules to center"""
-    c_x, c_y, c_z = ha.find_centroid(mol)
+    c_x, c_y, c_z = find_centroid(atoms)
     for atom in atoms:
         atom.translate(-c_x, -c_y, -c_z)
 
@@ -305,7 +305,7 @@ def translate_atoms(atoms, vector):
         Untranslated atoms
     vector : 3 x 1 numpy array
         Translation vector
-    
+
     """
     for atom in atoms:
         atom.v_translate(vector)
