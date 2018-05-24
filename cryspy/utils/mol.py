@@ -172,18 +172,18 @@ class Mol(object):
         if len(labels) > len(set(labels)):
             raise TypeError("Some labels are repeated")
 
-        # list of selected atoms from the unit cell
-        selected = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
-        # list of selected atoms where the periodic image
+        # Mol of selected atoms from the unit cell
+        selected_old = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+        # Mol of selected atoms where the periodic image
         # atoms are translated back to form a molecule
         selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
 
         remaining = deepcopy(self)
-        for atom in selected:
+        for atom in selected_old:
             if atom in remaining:
                 remaining.remove(atom)
 
-        old_atoms = deepcopy(selected)
+        old_atoms = deepcopy(selected_old)
 
         # While there are atoms to add
         cont = True
@@ -194,21 +194,20 @@ class Mol(object):
                 for rem in remaining:
                     # contains the distance from the point or image and the
                     # coordinates of the point or image
-                    vdw_overlap, per_img = old.per_lap(rem, self.vectors, old_pos=True)
-
+                    vdw_overlap, per_img = old.per_lap(rem, self.vectors, new_pos=True)
                     # if the atom is close enough to be part of the molecule
                     if vdw_overlap >= self.min_lap:
-                        new_atoms.append(rem)
-                        selected.append(rem)
+                        new_atoms.append(per_img)
+                        selected_old.append(rem)
                         selected_img.append(per_img)
                         remaining.remove(rem)
                         cont = True # An atom was added so continue loop
                 old_atoms = new_atoms
 
         if old_pos:
-            return selected, selected_img
+            return selected_img, selected_old
         else:
-            return selected
+            return selected_img
 
     def segregate(self):
         """Separate current Mol in a list of Mols of different molecules"""
@@ -221,3 +220,27 @@ class Mol(object):
             for atom in molecule:
                 remaining.remove(atom)
         return molecules
+
+
+    def complete_mol(self, labels):
+        """
+        Take a cell and complete certain molecules
+
+        The objective is to end up with a unit cell where the molecules of interest
+        are complete. The rest of the atoms of the cell must remain intact. Note that
+        the input atoms are transformed and are the same as are present in the
+        output.
+
+        Returns
+        -------
+        new_mol : Mol object
+            The now complete molecule
+        new_cell : Mol object
+            The cell with the completed molecule
+        """
+        new_mol, scattered_mol = self.per_select(labels, old_pos = True)
+        new_cell = deepcopy([a for a in self.atoms if a not in scattered_mol])
+
+        for atom in new_mol:
+            new_cell.append(atom)
+        return new_mol, new_cell

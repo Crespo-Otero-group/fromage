@@ -225,11 +225,6 @@ def complete_mol(max_r, atoms, label, vectors):
     # atoms translated to join up the molecule with their image
     full_mol, full_mol_trans = multi_select(max_r, atoms, label, vectors)
 
-    # atoms from molecule which need translating
-    part_mol = [atom for atom in full_mol if atom not in full_mol_trans]
-    # atoms from molecule which were translated
-    part_mol_img = [atom for atom in full_mol_trans if atom not in full_mol]
-
     # using an explicit loop does not work for some reason,
     # use list comprehension
     atoms = [a for a in atoms if a not in full_mol]

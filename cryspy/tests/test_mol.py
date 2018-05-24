@@ -93,7 +93,8 @@ def test_per_select_hc1_cell(hc1_cell):
 def test_per_select_complete(hc1_cell, hc1_quad):
     """Check that periodic select completes the molecule"""
     selected = hc1_cell.per_select(0)
-    new_sel = hc1_quad.select(0)
+    new, old = hc1_cell.per_select(0,old_pos=True)
+    new_sel = selected.select(0)
     assert len(selected) == len(new_sel)
 
 def test_multi_per_select(hc1_cell, hc1_quad):
@@ -104,3 +105,8 @@ def test_multi_per_select(hc1_cell, hc1_quad):
 def test_mol_segregation(hc1_quad):
     mols = hc1_quad.segregate()
     assert len(mols) == 4 and len(mols[1]) == 37
+
+def test_complete_mol(hc1_cell):
+    new_mol, new_cell = hc1_cell.complete_mol(0)
+    sel = new_mol.select(0)
+#    assert len(new_mol) == len(sel)
