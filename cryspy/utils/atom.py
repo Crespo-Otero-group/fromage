@@ -219,7 +219,6 @@ class Atom(object):
             for trans_b in b_set:
                 for trans_c in c_set:
                     cell_origin = trans_a + trans_b + trans_c
-                    print(cell_origin)
                     tmp_img_atom = other_atom.v_translated(cell_origin)
                     r = self.dist_at(tmp_img_atom)
                     if r <= r_min:
