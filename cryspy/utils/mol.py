@@ -209,3 +209,15 @@ class Mol(object):
             return selected, selected_img
         else:
             return selected
+
+    def segregate(self):
+        """Separate current Mol in a list of Mols of different molecules"""
+        molecules = []  # list of molecules
+        remaining = deepcopy(self)
+
+        while len(remaining) > 0:
+            molecule = remaining.select(0)
+            molecules.append(molecule)
+            for atom in molecule:
+                remaining.remove(atom)
+        return molecules
