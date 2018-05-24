@@ -180,7 +180,7 @@ class Atom(object):
                         z3 = img_pos[2]
         return rMin, x3, y3, z3
 
-    def per_dist(self, other_atom, vectors, order=1, new_pos=False):
+    def per_dist(self, other_atom, vectors, new_pos=False):
         """
         Find the shortest distance to another atom in a periodic system.
 
@@ -203,7 +203,10 @@ class Atom(object):
              Closest image of the atom being targeted
 
         """
-        multipliers = np.arange(-order, order + 1)
+        # First put the other atom inside the cell
+        other_atom = other_atom.put_in_cell(vectors)
+
+        multipliers = np.array([-1, 0, 1])
 
         # sets comprised of the ranges of lattice vector values
         a_set = [i * vectors[0] for i in multipliers]
@@ -260,7 +263,7 @@ class Atom(object):
 
         return new_at
 
-    def per_lap(self, other_atom, vectors, order=1, new_pos=False):
+    def per_lap(self, other_atom, vectors, new_pos=False):
         """
         Find the vdw overlap distance to another atom in a periodic system
 
@@ -285,7 +288,7 @@ class Atom(object):
         """
 
         r_min, at_img = self.per_dist(
-            other_atom, vectors, order=order, new_pos=True)
+            other_atom, vectors, new_pos=True)
 
         lap_out = self.vdw + other_atom.vdw - r_min
 
