@@ -151,8 +151,8 @@ class Mol(object):
 
         Parameters
         ----------
-        label : int or list of ints
-            The number of the atoms from which the molecules are generated.
+        labels : int or list of ints
+            The number of the atoms from which the molecules are generated
         old_pos : bool
             Option to print the selected molecule at its original coordinates
 
@@ -237,6 +237,10 @@ class Mol(object):
         the input atoms are transformed and are the same as are present in the
         output.
 
+        Parameters
+        ----------
+        labels : int or list of ints
+            The number of the atoms from which the molecules are generated
         Returns
         -------
         new_mol : Mol object
@@ -245,8 +249,40 @@ class Mol(object):
             The cell with the completed molecule
         """
         new_mol, scattered_mol = self.per_select(labels, old_pos=True)
-        new_cell = deepcopy([a for a in self.atoms if a not in scattered_mol])
+        new_cell_atoms = deepcopy([a for a in self.atoms if a not in scattered_mol])
+        new_cell = deepcopy(self)
+        new_cell.atoms = new_cell_atoms
 
         for atom in new_mol:
             new_cell.append(atom)
         return new_mol, new_cell
+
+    def complete_cell(self):
+        """
+        Return a cell where atoms have been translated to complete all molecules of
+        the cell
+
+        Returns
+        -------
+        out_cell : Mol object
+            The new untruncated cell
+        full_mol_l : list of Mol objects
+            Each molecule in the untruncated cell
+
+        """
+        full_mol_l = []
+        remaining = deepcopy(self)
+
+        while len(remaining) != 0:
+            full_mol, cell = remaining.complete_mol(0)
+            full_mol_l.append(full_mol)
+            remaining = cell
+            for atom in full_mol:
+                if atom in remaining:
+                    remaining.remove(atom)
+
+        # Convinently, remaining is now an empty Mol
+        out_cell = remaining
+        for mol in full_mol_l:
+            out_cell.extend(mol)
+        return out_cell, full_mol_l

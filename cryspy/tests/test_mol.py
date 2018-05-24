@@ -130,4 +130,9 @@ def test_mol_segregation(hc1_quad):
 def test_complete_mol(hc1_cell):
     new_mol, new_cell = hc1_cell.complete_mol(0)
     sel = new_mol.select(0)
-#    assert len(new_mol) == len(sel)
+    assert len(new_mol) == len(sel)
+
+def test_complete_cell(hc1_cell):
+    new_cell, new_mols = hc1_cell.complete_cell()
+    new_cell.write_xyz("hi.xyz")
+    assert len(new_mols[0]) == 37
