@@ -260,7 +260,7 @@ class Atom(object):
             return lap_out, at_img
         else:
             return lap_out
-        
+
     def translated(self, x1, y1, z1):
         """Return a new atom which is a translated copy."""
         xout, yout, zout = self.x, self.y, self.z

@@ -32,7 +32,7 @@ class Mol(object):
 
     """
 
-    def __init__(self, in_atoms, min_lap=0.6, vectors=np.zeros((3, 3))):
+    def __init__(self, in_atoms, min_lap=0.4, vectors=np.zeros((3, 3))):
         # In case the user feeds a lone atom:
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
@@ -140,68 +140,72 @@ class Mol(object):
                         cont = True # An atom was added so continue loop
             old_atoms = new_atoms
         return selected
-    # 
-    # def per_select(self, labels, old_pos=False):
-    #     """
-    #     Select a molecule out of a Mol in a periodic system.
-    #
-    #     Parameters
-    #     ----------
-    #     label : int or list of ints
-    #         The number of the atoms from which the molecules are generated.
-    #     old_pos : bool
-    #         Option to print the selected molecule at its original coordinates
-    #
-    #     Returns
-    #     -------
-    #     selected_img : Mol object
-    #         The atoms belonging to the molecule which is selected with certain
-    #         atoms translated so that the molecule is fully connected without
-    #         periodic boundaries
-    #     selected_old : Mol object (optional)
-    #         The atoms belonging to the molecule which is selected before
-    #         translations
-    #
-    #     """
-    #
-    #     # Make sure that labels is a list
-    #     if isinstance(labels, int):
-    #         labels = [labels]
-    #
-    #     # Check for duplicate labels
-    #     if len(labels) > len(set(labels)):
-    #         raise TypeError("Some labels are repeated")
-    #
-    #     # list of selected atoms from the unit cell
-    #     selected = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
-    #     # list of selected atoms where the periodic image
-    #     # atoms are translated back to form a molecule
-    #     selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
-    #
-    #     remaining = deepcopy(self)
-    #     for atom in selected:
-    #         if atom in remaining:
-    #             remaining.remove(atom)
-    #
-    #     old_atoms = deepcopy(selected)
-    #
-    #     # While there are atoms to add
-    #     cont = True
-    #     while cont == True:
-    #         cont = False
-    #         for selected in selected:
-    #             for other_atom in remaining:
-    #                 # contains the distance from the point or image and the
-    #                 # coordinates of the point or image
-    #                 gamma = selected.per_dist()
-    #
-    #                 # if the atom is close enough to be part of the molecule
-    #                 # and is not already part of the molecule
-    #                 if gamma[0] <= max_r and j not in selected:
-    #                     selected.append(j)
-    #                     k = copy(j)
-    #                     k.x, k.y, k.z = gamma[1:]
-    #                     selected_img.append(k)
-    #                     cont = True # An atom was added so continue loop
-    #
-    #     return selected, selected_img
+
+    def per_select(self, labels, old_pos=False):
+        """
+        Select a molecule out of a Mol in a periodic system.
+
+        Parameters
+        ----------
+        label : int or list of ints
+            The number of the atoms from which the molecules are generated.
+        old_pos : bool
+            Option to print the selected molecule at its original coordinates
+
+        Returns
+        -------
+        selected_img : Mol object
+            The atoms belonging to the molecule which is selected with certain
+            atoms translated so that the molecule is fully connected without
+            periodic boundaries
+        selected_old : Mol object (optional)
+            The atoms belonging to the molecule which is selected before
+            translations
+
+        """
+
+        # Make sure that labels is a list
+        if isinstance(labels, int):
+            labels = [labels]
+
+        # Check for duplicate labels
+        if len(labels) > len(set(labels)):
+            raise TypeError("Some labels are repeated")
+
+        # list of selected atoms from the unit cell
+        selected = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+        # list of selected atoms where the periodic image
+        # atoms are translated back to form a molecule
+        selected_img = Mol(deepcopy([self[i] for i in labels]), min_lap = self.min_lap, vectors = self.vectors)
+
+        remaining = deepcopy(self)
+        for atom in selected:
+            if atom in remaining:
+                remaining.remove(atom)
+
+        old_atoms = deepcopy(selected)
+
+        # While there are atoms to add
+        cont = True
+        while cont == True:
+            cont = False
+            new_atoms = Mol([])
+            for old in old_atoms:
+                for rem in remaining:
+                    # contains the distance from the point or image and the
+                    # coordinates of the point or image
+                    vdw_overlap, per_img = old.per_lap(rem, self.vectors, old_pos=True)
+
+                    # if the atom is close enough to be part of the molecule
+                    if vdw_overlap >= self.min_lap:
+                        new_atoms.append(rem)
+                        selected.append(rem)
+                        selected_img.append(per_img)
+                        remaining.remove(rem)
+                        cont = True # An atom was added so continue loop
+                old_atoms = new_atoms
+
+        if old_pos:
+            return selected, selected_img
+        else:
+            return selected
