@@ -95,3 +95,7 @@ def test_per_select_complete(hc1_cell, hc1_quad):
     selected = hc1_cell.per_select(0)
     new_sel = hc1_quad.select(0)
     assert len(selected) == len(new_sel)
+
+def test_mol_segregation(hc1_quad):
+    mols = hc1_quad.segregate()
+    assert len(mols) == 4 and mols[1] == 37
