@@ -2,6 +2,7 @@
 
 import numpy as np
 from collections import Counter
+from copy import deepcopy
 
 from cryspy.utils import per_table as per
 from cryspy.fdist import fdist as fd
@@ -235,6 +236,29 @@ class Atom(object):
             return r_min, at_img
         else:
             return r_min
+
+    def put_in_cell(self, vectors):
+        """
+        Return a new atom at a position inside the parallelepiped cell
+        """
+        # transpose to get the transformation matrix
+        M = np.transpose(vectors)
+        # inverse transformation matrix
+        U = np.linalg.inv(M)
+
+        dir_pos = np.array([self.x, self.y, self.z])
+        frac_pos = np.dot(U, dir_pos)
+        # translate to the range [0.1]
+        new_frac_pos = [i % 1 for i in frac_pos]
+
+        new_dir_pos = np.dot(M, new_frac_pos)
+
+        new_at = deepcopy(self)
+        new_at.x = new_dir_pos[0]
+        new_at.y = new_dir_pos[1]
+        new_at.z = new_dir_pos[2]
+
+        return new_at
 
     def per_lap(self, other_atom, vectors, order=1, new_pos=False):
         """
