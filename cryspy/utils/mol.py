@@ -297,3 +297,10 @@ class Mol(object):
             centro[2] += atom.z
         centro = centro/N
         return centro
+
+    def center_mol(self):
+        """Translate molecules to center"""
+        cen = self.centroid()
+        for atom in self.atoms:
+            atom.v_translate(-cen)
+        return

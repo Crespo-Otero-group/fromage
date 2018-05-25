@@ -1,4 +1,5 @@
 import pytest
+from pytest import approx
 import cryspy.io.read_file as rf
 import numpy as np
 from cryspy.utils.atom import Atom
@@ -143,4 +144,8 @@ def test_complete_cell(hc1_cell):
 
 def test_centroid(c_o):
     cen = c_o.centroid()
-    assert cen[0] == 0.5
+    assert cen[0] == approx(0.5)
+
+def test_center(c_o):
+    c_o.center_mol()
+    assert c_o[0].x == approx(-0.5)
