@@ -304,3 +304,17 @@ class Mol(object):
         for atom in self.atoms:
             atom.v_translate(-cen)
         return
+
+    def translate(self, vector):
+        """
+        Translate Mol by a vector
+
+        Parameters
+        ----------
+        vector : 3 x 1 numpy array
+            Translation vector
+
+        """
+        for atom in self.atoms:
+            atom.v_translate(vector)
+        return
