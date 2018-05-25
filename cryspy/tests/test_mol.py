@@ -153,4 +153,4 @@ def test_center(c_o):
 def test_translate(c_o):
     vec = np.array([0.25,1.0,0.0])
     c_o.translate(vec)
-    assert c_o[1].x == approx(0.75)
+    assert c_o[1].x == approx(1.25)
