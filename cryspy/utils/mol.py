@@ -286,3 +286,14 @@ class Mol(object):
         for mol in full_mol_l:
             out_cell.extend(mol)
         return out_cell, full_mol_l
+
+    def centroid(self):
+        """Return np array of the centroid"""
+        N = len(self.atoms)
+        centro = np.array([0.0, 0.0, 0.0])
+        for atom in self.atoms:
+            centro[0] += atom.x
+            centro[1] += atom.y
+            centro[2] += atom.z
+        centro = centro/N
+        return centro

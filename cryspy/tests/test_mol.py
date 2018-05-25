@@ -143,4 +143,4 @@ def test_complete_cell(hc1_cell):
 
 def test_centroid(c_o):
     cen = c_o.centroid()
-    assert cen == 0.5
+    assert cen[0] == 0.5
