@@ -47,17 +47,21 @@ def hc1_cell():
     cell.vectors = vectors
     return cell
 
-
 @pytest.fixture
 def newat():
     """Return an Atom object C at origin"""
     return Atom("C", 0.0, 0.0, 0.0)
 
-
 @pytest.fixture
 def empty_mol():
     return Mol([])
 
+@pytest.fixture
+def c_o():
+    c_at = Atom("C", 0.0, 0.0, 0.0)
+    o_at = Atom("O", 1.0, 0.0, 0.0)
+    out_mol = Mol([c_at, o_at])
+    return out_mol
 
 def test_len(h2o_dimer):
     """The len method is implemented"""
@@ -136,3 +140,7 @@ def test_complete_cell(hc1_cell):
     new_cell, new_mols = hc1_cell.complete_cell()
     new_cell.write_xyz("hi.xyz")
     assert len(new_mols[0]) == 37
+
+def test_centroid(c_o):
+    cen = c_o.centroid()
+    assert cen == 0.5
