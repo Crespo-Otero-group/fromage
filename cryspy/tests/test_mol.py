@@ -149,3 +149,8 @@ def test_centroid(c_o):
 def test_center(c_o):
     c_o.center_mol()
     assert c_o[0].x == approx(-0.5)
+
+def test_translate(c_o):
+    vec = np.array([0.25,1.0,0.0])
+    c_o.translate(vec)
+    assert c_o[1].x == approx(0.75)
