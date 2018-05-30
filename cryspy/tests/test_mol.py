@@ -154,3 +154,9 @@ def test_translate(c_o):
     vec = np.array([0.25,1.0,0.0])
     c_o.translate(vec)
     assert c_o[1].x == approx(1.25)
+
+def test_supercell(hc1_cell):
+    trans = np.array([2,2,2])
+    new_cell = hc1_cell.supercell(trans)
+    assert len(new_cell) == 1184
+
