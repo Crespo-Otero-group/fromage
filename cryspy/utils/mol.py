@@ -12,7 +12,7 @@ def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
     if not isinstance(to_test, Mol):
         raise TypeError("Cannot cast " +
-                        type(to_test).__name__ + " and Mol object")
+                        type(to_test).__name__ + " to Mol object")
 
 
 class Mol(object):
@@ -318,3 +318,27 @@ class Mol(object):
         for atom in self.atoms:
             atom.v_translate(vector)
         return
+    def supercell(self, trans):
+        """
+        Return a supercell of I x J x K
+
+        Parameters
+        ----------
+        trans : numpy array of length 3
+            Multiplications of the primitive cell
+        Returns
+        -------
+        supercell : Mol object
+            New supercell with adjusted lattice vectors
+
+        """
+        cart = [0, 1, 2]
+        supercell = deepcopy(self)
+        for comp in cart:
+            if trans[comp] != 1:
+                for mult in range(trans[comp])[1:]:
+                    new_atoms = [i.v_translated(mult * self.vectors[comp]) for i in supercell]
+                    supercell += new_atoms
+        out_vec = (self.vectors.T * trans.transpose()).T
+        supercell.vectors = out_vec
+        return supercell
