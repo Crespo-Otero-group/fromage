@@ -337,7 +337,7 @@ class Mol(object):
         for comp in cart:
             if trans[comp] != 1:
                 for mult in range(trans[comp])[1:]:
-                    new_atoms = [i.v_translated(mult * self.vectors[comp]) for i in supercell]
+                    new_atoms = Mol([i.v_translated(mult * self.vectors[comp]) for i in supercell])
                     supercell += new_atoms
         out_vec = (self.vectors.T * trans.transpose()).T
         supercell.vectors = out_vec
