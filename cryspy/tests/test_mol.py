@@ -160,3 +160,12 @@ def test_supercell(hc1_cell):
     new_cell = hc1_cell.supercell(trans)
     assert len(new_cell) == 1184
 
+def test_centered_supercell(hc1_cell):
+    trans = np.array([1,1,1])
+    new_cell = hc1_cell.centered(trans)
+    assert len(new_cell) == approx(1332)
+
+def test_centered_supercell(hc1_cell):
+    trans = np.array([1,1,1])
+    new_cell = hc1_cell.centered(trans, from_origin=True)
+    assert len(new_cell) == approx(592)
