@@ -94,6 +94,12 @@ class Mol(object):
         """Write an xyz file of the Mol"""
         ef.write_xyz(name, self.atoms)
 
+    def empty_mol(self):
+        """Return an empty mol with the same properties"""
+        new_mol = deepcopy(self)
+        new_mol.atoms = []
+        return new_mol
+
     def select(self, labels):
         """
         Return a molecule out of the current Mol.
@@ -318,6 +324,7 @@ class Mol(object):
         for atom in self.atoms:
             atom.v_translate(vector)
         return
+
     def supercell(self, trans):
         """
         Return a supercell of I x J x K
@@ -332,13 +339,60 @@ class Mol(object):
             New supercell with adjusted lattice vectors
 
         """
-        cart = [0, 1, 2]
-        supercell = deepcopy(self)
-        for comp in cart:
-            if trans[comp] != 1:
-                for mult in range(trans[comp])[1:]:
-                    new_atoms = Mol([i.v_translated(mult * self.vectors[comp]) for i in supercell])
-                    supercell += new_atoms
+        new_cell = self.empty_mol()
+        for a_mult in range(trans[0]):
+            for b_mult in range(trans[1]):
+                for c_mult in range(trans[1]):
+                    vector = a_mult * self.vectors[0] + b_mult * self.vectors[1] + c_mult * self.vectors[2]
+                    new_atoms = Mol([i.v_translated(vector) for i in self.atoms])
+                    new_cell += new_atoms
         out_vec = (self.vectors.T * trans.transpose()).T
-        supercell.vectors = out_vec
-        return supercell
+        new_cell.vectors = out_vec
+        return new_cell
+
+    def centered_supercell(self, trans, from_origin=False):
+        """
+        Make a bigger supercell out of an input cell.
+
+        The cell is multiplied positively and negatively through each lattice
+        vector so that the supercluster ends up being
+        (1+2*trans[0])*(1+2*trans[1])*(1+2*trans[2]) times larger. For example if the
+        input is 1,1,1 for a cubic unit cell, the output will be the original unit
+        cell surrounded by 26 other unit cells forming a total 3x3x3 cube.
+
+        Alternatively, the multiplication can be centered around the origin, a corner of the
+        unit cell, instead of the centre. In that case the supercluster ends up being
+        only (2*trans[0])*(2*trans[1])*(2*trans[2])
+
+        Parameters
+        ----------
+        trans : numpy array of length 3
+            Multiplications of the primitive cell
+        from_origin : bool
+            Determines the kind of multiplication. True is centre of the cell as
+            the, False is corner of the cell.
+
+        Returns
+        -------
+        mega_cell : Mol object
+            The resulting supercell
+
+        """
+        trans_series = [0,0,0]
+        for i,tra in enumerate(trans):
+            if from_origin:
+                trans_series[i] = list(range(-tra, tra))
+            else:
+                trans_series[i] = list(range(-tra, tra+1))
+        trans_series = np.array(trans_series)
+
+        new_cell = self.empty_mol()
+        for a_mult in trans_series[0]:
+            for b_mult in trans_series[1]:
+                for c_mult in trans_series[2]:
+                    vector = a_mult * self.vectors[0] + b_mult * self.vectors[1] + c_mult * self.vectors[2]
+                    new_atoms = Mol([i.v_translated(vector) for i in self.atoms])
+                    new_cell += new_atoms
+        out_vec = (self.vectors.T * trans.transpose()).T
+        new_cell.vectors = out_vec
+        return new_cell
