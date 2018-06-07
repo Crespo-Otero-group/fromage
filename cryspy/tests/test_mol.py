@@ -174,3 +174,8 @@ def test_centered_supercell_alt(hc1_cell):
     trans = np.array([1,1,1])
     new_cell = hc1_cell.centered_supercell(trans, from_origin=True)
     assert len(new_cell) == approx(1184)
+
+def test_make_cluster(hc1_cell):
+    clust = hc1_cell.make_cluster(7)
+    clust.write_xyz("hi.xyz")
+    assert len(clust) == 518

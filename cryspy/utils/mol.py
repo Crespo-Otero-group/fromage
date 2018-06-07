@@ -396,3 +396,86 @@ class Mol(object):
         out_vec = (self.vectors.T * trans.transpose()).T
         new_cell.vectors = out_vec
         return new_cell
+
+    def trans_from_rad(self, clust_rad):
+        """
+        Generate the translations necessary to encapsulate a sphere of given rad
+
+        Parameters
+        ----------
+        clust_rad : float
+            Radius defining a sphere
+
+        Returns
+        -------
+        trans_count : 3 x 1 numpy array
+            The translations required for the unit cell to contain the sphere
+
+        """
+
+        # determine how many unit cells we need
+        vectors = deepcopy(self.vectors)
+
+        # vectors normal to faces
+        a_perp = np.cross(vectors[1],vectors[2])
+        b_perp = np.cross(vectors[2],vectors[0])
+        c_perp = np.cross(vectors[0],vectors[1])
+
+        # the three normalised unit vectors
+        perp = np.array([a_perp/np.linalg.norm(a_perp), b_perp/np.linalg.norm(b_perp), c_perp/np.linalg.norm(c_perp)])
+
+        trans_count = np.array([1,1,1])
+
+        # distances from faces
+        distances = np.array([0.0,0.0,0.0])
+
+        new_vectors = deepcopy(vectors)
+
+        for comp in range(3):
+            while True:
+                trans_count[comp] += 1
+                distances[comp] = np.dot(new_vectors[comp], perp[comp])
+                new_vectors[comp] = trans_count[comp] * vectors[comp]
+                if distances[comp] > clust_rad:
+                    break
+        trans_count -= np.array([1,1,1])
+        return trans_count
+
+    def make_cluster(self, clust_rad):
+        """
+        Generate a cluster of molecules from a primitive cell
+
+        This first makes a supercell of the correct size which will contain with
+        one additional buffer shell. Then the sphere is generated from this new
+        supercell by connectivity.
+
+        Parameters
+        ----------
+        clust_rad : float
+            Radius defining a sphere. All molecules with atoms in the sphere are
+            to be grabbed
+        Returns
+        -------
+        cluster : Mol object
+            Sphericall cluster of molecules from their crystal positions
+
+        """
+        trans = self.trans_from_rad(clust_rad)
+        # add a buffer of one cell in order to not chop the molecules up
+        trans += np.array([1,1,1])
+        supercell = self.centered_supercell(trans, from_origin = True)
+
+        # atoms within the sphere of rad clust_rad
+        seed_atoms = Mol([])
+
+        for atom in supercell:
+            if atom.dist(0, 0, 0) < clust_rad:
+                seed_atoms.append(atom)
+
+        # atoms in the cluster (seed_atoms + atoms to complete molecules)
+        clust_atoms = Mol([])
+        for i, atom in enumerate(seed_atoms):
+            if atom not in clust_atoms:
+                mol_to_add = supercell.select(supercell.atoms.index(atom))
+                clust_atoms += mol_to_add
+        return clust_atoms
