@@ -135,7 +135,7 @@ def write_uc(in_name, vectors, aN, bN, cN, atoms):
             if coord < 0 or coord > 1:
                 # translate it to the range [0,1]
                 frac_pos[frac_pos.index(coord)] = coord % 1
-        str_line = "{:10.6f} {:10.6f} {:10.6f} {:10.10f} {:>6}".format(
+        str_line = "{:10.6f} {:10.6f} {:10.6f} {:14.10f} {:>6}".format(
             *frac_pos + [atom.q] + [atom.elem]) + "\n"
         out_file.write(str_line)
     out_file.close()
