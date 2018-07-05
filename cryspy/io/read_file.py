@@ -92,7 +92,7 @@ def read_xyz(in_name):
     # main list where each element is a relaxation step
     atom_step = []
 
-    for line in xyz_content:
+    for i,line in enumerate(xyz_content):
 
         # if the line is the amount of atoms in the system
         if line.strip():
@@ -103,7 +103,7 @@ def read_xyz(in_name):
 
                 # from 2 lines after the amount of atoms to the last atom line
                 # for the relaxation step
-                for line_in_step in xyz_content[xyz_content.index(line) + 2:xyz_content.index(line) + int(line) + 2]:
+                for line_in_step in xyz_content[i + 2:i + int(line) + 2]:
                     elemAtom = line_in_step.split()[0]
                     xAtom, yAtom, zAtom = map(float, line_in_step.split()[1:])
                     atoms.append(Atom(elemAtom, xAtom, yAtom, zAtom))
