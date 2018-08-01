@@ -7,6 +7,7 @@ outside of this file for clarity.
 import sys
 import numpy as np
 
+from cryspy.utils.mol import Mol
 from cryspy.utils import atom as at
 from cryspy.utils import per_table as per
 from cryspy.utils.atom import Atom
@@ -129,7 +130,7 @@ def read_pos(in_name):
         Name of the file to read
     Returns
     -------
-    atom_step = list of Atom objects
+    atom_step : list of Atom objects
         The last or only set of atomic positions in the file
 
     """
@@ -137,6 +138,23 @@ def read_pos(in_name):
 
     return atoms
 
+def mol_from_file(in_name):
+    """
+    Return a Mol object from a file
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    atom_step : Mol object
+        The atomic positions in the file
+
+    """
+    mol = Mol(read_pos(in_name))
+
+    return mol
 
 def read_cp2k(in_name, pop="ESP"):
     """
