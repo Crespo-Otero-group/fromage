@@ -67,6 +67,7 @@ class Atom(object):
         self.at_num = table[self.elem.lower()]["at_num"]
         self.valence_e = table[self.elem.lower()]["valence_e"]
         self.vdw = table[self.elem.lower()]["vdw"]
+        self.mass = table[self.elem.lower()]["mass"]
         self.my_pos = np.array([self.x, self.y, self.z])
         # to string methods to be used mainly for debugging and .qc file
 
