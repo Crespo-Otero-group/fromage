@@ -5,7 +5,9 @@ This module contains the information from the periodic table
 # This list is for reverse searching e.g. having the atomic number but not the
 # symbol. The format is:
 # Lower case symbol, symbol, atomic number, number of valence electrons,
-# vdw radius in Angstrom
+# vdw radius in Angstrom, mass in Da
+# Atomic masses are taken from:
+# https://www.lenntech.com/periodic/mass/atomic-mass.htm
 periodic_list = [("", "", 0, 0, 0.0,0.0),
                  ("point", "point", 0, 0, 0.0, 0.0),
                  ("h", "H", 1, 1, 1.2, 1.0079),
