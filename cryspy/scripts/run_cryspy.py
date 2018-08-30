@@ -18,11 +18,8 @@ from datetime import datetime
 from scipy.optimize import minimize
 
 from cryspy.io import read_file as rf
-from cryspy.io import edit_file as ef
 from cryspy.utils import handle_atoms as ha
 from cryspy.utils import calc
-from cryspy.utils.atom import Atom
-
 
 def sequence(in_pos):
     """
