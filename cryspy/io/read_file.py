@@ -283,7 +283,7 @@ def read_g_char(in_name, pop="ESP", debug=False):
             break
     # find each occurrence of Energy
     for line in content:
-        if "Done" in line:
+        if "SCF Done" in line:
             energy = float(line.split()[4])
         if "Total Energy" in line:
             energy = float(line.split()[4])

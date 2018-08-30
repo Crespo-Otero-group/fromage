@@ -25,7 +25,7 @@ from cryspy.io import edit_file as ef
 from cryspy.io import parse_config_file as pcf
 from cryspy.utils import handle_atoms as ha
 from cryspy.scripts.assign_charges import assign_charges
-
+from cryspy.utils.mol import Mol
 
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
     """
@@ -455,10 +455,8 @@ if __name__ == '__main__':
             # assign charges to the rest of the cell
             assign_charges(high_target_pop_mol, None, high_shell, None, max_bl)
         else:
-            # make a very big cell
-            high_mega = ha.make_mega_cell(atoms, traAN, traBN, traCN, vectors, alt_multi=True)
             # get a cluster of atoms
-            high_clust = ha.make_cluster(high_mega, clust_rad, max_bl)
+            high_clust = Mol(atoms,vectors=vectors).make_cluster(clust_rad)
             # make a list of shell atoms
             high_shell = []
             for atom_i in high_clust:
@@ -508,10 +506,8 @@ if __name__ == '__main__':
         # generate a shell of molecules with low level charges
         low_atoms = [copy(i) for i in atoms]
         populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
-        # make a very big cell
-        mega = ha.make_mega_cell(low_atoms, traAN, traBN, traCN, vectors, alt_multi=True)
         # get a cluster of atoms
-        clust = ha.make_cluster(mega, clust_rad, max_bl)
+        clust = Mol(low_atoms,vectors=vectors).make_cluster(clust_rad)
         # make a list of shell atoms
         shell = []
         for atom_i in clust:
