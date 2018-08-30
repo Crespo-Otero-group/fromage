@@ -24,7 +24,6 @@ from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
 from cryspy.io import parse_config_file as pcf
 from cryspy.utils import handle_atoms as ha
-from cryspy.utils.atom import Atom
 from cryspy.scripts.assign_charges import assign_charges
 
 

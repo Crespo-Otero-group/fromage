@@ -13,9 +13,7 @@ import time
 
 from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
-from cryspy.io import parse_config_file as pcf
 from cryspy.utils import handle_atoms as ha
-from cryspy.fdist import fdist as fd
 
 
 def compare_id(id_i, id_j):
