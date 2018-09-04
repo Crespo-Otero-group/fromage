@@ -7,14 +7,12 @@ unique monomer identities and modified 'uncropped' unit cells.
 import argparse
 import numpy as np
 import sys
-from copy import copy, deepcopy
+from copy import deepcopy
 import itertools as it
 import time
 
 from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
-from cryspy.utils import handle_atoms as ha
-
 
 def compare_id(id_i, id_j):
     """
