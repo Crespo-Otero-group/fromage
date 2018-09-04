@@ -493,3 +493,42 @@ class Mol(object):
                 purged_mol.append(atom_a)
         self.atoms = purged_mol
         return
+
+    def dir_to_frac_pos(self):
+        """Move all atoms to fractional coordinates"""
+
+        out_mol = deepcopy(self)
+        # transpose to get the transformation matrix
+        M = np.transpose(self.vectors)
+        # inverse transformation matrix
+        U = np.linalg.inv(M)
+
+        for atom in out_mol:
+            # change of basis transformation
+            dir_pos = atom.my_pos
+            frac_pos = np.dot(U, dir_pos)
+            for i, coord in enumerate(frac_pos):
+                # if the coordinate is out of range
+                if coord < 0 or coord > 1:
+                    # translate it to the range [0,1]
+                    frac_pos[i] = coord % 1
+            atom.set_pos(frac_pos)
+
+        return out_mol
+
+    def frac_to_dir_pos(self):
+        """Move all atoms to direct coordinates"""
+        out_mol = deepcopy(self)
+        for atom in out_mol:
+            new_pos = np.matmul(self.vectors.T,atom.get_pos())
+            atom.set_pos(new_pos)
+
+        return out_mol
+
+    def confined(self):
+        """Move all atoms to fit inside the primitive cell"""
+        frac_mol = self.dir_to_frac_pos()
+        print(frac_mol[0])
+        out_mol = frac_mol.frac_to_dir_pos()
+
+        return out_mol
