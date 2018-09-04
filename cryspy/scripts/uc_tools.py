@@ -7,7 +7,7 @@ unique monomer identities and modified 'uncropped' unit cells.
 import argparse
 import numpy as np
 import sys
-from copy import copy
+from copy import copy, deepcopy
 import itertools as it
 import time
 
@@ -47,23 +47,27 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, output, max_r, print_mono, trans):
+def main(in_xyz, vectors_file, complete, output, min_lap, print_mono, trans):
+    atoms = rf.mol_from_file(in_xyz)
     vectors = rf.read_vectors(vectors_file)
-    atoms = rf.read_pos(in_xyz)
+    atoms.vectors = vectors
+    atoms.min_lap = min_lap
 
     if print_mono and not complete:
         print("-c is required for -m")
         return
     if complete:
         # get the modified (uncropped) unit cell
-        mod_cell, mols = ha.complete_cell(atoms, vectors, max_bl=max_r)
-        ef.write_xyz(output, mod_cell)
+        mod_cell, mols = atoms.complete_cell()
+        mod_cell.write_xyz(output)
     else:
-        mod_cell = copy(atoms)
+        mod_cell = deepcopy(atoms)
 
     if trans:
-        new_atoms,new_vec = ha.supercell(mod_cell, vectors, np.array(trans))
-        ef.write_xyz("supercell_out.xyz",new_atoms)
+        translation = np.array(trans)
+        new_atoms = mod_cell.supercell(translation)
+        new_vec = (vectors.T * translation.transpose()).T
+        new_atoms.write_xyz("supercell_out.xyz")
         ef.write_lat_vec("supercell_vectors",new_vec)
 
     if print_mono:
@@ -131,13 +135,13 @@ if __name__ == '__main__':
         "vectors", help="Input lattice vectors", default="vectors")
     parser.add_argument(
         "-o", "--output", help="Name of the output file", default="out_cell.xyz", type=str)
-    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
+    parser.add_argument("-l", "--overlap", help="Minimum distance that adjacent vdw spheres need to overlap to constitute a bond. Default 0.4 A",
                         default=1.7, type=float)
     parser.add_argument("-c", "--complete", help="Complete the molecules in the cell", action="store_true")
     parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c", action="store_true")
     parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.complete, args.output, args.bond, args.mono, args.translations)
+    main(args.in_xyz, args.vectors, args.complete, args.output, args.overlap, args.mono, args.translations)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
