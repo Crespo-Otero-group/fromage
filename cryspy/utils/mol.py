@@ -479,3 +479,17 @@ class Mol(object):
                 mol_to_add = supercell.select(supercell.atoms.index(atom))
                 clust_atoms += mol_to_add
         return clust_atoms
+
+    def remove_duplicates(self, thresh=0.001):
+        """Remove the duplicate atoms"""
+        purged_mol = Mol([self.atoms[0]])
+        for atom_a in self[1:]:
+            unique = True
+            for atom_b in purged_mol:
+                if atom_a.very_close(atom_b, thresh=thresh):
+                    unique = False
+                    break
+            if unique:
+                purged_mol.append(atom_a)
+        self.atoms = purged_mol
+        return

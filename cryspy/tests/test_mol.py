@@ -64,6 +64,16 @@ def c_o():
     out_mol = Mol([c_at, o_at])
     return out_mol
 
+@pytest.fixture
+def h2o_dup():
+    out_mol = rf.mol_from_file("h2o_repeated.xyz")
+    return out_mol
+
+def test_duplicity(h2o_dup):
+    """Check for repeated atoms"""
+    h2o_dup.remove_duplicates()
+    assert len(h2o_dup) == 3
+
 def test_len(h2o_dimer):
     """The len method is implemented"""
     assert len(h2o_dimer) == 6
