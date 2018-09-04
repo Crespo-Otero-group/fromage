@@ -81,6 +81,23 @@ class Atom(object):
     def __eq__(self, other):
         return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
+    def np_pos(np_pos, self):
+        """
+        Assign coordinates via numpy array
+
+        Parameters
+        ----------
+        np_pos : 3 x 1 numpy array
+            The position to assign to the atom
+
+        """
+
+        self.x = np_pos[0]
+        self.y = np_pos[1]
+        self.z = np_pos[2]
+
+        return
+    
     def very_close(self, other, thresh=0.001):
         """Check if two atoms are very close together"""
         x_cond = abs(self.x - other.x) < thresh
