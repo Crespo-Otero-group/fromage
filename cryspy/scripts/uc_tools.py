@@ -45,7 +45,7 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, output, min_lap, print_mono, trans):
+def main(in_xyz, vectors_file, complete, confine, frac, output, min_lap, print_mono, trans):
     atoms = rf.mol_from_file(in_xyz)
     vectors = rf.read_vectors(vectors_file)
     atoms.vectors = vectors
@@ -54,12 +54,32 @@ def main(in_xyz, vectors_file, complete, output, min_lap, print_mono, trans):
     if print_mono and not complete:
         print("-c is required for -m")
         return
+
+    if sum([complete, confine,frac]) > 1:
+        print("-c, -C and -f are mutually exclusive")
+        return
+
+    print_now = True
+
     if complete:
         # get the modified (uncropped) unit cell
         mod_cell, mols = atoms.complete_cell()
-        mod_cell.write_xyz(output)
+    elif confine:
+        # get the cell confined to primitive
+        mod_cell = atoms.confined()
+    elif frac:
+        # get the cell in fractional coordinates
+        mod_cell = atoms.dir_to_frac_pos()
     else:
         mod_cell = deepcopy(atoms)
+        print_now = False
+
+
+    if print_now:
+        mod_cell.write_xyz(output)
+
+    if print_now:
+        mod_cell.write_xyz(output)
 
     if trans:
         translation = np.array(trans)
@@ -135,11 +155,14 @@ if __name__ == '__main__':
         "-o", "--output", help="Name of the output file", default="out_cell.xyz", type=str)
     parser.add_argument("-l", "--overlap", help="Minimum distance that adjacent vdw spheres need to overlap to constitute a bond. Default 0.4 A",
                         default=1.7, type=float)
-    parser.add_argument("-c", "--complete", help="Complete the molecules in the cell", action="store_true")
+    parser.add_argument("-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
+    parser.add_argument("-C", "--confine", help="Confine the molecule to the primitive cell. Incompatible with -c or -f", action="store_true")
+    parser.add_argument("-f", "--fractional", help="Print the xyz in fractional coordinates. Incompatible with -c or -C", action="store_true")
     parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c", action="store_true")
     parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
+
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.complete, args.output, args.overlap, args.mono, args.translations)
+    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.output, args.overlap, args.mono, args.translations)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))

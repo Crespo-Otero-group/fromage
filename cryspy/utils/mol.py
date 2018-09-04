@@ -528,7 +528,6 @@ class Mol(object):
     def confined(self):
         """Move all atoms to fit inside the primitive cell"""
         frac_mol = self.dir_to_frac_pos()
-        print(frac_mol[0])
         out_mol = frac_mol.frac_to_dir_pos()
 
         return out_mol
