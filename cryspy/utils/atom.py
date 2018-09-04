@@ -81,9 +81,8 @@ class Atom(object):
     def __eq__(self, other):
         return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
-    def very_close(self, other):
+    def very_close(self, other, thresh=0.001):
         """Check if two atoms are very close together"""
-        thresh = 0.001
         x_cond = abs(self.x - other.x) < thresh
         y_cond = abs(self.y - other.y) < thresh
         z_cond = abs(self.z - other.z) < thresh
