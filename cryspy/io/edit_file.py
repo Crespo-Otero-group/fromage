@@ -1,11 +1,7 @@
 """Functions for creating files needed for other software"""
 
 import numpy as np
-import os
 from random import randint
-
-from cryspy.utils.atom import Atom
-
 
 def write_cp2k(in_name, file_name, vectors, atoms, temp_name):
     """
