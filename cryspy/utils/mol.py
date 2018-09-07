@@ -342,7 +342,7 @@ class Mol(object):
         new_cell = self.empty_mol()
         for a_mult in range(trans[0]):
             for b_mult in range(trans[1]):
-                for c_mult in range(trans[1]):
+                for c_mult in range(trans[2]):
                     vector = a_mult * self.vectors[0] + b_mult * self.vectors[1] + c_mult * self.vectors[2]
                     new_atoms = Mol([i.v_translated(vector) for i in self.atoms])
                     new_cell += new_atoms
