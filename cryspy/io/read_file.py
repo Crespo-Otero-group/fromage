@@ -283,7 +283,7 @@ def read_g_char(in_name, pop="ESP", debug=False):
             break
     # find each occurrence of Energy
     for line in content:
-        if "Done" in line:
+        if "SCF Done" in line:
             energy = float(line.split()[4])
         if "Total Energy" in line:
             energy = float(line.split()[4])
@@ -479,11 +479,11 @@ def read_g_pos(in_name):
     for i, line in enumerate(content):
         if 'Input orientation:' in line:
             ori_line = i
-        if 'Distance matrix' in line:
-            dist_line = i
             break
     atoms = []
-    for line in content[ori_line + 5:dist_line - 1]:
+    for line in content[ori_line + 5:]:
+        if not line.strip()[0].isdigit(): # if line not number
+            break
         line_bits = [float(i) for i in line.split()]
         symbol = per.num_to_elem(line_bits[1])
         atom_to_add = Atom(symbol, line_bits[3], line_bits[4], line_bits[5], 0)
