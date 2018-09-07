@@ -49,6 +49,16 @@ def hc1_cell():
     return cell
 
 @pytest.fixture
+def hc1_complete_cell():
+    """Return an HC1 cell"""
+    cell = Mol(rf.read_pos("hc1_complete_cell.xyz"))
+    vectors = np.array([[12.1199998856, 0.0, 0.0],
+                        [0.0, 10.2849998474, 0.0],
+                        [-5.4720203118, 0.0, 11.2441994632]])
+    cell.vectors = vectors
+    return cell
+
+@pytest.fixture
 def newat():
     """Return an Atom object C at origin"""
     return Atom("C", 0.0, 0.0, 0.0)
@@ -63,6 +73,16 @@ def c_o():
     o_at = Atom("O", 1.0, 0.0, 0.0)
     out_mol = Mol([c_at, o_at])
     return out_mol
+
+@pytest.fixture
+def h2o_dup():
+    out_mol = rf.mol_from_file("h2o_repeated.xyz")
+    return out_mol
+
+def test_duplicity(h2o_dup):
+    """Check for repeated atoms"""
+    h2o_dup.remove_duplicates()
+    assert len(h2o_dup) == 3
 
 def test_len(h2o_dimer):
     """The len method is implemented"""
@@ -177,5 +197,8 @@ def test_centered_supercell_alt(hc1_cell):
 
 def test_make_cluster(hc1_cell):
     clust = hc1_cell.make_cluster(7)
-    clust.write_xyz("hi.xyz")
     assert len(clust) == 518
+
+def test_confine(hc1_complete_cell):
+    conf = hc1_complete_cell.confined()
+    assert conf[19].x == approx(-0.202155)

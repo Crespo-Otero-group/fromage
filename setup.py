@@ -19,5 +19,6 @@ setup(name='cryspy',
                'cryspy/scripts/dimer_select.py',
                'cryspy/scripts/pick_mol.py',
                'cryspy/scripts/pop_stat.py',
-               'cryspy/scripts/prepare_calculation.py'],
+               'cryspy/scripts/prepare_calculation.py',
+               'cryspy/scripts/uc_tools.py'],
       )
