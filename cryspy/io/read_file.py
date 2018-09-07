@@ -482,7 +482,7 @@ def read_g_pos(in_name):
             break
     atoms = []
     for line in content[ori_line + 5:]:
-        if not line.strip()[1].isdigit(): # if line not number
+        if not line.strip()[0].isdigit(): # if line not number
             break
         line_bits = [float(i) for i in line.split()]
         symbol = per.num_to_elem(line_bits[1])
