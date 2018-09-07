@@ -77,6 +77,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
     if dupli:
         # purge duplicate atoms
         mod_cell.remove_duplicates()
+        print_now = True
 
     if print_now:
         mod_cell.write_xyz(output)
@@ -160,10 +161,10 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--fractional", help="Print the xyz in fractional coordinates. Incompatible with -c or -C", action="store_true")
     parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c", action="store_true")
     parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
-    parser.add_argument("-d", "--duplicate_atoms", help="Purge duplicate atoms", action="store_true")
+    parser.add_argument("-d", "--remove_duplicate_atoms", help="Purge duplicate atoms", action="store_true")
 
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.duplicate_atoms, args.output, args.overlap, args.mono, args.translations)
+    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
