@@ -159,7 +159,7 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
     parser.add_argument("-C", "--confine", help="Confine the molecule to the primitive cell. Incompatible with -c or -f", action="store_true")
     parser.add_argument("-f", "--fractional", help="Print the xyz in fractional coordinates. Incompatible with -c or -C", action="store_true")
-    parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c", action="store_true")
+    parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c. NB: This breaks severely if the wrong -l is chosen", action="store_true")
     parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
     parser.add_argument("-d", "--remove_duplicate_atoms", help="Purge duplicate atoms", action="store_true")
 
