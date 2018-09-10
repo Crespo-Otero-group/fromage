@@ -4,11 +4,9 @@ When it comes to energy and gradient values, the units generally
 the same as in the file being read. Keep further unit conversion
 outside of this file for clarity.
 """
-import sys
 import numpy as np
 
 from cryspy.utils.mol import Mol
-from cryspy.utils import atom as at
 from cryspy.utils import per_table as per
 from cryspy.utils.atom import Atom
 
@@ -739,4 +737,3 @@ def read_vectors(in_file):
     if len(vectors) != 3:
         raise ValueError("The lattice vector file does not have 3 vectors")
     return vectors
-
