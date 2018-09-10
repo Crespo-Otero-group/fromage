@@ -643,7 +643,6 @@ def read_g_cas(in_name):
         lines = data.readlines()
     grad_g = []
     grad_e = []
-    reading = False
     for line in lines:
         if line.strip():
             if line.strip()[0].isalpha():
