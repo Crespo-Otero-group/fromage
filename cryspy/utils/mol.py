@@ -550,3 +550,26 @@ class Mol(object):
         for atom in self:
             tot_pot += atom.es_pot(position)
         return tot_pot
+
+    def change_charges(self, charges):
+        """
+        Change all of the charges of the constituent atoms at once
+
+        Parameters
+        ----------
+        charges : array-like of floats
+            Contains all of the new charges. IMPORTANT: they need to be in the
+            order corresponding to self.atoms
+
+        """
+        for i, atom in enumerate(self.atoms):
+            atom.q = charges[i]
+        return
+
+    def charges(self):
+        """Return an array of charges"""
+        l_char = []
+        for atom in self.atoms:
+            l_char.append(atom.q)
+        arr_char = np.array(l_char)
+        return arr_char

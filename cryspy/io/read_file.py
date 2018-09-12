@@ -388,6 +388,32 @@ def read_gauss(in_name):
         atoms.append(atom_2_add)
     return atoms
 
+def mol_from_gauss(in_name, pop="ESP"):
+    """
+    Read Mol from a Gaussian log file
+
+    Include the requested charges.
+
+    Parameters:
+    -----------
+        in_name : str
+            Name of the file to read
+        pop : str, optional
+            Type of charges requested
+    Returns
+    -------
+        out_mol : Mol object
+            The atoms in the Gaussian log file, along with their charge
+
+    """
+    atoms = read_g_pos(in_name)
+    charges = read_g_char(in_name, pop=pop)[0]
+
+    for i, char in enumerate(charges):
+        atoms[i].q = char
+    out_mol = Mol(atoms)
+
+    return out_mol
 
 def read_fchk(in_name):
     """

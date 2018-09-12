@@ -42,6 +42,9 @@ class Atom(object):
         self.z = 0.0
         self.q = 0.0
         self.num = 1
+        # Atom objects with no charge can have feel a finite electostatic
+        # potential which we include as
+        self.es = 0.0
         # The connectivity is a frozenset (because a list would have a built-in ordering)
         # of the tuples of the form (A,N) where A is an tuple of different
         # distances to atoms e.g. ("C",4) if there is a carbon 4 bonds away. N
