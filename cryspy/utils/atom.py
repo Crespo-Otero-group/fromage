@@ -133,7 +133,7 @@ class Atom(object):
 
     def v_dist(self, position):
         """Return distance of the atom from a point defined by an array-like"""
-        r =  self.dist(self.x, self.y, self.z, position[0], position[1], position[2])
+        r =  self.dist(position[0], position[1], position[2])
         return r
 
     def dist_at_general(self, dist_type, other_atom):
@@ -397,5 +397,5 @@ class Atom(object):
             The potential of the Atom felt at the input position
 
         """
-        pot = self.q / self.dist(position)
+        pot = self.q / self.v_dist(position)
         return pot
