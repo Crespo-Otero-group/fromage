@@ -103,6 +103,79 @@ class Calc(object):
         return
 
 
+class DFTB_calc(Calc):
+    """
+    Calculation of DFTB+ tested with v18.2
+
+    """
+
+    def run(self, atoms):
+        """
+        Write a DFTB .gen file and return a subprocess.Popen
+
+        Parameters
+        ----------
+        atoms : list of Atom objects
+            Atoms to be calculated with DFTB+
+        Returns
+        -------
+        proc : subprocess.Popen object
+            the object should have a .wait() method
+
+        """
+        dftb_path = os.path.join(self.here, self.calc_name)
+        os.chdir(dftb_path)
+
+        ef.write_xyz("geom.xyz",atoms)
+        subprocess.call("xyz2gen geom.xyz",shell=True)
+        # Run DFTB+
+        proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
+
+        os.chdir(self.here)
+
+        return proc
+
+    def read_out(self, positions, in_mol=None, in_shell=None):
+        """
+        Analyse a DFTB+ detailed.out file while printing geometry updates
+
+        To update the geom files, include in_mol and in_shell
+
+        Parameters
+        ----------
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
+        in_mol : list of Atom objects, optional
+            Atoms in the inner region. Include to write geom files
+        in_shell : list of Atom objects, optional
+            Atoms in the middle region. Include to write geom files
+        Returns
+        -------
+        energy : float
+            Energy calculated by DFTB+ in Hartree
+        gradients : list of floats
+            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+        scf_energy : float
+            The ground state energy in Hartree
+
+        """
+        dftb_path = os.path.join(self.here, self.calc_name)
+        os.chdir(dftb_path)
+
+        energy, gradients_b, scf_energy = rf.read_dftb_out("detailed.out")
+        # fix gradients units to Hartree/Angstrom
+        gradients = gradients_b * bohrconv
+        # update the geometry log
+        if in_mol != None:
+            self.update_geom(positions, in_mol, in_shell)
+
+        # truncate gradients if too long
+        gradients = gradients[:len(positions)]
+
+        os.chdir(self.here)
+        return (energy, gradients, scf_energy)
+
 class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09
