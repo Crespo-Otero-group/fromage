@@ -237,9 +237,6 @@ class Gauss_CAS_calc(Calc):
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
 
-        # stdout=FNULL to not have to read the output of formchk
-        FNULL = open(os.devnull, 'w')
-
         energy_e, grad_e, energy_g, grad_g = rf.read_g_cas(
             self.calc_name + ".log")
         # fix gradients units to Hartree/Angstrom
@@ -449,7 +446,6 @@ class Molcas_calc(Calc):
             the object should have a .wait() method
 
         """
-        FNULL = open(os.devnull, 'w')
         molcas_path = os.path.join(self.here, self.calc_name)
         os.chdir(molcas_path)
 
