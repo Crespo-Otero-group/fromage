@@ -618,7 +618,7 @@ def read_molcas(in_name):
 
 def read_dftb_out(in_name):
     """
-    Read a dftb+ ground state gradient detailed.out file
+    Read a dftb+ gradient detailed.out file
 
     Parameters
     ----------
@@ -636,6 +636,7 @@ def read_dftb_out(in_name):
     """
 
     grad = []
+    exci = 0
     with open(in_name) as lines:
         read_grad = False
         for line in lines:
@@ -648,8 +649,10 @@ def read_dftb_out(in_name):
                 read_grad = True
             if "Total energy" in line:
                 gr_energy = float(line.split()[4])
-    # This is a dirty hack before excited state gradients are figured out
-    ex_energy = gr_energy
+            if "Excitation Energy" in line:
+                exci += float(line.split()[1])
+
+    ex_energy = gr_energy + exci
 
     return ex_energy, grad, gr_energy
 
