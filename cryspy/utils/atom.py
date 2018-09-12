@@ -398,4 +398,4 @@ class Atom(object):
 
         """
         pot = self.q / self.dist(position)
-        return tot_pot
+        return pot
