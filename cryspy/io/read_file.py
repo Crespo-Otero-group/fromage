@@ -616,6 +616,42 @@ def read_molcas(in_name):
         ex_energy = gr_energy
     return ex_energy, grad, gr_energy
 
+def read_dftb_out(in_name):
+    """
+    Read a dftb+ ground state gradient detailed.out file
+
+    Parameters
+    ----------
+    in_name : str
+        name of the file to read
+    Returns
+    -------
+    ex_energy : None
+        There are no excited state gradients in dftb+ so this will always be empty
+    grad : numpy array of floats
+        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
+    gr_energy : float
+        Ground state energy in Hartree
+
+    """
+
+    grad = []
+    with open(in_name) as lines:
+        read_grad = False
+        for line in lines:
+            if not line.strip():
+                read_grad = False
+            if read_grad:
+                atom_grads = [float(i) for i in line.split()]
+                grad.extend(atom_grads)
+            if "Total Forces" in line:
+                read_grad = True
+            if "Total energy" in line:
+                gr_energy = float(line.split()[4])
+    # This is a dirty hack before excited state gradients are figured out
+    ex_energy = gr_energy
+
+    return ex_energy, grad, gr_energy
 
 def read_g_cas(in_name):
     """
