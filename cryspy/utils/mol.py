@@ -35,7 +35,7 @@ class Mol(object):
 
     """
 
-    def __init__(self, in_atoms, min_lap=0.4, vectors=np.zeros((3, 3))):
+    def __init__(self, in_atoms=[], min_lap=0.4, vectors=np.zeros((3, 3))):
         # In case the user feeds a lone atom:
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
@@ -462,23 +462,25 @@ class Mol(object):
         """
         trans = self.trans_from_rad(clust_rad)
         # add a buffer of one cell in order to not chop the molecules up
-        trans += np.array([1,1,1])
         supercell = self.centered_supercell(trans, from_origin = True)
-
         # atoms within the sphere of rad clust_rad
         seed_atoms = Mol([])
 
         for atom in supercell:
             if atom.dist(0, 0, 0) < clust_rad:
                 seed_atoms.append(atom)
-
-        # atoms in the cluster (seed_atoms + atoms to complete molecules)
-        clust_atoms = Mol([])
-        for i, atom in enumerate(seed_atoms):
-            if atom not in clust_atoms:
-                mol_to_add = supercell.select(supercell.atoms.index(atom))
-                clust_atoms += mol_to_add
+        max_mol_len = 0
+        while len(seed_atoms)>0:
+            mol = seed_atoms.select(0)
+            if len(mol) > max_mol_len:
+                max_mol_len = len(mol)
+                clust_atoms = Mol()
+            if len(mol) == max_mol_len:
+                clust_atoms += mol
+            for atom in mol:
+                seed_atoms.remove(atom)
         return clust_atoms
+
 
     def remove_duplicates(self, thresh=0.001):
         """Remove the duplicate atoms"""
