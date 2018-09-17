@@ -159,7 +159,6 @@ def test_complete_mol(hc1_cell):
 
 def test_complete_cell(hc1_cell):
     new_cell, new_mols = hc1_cell.complete_cell()
-    new_cell.write_xyz("hi.xyz")
     assert len(new_mols[0]) == 37
 
 def test_centroid(c_o):
