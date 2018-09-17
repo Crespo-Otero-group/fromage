@@ -72,4 +72,8 @@ def test_fit_to_pot(benz_pot_cub,benz_clust_char):
     return
 
 def test_sample(benz_pot_cub,benz_cell):
-    print(benz_pot_cub.shell_region(benz_cell, 1, 2))
+    pts = benz_pot_cub.shell_region(benz_cell, 0.2, 0.7)
+    out_mol = Mol([])
+    for point in pts:
+        out_mol.append(Atom("point",point[0],point[1],point[2]))
+    out_mol.write_xyz("tmp.xyz")

@@ -822,7 +822,7 @@ def read_cube(in_file):
     xyz_nums = [0,0,0]
     values = []
 
-    out_mol = Mol()
+    out_mol = Mol([])
     ind = 0
     natoms = 0
     with open(in_file) as lines:

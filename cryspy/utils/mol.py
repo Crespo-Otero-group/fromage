@@ -474,7 +474,7 @@ class Mol(object):
             mol = seed_atoms.select(0)
             if len(mol) > max_mol_len:
                 max_mol_len = len(mol)
-                clust_atoms = Mol()
+                clust_atoms = Mol([])
             if len(mol) == max_mol_len:
                 clust_atoms += mol
             for atom in mol:
