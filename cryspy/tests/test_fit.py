@@ -70,3 +70,6 @@ def test_fit_to_pot(benz_pot_cub,benz_clust_char):
     out_clust = var_atoms + fixed_atoms
     print(out_clust.es_pot([0,0,0]))
     return
+
+def test_sample(benz_pot_cub,benz_cell):
+    print(benz_pot_cub.shell_region(benz_cell, 1, 2))

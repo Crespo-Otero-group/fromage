@@ -202,11 +202,17 @@ class CubeGrid(object):
 
         """
         shell_points = []
-        for atom in sample_atoms:
-            in_r_scaled2 = (inner_r * atom.vdw)**2
-            out_r_scaled2 = (outer_r * atom.vdw)**2
-            for point in self.grid:
+        for point in self.grid:
+            add = False
+            for atom in sample_atoms:
+                # we compare squared distances to limit the amount of sqrt operations
+                in_r_scaled2 = (inner_r * atom.vdw)**2
+                out_r_scaled2 = (outer_r * atom.vdw)**2
                 dist2 = atom.dist2(point[0],point[1],point[2])
-                if in_r_scaled2 <= dist2 <= out_r_scaled2 and point not in shell_points:
-                    shell_points.append(point)
+                if in_r_scaled2 <= dist2 <= out_r_scaled2:
+                    add = True
+                    break
+            if add:
+                shell_points.append(point.tolist())
+        np.array(shell_points)
         return shell_points
