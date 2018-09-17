@@ -394,8 +394,8 @@ def mol_from_gauss(in_name, pop="ESP"):
 
     Include the requested charges.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
         in_name : str
             Name of the file to read
         pop : str, optional
@@ -806,8 +806,8 @@ def read_cube(in_file):
     """
     Read a cube file and return a Mol and a CubeGrid object
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     in_file : str
         Input file name
     Returns
