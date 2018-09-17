@@ -35,11 +35,38 @@ def benz_clust_char(benz_solo):
     ac.assign_charges(benz_solo, None, out_char_clust, None, 1.7)
     return out_char_clust
 
+@pytest.fixture
+def benz_pot_cub():
+    """Return the CubeGrid for a benzene cell potential"""
+    cub, mol = rf.read_cube("benz_pot.cube")
+    return cub
+
 def test_fit_benz_clust(benz_clust_char):
     sample_point = Atom("",0,0,0)
     sample_point2 = Atom("",0.1,0,0)
     sample_point.es = 0
     sample_point2.es = 0
-    fi.fit_points(benz_clust_char, Mol([sample_point, sample_point2]))
+    fi.fit_points(benz_clust_char, None, Mol([sample_point, sample_point2]))
+    return
 
+def test_fit_benz_clust_shell(benz_clust_char):
+    sample_point = Atom("",0,0,0)
+    sample_point2 = Atom("",0.1,0,0)
+    sample_point.es = 0
+    sample_point2.es = 0
+    fixed_atoms = benz_clust_char.select(0)
+    var_atoms = Mol([i for i in benz_clust_char if i not in fixed_atoms])
+    fi.fit_points(var_atoms, fixed_atoms,Mol([sample_point, sample_point2]))
+    return
+
+def test_fit_to_pot(benz_pot_cub,benz_clust_char):
+    print(benz_pot_cub.grid)
+    sample_point = Atom("",0,0,0)
+    sample_point.es = 0.17671
+    print(benz_clust_char.es_pot([0,0,0]))
+    fixed_atoms = benz_clust_char.select(0)
+    var_atoms = Mol([i for i in benz_clust_char if i not in fixed_atoms])
+    fi.fit_points(var_atoms, fixed_atoms,Mol([sample_point]))
+    out_clust = var_atoms + fixed_atoms
+    print(out_clust.es_pot([0,0,0]))
     return

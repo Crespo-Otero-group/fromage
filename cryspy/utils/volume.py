@@ -180,3 +180,33 @@ class CubeGrid(object):
         vox_vol = np.linalg.det(self.vectors)
 
         return filled * vox_vol
+
+    def shell_region(self, sample_atoms, inner_r, outer_r):
+        """
+        Return grid points in shell regions around given points
+
+        The shell region is determined by inner and outer radii which are then
+        scaled by the wdv radii of the corresponding atoms.
+
+        Parameters
+        ----------
+        sample_atoms : Mol object
+            The atoms which are to be enclosed by the shells
+        inner_r : float
+            The inner radius of the shell before wdv scaling
+        outer_r : float
+            The outer radius of the shell before scaling
+        Returns
+        -------
+        shell_points : numpy N x 4 array
+
+        """
+        shell_points = []
+        for atom in sample_atoms:
+            in_r_scaled2 = (inner_r * atom.vdw)**2
+            out_r_scaled2 = (outer_r * atom.vdw)**2
+            for point in self.grid:
+                dist2 = atom.dist2(point[0],point[1],point[2])
+                if in_r_scaled2 <= dist2 <= out_r_scaled2 and point not in shell_points:
+                    shell_points.append(point)
+        return shell_points

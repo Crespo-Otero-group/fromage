@@ -9,7 +9,7 @@ import numpy as np
 from cryspy.utils.mol import Mol
 from cryspy.utils import per_table as per
 from cryspy.utils.atom import Atom
-
+from cryspy.utils.volume import CubeGrid
 
 def read_vasp(in_name):
     """
@@ -801,3 +801,55 @@ def read_vectors(in_file):
     if len(vectors) != 3:
         raise ValueError("The lattice vector file does not have 3 vectors")
     return vectors
+
+def read_cube(in_file):
+    """
+    Read a cube file and return a Mol and a CubeGrid object
+
+    Parameters:
+    -----------
+    in_file : str
+        Input file name
+    Returns
+    -------
+    out_mol : Mol object
+        The atoms in the cube file
+    out_cub : CubeGrid object
+        The grid in the cube file
+
+    """
+    vectors = np.zeros((3,3))
+    xyz_nums = [0,0,0]
+    values = []
+
+    out_mol = Mol()
+    ind = 0
+    natoms = 0
+    with open(in_file) as lines:
+        for line in lines:
+            if ind == 2:
+                natoms = int(line.split()[0])
+                origin = np.array([float(i) for i in line.split()[1:]])
+            if ind == 3:
+                xyz_nums[0] = int(line.split()[0])
+                vectors[0] = np.array([float(i) for i in line.split()[1:]])
+            if ind == 4:
+                xyz_nums[1] = int(line.split()[0])
+                vectors[1] = np.array([float(i) for i in line.split()[1:]])
+            if ind == 5:
+                xyz_nums[2] = int(line.split()[0])
+                vectors[2] = np.array([float(i) for i in line.split()[1:]])
+                out_cub = CubeGrid(vectors, xyz_nums[0], xyz_nums[1], xyz_nums[2], origin)
+                out_cub.set_grid_coord()
+            if 6 <= ind < (6 + natoms):
+                line_s = line.split()
+                new_atom = Atom()
+                new_atom.elem = per.num_to_elem(int(line_s[0]))
+                new_atom.set_pos([float(i) for i in line_s[2:]])
+                out_mol.append(new_atom)
+            if ind >= (6 + natoms):
+                values.extend([float(i) for i in line.split()])
+            ind += 1
+    values_arr = np.array(values)
+    out_cub.grid[:, 3] = values_arr
+    return out_cub, out_mol

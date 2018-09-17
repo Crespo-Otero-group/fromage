@@ -45,7 +45,7 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, print_mono, trans):
+def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, print_mono, trans, clust_rad):
     atoms = rf.mol_from_file(in_xyz)
     vectors = rf.read_vectors(vectors_file)
     atoms.vectors = vectors
@@ -89,6 +89,10 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
         new_atoms.write_xyz("supercell_out.xyz")
         ef.write_lat_vec("supercell_vectors",new_vec)
 
+    if clust_rad > 0.0:
+        clust = atoms.make_cluster(clust_rad)
+        clust.write_xyz("cluster_out.xyz")
+        
     if print_mono:
         identities = []
         # for each molecule of the modified unit cell
@@ -162,9 +166,10 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c. NB: This breaks severely if the wrong -l is chosen", action="store_true")
     parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
     parser.add_argument("-d", "--remove_duplicate_atoms", help="Purge duplicate atoms", action="store_true")
-
+    parser.add_argument("-r", "--radius", help="Generate a cluster of molecules of the given radius. Radius 0.0 turns this off.",
+                        default=0.0, type=float)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations)
+    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations, args.radius)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
