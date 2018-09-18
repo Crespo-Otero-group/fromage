@@ -1,11 +1,11 @@
-cryspy\.fdist package
-=====================
+cryspy.fdist package
+====================
 
 Submodules
 ----------
 
-cryspy\.fdist\.fdist module
----------------------------
+cryspy.fdist.fdist module
+-------------------------
 
 .. automodule:: cryspy.fdist.fdist
     :members:
