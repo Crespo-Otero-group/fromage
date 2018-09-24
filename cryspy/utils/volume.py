@@ -45,6 +45,11 @@ class CubeGrid(object):
         # initiate grid
         self.grid = np.zeros((self.dimension, 4))
 
+    def get_enclosing_vectors(self):
+        n_vox = np.array([self.x_num, self.y_num, self.z_num])
+        enclosing_vectors = (self.vectors.T*n_vox).T
+        return enclosing_vectors
+
     def set_grid_coord(self):
         """Generate the coordinates of the voxel origins on the grid"""
 
@@ -231,8 +236,7 @@ class CubeGrid(object):
         -a,-b,-c
 
         """
-        n_vox = np.array([self.x_num, self.y_num, self.z_num])
-        lattice_vectors = (self.vectors.T*n_vox).T
+        lattice_vectors = self.get_enclosing_vectors()
         null_vec = np.array([0,0,0])
         grids = []
         for trans_a in [null_vec, lattice_vectors[0]]:
@@ -252,3 +256,9 @@ class CubeGrid(object):
         self.z_num *= 2
 
         return self
+
+    def confine_grid(self):
+        """Confine grid points in the enclosing box"""
+        for row in self.grid:
+            pos = row[0:3]
+        pass
