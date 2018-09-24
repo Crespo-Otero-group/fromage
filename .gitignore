@@ -4,6 +4,7 @@ cryspy/fdist/fdist.py
 cryspy/fdist/build
 **/*.swp
 **/*.pyc
+cryspy/test/.pytest_cache/**
 build/*
 doc/build/*
 .cache

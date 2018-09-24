@@ -78,6 +78,10 @@ def test_sample(benz_pot_cub,benz_cell):
         out_mol.append(Atom("point",point[0],point[1],point[2]))
     #out_mol.write_xyz("tmp.xyz")
 
-def test_supergrid(benz_pot_cub,benz_cell):
-    new_cub = benz_pot_cub.supergrid()
-    new_cub.out_cube("super.cub",benz_cell)
+def test_expand(benz_pot_cub,benz_cell):
+    new_cub = benz_pot_cub.expand()
+    new_cub.out_cube("exp.cub",benz_cell)
+
+def test_supercell(benz_pot_cub,benz_cell):
+    new_cub = benz_pot_cub.supergrid([2,2,2])
+    new_cub.out_cube("sup.cub",benz_cell)

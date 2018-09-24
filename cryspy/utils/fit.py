@@ -1,6 +1,7 @@
 """Fit point charges to match a given potential"""
 import numpy as np
 from cryspy.utils.mol import Mol
+
 def coeff_mat(var_points,samples):
     """Return the coefficients matrix"""
     out_mat = np.zeros((len(samples),len(var_points)))

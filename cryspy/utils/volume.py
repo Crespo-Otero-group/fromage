@@ -222,7 +222,7 @@ class CubeGrid(object):
         np.array(shell_points)
         return shell_points
 
-    def supergrid(self):
+    def expand(self):
         """
         Expand the grid so that the new grid has 8 times the volume
 
@@ -254,6 +254,35 @@ class CubeGrid(object):
         self.x_num *= 2
         self.y_num *= 2
         self.z_num *= 2
+
+        return self
+
+    def supergrid(self, trans):
+        """
+        Make a supercell cube out of the original cube grid
+
+        Parameters
+        ----------
+        trans : numpy array of length 3
+            Multiplications of the primitive cell
+
+        """
+        grids = []
+        lattice_vectors = self.get_enclosing_vectors()
+        for a_mult in range(trans[0]):
+            for b_mult in range(trans[1]):
+                for c_mult in range(trans[2]):
+                    new_grid = self.grid.copy()
+                    new_grid[:,0:3] += a_mult * lattice_vectors[0] + b_mult * lattice_vectors[1] + c_mult * lattice_vectors[2]
+                    grids.append(new_grid)
+
+        unsorted = np.concatenate(grids)
+        # The cube values are not yet order like:
+        #for i_x in x(for i_y in y(for i_z in z))
+        self.grid = unsorted[np.lexsort(np.rot90(unsorted))]
+        self.x_num *= trans[0]
+        self.y_num *= trans[1]
+        self.z_num *= trans[2]
 
         return self
 
