@@ -295,3 +295,26 @@ class CubeGrid(object):
         for row in self.grid:
             pos = row[0:3]
         pass
+
+    def sample_from_cell(self):
+        # atoms = rf.read_pos(cell_file)
+        # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
+        # output_file.flush()
+        # # the molecule of interest and the atoms which now contain
+        # # the full, unchopped molecule
+        # # NB: all objects in mol are also referenced inside atoms
+        # mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)
+        #
+        # # High level charge assignment
+        # populate_cell(atoms, high_pop_program, high_pop_file, high_pop_method)
+        #
+        # # find the centroid of the molecule
+        # c_x, c_y, c_z = ha.find_centroid(mol)
+        # # translate the molecule and atoms to the centroid
+        # for atom in atoms:
+        #     atom.translate(-c_x, -c_y, -c_z)
+        #
+        # # write useful xyz and new cell
+        # ef.write_xyz("mol.init.xyz", mol)
+        # if print_tweak:
+        #     ef.write_xyz("tweaked_cell.xyz", atoms)

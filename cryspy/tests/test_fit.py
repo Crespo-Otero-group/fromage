@@ -85,3 +85,6 @@ def test_expand(benz_pot_cub,benz_cell):
 def test_supercell(benz_pot_cub,benz_cell):
     new_cub = benz_pot_cub.supergrid([2,2,2])
     new_cub.out_cube("sup.cub",benz_cell)
+
+def test_sample_spheres_from_cell(benz_pot_cub,benz_cell):
+
