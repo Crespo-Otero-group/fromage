@@ -679,6 +679,7 @@ def read_dftb_out(in_name):
             if "Excitation Energy" in line:
                 exci += float(line.split()[2])
 
+    grad = np.array(grad)
     ex_energy = gr_energy + exci
 
     return ex_energy, grad, gr_energy
