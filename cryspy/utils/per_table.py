@@ -26,6 +26,7 @@ for atom in periodic_list:
             "vdw" : atom[4],
             "mass" : atom[5]}
 
+bohrconv = 1.88973
 
 def num_to_elem(num):
     """

@@ -1,7 +1,7 @@
 import numpy as np
 
 import cryspy.io.edit_file as ef
-
+import cryspy.utils.per_table as pt
 
 class CubeGrid(object):
     """
@@ -12,11 +12,11 @@ class CubeGrid(object):
     Attributes
     ----------
     vectors : 3x3 numpy array
-        The three vectors defining the shape of one voxel in Bohr
+        The three vectors defining the shape of one voxel in Angstrom
     x_num, y_num, z_num : ints
         Length of the parallelepiped in units of voxels
     origin : numpy array of length 3
-        Origin of the parallelepiped in Bohr
+        Origin of the parallelepiped in Angstrom
     grid : numpy array of x_num * y_num * z_num * x 4 dimension
         This determines a value and position at each point in space which is
         the origin of a voxel. The format is [[x1,y1,z1,val],[x1,y1,z2,val],...]
@@ -44,6 +44,11 @@ class CubeGrid(object):
         self.dimension = self.x_num * self.y_num * self.z_num
         # initiate grid
         self.grid = np.zeros((self.dimension, 4))
+
+    def get_enclosing_vectors(self):
+        n_vox = np.array([self.x_num, self.y_num, self.z_num])
+        enclosing_vectors = (self.vectors.T*n_vox).T
+        return enclosing_vectors
 
     def set_grid_coord(self):
         """Generate the coordinates of the voxel origins on the grid"""
@@ -180,3 +185,80 @@ class CubeGrid(object):
         vox_vol = np.linalg.det(self.vectors)
 
         return filled * vox_vol
+
+    def shell_region(self, sample_atoms, inner_r, outer_r):
+        """
+        Return grid points in shell regions around given points
+
+        The shell region is determined by inner and outer radii which are then
+        scaled by the wdv radii of the corresponding atoms.
+
+        Parameters
+        ----------
+        sample_atoms : Mol object
+            The atoms which are to be enclosed by the shells
+        inner_r : float
+            The inner radius of the shell before wdv scaling
+        outer_r : float
+            The outer radius of the shell before scaling
+        Returns
+        -------
+        shell_points : numpy N x 4 array
+
+        """
+        shell_points = []
+        for point in self.grid:
+            add = False
+            for atom in sample_atoms:
+                # we compare squared distances to limit the amount of sqrt operations
+                in_r_scaled2 = (inner_r * atom.vdw)**2
+                out_r_scaled2 = (outer_r * atom.vdw)**2
+                dist2 = atom.dist2(point[0],point[1],point[2])
+                if in_r_scaled2 <= dist2 <= out_r_scaled2:
+                    add = True
+                    break
+            if add:
+                shell_points.append(point.tolist())
+        np.array(shell_points)
+        return shell_points
+
+    def supergrid(self):
+        """
+        Expand the grid so that the new grid has 8 times the volume
+
+        The original grid has the origin at 0,0,0 so we add grids at origins:
+        -a, 0, 0
+         0,-b, 0
+         0, 0,-c
+        -a,-b, 0
+        -a, 0,-c
+         0,-b,-c
+        -a,-b,-c
+
+        """
+        lattice_vectors = self.get_enclosing_vectors()
+        null_vec = np.array([0,0,0])
+        grids = []
+        for trans_a in [null_vec, lattice_vectors[0]]:
+            for trans_c in [null_vec, lattice_vectors[1]]:
+                for trans_b in [null_vec, lattice_vectors[2]]:
+                    new_grid = self.grid.copy()
+                    new_grid[:,0:3] -= (trans_a + trans_b + trans_c)
+                    grids.append(new_grid)
+
+        unsorted = np.concatenate(grids)
+        # The cube values are not yet order like:
+        #for i_x in x(for i_y in y(for i_z in z))
+        self.grid = unsorted[np.lexsort(np.rot90(unsorted))]
+        self.origin = -lattice_vectors.sum(axis=0)
+        self.x_num *= 2
+        self.y_num *= 2
+        self.z_num *= 2
+
+        return self
+
+    def confine_grid(self):
+        """Confine grid points in the enclosing box"""
+        for row in self.grid:
+            pos = row[0:3]
+        pass
