@@ -51,10 +51,10 @@ And optionally:
 This is the kind of file which is typically produced from a periodic DFT calculation. Avoid double counted atoms outside the unit cell which might be snuk in by visualization programs such as VESTA. If you deem that geometry optimisation of your cell is unnecessary (publish this result because I am interested) you will need to convert a `.cif` file into a unit cell `.xyz` file. For this I recommend [Open Babel](http://openbabel.org/wiki/Main_Page) which would use the syntax:
 
 ```bash
-    babel -i -cif cell.cif -o -xyz cell.xyz -filluc
+    babel -i -cif cell.cif -o -xyz cell.xyz --filluc
 ```
 
-The `-filluc` keyword is crucial otherwise you will end up with an asymmetric unit of the cell.
+The `--filluc` keyword is crucial otherwise you will end up with an asymmetric unit of the cell.
 
 ### 2.2 Configuration file
 
