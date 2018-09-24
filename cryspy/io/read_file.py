@@ -12,6 +12,7 @@ from cryspy.utils import per_table as per
 from cryspy.utils.atom import Atom
 from cryspy.utils.volume import CubeGrid
 
+
 def read_vasp(in_name):
     """
     Read VASP POSCAR-like file.
@@ -92,7 +93,7 @@ def read_xyz(in_name):
     # main list where each element is a relaxation step
     atom_step = []
 
-    for i,line in enumerate(xyz_content):
+    for i, line in enumerate(xyz_content):
 
         # if the line is the amount of atoms in the system
         if line.strip():
@@ -137,6 +138,7 @@ def read_pos(in_name):
 
     return atoms
 
+
 def mol_from_file(in_name):
     """
     Return a Mol object from a file
@@ -154,6 +156,7 @@ def mol_from_file(in_name):
     mol = Mol(read_pos(in_name))
 
     return mol
+
 
 def read_cp2k(in_name, pop="ESP"):
     """
@@ -389,6 +392,7 @@ def read_gauss(in_name):
         atoms.append(atom_2_add)
     return atoms
 
+
 def mol_from_gauss(in_name, pop="ESP"):
     """
     Read Mol from a Gaussian log file
@@ -415,6 +419,7 @@ def mol_from_gauss(in_name, pop="ESP"):
     out_mol = Mol(atoms)
 
     return out_mol
+
 
 def read_fchk(in_name):
     """
@@ -507,7 +512,7 @@ def read_g_pos(in_name):
             break
     atoms = []
     for line in content[ori_line + 5:]:
-        if not line.strip()[0].isdigit(): # if line not number
+        if not line.strip()[0].isdigit():  # if line not number
             break
         line_bits = [float(i) for i in line.split()]
         symbol = per.num_to_elem(line_bits[1])
@@ -594,9 +599,10 @@ def read_tbgrad(in_name):
                 energy = float(sline[6])
             if len(sline) == 3 and sline[0] != "$grad":
                 for number in sline:
-                    grad.append(float(number.replace("D","E")))
+                    grad.append(float(number.replace("D", "E")))
 
     return energy, grad
+
 
 def read_molcas(in_name):
     """
@@ -643,6 +649,7 @@ def read_molcas(in_name):
         ex_energy = gr_energy
     return ex_energy, grad, gr_energy
 
+
 def read_dftb_out(in_name):
     """
     Read a dftb+ gradient detailed.out file
@@ -682,6 +689,7 @@ def read_dftb_out(in_name):
     ex_energy = gr_energy + exci
 
     return ex_energy, grad, gr_energy
+
 
 def read_g_cas(in_name):
     """
@@ -803,6 +811,7 @@ def read_vectors(in_file):
         raise ValueError("The lattice vector file does not have 3 vectors")
     return vectors
 
+
 def read_cube(in_file):
     """
     Read a cube file and return a Mol and a CubeGrid object
@@ -819,8 +828,8 @@ def read_cube(in_file):
         The grid in the cube file where all distances are in Angstrom
 
     """
-    vectors = np.zeros((3,3))
-    xyz_nums = [0,0,0]
+    vectors = np.zeros((3, 3))
+    xyz_nums = [0, 0, 0]
     values = []
 
     out_mol = Mol([])
@@ -830,23 +839,28 @@ def read_cube(in_file):
         for line in lines:
             if ind == 2:
                 natoms = int(line.split()[0])
-                origin = np.array([float(i) for i in line.split()[1:]]) / pt.bohrconv
+                origin = np.array([float(i)
+                                   for i in line.split()[1:]]) / pt.bohrconv
             if ind == 3:
                 xyz_nums[0] = int(line.split()[0])
-                vectors[0] = np.array([float(i) for i in line.split()[1:]]) / pt.bohrconv
+                vectors[0] = np.array([float(i)
+                                       for i in line.split()[1:]]) / pt.bohrconv
             if ind == 4:
                 xyz_nums[1] = int(line.split()[0])
-                vectors[1] = np.array([float(i) for i in line.split()[1:]]) / pt.bohrconv
+                vectors[1] = np.array([float(i)
+                                       for i in line.split()[1:]]) / pt.bohrconv
             if ind == 5:
                 xyz_nums[2] = int(line.split()[0])
-                vectors[2] = np.array([float(i) for i in line.split()[1:]]) / pt.bohrconv
-                out_cub = CubeGrid(vectors, xyz_nums[0], xyz_nums[1], xyz_nums[2], origin)
+                vectors[2] = np.array([float(i)
+                                       for i in line.split()[1:]]) / pt.bohrconv
+                out_cub = CubeGrid(vectors, xyz_nums[0], xyz_nums[
+                                   1], xyz_nums[2], origin)
                 out_cub.set_grid_coord()
             if 6 <= ind < (6 + natoms):
                 line_s = line.split()
                 new_atom = Atom()
                 new_atom.elem = per.num_to_elem(int(line_s[0]))
-                new_atom.set_pos([float(i)/ pt.bohrconv for i in line_s[2:]])
+                new_atom.set_pos([float(i) / pt.bohrconv for i in line_s[2:]])
                 out_mol.append(new_atom)
             if ind >= (6 + natoms):
                 values.extend([float(i) for i in line.split()])

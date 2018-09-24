@@ -27,6 +27,7 @@ from cryspy.utils import handle_atoms as ha
 from cryspy.scripts.assign_charges import assign_charges
 from cryspy.utils.mol import Mol
 
+
 def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=2, in_cN=2, in_nChk=1000):
     """
     Perform an Ewald calculation in the working directory
@@ -143,7 +144,8 @@ if __name__ == '__main__':
         old_charges = [atom.q for atom in mol]
 
         # Calculate new charges
-        ef.write_gauss(sc_name + ".com", mol, in_shell, sc_temp, proj_name=sc_name)
+        ef.write_gauss(sc_name + ".com", mol, in_shell,
+                       sc_temp, proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -224,7 +226,7 @@ if __name__ == '__main__':
 
         # Calculate new charges
         ef.write_gauss(sc_name + ".com", mol, sc_points,
-                       os.path.join(here,sc_temp), proj_name=sc_name)
+                       os.path.join(here, sc_temp), proj_name=sc_name)
         subprocess.call("g09 " + sc_name + ".com", shell=True)
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(
@@ -288,14 +290,14 @@ if __name__ == '__main__':
     # lattice vectors
     vectors = np.zeros((3, 3))
     # specified in config
-    if all(len(i) == 3 for i in [inputs["a_vec"],inputs["b_vec"],inputs["c_vec"]]):
+    if all(len(i) == 3 for i in [inputs["a_vec"], inputs["b_vec"], inputs["c_vec"]]):
         a_vec = inputs["a_vec"]
         b_vec = inputs["b_vec"]
         c_vec = inputs["c_vec"]
         vectors[0] = a_vec
         vectors[1] = b_vec
         vectors[2] = c_vec
-    else: # from external file
+    else:  # from external file
         vectors = rf.read_vectors(inputs["vectors_file"])
 
     output_file.write("Vectors read in config:\n")
@@ -406,7 +408,7 @@ if __name__ == '__main__':
 
     if ewald:
 
-        ew_path = os.path.join(here,'ewald')
+        ew_path = os.path.join(here, 'ewald')
         if not os.path.exists(ew_path):
             os.makedirs(ew_path)
         os.chdir(ew_path)
@@ -456,7 +458,7 @@ if __name__ == '__main__':
             assign_charges(high_target_pop_mol, None, high_shell, None, max_bl)
         else:
             # get a cluster of atoms
-            high_clust = Mol(atoms,vectors=vectors).make_cluster(clust_rad)
+            high_clust = Mol(atoms, vectors=vectors).make_cluster(clust_rad)
             # make a list of shell atoms
             high_shell = []
             for atom_i in high_clust:
@@ -507,7 +509,7 @@ if __name__ == '__main__':
         low_atoms = [copy(i) for i in atoms]
         populate_cell(low_atoms, low_pop_program, low_pop_file, low_pop_method)
         # get a cluster of atoms
-        clust = Mol(low_atoms,vectors=vectors).make_cluster(clust_rad)
+        clust = Mol(low_atoms, vectors=vectors).make_cluster(clust_rad)
         # make a list of shell atoms
         shell = []
         for atom_i in clust:
@@ -521,10 +523,10 @@ if __name__ == '__main__':
         ef.write_xyz("shell.xyz", shell)
 
     # Make inputs
-    mh_path = os.path.join(here,'mh')
-    ml_path = os.path.join(here,'ml')
-    rl_path = os.path.join(here,'rl')
-    mg_path = os.path.join(here,'mg')
+    mh_path = os.path.join(here, 'mh')
+    ml_path = os.path.join(here, 'ml')
+    rl_path = os.path.join(here, 'rl')
+    mg_path = os.path.join(here, 'mg')
 
     if not os.path.exists(mh_path):
         os.makedirs(mh_path)
@@ -539,23 +541,25 @@ if __name__ == '__main__':
         os.makedirs(mg_path)
 
     os.chdir(rl_path)
-    ef.write_g_temp("rl.temp", shell, [], os.path.join(here,"rl.template"))
+    ef.write_g_temp("rl.temp", shell, [], os.path.join(here, "rl.template"))
     os.chdir(ml_path)
-    ef.write_g_temp("ml.temp", [], shell, os.path.join(here,"ml.template"))
+    ef.write_g_temp("ml.temp", [], shell, os.path.join(here, "ml.template"))
 
     if ewald:
         os.chdir(mh_path)
-        ef.write_g_temp("mh.temp", [], points, os.path.join(here,"mh.template"))
+        ef.write_g_temp("mh.temp", [], points,
+                        os.path.join(here, "mh.template"))
         os.chdir(mg_path)
         ef.write_g_temp("mg.temp", [], points,
-                        os.path.join(here,"mg.template"))  # only useful for CI
+                        os.path.join(here, "mg.template"))  # only useful for CI
     else:
         # Make inputs
         os.chdir(mh_path)
-        ef.write_g_temp("mh.temp", [], high_shell, os.path.join(here,"mh.template"))
+        ef.write_g_temp("mh.temp", [], high_shell,
+                        os.path.join(here, "mh.template"))
         os.chdir(mg_path)
         ef.write_g_temp("mg.temp", [], high_shell,
-                        os.path.join(here,"mg.template"))  # only useful for CI
+                        os.path.join(here, "mg.template"))  # only useful for CI
     os.chdir(here)
     end_time = datetime.now()
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")

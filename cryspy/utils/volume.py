@@ -3,6 +3,7 @@ import numpy as np
 import cryspy.io.edit_file as ef
 import cryspy.utils.per_table as pt
 
+
 class CubeGrid(object):
     """
     A grid of voxels with attached values for each one
@@ -47,7 +48,7 @@ class CubeGrid(object):
 
     def get_enclosing_vectors(self):
         n_vox = np.array([self.x_num, self.y_num, self.z_num])
-        enclosing_vectors = (self.vectors.T*n_vox).T
+        enclosing_vectors = (self.vectors.T * n_vox).T
         return enclosing_vectors
 
     def set_grid_coord(self):
@@ -210,10 +211,11 @@ class CubeGrid(object):
         for point in self.grid:
             add = False
             for atom in sample_atoms:
-                # we compare squared distances to limit the amount of sqrt operations
+                # we compare squared distances to limit the amount of sqrt
+                # operations
                 in_r_scaled2 = (inner_r * atom.vdw)**2
                 out_r_scaled2 = (outer_r * atom.vdw)**2
-                dist2 = atom.dist2(point[0],point[1],point[2])
+                dist2 = atom.dist2(point[0], point[1], point[2])
                 if in_r_scaled2 <= dist2 <= out_r_scaled2:
                     add = True
                     break
@@ -237,18 +239,18 @@ class CubeGrid(object):
 
         """
         lattice_vectors = self.get_enclosing_vectors()
-        null_vec = np.array([0,0,0])
+        null_vec = np.array([0, 0, 0])
         grids = []
         for trans_a in [null_vec, lattice_vectors[0]]:
             for trans_c in [null_vec, lattice_vectors[1]]:
                 for trans_b in [null_vec, lattice_vectors[2]]:
                     new_grid = self.grid.copy()
-                    new_grid[:,0:3] -= (trans_a + trans_b + trans_c)
+                    new_grid[:, 0:3] -= (trans_a + trans_b + trans_c)
                     grids.append(new_grid)
 
         unsorted = np.concatenate(grids)
         # The cube values are not yet order like:
-        #for i_x in x(for i_y in y(for i_z in z))
+        # for i_x in x(for i_y in y(for i_z in z))
         self.grid = unsorted[np.lexsort(np.rot90(unsorted))]
         self.origin = -lattice_vectors.sum(axis=0)
         self.x_num *= 2
@@ -273,12 +275,14 @@ class CubeGrid(object):
             for b_mult in range(trans[1]):
                 for c_mult in range(trans[2]):
                     new_grid = self.grid.copy()
-                    new_grid[:,0:3] += a_mult * lattice_vectors[0] + b_mult * lattice_vectors[1] + c_mult * lattice_vectors[2]
+                    new_grid[:, 0:3] += a_mult * lattice_vectors[0] + \
+                        b_mult * lattice_vectors[1] + \
+                        c_mult * lattice_vectors[2]
                     grids.append(new_grid)
 
         unsorted = np.concatenate(grids)
         # The cube values are not yet order like:
-        #for i_x in x(for i_y in y(for i_z in z))
+        # for i_x in x(for i_y in y(for i_z in z))
         self.grid = unsorted[np.lexsort(np.rot90(unsorted))]
         self.x_num *= trans[0]
         self.y_num *= trans[1]

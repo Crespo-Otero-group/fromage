@@ -21,6 +21,7 @@ from cryspy.io import read_file as rf
 from cryspy.utils import handle_atoms as ha
 from cryspy.utils import calc
 
+
 def sequence(in_pos):
     """
     Run Gaussian calculations in parallel and write and return results
@@ -50,11 +51,11 @@ def sequence(in_pos):
 
     """
     # initialise calculation objects
-    rl = calc.setup_calc("rl",low_level)
-    ml = calc.setup_calc("ml",low_level)
-    mh = calc.setup_calc("mh",high_level)
+    rl = calc.setup_calc("rl", low_level)
+    ml = calc.setup_calc("ml", low_level)
+    mh = calc.setup_calc("mh", high_level)
     if bool_ci:
-        mg = calc.setup_calc("mg",high_level)
+        mg = calc.setup_calc("mg", high_level)
 
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
@@ -155,7 +156,7 @@ if __name__ == '__main__':
         "low_level": "gaussian",
         "sigma": "3.5",
         "gtol": 1e-5,
-        "single_point":"0"}
+        "single_point": "0"}
 
     inputs = def_inputs.copy()
 
@@ -207,7 +208,8 @@ if __name__ == '__main__':
     if single_point:
         sequence(atoms_array)
     else:
-        res = minimize(sequence, atoms_array, jac=True, options={'disp': True,'gtol':gtol})
+        res = minimize(sequence, atoms_array, jac=True,
+                       options={'disp': True, 'gtol': gtol})
 
     out_file.write("DONE\n")
     end_time = datetime.now()

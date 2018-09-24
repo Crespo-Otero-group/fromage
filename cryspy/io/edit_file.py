@@ -3,6 +3,7 @@
 import numpy as np
 from random import randint
 
+
 def write_cp2k(in_name, file_name, vectors, atoms, temp_name):
     """
     Make a cp2k input file from a template.
@@ -471,7 +472,8 @@ def write_cube(in_name, origin, vectors, x_num, y_num, z_num, atoms, vals, comme
 
     return
 
-def write_lat_vec(in_name,vectors):
+
+def write_lat_vec(in_name, vectors):
     """
     Write vectors to a file
 
@@ -483,7 +485,8 @@ def write_lat_vec(in_name,vectors):
         Lattice vectors
 
     """
-    out_file = open(in_name,"w")
-    for line in [0,1,2]:
-        out_file.write("{:15.11f}{:15.11f}{:15.11f}\n".format(vectors[line][0],vectors[line][1],vectors[line][2]))
+    out_file = open(in_name, "w")
+    for line in [0, 1, 2]:
+        out_file.write("{:15.11f}{:15.11f}{:15.11f}\n".format(
+            vectors[line][0], vectors[line][1], vectors[line][2]))
     out_file.close()

@@ -17,23 +17,25 @@ from cryspy.utils import handle_atoms as ha
 
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 
+
 def setup_calc(calc_name, calc_type):
     """
     Return a calculation of the correct subclass
 
     """
     calc_type = calc_type.lower()
-    calc_types = {"gaussian" : Gauss_calc,
-                  "gaussian_cas" : Gauss_CAS_calc,
-                  "molcas" : Molcas_calc,
-                  "turbomole" : Turbo_calc,
-                  "turbomole_scf" : Turbo_SCF_calc}
+    calc_types = {"gaussian": Gauss_calc,
+                  "gaussian_cas": Gauss_CAS_calc,
+                  "molcas": Molcas_calc,
+                  "turbomole": Turbo_calc,
+                  "turbomole_scf": Turbo_SCF_calc}
     try:
-        out_calc=calc_types[calc_type](calc_name)
+        out_calc = calc_types[calc_type](calc_name)
     except KeyError:
-        print("Unercognised program: "+calc_type)
+        print("Unercognised program: " + calc_type)
 
     return out_calc
+
 
 class Calc(object):
     """
@@ -126,8 +128,8 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        ef.write_xyz("geom.xyz",atoms)
-        subprocess.call("xyz2gen geom.xyz",shell=True)
+        ef.write_xyz("geom.xyz", atoms)
+        subprocess.call("xyz2gen geom.xyz", shell=True)
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
 
@@ -176,6 +178,7 @@ class DFTB_calc(Calc):
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
 
+
 class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09
@@ -200,7 +203,8 @@ class Gauss_calc(Calc):
 
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
-        proc = subprocess.Popen("${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
+        proc = subprocess.Popen(
+            "${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
@@ -276,7 +280,8 @@ class Gauss_CAS_calc(Calc):
 
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
-        proc = subprocess.Popen("${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
+        proc = subprocess.Popen(
+            "${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
@@ -326,6 +331,7 @@ class Gauss_CAS_calc(Calc):
         os.chdir(self.here)
 
         return (energy_e, grad_e, energy_g, grad_g)
+
 
 def turbo_redefine(atoms):
     """Update Turbomole mos and run actual"""
@@ -425,7 +431,7 @@ class Turbo_SCF_calc(Calc):
 
     """
 
-    def run(self,atoms):
+    def run(self, atoms):
         """
         Write a Turbomole coord file and return a subprocess.Popen
 

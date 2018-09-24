@@ -104,7 +104,7 @@ class Atom(object):
     def get_pos(self):
         """Return np array of coord"""
 
-        out_arr = np.array([self.x,self.y,self.z])
+        out_arr = np.array([self.x, self.y, self.z])
 
         return out_arr
 
@@ -136,7 +136,7 @@ class Atom(object):
 
     def v_dist(self, position):
         """Return distance of the atom from a point defined by an array-like"""
-        r =  self.dist(position[0], position[1], position[2])
+        r = self.dist(position[0], position[1], position[2])
         return r
 
     def dist_at_general(self, dist_type, other_atom):

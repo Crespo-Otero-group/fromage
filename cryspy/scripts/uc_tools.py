@@ -14,6 +14,7 @@ import time
 from cryspy.io import read_file as rf
 from cryspy.io import edit_file as ef
 
+
 def compare_id(id_i, id_j):
     """
     Compare two sets of dimeric distance identities
@@ -55,7 +56,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
         print("-c is required for -m")
         return
 
-    if sum([complete, confine,frac]) > 1:
+    if sum([complete, confine, frac]) > 1:
         print("-c, -C and -f are mutually exclusive")
         return
 
@@ -87,12 +88,12 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
         new_atoms = mod_cell.supercell(translation)
         new_vec = (vectors.T * translation.transpose()).T
         new_atoms.write_xyz("supercell_out.xyz")
-        ef.write_lat_vec("supercell_vectors",new_vec)
+        ef.write_lat_vec("supercell_vectors", new_vec)
 
     if clust_rad > 0.0:
         clust = atoms.make_cluster(clust_rad)
         clust.write_xyz("cluster_out.xyz")
-        
+
     if print_mono:
         identities = []
         # for each molecule of the modified unit cell
@@ -123,7 +124,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
         # list of each molecule paired with its identity separated by equivalent
         # molecule
         sep_mols_ids = []
-        while len(mols_ids)>0:
+        while len(mols_ids) > 0:
             sep_mol_id = [mols_ids[0]]
             for mol_i, id_i in mols_ids[1:]:
                 comp = compare_id(mols_ids[0][1], id_i)
@@ -144,7 +145,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
             fequimols = [i[0] for i in equimols]
             # make it a flat list
             fequimols = [inner for outer in fequimols for inner in outer]
-            ef.write_xyz("mono_"+str(counter+1)+".xyz",fequimols)
+            ef.write_xyz("mono_" + str(counter + 1) + ".xyz", fequimols)
     return
 
 
@@ -160,16 +161,23 @@ if __name__ == '__main__':
         "-o", "--output", help="Name of the output file", default="out_cell.xyz", type=str)
     parser.add_argument("-l", "--overlap", help="Minimum distance that adjacent vdw spheres need to overlap to constitute a bond. Default 0.4 A",
                         default=1.7, type=float)
-    parser.add_argument("-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
-    parser.add_argument("-C", "--confine", help="Confine the molecule to the primitive cell. Incompatible with -c or -f", action="store_true")
-    parser.add_argument("-f", "--fractional", help="Print the xyz in fractional coordinates. Incompatible with -c or -C", action="store_true")
-    parser.add_argument("-m", "--mono", help="Boolean to print all unique monomers, requires -c. NB: This breaks severely if the wrong -l is chosen", action="store_true")
-    parser.add_argument("-t", "--translations",help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
-    parser.add_argument("-d", "--remove_duplicate_atoms", help="Purge duplicate atoms", action="store_true")
+    parser.add_argument(
+        "-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
+    parser.add_argument(
+        "-C", "--confine", help="Confine the molecule to the primitive cell. Incompatible with -c or -f", action="store_true")
+    parser.add_argument(
+        "-f", "--fractional", help="Print the xyz in fractional coordinates. Incompatible with -c or -C", action="store_true")
+    parser.add_argument(
+        "-m", "--mono", help="Boolean to print all unique monomers, requires -c. NB: This breaks severely if the wrong -l is chosen", action="store_true")
+    parser.add_argument("-t", "--translations",
+                        help="Create a supercell via lattice translations", default=None, type=int, nargs='*')
+    parser.add_argument("-d", "--remove_duplicate_atoms",
+                        help="Purge duplicate atoms", action="store_true")
     parser.add_argument("-r", "--radius", help="Generate a cluster of molecules of the given radius. Radius 0.0 turns this off.",
                         default=0.0, type=float)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
-    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional, args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations, args.radius)
+    main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional,
+         args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations, args.radius)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))

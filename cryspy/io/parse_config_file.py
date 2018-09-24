@@ -31,7 +31,7 @@ def complete_config(name="config"):
         "a_vec": "",
         "b_vec": "",
         "c_vec": "",
-        "vectors_file":"",
+        "vectors_file": "",
         "clust_rad": "5",
         "traan": "2",
         "trabn": "2",
@@ -40,7 +40,7 @@ def complete_config(name="config"):
         "sc_temp": "sc_temp.template",
         "dev_tol": "0.001",
         "damping": "0.0",
-        "print_tweak":""}
+        "print_tweak": ""}
 
     usr_inputs = rf.read_config(name)
     inputs.update(usr_inputs)

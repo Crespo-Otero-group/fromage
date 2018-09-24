@@ -69,7 +69,8 @@ if __name__ == "__main__":
                         default=[0], type=int, nargs='*')
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond",
                         default=1.6, type=float)
-    parser.add_argument("-r", "--reverse", help="Print all atoms except selected molecules", action="store_true")
+    parser.add_argument(
+        "-r", "--reverse", help="Print all atoms except selected molecules", action="store_true")
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
 
@@ -77,4 +78,5 @@ if __name__ == "__main__":
     new_labels = [a - 1 for a in args.labels]
 
     # call the main function
-    picker(args.input, args.output, new_labels, args.bond, reverse=args.reverse)
+    picker(args.input, args.output, new_labels,
+           args.bond, reverse=args.reverse)

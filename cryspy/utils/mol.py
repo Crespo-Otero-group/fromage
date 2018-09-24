@@ -255,7 +255,8 @@ class Mol(object):
             The cell with the completed molecule
         """
         new_mol, scattered_mol = self.per_select(labels, old_pos=True)
-        new_cell_atoms = deepcopy([a for a in self.atoms if a not in scattered_mol])
+        new_cell_atoms = deepcopy(
+            [a for a in self.atoms if a not in scattered_mol])
         new_cell = deepcopy(self)
         new_cell.atoms = new_cell_atoms
 
@@ -301,7 +302,7 @@ class Mol(object):
             centro[0] += atom.x
             centro[1] += atom.y
             centro[2] += atom.z
-        centro = centro/N
+        centro = centro / N
         return centro
 
     def center_mol(self):
@@ -343,8 +344,11 @@ class Mol(object):
         for a_mult in range(trans[0]):
             for b_mult in range(trans[1]):
                 for c_mult in range(trans[2]):
-                    vector = a_mult * self.vectors[0] + b_mult * self.vectors[1] + c_mult * self.vectors[2]
-                    new_atoms = Mol([i.v_translated(vector) for i in self.atoms])
+                    vector = a_mult * \
+                        self.vectors[0] + b_mult * \
+                        self.vectors[1] + c_mult * self.vectors[2]
+                    new_atoms = Mol([i.v_translated(vector)
+                                     for i in self.atoms])
                     new_cell += new_atoms
         out_vec = (self.vectors.T * trans.transpose()).T
         new_cell.vectors = out_vec
@@ -378,20 +382,23 @@ class Mol(object):
             The resulting supercell
 
         """
-        trans_series = [0,0,0]
-        for i,tra in enumerate(trans):
+        trans_series = [0, 0, 0]
+        for i, tra in enumerate(trans):
             if from_origin:
                 trans_series[i] = list(range(-tra, tra))
             else:
-                trans_series[i] = list(range(-tra, tra+1))
+                trans_series[i] = list(range(-tra, tra + 1))
         trans_series = np.array(trans_series)
 
         new_cell = self.empty_mol()
         for a_mult in trans_series[0]:
             for b_mult in trans_series[1]:
                 for c_mult in trans_series[2]:
-                    vector = a_mult * self.vectors[0] + b_mult * self.vectors[1] + c_mult * self.vectors[2]
-                    new_atoms = Mol([i.v_translated(vector) for i in self.atoms])
+                    vector = a_mult * \
+                        self.vectors[0] + b_mult * \
+                        self.vectors[1] + c_mult * self.vectors[2]
+                    new_atoms = Mol([i.v_translated(vector)
+                                     for i in self.atoms])
                     new_cell += new_atoms
         out_vec = (self.vectors.T * trans.transpose()).T
         new_cell.vectors = out_vec
@@ -417,17 +424,18 @@ class Mol(object):
         vectors = deepcopy(self.vectors)
 
         # vectors normal to faces
-        a_perp = np.cross(vectors[1],vectors[2])
-        b_perp = np.cross(vectors[2],vectors[0])
-        c_perp = np.cross(vectors[0],vectors[1])
+        a_perp = np.cross(vectors[1], vectors[2])
+        b_perp = np.cross(vectors[2], vectors[0])
+        c_perp = np.cross(vectors[0], vectors[1])
 
         # the three normalised unit vectors
-        perp = np.array([a_perp/np.linalg.norm(a_perp), b_perp/np.linalg.norm(b_perp), c_perp/np.linalg.norm(c_perp)])
+        perp = np.array([a_perp / np.linalg.norm(a_perp), b_perp /
+                         np.linalg.norm(b_perp), c_perp / np.linalg.norm(c_perp)])
 
-        trans_count = np.array([1,1,1])
+        trans_count = np.array([1, 1, 1])
 
         # distances from faces
-        distances = np.array([0.0,0.0,0.0])
+        distances = np.array([0.0, 0.0, 0.0])
 
         new_vectors = deepcopy(vectors)
 
@@ -438,7 +446,7 @@ class Mol(object):
                 new_vectors[comp] = trans_count[comp] * vectors[comp]
                 if distances[comp] > clust_rad:
                     break
-        trans_count -= np.array([1,1,1])
+        trans_count -= np.array([1, 1, 1])
         return trans_count
 
     def make_cluster(self, clust_rad):
@@ -462,7 +470,7 @@ class Mol(object):
         """
         trans = self.trans_from_rad(clust_rad)
         # add a buffer of one cell in order to not chop the molecules up
-        supercell = self.centered_supercell(trans, from_origin = True)
+        supercell = self.centered_supercell(trans, from_origin=True)
         # atoms within the sphere of rad clust_rad
         seed_atoms = Mol([])
 
@@ -470,7 +478,7 @@ class Mol(object):
             if atom.dist(0, 0, 0) < clust_rad:
                 seed_atoms.append(atom)
         max_mol_len = 0
-        while len(seed_atoms)>0:
+        while len(seed_atoms) > 0:
             mol = seed_atoms.select(0)
             if len(mol) > max_mol_len:
                 max_mol_len = len(mol)
@@ -480,7 +488,6 @@ class Mol(object):
             for atom in mol:
                 seed_atoms.remove(atom)
         return clust_atoms
-
 
     def remove_duplicates(self, thresh=0.001):
         """Remove the duplicate atoms"""
@@ -522,7 +529,7 @@ class Mol(object):
         """Move all atoms to direct coordinates"""
         out_mol = deepcopy(self)
         for atom in out_mol:
-            new_pos = np.matmul(self.vectors.T,atom.get_pos())
+            new_pos = np.matmul(self.vectors.T, atom.get_pos())
             atom.set_pos(new_pos)
 
         return out_mol
