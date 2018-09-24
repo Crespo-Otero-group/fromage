@@ -27,7 +27,8 @@ def setup_calc(calc_name, calc_type):
                   "gaussian_cas" : Gauss_CAS_calc,
                   "molcas" : Molcas_calc,
                   "turbomole" : Turbo_calc,
-                  "turbomole_scf" : Turbo_SCF_calc}
+                  "turbomole_scf" : Turbo_SCF_calc,
+                  "dftb" : DFTB_calc}
     try:
         out_calc=calc_types[calc_type](calc_name)
     except KeyError:
