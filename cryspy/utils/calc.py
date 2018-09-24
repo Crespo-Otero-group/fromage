@@ -127,7 +127,7 @@ class Gauss_calc(Calc):
 
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
-        proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
+        proc = subprocess.Popen("${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
@@ -203,7 +203,7 @@ class Gauss_CAS_calc(Calc):
 
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
-        proc = subprocess.Popen("g09 " + self.calc_name + ".com", shell=True)
+        proc = subprocess.Popen("${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
