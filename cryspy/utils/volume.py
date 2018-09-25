@@ -21,6 +21,8 @@ class CubeGrid(object):
     grid : numpy array of x_num * y_num * z_num * x 4 dimension
         This determines a value and position at each point in space which is
         the origin of a voxel. The format is [[x1,y1,z1,val],[x1,y1,z2,val],...]
+        This grid should remain in real space unless otherwise specified, that
+        is, it should
 
     """
 
@@ -259,9 +261,12 @@ class CubeGrid(object):
 
         return self
 
-    def supergrid(self, trans):
+    def supergrid_unsorted(self, trans):
         """
-        Make a supercell cube out of the original cube grid
+        Make a supercell cube out of the original cube grid but no sorting
+
+        No sorting means that the values will not be in the correct order for
+        the cube file.
 
         Parameters
         ----------
@@ -280,23 +285,71 @@ class CubeGrid(object):
                         c_mult * lattice_vectors[2]
                     grids.append(new_grid)
 
-        unsorted = np.concatenate(grids)
         # The cube values are not yet order like:
         # for i_x in x(for i_y in y(for i_z in z))
-        self.grid = unsorted[np.lexsort(np.rot90(unsorted))]
+        self.grid = np.concatenate(grids)
         self.x_num *= trans[0]
         self.y_num *= trans[1]
         self.z_num *= trans[2]
 
         return self
 
-    def confine_grid(self):
-        """Confine grid points in the enclosing box"""
-        for row in self.grid:
-            pos = row[0:3]
-        pass
+    def supergrid(self, trans):
+        """
+        Make a supercell cube out of the original cube grid with sorting
 
-    def sample_from_cell(self):
+        This is the function to call if the grid is then to be made into a cube
+        file.
+
+        Parameters
+        ----------
+        trans : numpy array of length 3
+            Multiplications of the primitive cell
+
+        """
+        self.supergrid_unsorted(trans)
+        self.confine_sort()
+
+        return self
+
+    def dir_to_frac_pos(self):
+        """Move all grid points to fractional coordinates"""
+        new_grid = self.grid.copy()
+        lattice_vectors = self.get_enclosing_vectors() + self.origin
+        # transpose to get the transformation matrix
+        M = np.transpose(lattice_vectors)
+        # inverse transformation matrix
+        U = np.linalg.inv(M)
+        # get a matrix A such that A[i] = U dot self.grid[i] excluding the 4th
+        # column which remains intact. Then modulo 1 each coordinate
+        new_grid[:, 0:3] = np.mod(
+            np.einsum('ij,kj->ki', U, self.grid[:, 0:3]), 1)
+        # get in the proper order for cube files
+        self.grid = new_grid[np.lexsort(np.rot90(new_grid))]
+        return
+
+    def frac_to_dir_pos(self):
+        """Move all grid points to direct coordinates"""
+        lattice_vectors = self.get_enclosing_vectors() + self.origin
+        M = np.transpose(lattice_vectors)
+        # see dir_to_frac_pos for detils
+        self.grid[:, 0:3] = np.mod(
+            np.einsum('ij,kj->ki', M, self.grid[:, 0:3]), 1)
+        return
+
+    def confine_sort(self):
+        """
+        Confine grid points in the enclosing box in the correct order
+
+        The enclosing box has origin in self.origin and bounding vectors
+        self.get_enclosing_vectors().
+
+        """
+        self.dir_to_frac_pos()
+        self.frac_to_dir_pos()
+        return
+
+    # def sample_from_cell(self):
         # atoms = rf.read_pos(cell_file)
         # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
         # output_file.flush()
