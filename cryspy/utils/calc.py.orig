@@ -24,12 +24,26 @@ def setup_calc(calc_name, calc_type):
 
     """
     calc_type = calc_type.lower()
+<<<<<<< HEAD
+    calc_types = {"gaussian": Gauss_calc,
+                  "gaussian_cas": Gauss_CAS_calc,
+                  "molcas": Molcas_calc,
+                  "turbomole": Turbo_calc,
+                  "turbomole_scf": Turbo_SCF_calc}
+||||||| merged common ancestors
+    calc_types = {"gaussian" : Gauss_calc,
+                  "gaussian_cas" : Gauss_CAS_calc,
+                  "molcas" : Molcas_calc,
+                  "turbomole" : Turbo_calc,
+                  "turbomole_scf" : Turbo_SCF_calc}
+=======
     calc_types = {"gaussian" : Gauss_calc,
                   "gaussian_cas" : Gauss_CAS_calc,
                   "molcas" : Molcas_calc,
                   "turbomole" : Turbo_calc,
                   "turbomole_scf" : Turbo_SCF_calc,
                   "dftb" : DFTB_calc}
+>>>>>>> dcd02ff67ef55dd801c5179d03c1fe52c0234b8f
     try:
         out_calc = calc_types[calc_type](calc_name)
     except KeyError:
