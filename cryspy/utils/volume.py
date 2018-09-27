@@ -10,10 +10,7 @@ class CubeGrid(object):
 
     The grid starts at the origin and propagates in a parallelepiped. There may
     be confusion as to what should go in grid and origin since these can be
-    defined in many ways. Unless otherwise stated, the convention here is that
-    the grid is in real space and should be able to be imported directly.
-    It follows that the origin should be the first element of the grid.
-    Functions that modify the grid should therefore also modify the origin.
+    defined in many ways.
 
     Attributes
     ----------
@@ -26,8 +23,6 @@ class CubeGrid(object):
     grid : numpy array of x_num * y_num * z_num * x 4 dimension
         This determines a value and position at each point in space which is
         the origin of a voxel. The format is [[x1,y1,z1,val],[x1,y1,z2,val],...]
-        This grid should remain in real space unless otherwise specified, that
-        is, it should
 
     """
 
