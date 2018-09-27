@@ -2,13 +2,18 @@ import numpy as np
 
 import cryspy.io.edit_file as ef
 import cryspy.utils.per_table as pt
-
+from copy import deepcopy
 
 class CubeGrid(object):
     """
     A grid of voxels with attached values for each one
 
-    The grid starts at the origin and propagates in a parallelepiped
+    The grid starts at the origin and propagates in a parallelepiped. There may
+    be confusion as to what should go in grid and origin since these can be
+    defined in many ways. Unless otherwise stated, the convention here is that
+    the grid is in real space and should be able to be imported directly.
+    It follows that the origin should be the first element of the grid.
+    Functions that modify the grid should therefore also modify the origin.
 
     Attributes
     ----------
@@ -47,6 +52,8 @@ class CubeGrid(object):
         self.dimension = self.x_num * self.y_num * self.z_num
         # initiate grid
         self.grid = np.zeros((self.dimension, 4))
+    def copy(self):
+        return deepcopy(self)
 
     def get_enclosing_vectors(self):
         n_vox = np.array([self.x_num, self.y_num, self.z_num])
@@ -189,46 +196,9 @@ class CubeGrid(object):
 
         return filled * vox_vol
 
-    def shell_region(self, sample_atoms, inner_r, outer_r):
-        """
-        Return grid points in shell regions around given points
-
-        The shell region is determined by inner and outer radii which are then
-        scaled by the wdv radii of the corresponding atoms.
-
-        Parameters
-        ----------
-        sample_atoms : Mol object
-            The atoms which are to be enclosed by the shells
-        inner_r : float
-            The inner radius of the shell before wdv scaling
-        outer_r : float
-            The outer radius of the shell before scaling
-        Returns
-        -------
-        shell_points : numpy N x 4 array
-
-        """
-        shell_points = []
-        for point in self.grid:
-            add = False
-            for atom in sample_atoms:
-                # we compare squared distances to limit the amount of sqrt
-                # operations
-                in_r_scaled2 = (inner_r * atom.vdw)**2
-                out_r_scaled2 = (outer_r * atom.vdw)**2
-                dist2 = atom.dist2(point[0], point[1], point[2])
-                if in_r_scaled2 <= dist2 <= out_r_scaled2:
-                    add = True
-                    break
-            if add:
-                shell_points.append(point.tolist())
-        np.array(shell_points)
-        return shell_points
-
     def expand(self):
         """
-        Expand the grid so that the new grid has 8 times the volume
+        BROKEN! Expand the grid so that the new grid has 8 times the volume
 
         The original grid has the origin at 0,0,0 so we add grids at origins:
         -a, 0, 0
@@ -313,28 +283,58 @@ class CubeGrid(object):
         return self
 
     def dir_to_frac_pos(self):
-        """Move all grid points to fractional coordinates"""
+        """
+        Move all grid points to fractional coordinates
+
+        This breaks the assumption that the grid is in real space. Therefore
+        this function is to be used with care
+        """
         new_grid = self.grid.copy()
-        lattice_vectors = self.get_enclosing_vectors() + self.origin
+        #new_grid[:, 0:3] -= self.origin
+        lattice_vectors = self.get_enclosing_vectors()
         # transpose to get the transformation matrix
         M = np.transpose(lattice_vectors)
         # inverse transformation matrix
         U = np.linalg.inv(M)
         # get a matrix A such that A[i] = U dot self.grid[i] excluding the 4th
-        # column which remains intact. Then modulo 1 each coordinate
-        new_grid[:, 0:3] = np.mod(
-            np.einsum('ij,kj->ki', U, self.grid[:, 0:3]), 1)
+        # column which remains intact.
+        new_grid[:, 0:3] = np.einsum('ij,kj->ki', U, self.grid[:, 0:3])
+        self.grid = new_grid
+        return
+
+    def sort_adjust_frac_pos(self):
+        """
+        Put the fractional grid on fractional grid points and sort
+
+        The idea here is that in order to be able to use cube files, the grid
+        needs to be sorted in a specific way and the real space points must
+        coincide with grid points of the cube file, otherwise hard to diagnose
+        bugs happen. However in order to match grid points, slight translations
+        need to be done in the form of rounding, thus making the grid points
+        inaccurate for use in computation. Therefore this step is only to be
+        used when the end result is a cube file, not a grid for computation.
+
+        """
+        new_grid = self.grid.copy()
+        # now we make sure that the points are on grid points of the mesh
+        xyz_nums = np.array([self.x_num,self.y_num,self.z_num,])
+        new_grid[:, 0:3] *= xyz_nums
+        new_grid[:, 0:3] = np.round(new_grid[:, 0:3],0)
+        new_grid[:, 0:3] /= xyz_nums
+        # And now confine them to the cell
+        new_grid[:, 0:3] = np.mod(new_grid[:, 0:3],1)
         # get in the proper order for cube files
         self.grid = new_grid[np.lexsort(np.rot90(new_grid))]
         return
 
     def frac_to_dir_pos(self):
         """Move all grid points to direct coordinates"""
-        lattice_vectors = self.get_enclosing_vectors() + self.origin
-        M = np.transpose(lattice_vectors)
+        lattice_vectors = self.get_enclosing_vectors()# + self.origin
+        #print(self.origin)
         # see dir_to_frac_pos for detils
-        self.grid[:, 0:3] = np.mod(
-            np.einsum('ij,kj->ki', M, self.grid[:, 0:3]), 1)
+        new_grid = np.einsum('ij,ki->kj', lattice_vectors, self.grid[:, 0:3])
+        #self.grid[:, 0:3] = new_grid + self.origin
+        self.grid[:, 0:3] = new_grid
         return
 
     def confine_sort(self):
@@ -346,28 +346,55 @@ class CubeGrid(object):
 
         """
         self.dir_to_frac_pos()
+        self.sort_adjust_frac_pos()
         self.frac_to_dir_pos()
         return
 
-    # def sample_from_cell(self):
-        # atoms = rf.read_pos(cell_file)
-        # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
-        # output_file.flush()
-        # # the molecule of interest and the atoms which now contain
-        # # the full, unchopped molecule
-        # # NB: all objects in mol are also referenced inside atoms
-        # mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)
-        #
-        # # High level charge assignment
-        # populate_cell(atoms, high_pop_program, high_pop_file, high_pop_method)
-        #
-        # # find the centroid of the molecule
-        # c_x, c_y, c_z = ha.find_centroid(mol)
-        # # translate the molecule and atoms to the centroid
-        # for atom in atoms:
-        #     atom.translate(-c_x, -c_y, -c_z)
-        #
-        # # write useful xyz and new cell
-        # ef.write_xyz("mol.init.xyz", mol)
-        # if print_tweak:
-        #     ef.write_xyz("tweaked_cell.xyz", atoms)
+    def translate_grid(self,trans_vec):
+        """Translate grid and origin by a numpy vector"""
+        self.grid[:, 0:3] += trans_vec
+        #self.origin += trans_vec
+        return
+
+    def translate_inplace(self,trans_vec):
+        """
+        Translate the cell and then confine it back to the enclosing box
+
+        This allows for the grid to move in the periodic cell without having to
+        change the origin
+
+        Parameters
+        ----------
+        trans_vec : 3x1 numpy array
+            The vector by which to translate the grid
+
+        """
+        self.translate_grid(trans_vec)
+        self.confine_sort()
+        #self.translate_grid(-trans_vec)
+        return
+
+    def centered_quad(self,trans_vec):
+        """
+        Produce a 4x4x4 supercell centered at the origin after inplace translate
+
+        The point is to have a large grid which encloses a specific point of the
+        original grid. This way we can center a molecule (or several) at the
+        origin and sample as much as we want without risking hitting the
+        supercell walls
+
+        Parameters:
+        -----------
+        trans_vec : 3x1 numpy array
+            The vector by which to translate inplace. The point which was
+            originally at trans_vec ends up at the origin
+
+        """
+        new_cub = self.copy()
+        new_cub.translate_inplace(trans_vec)
+        super_cub = new_cub.supergrid([4,4,4])
+
+        center = np.sum(super_cub.get_enclosing_vectors(),axis=0)/2
+        super_cub.origin -= center
+
+        return super_cub

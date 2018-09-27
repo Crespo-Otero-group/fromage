@@ -2,6 +2,45 @@
 import numpy as np
 from cryspy.utils.mol import Mol
 
+def shell_region(in_grid, sample_atoms, inner_r, outer_r):
+    """
+    Return grid points in shell regions around given points
+
+    The shell region is determined by inner and outer radii which are then
+    scaled by the wdv radii of the corresponding atoms.
+
+    Parameters
+    ----------
+    in_grid : numpy array of N x 4
+        A real space grid representing a field with each row being
+        [x y z value]
+    sample_atoms : Mol object
+        The atoms which are to be enclosed by the shells
+    inner_r : float
+        The inner radius of the shell before wdv scaling
+    outer_r : float
+        The outer radius of the shell before scaling
+    Returns
+    -------
+    shell_points : numpy N x 4 array
+
+    """
+    shell_points = []
+    for point in in_grid:
+        add = False
+        for atom in sample_atoms:
+            # we compare squared distances to limit the amount of sqrt
+            # operations
+            in_r_scaled2 = (inner_r * atom.vdw)**2
+            out_r_scaled2 = (outer_r * atom.vdw)**2
+            dist2 = atom.dist2(point[0], point[1], point[2])
+            if in_r_scaled2 <= dist2 <= out_r_scaled2:
+                add = True
+                break
+        if add:
+            shell_points.append(point.tolist())
+    np.array(shell_points)
+    return shell_points
 
 def coeff_mat(var_points, samples):
     """Return the coefficients matrix"""
@@ -59,3 +98,23 @@ def fit_points(var_points, fix_points, samples):
     var_points.change_charges(var_points.charges() + fitting)
 
     return var_points
+
+
+    # atoms = rf.read_pos(cell_file)
+    # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
+    # output_file.flush()
+    # # the molecule of interest and the atoms which now contain
+    # # the full, unchopped molecule
+    # # NB: all objects in mol are also referenced inside atoms
+    # mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)
+    #
+    # # find the centroid of the molecule
+    # c_x, c_y, c_z = ha.find_centroid(mol)
+    # # translate the molecule and atoms to the centroid
+    # for atom in atoms:
+    #     atom.translate(-c_x, -c_y, -c_z)
+    #
+    # # write useful xyz and new cell
+    # ef.write_xyz("mol.init.xyz", mol)
+    # if print_tweak:
+    #     ef.write_xyz("tweaked_cell.xyz", atoms)

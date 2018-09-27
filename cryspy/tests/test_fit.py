@@ -18,7 +18,7 @@ def benz_cell():
 @pytest.fixture
 def benz_solo():
     """Return a Mol object of a charged benzene"""
-    out_mol = rf.mol_from_gauss("benz.log")
+    out_mol = rf.mol_from_gauss("benzene_pop.log")
     return out_mol
 
 @pytest.fixture
@@ -31,14 +31,14 @@ def benz_cell_char(benz_cell,benz_solo):
 @pytest.fixture
 def benz_clust_char(benz_solo):
     """Return a Mol object of a charged benzene cluster"""
-    out_char_clust = rf.mol_from_file("benz_clust.xyz")
+    out_char_clust = rf.mol_from_file("benzene_clust.xyz")
     ac.assign_charges(benz_solo, None, out_char_clust, None, 1.7)
     return out_char_clust
 
 @pytest.fixture
 def benz_pot_cub():
     """Return the CubeGrid for a benzene cell potential"""
-    cub, mol = rf.read_cube("benz_pot.cube")
+    cub, mol = rf.read_cube("benzene_pot.cube")
     return cub
 
 @pytest.fixture
@@ -85,7 +85,7 @@ def test_fit_to_pot(benz_pot_cub,benz_clust_char):
     return
 
 def test_sample(benz_pot_cub,benz_cell):
-    pts = benz_pot_cub.shell_region(benz_cell, 0.2, 0.7)
+    pts = fi.shell_region(benz_pot_cub.grid,benz_cell, 0.2, 0.7)
     out_mol = Mol([])
     for point in pts:
         out_mol.append(Atom("point",point[0],point[1],point[2]))
@@ -93,7 +93,7 @@ def test_sample(benz_pot_cub,benz_cell):
 
 def expand(cub,cell):
     new_cub = cub.expand()
-    new_cub.out_cube("exp.cub",cell)
+    #new_cub.out_cube("exp.cub",cell)
 
 def supercell(cub,cell):
     new_cub = cub.supergrid([2,2,2])
@@ -111,12 +111,28 @@ def test_expand_perylene(pery_pot_cub,pery_cell):
 def test_supercell_perylene(pery_pot_cub,pery_cell):
     supercell(pery_pot_cub,pery_cell)
 
-def test_dir_to_frac(pery_pot_cub):
-    print(pery_pot_cub.grid)
+def test_dir_to_frac(pery_pot_cub,pery_cell):
+    old_grid = pery_pot_cub.grid.copy()
     pery_pot_cub.dir_to_frac_pos()
-    print(pery_pot_cub.grid)
     pery_pot_cub.frac_to_dir_pos()
-    print(pery_pot_cub.grid)
+    assert np.allclose(old_grid,pery_pot_cub.grid,rtol=0,atol=10e-9)
+
+def test_translate(pery_pot_cub,pery_cell):
+    trans = np.array([5,5,5])
+    pery_pot_cub.translate_inplace(trans)
+    pery_pot_cub.out_cube("trans.cube",pery_cell)
+
+def test_quad(pery_pot_cub,pery_cell):
+    trans = -np.array([5,5,5])
+    quad_cub = pery_pot_cub.centered_quad(trans)
+    pery_cell.translate(trans)
+    quad_cub.out_cube("trans.cube",pery_cell)
+
+#def test_quad(benz_pot_cub,benz_cell):
+#    trans = np.array([5,5,5])
+#    quad_cub = benz_pot_cub.centered_quad(trans)
+#    benz_cell.translate(trans)
+#    quad_cub.out_cube("trans.cube",benz_cell)
 
 #def test_sample_spheres_from_cell(benz_pot_cub,benz_cell):
 
