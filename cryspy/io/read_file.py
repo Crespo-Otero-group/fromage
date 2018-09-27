@@ -682,10 +682,11 @@ def read_dftb_out(in_name):
             if "Total Forces" in line:
                 read_grad = True
             if "Total energy" in line:
-                gr_energy = float(line.split()[4])
+                gr_energy = float(line.split()[2])
             if "Excitation Energy" in line:
-                exci += float(line.split()[1])
+                exci += float(line.split()[2])
 
+    grad = np.array(grad)
     ex_energy = gr_energy + exci
 
     return ex_energy, grad, gr_energy
