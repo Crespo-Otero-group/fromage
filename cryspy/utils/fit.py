@@ -23,6 +23,7 @@ def shell_region(in_grid, sample_atoms, inner_r, outer_r):
     Returns
     -------
     shell_points : numpy N x 4 array
+        The sampling points with rows as x1 y1 z1 value1
 
     """
     shell_points = []
@@ -99,6 +100,35 @@ def fit_points(var_points, fix_points, samples):
 
     return var_points
 
+def shells_from_cell(cell_cub, central_mol, trans_vec, inner_r, outer_r):
+    """
+    Return the points in shell regions of a cube file after translation
+
+    Parameters
+    ----------
+    cell_cub : CubeGrid object
+        The cube file of the unit cell before any translations
+    central_mol : Mol object
+        The atoms which need to be surrounded by shells. These have already been
+        selected from lattice positions and translated by trans_vec
+    trans_vec : 3x1 numpy object
+        Vector by which cental_mol was translated and which therefore needs to
+        translate the cell_cub.grid
+    inner_r : float
+        The inner radius of the shell region for sampling around atoms of the
+        central_mol. This distance is then scaled by wdv radius
+    outer_r : float
+        The outer radius of the shell region for sampling around atoms of the
+        central_mol. This distance is then scaled by wdv radius
+    Returns
+    -------
+    shell_points : numpy Nx4 array
+        The sampling points with rows as x1 y1 z1 value1
+
+    """
+    grid = cell_cub.unord_trans_inplace_grid(trans_vec)
+    sample_points = shell_region(grid, central_mol, inner_r, outer_r)
+    return sample_points
 
     # atoms = rf.read_pos(cell_file)
     # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")

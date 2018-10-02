@@ -8,9 +8,15 @@ class CubeGrid(object):
     """
     A grid of voxels with attached values for each one
 
-    The grid starts at the origin and propagates in a parallelepiped. There may
-    be confusion as to what should go in grid and origin since these can be
-    defined in many ways.
+    This objects contains the information present in a cube file minus the
+    atoms inside of it. Its main component is the self.grid but it contains
+    additional information which would be compuationally costly to extract
+    from the grid: the origin, the lattice vectors, the grid spacing. This
+    oject is delicate to use because in order to be writeable as a cube file,
+    the self.grid must a) be ordered and b) be on points of the grid. Therefore
+    not any translation of the grid will do. Here are provided functions which
+    break these rules along with ones which repair them. self.confine_sort is
+    therefore important to use on objects which will later be printed
 
     Attributes
     ----------
@@ -297,7 +303,7 @@ class CubeGrid(object):
         self.grid = new_grid
         return
 
-    def sort_adjust_frac_pos(self):
+    def sort_adjust_frac_pos(self, sorting=True, rounding=True):
         """
         Put the fractional grid on fractional grid points and sort
 
@@ -314,12 +320,15 @@ class CubeGrid(object):
         # now we make sure that the points are on grid points of the mesh
         xyz_nums = np.array([self.x_num,self.y_num,self.z_num,])
         new_grid[:, 0:3] *= xyz_nums
-        new_grid[:, 0:3] = np.round(new_grid[:, 0:3],0)
+        if rounding:
+            new_grid[:, 0:3] = np.round(new_grid[:, 0:3],0)
         new_grid[:, 0:3] /= xyz_nums
         # And now confine them to the cell
         new_grid[:, 0:3] = np.mod(new_grid[:, 0:3],1)
         # get in the proper order for cube files
-        self.grid = new_grid[np.lexsort(np.rot90(new_grid))]
+        if sorting:
+            new_grid = new_grid[np.lexsort(np.rot90(new_grid))]
+        self.grid = new_grid
         return
 
     def frac_to_dir_pos(self):
@@ -345,6 +354,17 @@ class CubeGrid(object):
         self.frac_to_dir_pos()
         return
 
+    def confine_unordered(self):
+        """
+        Confine grid points in the enclosing box but lose the correct order
+
+        This means that the grid is no longer ordered or on grid points defined
+        by the voxel spacing of the CubeGrid.
+        """
+        self.dir_to_frac_pos()
+        self.sort_adjust_frac_pos(sorting=False, rounding=False)
+        self.frac_to_dir_pos()
+
     def translate_grid(self,trans_vec):
         """Translate grid and origin by a numpy vector"""
         self.grid[:, 0:3] += trans_vec
@@ -369,6 +389,12 @@ class CubeGrid(object):
         #self.translate_grid(-trans_vec)
         return
 
+    def unord_trans_inplace_grid(self,trans_vec):
+        """Get the unordered list of an inplace translation"""
+        fresh_cub = self.copy()
+        fresh_cub.translate_grid(trans_vec)
+        fresh_cub.confine_unordered()
+        return fresh_cub.grid
     def centered_quad(self,trans_vec):
         """
         Produce a 4x4x4 supercell centered at the origin after inplace translate
