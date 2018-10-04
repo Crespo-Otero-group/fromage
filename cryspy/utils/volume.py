@@ -390,11 +390,12 @@ class CubeGrid(object):
         return
 
     def unord_trans_inplace_grid(self,trans_vec):
-        """Get the unordered list of an inplace translation"""
+        """Get the unordered Cub after an inplace translation"""
         fresh_cub = self.copy()
         fresh_cub.translate_grid(trans_vec)
         fresh_cub.confine_unordered()
-        return fresh_cub.grid
+        return fresh_cub
+
     def centered_quad(self,trans_vec):
         """
         Produce a 4x4x4 supercell centered at the origin after inplace translate

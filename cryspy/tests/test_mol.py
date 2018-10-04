@@ -196,7 +196,6 @@ def test_centered_supercell_alt(hc1_cell):
 
 def test_make_cluster(hc1_cell):
     clust = hc1_cell.make_cluster(15)
-    clust.write_xyz("boo.xyz")
     assert len(clust) == 296
 
 def test_confine(hc1_complete_cell):

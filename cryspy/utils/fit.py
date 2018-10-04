@@ -40,7 +40,7 @@ def shell_region(in_grid, sample_atoms, inner_r, outer_r):
                 break
         if add:
             shell_points.append(point.tolist())
-    np.array(shell_points)
+    shell_points = np.array(shell_points)
     return shell_points
 
 def coeff_mat(var_points, samples):
@@ -94,7 +94,7 @@ def fit_points(var_points, fix_points, samples):
     deps = dep_var(var_points, fix_points, samples)
 
     res = np.linalg.lstsq(coeffs, deps, rcond=None)
-    # print(res)
+    print(res[1:])
     fitting = res[0]
     var_points.change_charges(var_points.charges() + fitting)
 
@@ -126,7 +126,11 @@ def shells_from_cell(cell_cub, central_mol, trans_vec, inner_r, outer_r):
         The sampling points with rows as x1 y1 z1 value1
 
     """
-    grid = cell_cub.unord_trans_inplace_grid(trans_vec)
+    trans_cub = cell_cub.unord_trans_inplace_grid(trans_vec)
+    sup_cube = trans_cub.supergrid_unsorted([4,4,4])
+    center = np.sum(sup_cube.get_enclosing_vectors(),axis=0)/2
+    grid = sup_cube.grid
+    grid[:,0:3] -= center
     sample_points = shell_region(grid, central_mol, inner_r, outer_r)
     return sample_points
 
