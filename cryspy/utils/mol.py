@@ -6,7 +6,7 @@ from copy import deepcopy
 
 from cryspy.utils.atom import Atom
 import cryspy.io.edit_file as ef
-
+import cryspy.scripts.assign_charges as ac
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
@@ -582,3 +582,22 @@ class Mol(object):
             l_char.append(atom.q)
         arr_char = np.array(l_char)
         return arr_char
+
+    def populate(self, reference_mol):
+        """
+        Assign charges to the Mol by comparing to the connectivity of a
+        reference
+
+        Parameters
+        ----------
+        reference_mol : Mol object
+            Charged molecule or cell
+
+        """
+        ref_vec = reference_mol.vectors
+        if np.count_nonzero(reference_mol.vectors) == 0:
+            ref_vec = None
+        targ_vec = self.vectors
+        if np.count_nonzero(self.vectors) == 0:
+            targ_vec = None
+        ac.assign_charges(reference_mol, ref_vec, self, targ_vec, )

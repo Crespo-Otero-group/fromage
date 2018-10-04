@@ -148,21 +148,14 @@ def test_benz_trans_shell(benz_pot_cub,benz_cell):
     np.savetxt("boop_b.xyz",samples[:,0:3])
     mol.write_xyz("foo_b.xyz")
 
-#def test_tmptest(pery_pot_cub,pery_cell):
-#    import cryspy.utils.handle_atoms as ha
-#    #mol, cell = pery_cell.complete_mol([76,86])
-#    mol, cell = ha.complete_mol(1.4, pery_cell, [88], pery_cell.vectors)
-#    #mol.min_lap = 0.2
-#    #centr = mol.centroid()
-#    #mol.translate(-centr)
-#    import cryspy.io.edit_file as ef
-#    ef.write_xyz("foo.xyz", mol)
+def test_benz_trans_shell(benz_pot_cub,benz_cell):
+    mol, cell = benz_cell.complete_mol([24,38])
+    centr = mol.centroid()
+    mol.translate(-centr)
+    samples = fi.shells_from_cell(benz_pot_cub, mol, -centr, 0.5, 0.7)
+    print(samples[0:6])
+    print(type(samples[0:6]))
+    np.savetxt("boop_b.xyz",samples[:,0:3])
+    mol.write_xyz("foo_b.xyz")
 
-#def test_quad(benz_pot_cub,benz_cell):
-#    trans = np.array([5,5,5])
-#    quad_cub = benz_pot_cub.centered_quad(trans)
-#    benz_cell.translate(trans)
-#    quad_cub.out_cube("trans.cube",benz_cell)
-
-#def test_sample_spheres_from_cell(benz_pot_cub,benz_cell):
 
