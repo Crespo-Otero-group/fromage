@@ -19,7 +19,7 @@ import numpy as np
 import sys
 import argparse
 
-from cryspy.io import read_file as rf
+import cryspy.io.read_file as rf
 
 
 def detect_1_connect(in_atoms, vectors, max_BL):

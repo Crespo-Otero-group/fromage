@@ -6,7 +6,6 @@ from copy import deepcopy
 
 from cryspy.utils.atom import Atom
 import cryspy.io.edit_file as ef
-import cryspy.scripts.assign_charges as ac
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
@@ -594,10 +593,16 @@ class Mol(object):
             Charged molecule or cell
 
         """
+        # This is a naughty in-function import to prevent a circular dependency.
+        # The reason is that assign_charges functions are grouped up with the
+        # executable script which needs to read_file and in turn use mol.py
+        # Some careful refactoring should fix this
+        import cryspy.scripts.assign_charges as ac
         ref_vec = reference_mol.vectors
         if np.count_nonzero(reference_mol.vectors) == 0:
             ref_vec = None
         targ_vec = self.vectors
         if np.count_nonzero(self.vectors) == 0:
             targ_vec = None
-        ac.assign_charges(reference_mol, ref_vec, self, targ_vec, )
+        ac.assign_charges(reference_mol, ref_vec, self, targ_vec, 1.5)
+        pass
