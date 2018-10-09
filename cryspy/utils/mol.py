@@ -152,6 +152,10 @@ class Mol(object):
 
     def __setitem__(self, index, value):
         self.atoms[index] = value
+        return
+
+    def __contains__(self, elem):
+        return self.atoms.__contains__(elem)
 
     def copy(self):
         return deepcopy(self)
@@ -326,7 +330,7 @@ class Mol(object):
         new_cell.atoms = new_cell_atoms
 
         for atom in new_mol:
-            new_cell.append(atom)
+            new_cell.append(atom.copy())
         return new_mol, new_cell
 
     def complete_cell(self):
@@ -438,8 +442,8 @@ class Mol(object):
         trans : numpy array of length 3
             Multiplications of the primitive cell
         from_origin : bool
-            Determines the kind of multiplication. True is centre of the cell as
-            the, False is corner of the cell.
+            Determines the kind of multiplication. True is corner of the cell as
+            the center, False is middle of the cell.
 
         Returns
         -------
@@ -538,7 +542,6 @@ class Mol(object):
         supercell = self.centered_supercell(trans, from_origin=True)
         # atoms within the sphere of rad clust_rad
         seed_atoms = Mol([])
-
         for atom in supercell:
             if atom.v_dist([0, 0, 0]) < clust_rad:
                 seed_atoms.append(atom)
@@ -579,7 +582,7 @@ class Mol(object):
 
         for atom in out_mol:
             # change of basis transformation
-            dir_pos = atom.my_pos
+            dir_pos = atom.get_pos()
             frac_pos = np.dot(U, dir_pos)
             for i, coord in enumerate(frac_pos):
                 # if the coordinate is out of range
@@ -587,7 +590,6 @@ class Mol(object):
                     # translate it to the range [0,1]
                     frac_pos[i] = coord % 1
             atom.set_pos(frac_pos)
-
         return out_mol
 
     def frac_to_dir_pos(self):
@@ -605,6 +607,33 @@ class Mol(object):
         out_mol = frac_mol.frac_to_dir_pos()
 
         return out_mol
+
+    def centered_mols(self, labels):
+        """
+        Return the molecules translated at the origin with a corresponding cell
+
+        Parameters
+        ----------
+        labels : int or list of ints
+            The labels of the atoms to select
+        Returns
+        -------
+        mol : Mol object
+            The selected molecules with their centroid at the origin
+        mod_cell : Mol object
+            The new confined cell corresponding to the now translated molecules
+
+        """
+        mol, mod_cell = self.complete_mol(labels)
+        mod_cell.write_xyz("man.xyz")
+        centro = mol.centroid()
+        mol.translate(-centro)
+        mod_cell.translate(-centro)
+        mod_cell.write_xyz("go.xyz")
+        new_cell = mod_cell.confined()
+        new_cell.write_xyz("ron.xyz")
+        return mol, mod_cell
+
 
     def es_pot(self, position):
         """
@@ -664,11 +693,5 @@ class Mol(object):
         # executable script which needs to read_file and in turn use mol.py
         # Some careful refactoring should fix this
         import cryspy.scripts.assign_charges as ac
-        ref_vec = reference_mol.vectors
-        if np.count_nonzero(reference_mol.vectors) == 0:
-            ref_vec = None
-        targ_vec = self.vectors
-        if np.count_nonzero(self.vectors) == 0:
-            targ_vec = None
-        ac.assign_charges(reference_mol, ref_vec, self, targ_vec, 1.5)
+        ac.assign_charges(reference_mol, self)
         pass

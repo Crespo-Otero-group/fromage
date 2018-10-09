@@ -1,6 +1,7 @@
 """Fit point charges to match a given potential"""
 import numpy as np
 from cryspy.utils.mol import Mol
+from cryspy.scripts.assign_charges impor assign_charges
 
 def shell_region(in_grid, sample_atoms, inner_r, outer_r):
     """
@@ -34,7 +35,7 @@ def shell_region(in_grid, sample_atoms, inner_r, outer_r):
             # operations
             in_r_scaled2 = (inner_r * atom.vdw)**2
             out_r_scaled2 = (outer_r * atom.vdw)**2
-            dist2 = atom.v_dist(point[0:4])
+            dist2 = atom.v_dist2(point[0:4])
             if in_r_scaled2 <= dist2 <= out_r_scaled2:
                 add = True
                 break
@@ -134,6 +135,14 @@ def shells_from_cell(cell_cub, central_mol, trans_vec, inner_r, outer_r):
     sample_points = shell_region(grid, central_mol, inner_r, outer_r)
     return sample_points
 
+#def fit_clust(in_cell, in_label, inner_r, outer_r):
+def fit_clust(in_cell, in_labels):
+    mol, mod_cell = in_cell.centered_mols(in_labels)
+    shell = mod_cell.make_cluster(15)
+    for atom in mol:
+        if atom in cluster:
+            cluster.remove(atom)
+    return
     # atoms = rf.read_pos(cell_file)
     # output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
     # output_file.flush()

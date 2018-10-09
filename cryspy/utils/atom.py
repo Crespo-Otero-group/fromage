@@ -73,7 +73,6 @@ class Atom(object):
         self.cov = table[self.elem.lower()]["cov"]
         self.vdw = table[self.elem.lower()]["vdw"]
         self.mass = table[self.elem.lower()]["mass"]
-        self.my_pos = np.array([self.x, self.y, self.z])
         # to string methods to be used mainly for debugging and .qc file
 
     def __repr__(self):
@@ -84,8 +83,11 @@ class Atom(object):
 
         # equality function
     def __eq__(self, other):
-        return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
+        return self.elem.lower() == other.elem.lower() and self.dist(other) < 1e-5 and self.q - other.q < 1e-5
+#        return self.elem.lower() == other.elem.lower() and self.x == other.x and self.y == other.y and self.z == other.z and self.q == other.q
 
+    def copy(self):
+        return deepcopy(self)
     def set_pos(self, pos_array):
         """
         Assign coordinates via numpy array
@@ -138,6 +140,11 @@ class Atom(object):
     def v_dist(self, position):
         """Return distance of the atom from a point defined by an array-like"""
         r = self.c_dist(position[0], position[1], position[2])
+        return r
+
+    def v_dist2(self, position):
+        """Return distance of the atom from a point defined by an array-like"""
+        r = self.c_dist2(position[0], position[1], position[2])
         return r
 
     def dist(self, other_atom, ref='dis'):
