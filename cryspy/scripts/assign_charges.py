@@ -22,18 +22,16 @@ import argparse
 import cryspy.io.read_file as rf
 
 
-def detect_1_connect(in_atoms, vectors, thresh):
+def detect_1_connect(in_atoms):
     """
     Make a matrix of first connectivities of a list of atoms.
 
     Parameters
     ----------
-    in_atoms : list of Atom objects
+    in_atoms : Mol object
         Atoms which need their connectivity detected
     vectors : 3x3 array-like or None
         Lattice vectors of the system if it is periodic. If not use None
-    thresh : float
-        Threshold of distance which constitutes a bond
 
     Returns
     -------
@@ -47,11 +45,11 @@ def detect_1_connect(in_atoms, vectors, thresh):
     cnct = np.zeros((nat_mol, nat_mol))
     for i, i_atom in enumerate(in_atoms):
         for j, j_atom in enumerate(in_atoms):
-            if vectors is None:
-                if i_atom.dist(j_atom.x, j_atom.y, j_atom.z) < thresh:
+            if np.count_nonzero(in_atoms.vectors) == 0:
+                if in_atoms.bonded(i_atom, j_atom):
                     cnct[i][j] = 1
             else:
-                if i_atom.dist_lat(j_atom.x, j_atom.y, j_atom.z, vectors[0], vectors[1], vectors[2])[0] < thresh:
+                if in_atoms.per_bonded(i_atom, j_atom):
                     cnct[i][j] = 1
     return cnct
 
@@ -122,7 +120,7 @@ def charged_kinds(in_atoms, in_kinds):
 
     Parameters
     ----------
-    in_atoms : list of Atom objects
+    in_atoms : Mol object
         The atoms should be charged and some of them at least should be of the
         relevant kind
     in_kinds : list of tuples
@@ -151,7 +149,7 @@ def charged_kinds(in_atoms, in_kinds):
     return q_kinds
 
 
-def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
+def assign_charges(char_atoms, unchar_atoms):
     """
     Assign charges from one list of atoms to another list of atoms.
 
@@ -162,20 +160,18 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
 
     Parameters
     ----------
-    char_atoms : list of Atom objects
+    char_atoms : Mol object
         Atoms which already have assigned charge
     char_vectors : 3x3 array-like or None
         Lattice vectors of the input system if it is periodic. If not use None
-    unchar_atoms : list of Atom objects
+    unchar_atoms : Mol object
         Atoms which need charges assigned to them
     unchar_vectors : 3x3 array-like or None
         See char_vectors
-    bl : float
-        Maximum distance between atoms which constitutes a bond
 
     """
     # detect the charged atom's connectivity matrix
-    char_first = detect_1_connect(char_atoms, char_vectors, bl)
+    char_first = detect_1_connect(char_atoms)
     char_cnct = complete_expand(char_first)
 
     # get charged atom kinds as a result
@@ -187,7 +183,7 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
     q_kinds = charged_kinds(char_atoms, kinds)
 
     # detect uncharged atom connectivity
-    unchar_first = detect_1_connect(unchar_atoms, unchar_vectors, bl)
+    unchar_first = detect_1_connect(unchar_atoms)
     unchar_cnct = complete_expand(unchar_first)
 
     # determine kind and cross check with charged kinds
@@ -199,18 +195,21 @@ def assign_charges(char_atoms, char_vectors, unchar_atoms, unchar_vectors, bl):
     return
 
 
-def main(in_xyz, in_log, target, output, bond, kind):
+def main(in_xyz, in_log, target, output, bonding, thresh, kind):
     if(in_xyz):
-        mol = rf.read_xyz(in_xyz)[-1]
+        mol = rf.mol_from_file(in_xyz)
     else:
         mol = rf.read_g_pos(in_log)
     charges = rf.read_g_char(in_log, kind)[0]
-    cluster = rf.read_xyz(target)[-1]
+    cluster = rf.mol_from_file(target)
+
+    mol.set_bonding(bonding=bonding, thresh=thresh)
+    target.set_bonding(bonding=bonding, thresh=thresh)
 
     for atom, char in zip(mol, charges):
         atom.q = char
 
-    assign_charges(mol, None, cluster, None, bond)
+    assign_charges(mol, cluster)
 
     # warning if some atoms have not been assigned or if some original charges
     # were 0
@@ -238,12 +237,12 @@ if __name__ == '__main__':
         "-i", "--in_xyz", help="Input .xyz file of single molecule if the geometry in the log file is not good")
     parser.add_argument("-o", "--output", help="Name of the output file",
                         default="out_char", type=str)
-    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
+    parser.add_argument("-b", "--bonding", help="Bonding type to be evaluated. Use 'dis' (default), 'cov' or 'vdw' to start calculating the distance at the centre of the atoms, the surface of the covalent sphere or the surface of the vdw sphere.", default="dis", type=str)
+    parser.add_argument("-t", "--threshold", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
                         default=1.7, type=float)
-    parser.add_argument("-R", "--reference", help="Reference distance to be used when evaluating the bond. Use 'dis', ,'cov' or 'vdw' to start calculating the distance at the centre of the atoms, the surface of the covalent sphere or the surface of the vdw sphere.")
     parser.add_argument("-k", "--kind", help="Kind of population, mulliken or esp",
                         default="esp", type=str)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     main(args.in_xyz, args.in_log, args.target,
-         args.output, args.bond, args.kind)
+         args.output, args.bonding, args.threshold, args.kind)

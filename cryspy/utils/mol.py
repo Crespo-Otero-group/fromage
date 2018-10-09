@@ -59,13 +59,13 @@ class Mol(object):
     def __str__(self):
         return self.__repr__()
 
-    def set_bonding(self, in_bonding='vdw', thresh=None):
+    def set_bonding(self, bonding='vdw', thresh=None):
         """
         Set the type of bonding detection used in this Mol
 
         Parameters
         ----------
-        in_bonding : string 'dist, 'cov' or 'vdw'
+        bonding : string 'dist, 'cov' or 'vdw'
             The method for detecting bonding in this molecule.
             'dis' : distance between atoms < threshold
             'cov' : distance - (cov radius of atom a + of atom b) < threshold
@@ -78,9 +78,9 @@ class Mol(object):
 
         """
         if in_bonding not in default_thresh:
-            raise TypeError("Unrecognised bonding type: "+ in_bonding)
-        self.bonding = in_bonding
-        self.thresh = default_thresh[in_bonding]
+            raise TypeError("Unrecognised bonding type: "+ bonding)
+        self.bonding = bonding
+        self.thresh = default_thresh[bonding]
         return
 
     def bonded(self, atom_a, atom_b):
@@ -97,6 +97,22 @@ class Mol(object):
             True if the atoms are bonded and False if not
         """
         bonded_bool = atom_a.dist(atom_b, ref=self.bonding) <= self.thresh
+        return bonded_bool
+
+    def per_bonded(self, atom_a, atom_b):
+        """
+        Check if atom_a is bonded to atom_b given lattice conditions
+
+        Parameters
+        ----------
+        atom_a, atom_b : Atom objects
+            The atoms to be compared
+        Returns
+        -------
+        bonded_bool : bool
+            True if the atoms are bonded and False if not
+        """
+        bonded_bool = atom_a.per_dist(atom_b, self.vectors, ref=self.bonding) <= self.thresh
         return bonded_bool
 
     # list-y behaviour

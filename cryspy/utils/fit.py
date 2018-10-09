@@ -55,7 +55,7 @@ def coeff_row(var_points, sample):
     """Return row of the coefficients matrix"""
     l_row = []
     for point in var_points:
-        entry = 1 / point.dist_at(sample)
+        entry = 1 / point.dist(sample)
         l_row.append(entry)
     row = np.array(l_row)
     return row

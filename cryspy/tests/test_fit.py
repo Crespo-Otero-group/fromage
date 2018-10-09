@@ -25,14 +25,14 @@ def benz_solo():
 def benz_cell_char(benz_cell,benz_solo):
     """Return a Mol object of a charged benzene cell"""
     out_char_cell = deepcopy(benz_cell)
-    ac.assign_charges(benz_solo, None, out_char_cell, out_char_cell.vectors, 1.7)
+    ac.assign_charges(benz_solo, out_char_cell)
     return out_char_cell
 
 @pytest.fixture
 def benz_clust_char(benz_solo):
     """Return a Mol object of a charged benzene cluster"""
     out_char_clust = rf.mol_from_file("benzene_clust.xyz")
-    ac.assign_charges(benz_solo, None, out_char_clust, None, 1.7)
+    ac.assign_charges(benz_solo, out_char_clust)
     return out_char_clust
 
 @pytest.fixture
