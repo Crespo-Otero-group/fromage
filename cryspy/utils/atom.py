@@ -32,7 +32,8 @@ class Atom(object):
         Number of valence electrons
     vdw : float
         Van der Waals radius in Angstrom
-
+    cov : float
+        Covalent radius in Angstrom
     """
 
     def __init__(self, elemIn="H", xIn=0.0, yIn=0.0, zIn=0.0, qIn=0.0, num=1):
@@ -69,6 +70,7 @@ class Atom(object):
         table = per.periodic
         self.at_num = table[self.elem.lower()]["at_num"]
         self.valence_e = table[self.elem.lower()]["valence_e"]
+        self.cov = table[self.elem.lower()]["cov"]
         self.vdw = table[self.elem.lower()]["vdw"]
         self.mass = table[self.elem.lower()]["mass"]
         self.my_pos = np.array([self.x, self.y, self.z])
@@ -103,7 +105,6 @@ class Atom(object):
 
     def get_pos(self):
         """Return np array of coord"""
-
         out_arr = np.array([self.x, self.y, self.z])
 
         return out_arr
@@ -121,14 +122,14 @@ class Atom(object):
         """Return a string of the atom in xyz format"""
         return "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(self.elem, self.x, self.y, self.z)
 
-    def dist2(self, x1, y1, z1):
+    def c_dist2(self, x1, y1, z1):
         """Return distance squared of the atom from a point"""
         # Use for no C++ version
 #        r = (self.x - x1) ** 2 + (self.y - y1) ** 2 + (self.z - z1) ** 2
         r = fd.dist2(self.x, self.y, self.z, x1, y1, z1)
         return r
 
-    def dist(self, x1, y1, z1):
+    def c_dist(self, x1, y1, z1):
         """Return distance of the atom from a point"""
         #r = np.sqrt(self.dist2(x1, y1, z1))
         r = fd.dist(self.x, self.y, self.z, x1, y1, z1)
@@ -136,30 +137,39 @@ class Atom(object):
 
     def v_dist(self, position):
         """Return distance of the atom from a point defined by an array-like"""
-        r = self.dist(position[0], position[1], position[2])
+        r = self.c_dist(position[0], position[1], position[2])
         return r
 
-    def dist_at_general(self, dist_type, other_atom):
-        """Return interatomic distance"""
-        r = dist_type(other_atom.x, other_atom.y, other_atom.z)
+    def dist(self, other_atom, ref='dis'):
+        """Return a distance between atoms starting form different ref points"""
+        distance_types = {'dis' : self.dist_dis,
+                        'cov' : self.dist_cov,
+                        'vdw' : self.dist_vdw}
+
+        r = distance_types[ref](other_atom)
         return r
 
-    def dist_at(self, other_atom):
-        """Return interatomic distance"""
-        r = self.dist_at_general(self.dist, other_atom)
+    def dist_dis(self, other_atom):
+        """Return the distance between centres of atoms"""
+        r = self.c_dist(other_atom.x,other_atom.y,other_atom.z)
         return r
 
-    def dist_at2(self, other_atom):
-        """Return interatomic distance"""
-        r = self.dist_at_general(self.dist2, other_atom)
+    def dist_cov(self, other_atom):
+        """Return the distance between covalent spheres of atoms"""
+        r = self.dist_dis(other_atom) - self.cov - other_atom.cov
+        return r
+
+    def dist_vdw(self, other_atom):
+        """Return the distance between vdw spheres of atoms"""
+        r = self.dist_dis(other_atom) - self.vdw - other_atom.vdw
         return r
 
     def at_lap(self, other_atom):
         """Return the overlap between vdw radii"""
-        r = self.vdw + other_atom.vdw - self.dist_at(other_atom)
+        r = self.vdw + other_atom.vdw - self.dist_dis(other_atom)
         return r
 
-    def dist_lat(self, x1, y1, z1, aVec, bVec, cVec, order=1):
+    def dist_lat(self, x1, y1, z1, aVec, bVec, cVec, order=1, ref='dis'):
         """
         Find the shortest distance to a point in a periodic system.
 
@@ -201,7 +211,7 @@ class Atom(object):
                 for trans3 in cSet:
                     img_pos = in_pos + trans1 + trans2 + trans3
                     # r=np.linalg.norm(self.my_pos-img_pos)
-                    r = self.dist(img_pos[0], img_pos[1], img_pos[2])
+                    r = self.c_dist(img_pos[0], img_pos[1], img_pos[2])
                     # if this particular translation of the point is the closest
                     # to the atom so far
                     if r < rMin:
@@ -212,7 +222,7 @@ class Atom(object):
                         z3 = img_pos[2]
         return rMin, x3, y3, z3
 
-    def per_dist(self, other_atom, vectors, new_pos=False):
+    def per_dist(self, other_atom, vectors, ref='dis', new_pos=False):
         """
         Find the shortest distance to another atom in a periodic system.
 
@@ -257,7 +267,7 @@ class Atom(object):
                 for trans_c in c_set:
                     cell_origin = trans_a + trans_b + trans_c
                     tmp_img_atom = other_atom.v_translated(cell_origin)
-                    r = self.dist_at(tmp_img_atom)
+                    r = self.dist(tmp_img_atom, ref=ref)
                     if r <= r_min:
                         if r < r_min:
                             unique = True
@@ -295,39 +305,6 @@ class Atom(object):
 
         return new_at
 
-    def per_lap(self, other_atom, vectors, new_pos=False):
-        """
-        Find the vdw overlap distance to another atom in a periodic system
-
-        Parameters
-        ----------
-        other_atom : Atom object
-            The atom which to which the distance is being calculated
-        vectors : 3 x 3 numpy array
-            Unit cell vectors
-        order : positive int
-            The amount of translations to be considered. Order 1 considers a
-            translation by -1, 0 and 1 of each lattice vector and all resulting
-            combination. Order 2 is [-2, -1, 0, 1, 2] and so onzx
-
-        Returns
-        -------
-        r_min : float
-            Minimal distance to the point
-        at_img : floats (optional)
-             Closest image of the atom being targeted
-
-        """
-
-        r_min, at_img = self.per_dist(
-            other_atom, vectors, new_pos=True)
-
-        lap_out = self.vdw + other_atom.vdw - r_min
-
-        if new_pos:
-            return lap_out, at_img
-        else:
-            return lap_out
 
     def translated(self, x1, y1, z1):
         """Return a new atom which is a translated copy."""

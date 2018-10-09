@@ -22,7 +22,7 @@ import argparse
 import cryspy.io.read_file as rf
 
 
-def detect_1_connect(in_atoms, vectors, max_BL):
+def detect_1_connect(in_atoms, vectors, thresh):
     """
     Make a matrix of first connectivities of a list of atoms.
 
@@ -32,9 +32,8 @@ def detect_1_connect(in_atoms, vectors, max_BL):
         Atoms which need their connectivity detected
     vectors : 3x3 array-like or None
         Lattice vectors of the system if it is periodic. If not use None
-    max_BL : float
-        Maximum length between atoms which counts as a bond in the
-        connectivity matrix
+    thresh : float
+        Threshold of distance which constitutes a bond
 
     Returns
     -------
@@ -49,10 +48,10 @@ def detect_1_connect(in_atoms, vectors, max_BL):
     for i, i_atom in enumerate(in_atoms):
         for j, j_atom in enumerate(in_atoms):
             if vectors is None:
-                if i_atom.dist(j_atom.x, j_atom.y, j_atom.z) < max_BL:
+                if i_atom.dist(j_atom.x, j_atom.y, j_atom.z) < thresh:
                     cnct[i][j] = 1
             else:
-                if i_atom.dist_lat(j_atom.x, j_atom.y, j_atom.z, vectors[0], vectors[1], vectors[2])[0] < max_BL:
+                if i_atom.dist_lat(j_atom.x, j_atom.y, j_atom.z, vectors[0], vectors[1], vectors[2])[0] < thresh:
                     cnct[i][j] = 1
     return cnct
 
@@ -241,6 +240,7 @@ if __name__ == '__main__':
                         default="out_char", type=str)
     parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond. Default 1.7",
                         default=1.7, type=float)
+    parser.add_argument("-R", "--reference", help="Reference distance to be used when evaluating the bond. Use 'dis', ,'cov' or 'vdw' to start calculating the distance at the centre of the atoms, the surface of the covalent sphere or the surface of the vdw sphere.")
     parser.add_argument("-k", "--kind", help="Kind of population, mulliken or esp",
                         default="esp", type=str)
     user_input = sys.argv[1:]

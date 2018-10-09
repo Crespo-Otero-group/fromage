@@ -128,25 +128,25 @@ def test_quad(pery_pot_cub,pery_cell):
     pery_cell.translate(trans)
     quad_cub.out_cube("trans.cube",pery_cell)
 
-def test_per_trans_shell(pery_pot_cub,pery_cell):
-    mol, cell = pery_cell.complete_mol([76,86])
-    centr = mol.centroid()
-    mol.translate(-centr)
-    samples = fi.shells_from_cell(pery_pot_cub, mol, -centr, 0.5, 0.7)
-    print(samples[0:6])
-    print(type(samples[0:6]))
-    np.savetxt("boop",samples[:,0:3])
-    mol.write_xyz("foo.xyz")
-
-def test_benz_trans_shell(benz_pot_cub,benz_cell):
-    mol, cell = benz_cell.complete_mol([24,38])
-    centr = mol.centroid()
-    mol.translate(-centr)
-    samples = fi.shells_from_cell(benz_pot_cub, mol, -centr, 0.5, 0.7)
-    print(samples[0:6])
-    print(type(samples[0:6]))
-    np.savetxt("boop_b.xyz",samples[:,0:3])
-    mol.write_xyz("foo_b.xyz")
+#def test_per_trans_shell(pery_pot_cub,pery_cell):
+#    mol, cell = pery_cell.complete_mol([76,86])
+#    centr = mol.centroid()
+#    mol.translate(-centr)
+#    samples = fi.shells_from_cell(pery_pot_cub, mol, -centr, 0.5, 0.7)
+#    print(samples[0:6])
+#    print(type(samples[0:6]))
+#    np.savetxt("boop",samples[:,0:3])
+#    mol.write_xyz("foo.xyz")
+#
+#def test_benz_trans_shell(benz_pot_cub,benz_cell):
+#    mol, cell = benz_cell.complete_mol([24,38])
+#    centr = mol.centroid()
+#    mol.translate(-centr)
+#    samples = fi.shells_from_cell(benz_pot_cub, mol, -centr, 0.5, 0.7)
+#    print(samples[0:6])
+#    print(type(samples[0:6]))
+#    np.savetxt("boop_b.xyz",samples[:,0:3])
+#    mol.write_xyz("foo_b.xyz")
 
 #def test_benz_trans_fit_shell(benz_pot_cub,benz_cell):
 #    mol, cell = benz_cell.complete_mol([24,38])

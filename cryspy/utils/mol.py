@@ -26,22 +26,30 @@ class Mol(object):
     ----------
     atoms : list of Atom objects
         Member atoms of Mol
-    min_lap : float
-        The minimum distance of two overlapping vdw radii for the atoms to be
-        considered bonded
     vectors : 3 x 3 numpy array
         Lattice vectors of the unit cell
+    bonding : string 'dist, 'cov' or 'vdw'
+        The method for detecting bonding in this molecule.
+        'dis' : distance between atoms < threshold
+        'cov' : distance - (cov radius of atom a + of atom b) < threshold
+        'vdw' : distance - (vwd radius of atom a + of atom b) < threshold
+    thresh : float, optional
+        Threshold for the detection. If None, use defaults
 
     """
 
-    def __init__(self, in_atoms=[], min_lap=0.4, vectors=np.zeros((3, 3))):
+    default_thresh = {'dis' : 1.8,
+                    'cov' : -0.1,
+                    'vdw' : -0.3}
+
+    def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding = 'vdw', thresh = -0.3):
         # In case the user feeds a lone atom:
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
         self.atoms = in_atoms
-        self.min_lap = min_lap
         self.vectors = vectors
-
+        self.bonding = bonding
+        self.thresh = thresh
     def __repr__(self):
         out_str = ""
         for atom in self.atoms:
@@ -50,6 +58,46 @@ class Mol(object):
 
     def __str__(self):
         return self.__repr__()
+
+    def set_bonding(self, in_bonding='vdw', thresh=None):
+        """
+        Set the type of bonding detection used in this Mol
+
+        Parameters
+        ----------
+        in_bonding : string 'dist, 'cov' or 'vdw'
+            The method for detecting bonding in this molecule.
+            'dis' : distance between atoms < threshold
+            'cov' : distance - (cov radius of atom a + of atom b) < threshold
+            'vdw' : distance - (vwd radius of atom a + of atom b) < threshold
+        thresh : float, optional
+            Threshold for the detection. If None, use defaults:
+            'dis' -> 1.8
+            'cov' -> 0.1
+            'vdw' -> 0.3
+
+        """
+        if in_bonding not in default_thresh:
+            raise TypeError("Unrecognised bonding type: "+ in_bonding)
+        self.bonding = in_bonding
+        self.thresh = default_thresh[in_bonding]
+        return
+
+    def bonded(self, atom_a, atom_b):
+        """
+        Check if atom_a is bonded to atom_b given the bonding settings
+
+        Parameters
+        ----------
+        atom_a, atom_b : Atom objects
+            The atoms to be compared
+        Returns
+        -------
+        bonded_bool : bool
+            True if the atoms are bonded and False if not
+        """
+        bonded_bool = atom_a.dist(atom_b, ref=self.bonding) <= self.thresh
+        return bonded_bool
 
     # list-y behaviour
     def append(self, element):
@@ -75,7 +123,7 @@ class Mol(object):
 
     def __add__(self, other_mol):
         try_ismol(other_mol)
-        return Mol(deepcopy(self).atoms + other_mol.atoms, min_lap=self.min_lap, vectors=self.vectors)
+        return Mol(deepcopy(self).atoms + other_mol.atoms, vectors = self.vectors, bonding = self.bonding, thresh = self.thresh)
 
     def __len__(self):
         return len(self.atoms)
@@ -88,6 +136,9 @@ class Mol(object):
 
     def __setitem__(self, index, value):
         self.atoms[index] = value
+
+    def copy(self):
+        return deepcopy(self)
 
     def write_xyz(self, name):
         """Write an xyz file of the Mol"""
@@ -126,14 +177,14 @@ class Mol(object):
         if len(labels) > len(set(labels)):
             raise TypeError("Some labels are repeated")
 
-        selected = Mol(deepcopy([self[i] for i in labels]),
-                       min_lap=self.min_lap, vectors=self.vectors)
-        remaining = deepcopy(self)
+        selected = self.copy()
+        selected.atoms = deepcopy([self[i] for i in labels])
+        remaining = self.copy()
         for atom in selected:
             if atom in remaining:
                 remaining.remove(atom)
 
-        old_atoms = deepcopy(selected)
+        old_atoms = selected.copy()
 
         # While there are atoms to add
         cont = True
@@ -142,7 +193,7 @@ class Mol(object):
             new_atoms = Mol([])
             for old in old_atoms:
                 for rem in remaining:
-                    if old.at_lap(rem) >= self.min_lap:
+                    if self.bonded(old,rem):
                         new_atoms.append(rem)
                         selected.append(rem)
                         remaining.remove(rem)
@@ -182,19 +233,19 @@ class Mol(object):
             raise TypeError("Some labels are repeated")
 
         # Mol of selected atoms from the unit cell
-        selected_old = Mol(deepcopy(
-            [self[i] for i in labels]), min_lap=self.min_lap, vectors=self.vectors)
+        selected_old = self.copy()
+        selected_old.atoms = [self[i] for i in labels]
+
         # Mol of selected atoms where the periodic image
         # atoms are translated back to form a molecule
-        selected_img = Mol(deepcopy(
-            [self[i] for i in labels]), min_lap=self.min_lap, vectors=self.vectors)
+        selected_img = selected_old.copy()
 
-        remaining = deepcopy(self)
+        remaining = self.copy()
         for atom in selected_old:
             if atom in remaining:
                 remaining.remove(atom)
 
-        old_atoms = deepcopy(selected_old)
+        old_atoms = selected_old.copy()
 
         # While there are atoms to add
         cont = True
@@ -205,10 +256,9 @@ class Mol(object):
                 for rem in remaining:
                     # contains the distance from the point or image and the
                     # coordinates of the point or image
-                    vdw_overlap, per_img = old.per_lap(
-                        rem, self.vectors, new_pos=True)
+                    dist, per_img = old.per_dist(rem, self.vectors, ref=self.bonding, new_pos=True)
                     # if the atom is close enough to be part of the molecule
-                    if vdw_overlap >= self.min_lap:
+                    if dist <= self.thresh:
                         new_atoms.append(per_img)
                         selected_old.append(rem)
                         selected_img.append(per_img)
@@ -224,7 +274,7 @@ class Mol(object):
     def segregate(self):
         """Separate current Mol in a list of Mols of different molecules"""
         molecules = []  # list of molecules
-        remaining = deepcopy(self)
+        remaining = self.copy()
 
         while len(remaining) > 0:
             molecule = remaining.select(0)
@@ -277,7 +327,7 @@ class Mol(object):
 
         """
         full_mol_l = []
-        remaining = deepcopy(self)
+        remaining = self.copy()
 
         while len(remaining) != 0:
             full_mol, cell = remaining.complete_mol(0)
@@ -474,7 +524,7 @@ class Mol(object):
         seed_atoms = Mol([])
 
         for atom in supercell:
-            if atom.dist(0, 0, 0) < clust_rad:
+            if atom.v_dist([0, 0, 0]) < clust_rad:
                 seed_atoms.append(atom)
         max_mol_len = 0
         while len(seed_atoms) > 0:
@@ -505,7 +555,7 @@ class Mol(object):
     def dir_to_frac_pos(self):
         """Move all atoms to fractional coordinates"""
 
-        out_mol = deepcopy(self)
+        out_mol = self.copy()
         # transpose to get the transformation matrix
         M = np.transpose(self.vectors)
         # inverse transformation matrix
@@ -526,7 +576,7 @@ class Mol(object):
 
     def frac_to_dir_pos(self):
         """Move all atoms to direct coordinates"""
-        out_mol = deepcopy(self)
+        out_mol = self.copy()
         for atom in out_mol:
             new_pos = np.matmul(self.vectors.T, atom.get_pos())
             atom.set_pos(new_pos)
