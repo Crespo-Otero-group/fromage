@@ -534,7 +534,7 @@ class Mol(object):
         Returns
         -------
         cluster : Mol object
-            Sphericall cluster of molecules from their crystal positions
+            Spherical cluster of molecules from their crystal positions
 
         """
         trans = self.trans_from_rad(clust_rad)

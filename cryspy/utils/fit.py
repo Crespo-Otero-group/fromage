@@ -32,8 +32,8 @@ def shell_region(in_grid, sample_atoms, inner_r, outer_r):
         for atom in sample_atoms:
             # we compare squared distances to limit the amount of sqrt
             # operations
-            in_r_scaled2 = (inner_r * atom.vdw)**2
-            out_r_scaled2 = (outer_r * atom.vdw)**2
+            in_r_scaled2 = (inner_r * atom.cov)**2
+            out_r_scaled2 = (outer_r * atom.cov)**2
             dist2 = atom.v_dist2(point[0:3])
             if in_r_scaled2 <= dist2 <= out_r_scaled2:
                 add = True
@@ -140,7 +140,8 @@ def fit_points(var_points, samples, fix_points= None):
     deps = dep_var(var_points, fix_points, samples)
 
     res = np.linalg.lstsq(coeffs, deps, rcond=None)
-    print("RMSD: "+str(np.sqrt(res[1]/len(samples))))
+
+    print("RMSD: "+str(np.sqrt(np.sum(res[3])/len(samples))))
     print(res[1:])
     fitting = res[0]
     print(fitting[0:6])
@@ -203,7 +204,7 @@ def fit_clust(in_cell, in_labels, in_cube):
     print("Remove kernel: done")
 
     print("Shell sampling: start")
-    samples = shells_from_cell(in_cube, mol, trans, 0.59, 0.6)
+    samples = shells_from_cell(in_cube, mol, trans, 0.9995, 1.0)
     np.savetxt("bar.xyz",samples[:,0:3])
     print("Shell sampling: done")
 
