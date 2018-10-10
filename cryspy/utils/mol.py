@@ -608,7 +608,7 @@ class Mol(object):
 
         return out_mol
 
-    def centered_mols(self, labels):
+    def centered_mols(self, labels, return_trans = False):
         """
         Return the molecules translated at the origin with a corresponding cell
 
@@ -616,6 +616,8 @@ class Mol(object):
         ----------
         labels : int or list of ints
             The labels of the atoms to select
+        print_centro : bool
+            Print the translation vector which was detected as -centroid
         Returns
         -------
         mol : Mol object
@@ -632,7 +634,11 @@ class Mol(object):
         mod_cell.write_xyz("go.xyz")
         new_cell = mod_cell.confined()
         new_cell.write_xyz("ron.xyz")
-        return mol, mod_cell
+
+        if return_trans:
+            return mol, mod_cell, -centro
+        else:
+            return mol, mod_cell
 
 
     def es_pot(self, position):

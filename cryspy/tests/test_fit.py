@@ -8,6 +8,9 @@ from cryspy.utils.mol import Mol
 import numpy as np
 from copy import deepcopy
 
+
+## Fixtures
+# Benzene
 @pytest.fixture
 def benz_cell():
     """Return a Mol object of the uncharged benzene cell"""
@@ -41,18 +44,34 @@ def benz_pot_cub():
     cub, mol = rf.read_cube("benzene_pot.cube")
     return cub
 
-@pytest.fixture
-def pery_pot_cub():
-    """Return the CubeGrid for a perylene cell potential"""
-    cub, mol = rf.read_cube("perylene_pot.cube")
-    return cub
-
+# Perylene
 @pytest.fixture
 def pery_cell():
     """Return a Mol object of the uncharged perylene cell"""
     out_cell = rf.mol_from_file("perylene_cell.xyz")
     out_cell.vectors = rf.read_vectors("perylene_vectors")
     return out_cell
+
+@pytest.fixture
+def pery_solo():
+    """Return a Mol object of a charged perylene"""
+    out_mol = rf.mol_from_gauss("perylene_pop.log")
+    return out_mol
+
+@pytest.fixture
+def pery_cell_char(pery_cell,pery_solo):
+    """Return a Mol object of a charged perylene cell"""
+    out_char_cell = deepcopy(pery_cell)
+    ac.assign_charges(pery_solo, out_char_cell)
+    return out_char_cell
+
+@pytest.fixture
+def pery_pot_cub():
+    """Return the CubeGrid for a perylene cell potential"""
+    cub, mol = rf.read_cube("perylene_pot.cube")
+    return cub
+
+## End fixtures
 
 def test_fit_benz_clust(benz_clust_char):
     sample_point = Atom("",0,0,0)
@@ -128,15 +147,13 @@ def test_quad(pery_pot_cub,pery_cell):
     pery_cell.translate(trans)
     quad_cub.out_cube("trans.cube",pery_cell)
 
-#def test_per_trans_shell(pery_pot_cub,pery_cell):
-#    mol, cell = pery_cell.complete_mol([76,86])
-#    centr = mol.centroid()
-#    mol.translate(-centr)
-#    samples = fi.shells_from_cell(pery_pot_cub, mol, -centr, 0.5, 0.7)
-#    print(samples[0:6])
-#    print(type(samples[0:6]))
-#    np.savetxt("boop",samples[:,0:3])
-#    mol.write_xyz("foo.xyz")
+def test_per_trans_shell(pery_pot_cub,pery_cell):
+    mol, cell = pery_cell.complete_mol([76,86])
+    centr = mol.centroid()
+    mol.translate(-centr)
+    samples = fi.shells_from_cell(pery_pot_cub, mol, -centr, 0.5, 0.7)
+    print(samples[0:6])
+    print(type(samples[0:6]))
 #
 #def test_benz_trans_shell(benz_pot_cub,benz_cell):
 #    mol, cell = benz_cell.complete_mol([24,38])
@@ -158,6 +175,10 @@ def test_benz_trans_fit_shell(benz_pot_cub,benz_cell):
     #np.savetxt("boop_b.xyz",samples[:,0:3])
     #mol.write_xyz("foo_b.xyz")
 
-def test_clust(pery_cell):
-    fi.fit_clust(pery_cell,[76,86])
+def test_clust(pery_cell_char):
+    fi.fit_clust(pery_cell_char,[76,86])
     pass
+
+def test_benz_total_fit(benz_cell_char, benz_pot_cub):
+    fi.fit_clust(benz_cell_char, [24,38], benz_pot_cub)
+
