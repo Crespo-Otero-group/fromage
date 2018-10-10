@@ -13,6 +13,9 @@ def try_ismol(to_test):
         raise TypeError("Cannot cast " +
                         type(to_test).__name__ + " to Mol object")
 
+default_thresh = {'dis' : 1.8,
+                'cov' : -0.1,
+                'vdw' : -0.3}
 
 class Mol(object):
     """
@@ -38,9 +41,7 @@ class Mol(object):
 
     """
 
-    default_thresh = {'dis' : 1.8,
-                    'cov' : -0.1,
-                    'vdw' : -0.3}
+
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding = 'vdw', thresh = -0.3):
         # In case the user feeds a lone atom:
@@ -77,7 +78,7 @@ class Mol(object):
             'vdw' -> 0.3
 
         """
-        if in_bonding not in default_thresh:
+        if bonding not in default_thresh:
             raise TypeError("Unrecognised bonding type: "+ bonding)
         self.bonding = bonding
         self.thresh = default_thresh[bonding]
