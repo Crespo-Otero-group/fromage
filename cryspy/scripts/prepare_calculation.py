@@ -62,7 +62,8 @@ if __name__ == '__main__':
 
         if program.lower() == "gaussian":
             mol_char = rf.mol_from_gauss(pop_file, pop=method)
-
+            mol_char.bonding = in_mol.bonding
+            mol_char.thresh = in_mol.thresh
             charges = [i.q for i in mol_char]
             # correct charges if they are not perfectly neutral
             if sum(charges) != 0.0:
@@ -89,22 +90,17 @@ if __name__ == '__main__':
     cell.vectors = inputs["vectors"]
     cell.bonding = inputs["bonding"]
     cell.thresh = inputs["bond_thresh"]
-    atoms = rf.read_pos(inputs["cell_file"])
     output_file.write("Read " + str(len(cell)) + " atoms in cell_file\n")
     output_file.flush()
-    # the molecule of interest and the atoms which now contain
-    # the full, unchopped molecule
-    # NB: all objects in mol are also referenced inside atoms
-    region_1, cell = cell.complete_mol(inputs["atom_label"])
 
     # High level charge assignment
     populate_cell(cell, inputs["high_pop_program"], inputs["high_pop_file"], inputs["high_pop_method"])
+    region_1, cell = cell.centered_mols(inputs["atom_label"])
 
-    cell.centered_mols(inputs["atom_label"])
     # write useful xyz and new cell
     ef.write_xyz("mol.init.xyz", region_1)
     if inputs["print_tweak"]:
-        ef.write_xyz("tweaked_cell.xyz", atoms)
+        ef.write_xyz("tweaked_cell.xyz", cell)
 
     run_sequence = rs.RunSeq(region_1, cell, inputs)
 

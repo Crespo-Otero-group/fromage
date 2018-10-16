@@ -78,14 +78,12 @@ class RunSeq(object):
         # no stdout
         FNULL = open(os.devnull, 'w')
 
-        ef.write_uc(self.inputs["name"] + ".uc", self.inputs["vectors"], self.inputs["an"], self.inputs["bn"], self.inputs["cn"], self.region_1)
+        ef.write_uc(self.inputs["name"] + ".uc", self.inputs["vectors"], self.inputs["an"], self.inputs["bn"], self.inputs["cn"], self.cell)
         ef.write_qc(self.inputs["name"] + ".qc", self.region_1)
         ef.write_ew_in(self.inputs["name"], "ewald.in." + self.inputs["name"], self.inputs["nchk"], self.inputs["nat"])
         ef.write_seed()
         # run Ewald
-        print("RUNNING")
         subprocess.call("$FRO_EWALD < ewald.in." + self.inputs["name"], stdout=FNULL, shell=True)
-        print("DONE")
         points = rf.read_points(self.inputs["name"]+".pts-fro")
         os.chdir(self.here)
 

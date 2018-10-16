@@ -42,7 +42,7 @@ def detect_1_connect(in_atoms):
 
     """
     nat_mol = len(in_atoms)
-    cnct = np.zeros((nat_mol, nat_mol))
+    cnct = np.zeros((nat_mol, nat_mol),dtype=int)
     for i, i_atom in enumerate(in_atoms):
         for j, j_atom in enumerate(in_atoms):
             if np.count_nonzero(in_atoms.vectors) == 0:

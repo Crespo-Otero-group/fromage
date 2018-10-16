@@ -327,7 +327,7 @@ class Mol(object):
         new_mol, scattered_mol = self.per_select(labels, old_pos=True)
         new_cell_atoms = deepcopy(
             [a for a in self.atoms if a not in scattered_mol])
-        new_cell = deepcopy(self)
+        new_cell = self.copy()
         new_cell.atoms = new_cell_atoms
 
         for atom in new_mol:
