@@ -62,18 +62,17 @@ def run_ewald(in_name, in_mol, in_atoms, in_vectors, in_nAt=500, in_aN=2, in_bN=
 if __name__ == '__main__':
 
     # a few functions to only be used in main
-    def populate_cell(in_atoms, program, pop_file, method):
+    def populate_cell(in_mol, program, pop_file, method):
         """
         Assign charge to the atoms from a unit cell
 
-        Don't import this, it depends on variables in the main of this module:
-        output_file, vectors and max_bl
+        Don't import this.
         If you want to assign charges go straign to assign_charges.py and use
         those utilities.
 
         Parameters
         ----------
-        in_atoms : list of Atom objects
+        in_mol : Mol object
             Make sure these atoms form a unit cell.
         program : str
             Make it "gaussian" or "cp2k"
@@ -85,10 +84,10 @@ if __name__ == '__main__':
         """
         if program.lower() == "cp2k":
             charges = rf.read_cp2k(pop_file, method)[0]
-            output_file.write("Read " + str(len(in_atoms)) +
+            output_file.write("Read " + str(len(in_mol)) +
                               " charges in cp2k_file\n")
             # in case there are more charges than atoms
-            charges = charges[:len(in_atoms)]
+            charges = charges[:len(in_mol)]
             # correct charges if they are not perfectly neutral
             if sum(charges) != 0.0:
                 output_file.write("Charge correction: " +
@@ -96,20 +95,17 @@ if __name__ == '__main__':
                 charges[-1] -= sum(charges)
 
         if program.lower() == "gaussian":
-            mol_char = rf.read_g_char(pop_file, method)[0]
-            # correct charges if they are not perfectly neutral
-            if sum(mol_char) != 0.0:
-                output_file.write("Charge correction: " +
-                                  str(sum(mol_char)) + "\n")
-                mol_char[-1] -= sum(mol_char)
+            mol_char = rf.mol_from_gauss(pop_file, pop=method)
 
-            # assigns charges to a molecule
-            pop_mol = rf.read_g_pos(pop_file)
-            for index, atom in enumerate(pop_mol):
-                atom.q = mol_char[index]
+            charges = [i.q for i in mol_char]
+            # correct charges if they are not perfectly neutral
+            if sum(charges) != 0.0:
+                output_file.write("Charge correction: " +
+                                  str(sum(charges)) + "\n")
+                mol_char[-1].q -= sum(mol_char)
 
             # assign charges to the rest of the cell
-            assign_charges(pop_mol, None, in_atoms, vectors, max_bl)
+            assign_charges(mol_char, in_mol)
         return
 
     output_file = open("prep.out", "w")
@@ -324,8 +320,11 @@ if __name__ == '__main__':
     low_pop_file = inputs["low_pop_file"]
     low_pop_method = inputs["low_pop_method"]
 
+    # criterion to use for bond detection
+    bonding = inputs["bonding"]
+
     # maximum bond length when defining a molecule
-    max_bl = inputs["max_bl"]
+    bond_thresh = inputs["bond_thresh"]
 
     # label of an atom which will be part of the quantum cluster
     # warning: [0,N-1], not [1,N]
@@ -380,34 +379,29 @@ if __name__ == '__main__':
     #------------------------------END OF INPUTS------------------------------
     #-------------------------------------------------------------------------
 
-    # read the input atoms
+    # read the input cell
+    cell = rf.mol_from_file(cell_file)
+    cell.vectors = vectors
+    cell.bonding = bonding
+    cell.thresh = bond_thresh
     atoms = rf.read_pos(cell_file)
-    output_file.write("Read " + str(len(atoms)) + " atoms in cell_file\n")
+    output_file.write("Read " + str(len(cell)) + " atoms in cell_file\n")
     output_file.flush()
-    # the molecule of interest and the atoms which now contain
-    # the full, unchopped molecule
-    # NB: all objects in mol are also referenced inside atoms
-    mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)
 
     # High level charge assignment
-    populate_cell(atoms, high_pop_program, high_pop_file, high_pop_method)
+    populate_cell(cell, high_pop_program, high_pop_file, high_pop_method)
 
-    # find the centroid of the molecule
-    c_x, c_y, c_z = ha.find_centroid(mol)
-    # translate the molecule and atoms to the centroid
-    for atom in atoms:
-        atom.translate(-c_x, -c_y, -c_z)
-
+    # get centered mod and corresponding cell
+    model_system, mod_cell = cell.centered_mols(atom_label)
     # write useful xyz and new cell
-    ef.write_xyz("mol.init.xyz", mol)
+    model_system.write_xyz("mol.init.xyz")
     if print_tweak:
-        ef.write_xyz("tweaked_cell.xyz", atoms)
+        mod_cell.write_xyz("tweaked_cell.xyz")
 
     # Ewald section
     here = os.getcwd()
 
     if ewald:
-
         ew_path = os.path.join(here, 'ewald')
         if not os.path.exists(ew_path):
             os.makedirs(ew_path)

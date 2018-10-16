@@ -2,7 +2,7 @@ Tutorial
 ########
 
 This tutorial will guide you step by step through a typical calculation done
-with **cryspy**. This page is meant to function as a standalone but for a refresher
+with **cryspy**. This page is meant to be self contained but for a refresher
 on the abbreviations used, visit the :ref:`glossary<gloss>`. Everything
 discussed herein is elaborated upon in the rest of the documentation.
 

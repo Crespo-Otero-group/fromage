@@ -20,7 +20,8 @@ def complete_config(name="config"):
         "low_pop_program": "gaussian",
         "low_pop_file": "gaussian_l.log",
         "low_pop_method": "ESP",
-        "max_bl": "1.7",
+        "bonding":"dis",
+        "bond_thresh": "1.7",
         "atom_label": "1",
         "ewald": "",  # becomes bool
         "nchk": "1000",
@@ -76,7 +77,7 @@ def parse_inputs(name="config"):
 
     inputs = complete_config(name)
 
-    inputs["max_bl"] = float(inputs["max_bl"])
+    inputs["bond_thresh"] = float(inputs["bond_thresh"])
     if type(inputs["atom_label"]) == str:
         inputs["atom_label"] = [int(inputs["atom_label"]) - 1]
     else:

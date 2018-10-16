@@ -92,7 +92,7 @@ class Calc(object):
         # the inner and middle regions
         with open("geom_cluster.xyz", "a") as geom_c_file:
             geom_c_file.write(
-                str((len(positions) / 3) + len(in_shell)) + "\n")
+                str(int((len(positions) / 3) + len(in_shell))) + "\n")
             geom_c_file.write(self.calc_name + "\n")
             for atom in ha.array2atom(in_mol, positions):
                 atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
