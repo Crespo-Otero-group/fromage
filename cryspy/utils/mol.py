@@ -628,13 +628,10 @@ class Mol(object):
 
         """
         mol, mod_cell = self.complete_mol(labels)
-        mod_cell.write_xyz("man.xyz")
         centro = mol.centroid()
         mol.translate(-centro)
         mod_cell.translate(-centro)
-        mod_cell.write_xyz("go.xyz")
         new_cell = mod_cell.confined()
-        new_cell.write_xyz("ron.xyz")
 
         if return_trans:
             return mol, mod_cell, -centro

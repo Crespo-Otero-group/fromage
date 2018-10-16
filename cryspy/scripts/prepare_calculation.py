@@ -68,7 +68,7 @@ if __name__ == '__main__':
             if sum(charges) != 0.0:
                 output_file.write("Charge correction: " +
                                   str(sum(charges)) + "\n")
-                mol_char[-1].q -= sum(mol_char)
+                mol_char[-1].q -= sum(charges)
 
             # assign charges to the rest of the cell
             assign_charges(mol_char, in_mol)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     if inputs["print_tweak"]:
         ef.write_xyz("tweaked_cell.xyz", atoms)
 
-    run_sequence = rs.RunSequence(region_1, cell, inputs)
+    run_sequence = rs.RunSeq(region_1, cell, inputs)
 
     region_2, high_points = run_sequence.run()
 

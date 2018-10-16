@@ -40,6 +40,9 @@ class RunSeq(object):
         else:
             post = "nosc"
         self.mode = pref + post
+        # dirs
+        self.here = os.getcwd()
+        self.ewald_path = os.path.join(self.here,"ewald/")
         return
 
     def make_region_2(self):
@@ -63,7 +66,7 @@ class RunSeq(object):
             for atom in self.region_1:
                 if atom in shell_high:
                     shell_high.remove(atom)
-        low_level_pop_mol = rf.mol_from_gauss("low_pop_file", pop=self.inputs["low_pop_method"])
+        low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
         shell_low.populate(low_level_pop_mol)
         return shell_high, shell_low
@@ -75,15 +78,17 @@ class RunSeq(object):
         # no stdout
         FNULL = open(os.devnull, 'w')
 
-        ef.write_uc(self.inputs["name"] + ".uc", self.cell_vectors, self.inputs["aN"], self.inputs["bN"], self.inputs["cN"], self.region_1)
+        ef.write_uc(self.inputs["name"] + ".uc", self.inputs["vectors"], self.inputs["an"], self.inputs["bn"], self.inputs["cn"], self.region_1)
         ef.write_qc(self.inputs["name"] + ".qc", self.region_1)
         ef.write_ew_in(self.inputs["name"], "ewald.in." + self.inputs["name"], self.inputs["nchk"], self.inputs["nat"])
         ef.write_seed()
         # run Ewald
+        print("RUNNING")
         subprocess.call("$FRO_EWALD < ewald.in." + self.inputs["name"], stdout=FNULL, shell=True)
+        print("DONE")
+        points = rf.read_points(self.inputs["name"]+".pts-fro")
         os.chdir(self.here)
 
-        points = rf.read_points(self.inputs["name"]+"pts-fro")
         return points
 
     def run(self):
@@ -102,7 +107,7 @@ class RunSeq(object):
                     "ew_nosc":self.run_eec,
                     "ew_sc":self.run_sceec}
         # execute the appropriate run type
-        region_2, high_points = run_types[self.mode]
+        region_2, high_points = run_types[self.mode]()
         return region_2, high_points
 
     def run_ec(self):
