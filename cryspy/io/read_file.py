@@ -224,7 +224,7 @@ def read_points(in_name):
         Name of the file to read
     Returns
     -------
-    points : list of Atom ojects
+    points : Mol object
         Point charges in the file. They have element "point"
 
     """
@@ -232,7 +232,7 @@ def read_points(in_name):
         pts_content = pts_file.readlines()
 
         # store point charges here
-    points = []
+    points = Mol([])
 
     for line in pts_content:
         xIn, yIn, zIn, qIn = map(float, line.split())

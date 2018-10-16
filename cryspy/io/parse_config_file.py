@@ -99,5 +99,16 @@ def parse_inputs(name="config"):
     inputs["c_vec"] = np.array([float(i) for i in inputs["c_vec"]])
     inputs["damping"] = float(inputs["damping"])
     inputs["print_tweak"] = bool_cast(inputs["print_tweak"])
+    # specified in config
+    inputs["vectors"] = np.zeros((3, 3))
+    if all(len(i) == 3 for i in [inputs["a_vec"], inputs["b_vec"], inputs["c_vec"]]):
+        a_vec = inputs["a_vec"]
+        b_vec = inputs["b_vec"]
+        c_vec = inputs["c_vec"]
+        inputs["vectors"][0] = a_vec
+        inputs["vectors"][1] = b_vec
+        inputs["vectors"][2] = c_vec
+    else:  # from external file
+        inputs["vectors"] = rf.read_vectors(inputs["vectors_file"])
 
     return inputs
