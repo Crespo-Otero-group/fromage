@@ -205,7 +205,7 @@ class Gauss_calc(Calc):
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
         proc = subprocess.Popen(
-            "${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
+            "${FRO_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
@@ -256,6 +256,14 @@ class Gauss_calc(Calc):
 
         return (energy, gradients, scf_energy)
 
+    def read_out_mol(self, pop="EPS"):
+        """Read the output log file and return Mol"""
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+        out_mol = rf.mol_from_gauss(self.calc_name + ".log")
+        os.chdir(self.here)
+
+        return out_mol
 
 class Gauss_CAS_calc(Calc):
     """
@@ -282,7 +290,7 @@ class Gauss_CAS_calc(Calc):
         ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp")
         proc = subprocess.Popen(
-            "${CRY_GAUSS} " + self.calc_name + ".com", shell=True)
+            "${FRO_GAUSS} " + self.calc_name + ".com", shell=True)
 
         os.chdir(self.here)
 
