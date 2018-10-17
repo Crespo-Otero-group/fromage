@@ -2,10 +2,10 @@
 import os
 import subprocess
 
-import cryspy.io.edit_file as ef
-import cryspy.io.read_file as rf
+import fromage.io.edit_file as ef
+import fromage.io.read_file as rf
 
-from cryspy.scripts.assign_charges import assign_charges
+from fromage.scripts.assign_charges import assign_charges
 
 class RunSeq(object):
     """

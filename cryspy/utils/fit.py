@@ -1,6 +1,6 @@
 """Fit point charges to match a given potential"""
 import numpy as np
-from cryspy.utils.mol import Mol
+from fromage.utils.mol import Mol
 
 def shell_region(in_grid, sample_atoms, inner_r, outer_r):
     """

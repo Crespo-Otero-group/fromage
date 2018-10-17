@@ -4,8 +4,8 @@ import numpy as np
 # from copy import copy
 from copy import deepcopy
 
-from cryspy.utils.atom import Atom
-import cryspy.io.edit_file as ef
+from fromage.utils.atom import Atom
+import fromage.io.edit_file as ef
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
@@ -702,6 +702,6 @@ class Mol(object):
         # The reason is that assign_charges functions are grouped up with the
         # executable script which needs to read_file and in turn use mol.py
         # Some careful refactoring should fix this
-        import cryspy.scripts.assign_charges as ac
+        import fromage.scripts.assign_charges as ac
         ac.assign_charges(reference_mol, self)
         pass

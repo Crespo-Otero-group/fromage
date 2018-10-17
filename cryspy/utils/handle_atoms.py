@@ -3,7 +3,7 @@
 import numpy as np
 from copy import copy
 
-from cryspy.utils.atom import Atom
+from fromage.utils.atom import Atom
 
 
 def select(max_r, atoms, label):

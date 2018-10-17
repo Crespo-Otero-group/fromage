@@ -1,7 +1,7 @@
 import numpy as np
 
-import cryspy.io.edit_file as ef
-import cryspy.utils.per_table as pt
+import fromage.io.edit_file as ef
+import fromage.utils.per_table as pt
 from copy import deepcopy
 
 class CubeGrid(object):

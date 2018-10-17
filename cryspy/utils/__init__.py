@@ -1,7 +1,7 @@
 """
 Utilities
 
-API supporting the callable scripts in cryspy
+API supporting the callable scripts in fromage
 
 Modules
 -------
@@ -19,4 +19,4 @@ Modules
         Tools for the calculation of vdW spheres and Voronoi volumes in a
         molecular crystal
 """
-#from cryspy.utils import *
+#from fromage.utils import *

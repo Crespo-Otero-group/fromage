@@ -10,9 +10,9 @@ preferences, it should be contained here in its Calc object member methods.
 import subprocess
 import os
 
-from cryspy.io import edit_file as ef
-from cryspy.io import read_file as rf
-from cryspy.utils import handle_atoms as ha
+from fromage.io import edit_file as ef
+from fromage.io import read_file as rf
+from fromage.utils import handle_atoms as ha
 
 
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
