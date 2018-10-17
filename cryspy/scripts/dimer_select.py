@@ -12,10 +12,10 @@ import argparse
 import time
 import numpy as np
 
-from cryspy.io import read_file as rf
-from cryspy.io import edit_file as ef
-from cryspy.utils import handle_atoms as ha
-from cryspy.fdist import fdist as fd
+from fromage.io import read_file as rf
+from fromage.io import edit_file as ef
+from fromage.utils import handle_atoms as ha
+from fromage.fdist import fdist as fd
 
 start = time.time()
 

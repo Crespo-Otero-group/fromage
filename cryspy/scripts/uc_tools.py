@@ -11,8 +11,8 @@ from copy import deepcopy
 import itertools as it
 import time
 
-from cryspy.io import read_file as rf
-from cryspy.io import edit_file as ef
+from fromage.io import read_file as rf
+from fromage.io import edit_file as ef
 
 
 def compare_id(id_i, id_j):

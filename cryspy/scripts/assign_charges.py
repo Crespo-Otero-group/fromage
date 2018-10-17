@@ -19,7 +19,7 @@ import numpy as np
 import sys
 import argparse
 
-import cryspy.io.read_file as rf
+import fromage.io.read_file as rf
 
 
 def detect_1_connect(in_atoms):

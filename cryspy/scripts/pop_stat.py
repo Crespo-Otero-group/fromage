@@ -11,7 +11,7 @@ import argparse
 import sys
 import numpy as np
 
-from cryspy.io import read_file as rf
+from fromage.io import read_file as rf
 
 
 def main(in_log, kind):

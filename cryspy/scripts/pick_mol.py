@@ -12,9 +12,9 @@ import sys
 import argparse
 from copy import copy
 
-from cryspy.io import read_file as rf
-from cryspy.io import edit_file as ef
-from cryspy.utils import handle_atoms as ha
+from fromage.io import read_file as rf
+from fromage.io import edit_file as ef
+from fromage.utils import handle_atoms as ha
 
 
 def picker(in_name, out_name, labels, max_bl, reverse=False):

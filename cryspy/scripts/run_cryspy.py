@@ -17,9 +17,9 @@ import os
 from datetime import datetime
 from scipy.optimize import minimize
 
-from cryspy.io import read_file as rf
-from cryspy.utils import handle_atoms as ha
-from cryspy.utils import calc
+from fromage.io import read_file as rf
+from fromage.utils import handle_atoms as ha
+from fromage.utils import calc
 
 
 def sequence(in_pos):
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     def_inputs = {
         "mol_file": "mol.init.xyz",
         "shell_file": "shell.xyz",
-        "out_file": "cryspy.out",
+        "out_file": "fromage.out",
         "bool_ci": "0",
         "high_level": "gaussian",
         "low_level": "gaussian",
@@ -161,8 +161,8 @@ if __name__ == '__main__':
     inputs = def_inputs.copy()
 
     # read user inputs
-    if os.path.isfile("cryspy.in"):
-        new_inputs = rf.read_config("cryspy.in")
+    if os.path.isfile("fromage.in"):
+        new_inputs = rf.read_config("fromage.in")
         inputs.update(new_inputs)
 
     mol_file = inputs["mol_file"]

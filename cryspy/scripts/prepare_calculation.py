@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""This module is a tool to prepare template and input files for cryspy.
+"""This module is a tool to prepare template and input files for fromage.
 
 You will need:
 - config file
@@ -17,11 +17,11 @@ And receive
 import os
 from datetime import datetime
 
-from cryspy.io import read_file as rf
-from cryspy.io import edit_file as ef
-from cryspy.io import parse_config_file as pcf
-from cryspy.scripts.assign_charges import assign_charges
-import cryspy.utils.run_sequence as rs
+from fromage.io import read_file as rf
+from fromage.io import edit_file as ef
+from fromage.io import parse_config_file as pcf
+from fromage.scripts.assign_charges import assign_charges
+import fromage.utils.run_sequence as rs
 
 
 
