@@ -5,12 +5,12 @@ the same as in the file being read. Keep further unit conversion
 outside of this file for clarity.
 """
 import numpy as np
-import cryspy.utils.per_table as pt
+import fromage.utils.per_table as pt
 
-from cryspy.utils.mol import Mol
-from cryspy.utils import per_table as per
-from cryspy.utils.atom import Atom
-from cryspy.utils.volume import CubeGrid
+from fromage.utils.mol import Mol
+from fromage.utils import per_table as per
+from fromage.utils.atom import Atom
+from fromage.utils.volume import CubeGrid
 
 
 def read_vasp(in_name):
@@ -463,7 +463,7 @@ def read_fchk(in_name):
 
 def read_config(in_name):
     """
-    Read a cryspy config file.
+    Read a fromage config file.
 
     Parameters
     ----------

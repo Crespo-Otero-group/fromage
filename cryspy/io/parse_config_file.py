@@ -5,13 +5,13 @@ if contradictory features are included.
 """
 import numpy as np
 
-from cryspy.io import read_file as rf
+from fromage.io import read_file as rf
 
 
 def complete_config(name="config"):
     """Write default parameters for config and update with user inputs"""
     inputs = {
-        "name": "cryspy_calc",
+        "name": "fromage_calc",
         "target_shell": "",
         "cell_file": "cell.xyz",
         "high_pop_program": "gaussian",
