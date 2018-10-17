@@ -1,10 +1,10 @@
 import pytest
 from pytest import approx
-import cryspy.io.read_file as rf
-import cryspy.utils.fit as fi
-import cryspy.scripts.assign_charges as ac
-from cryspy.utils.atom import Atom
-from cryspy.utils.mol import Mol
+import fromage.io.read_file as rf
+import fromage.utils.fit as fi
+import fromage.scripts.assign_charges as ac
+from fromage.utils.atom import Atom
+from fromage.utils.mol import Mol
 import numpy as np
 from copy import deepcopy
 
@@ -183,4 +183,3 @@ def test_benz_total_fit(benz_cell_char, benz_pot_cub):
 
 def test_pery_total_fit(pery_cell_char, pery_pot_cub):
     fi.fit_clust(pery_cell_char, [24,38], pery_pot_cub)
-

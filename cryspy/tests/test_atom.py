@@ -2,7 +2,7 @@ import pytest
 from pytest import approx
 import numpy as np
 
-from cryspy.utils.atom import Atom
+from fromage.utils.atom import Atom
 
 
 @pytest.fixture

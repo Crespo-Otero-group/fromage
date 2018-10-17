@@ -1,9 +1,9 @@
 import pytest
 from pytest import approx
-import cryspy.io.read_file as rf
+import fromage.io.read_file as rf
 import numpy as np
-from cryspy.utils.atom import Atom
-from cryspy.utils.mol import Mol
+from fromage.utils.atom import Atom
+from fromage.utils.mol import Mol
 
 
 @pytest.fixture
