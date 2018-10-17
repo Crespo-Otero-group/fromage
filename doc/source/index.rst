@@ -1,12 +1,12 @@
-.. cryspy documentation master file, created by
+.. fromage documentation master file, created by
    sphinx-quickstart on Tue Feb 13 10:35:39 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-cryspy
+fromage
 ==================================
 
-**cryspy** is a library designed to support the manipulation and optimisation of
+**fromage** is a library designed to support the manipulation and optimisation of
 molecular crystal structures. It provides an interface between popular
 electronic structure programs for cross-program ONIOM-style calculations. A
 suite of analysis tools is also included to calculate excitonic couplings,

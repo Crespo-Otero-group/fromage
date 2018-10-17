@@ -1,15 +1,15 @@
 Input file description
 ######################
 
-**cryspy** uses input files at two points of its execution. During the preparatory
+**fromage** uses input files at two points of its execution. During the preparatory
 calculation (using `prepare_calculation.py`), the `config` file is required.
-During the actual geometry optimisation (`run_cryspy.py`), the file `cryspy.in`
+During the actual geometry optimisation (`run_fromage.py`), the file `fromage.in`
 is read if present.
 
 config file
 ===========
 
-All **cryspy** input files follow the same input structure. The order of the
+All **fromage** input files follow the same input structure. The order of the
 keywords is irrelevant and blank lines are ignored. The keyword is stated and
 then its value(s) after any number of whitespaces. Therefore:
 
@@ -26,7 +26,7 @@ Is the same as:
 Below are listed the most important keywords available.
 
 name
-  The name of your calculation. Default: ``cryspy_calc``
+  The name of your calculation. Default: ``fromage_calc``
 
 a_vec, b_vec and c_vec
   The lattice vectors in Angstrom. This section has no default value. Example:
@@ -62,7 +62,7 @@ low_pop_method
   The method of population analysis. "Mulliken" or "ESP". Default: ``ESP``
 
 max_bl
-  The distance between two atoms in Angsrom below which **cryspy** will consider the
+  The distance between two atoms in Angsrom below which **fromage** will consider the
   atoms to be bonded together. Default: ``1.7``
 
 atom_label
@@ -121,7 +121,7 @@ print_tweak
   molecule(s) completed and the whole cell centred around its centroid. Default:
   ``off``
 
-cryspy.in file
+fromage.in file
 ==============
 
 The input structure is the same as for ``config``.
@@ -136,7 +136,7 @@ shell_file
 
 out_file
   File name for the output file containing the geometry optimisation
-  information. Default: ``cryspy.out``
+  information. Default: ``fromage.out``
 
 bool_ci
   Whether or not to optimise for :term:`MECI`. "1" for yes "0 for no. Default:
