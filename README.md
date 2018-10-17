@@ -1,4 +1,4 @@
-# cryspy
+# fromage
 
 This program offers interface for 2-level ONIOM calculations in between quantum packages. There is a heavy emphasis on applications for molecular crystals and as such different Ewald embedding schemes are implemented.
 
@@ -15,21 +15,21 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
 
   ```bash
    cd /path/to/dir/
-   git clone https://github.research.its.qmul.ac.uk/btx156/cryspy.git
-   cd cryspy/
+   git clone https://github.research.its.qmul.ac.uk/btx156/fromage.git
+   cd fromage/
   ```
 
 3. Compile
 
   ```bash
-  cd cryspy/fdist/
+  cd fromage/fdist/
   swig -c++ -python fdist.i
   cd ../../
   sudo python setup.py build_ext --inplace install
   ```
   Voilà!
 
-The main two modules in cryspy are `prepare_calculation.py` and `cryspy.py`. The former produces template files and geometry files to be used in the latter for geometry optimisation or minimal energy conical intersection (MECI) search. Following the standard ONIOM nomenclature, the central system which is only treated at the high level of theory is called the 'model' system. The whole system is called the 'real' system. As such the three parallel calculations which are carried out are called `mh` for `model high`, `ml` for `model low`, `rl` for `real low`. For MECI search, an additional calculation of the high level region for the ground state gradients is necessary and is labeled `mg`.
+The main two modules in fromage are `prepare_calculation.py` and `fromage.py`. The former produces template files and geometry files to be used in the latter for geometry optimisation or minimal energy conical intersection (MECI) search. Following the standard ONIOM nomenclature, the central system which is only treated at the high level of theory is called the 'model' system. The whole system is called the 'real' system. As such the three parallel calculations which are carried out are called `mh` for `model high`, `ml` for `model low`, `rl` for `real low`. For MECI search, an additional calculation of the high level region for the ground state gradients is necessary and is labeled `mg`.
 
 ## 2 Preparing the calculation
 
@@ -99,14 +99,14 @@ Once you have finished running `prepare_calculation.py`, you will end up with a 
 
 ### 3.1 Last few steps before running
 
-To run cryspy, all you need is:
+To run fromage, all you need is:
 
-- A `cryspy.in` file
+- A `fromage.in` file
 - `mol.init.xyz`
 - `shell.xyz`
 - `mh`, `ml` and `rl` directories containing `.temp` files (`mg` is only needed for MECI serach)
 
-The `cryspy.in` file has a similar structure to the `config` file but is much simpler and is not even necessary for geometry optimisation in Gaussian. If you want to change a program used in a specific level of theory from Gaussian ot something else, simply add `high_level [program]` or `low_level [program]`. For MECI search, add `bool_ci 1`
+The `fromage.in` file has a similar structure to the `config` file but is much simpler and is not even necessary for geometry optimisation in Gaussian. If you want to change a program used in a specific level of theory from Gaussian ot something else, simply add `high_level [program]` or `low_level [program]`. For MECI search, add `bool_ci 1`
 
 For Turbomole RI-CC2, run a define and then write in all of the point charges from `mh.temp` under the block `$point_charges` after scaling.
 
@@ -125,17 +125,17 @@ For Molcas RASCF, prepare an input file in the directory called `molcas.input` w
                 .
 ```
 
-You should be all set now. Run `run_cryspy.py` to begin the calculation.
+You should be all set now. Run `run_fromage.py` to begin the calculation.
 
 ### 3.2 Outputs
 
 The program only has three main outputs:
 
-- `cryspy.out` which gives updates on all of the individual energies being calculated, the total gradient norm and the energy gap
+- `fromage.out` which gives updates on all of the individual energies being calculated, the total gradient norm and the energy gap
 - `geom_mol.xyz` which keeps a record of the optimising geometry
 - `geom_cluster.xyz` which combines `geom_mol.xyz` and `shell.xyz` for a better view of intermolecular interactions
 
-If the minimisation ran smoothly, the last line of `cryspy.out` should be the ending time.
+If the minimisation ran smoothly, the last line of `fromage.out` should be the ending time.
 
 ## 4 Additional utilities
 
@@ -181,11 +181,11 @@ Options include extracting the nonequivalent monomers from the cell, generating 
 
 If you find yourself with a bunch of `core.` files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
 
-If you are happily preparing a calculation, see no error, run `cryspy.py` with sensible geometries and find that your quantum chemistry program is very upset about something, it might be that the point charges you are feeding it are unreasonable. Indeed when you start fiddling with large numbers of constrained point charges in Ewald, the system of linear equations which fits them becomes highly linearly dependent and you end up with point charges with values in the thousands. If this happens to you just try a smaller number of constrained point charges while still containing your central molecule.
+If you are happily preparing a calculation, see no error, run `fromage.py` with sensible geometries and find that your quantum chemistry program is very upset about something, it might be that the point charges you are feeding it are unreasonable. Indeed when you start fiddling with large numbers of constrained point charges in Ewald, the system of linear equations which fits them becomes highly linearly dependent and you end up with point charges with values in the thousands. If this happens to you just try a smaller number of constrained point charges while still containing your central molecule.
 
 Hacking this program for your own personal needs is a perfectly good idea and you may be able to get a lot from just importing the I/O modules and the `Atom` and `Mol` classes.
 
-If all you want to do is integrate your favourite quantum chemistry package into cryspy, all you need to do is a) add new io routines in `read_file` and `edit_file` b) make a new `Calc` object modeled after one of the existing ones in the `calc` module c) Add the class and corresponding keyword to the `calc_types` at the top of the `calc` module
+If all you want to do is integrate your favourite quantum chemistry package into fromage, all you need to do is a) add new io routines in `read_file` and `edit_file` b) make a new `Calc` object modeled after one of the existing ones in the `calc` module c) Add the class and corresponding keyword to the `calc_types` at the top of the `calc` module
 
 The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with `prepare_calculation`.
 
