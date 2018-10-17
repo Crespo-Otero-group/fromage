@@ -631,7 +631,7 @@ class Mol(object):
         centro = mol.centroid()
         mol.translate(-centro)
         mod_cell.translate(-centro)
-        new_cell = mod_cell.confined()
+        mod_cell = mod_cell.confined()
 
         if return_trans:
             return mol, mod_cell, -centro
