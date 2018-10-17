@@ -98,13 +98,15 @@ if __name__ == '__main__':
     region_1, cell = cell.centered_mols(inputs["atom_label"])
 
     # write useful xyz and new cell
-    ef.write_xyz("mol.init.xyz", region_1)
+    region_1.write_xyz("mol.init.xyz")
     if inputs["print_tweak"]:
         ef.write_xyz("tweaked_cell.xyz", cell)
 
     run_sequence = rs.RunSeq(region_1, cell, inputs)
 
     region_2, high_points = run_sequence.run()
+
+    region_2.write_xyz("shell.xyz")
 
     # Make inputs
     mh_path = os.path.join(here, 'mh')
