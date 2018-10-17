@@ -1,7 +1,7 @@
-cryspy
+fromage
 ======
 
 .. toctree::
    :maxdepth: 4
 
-   cryspy
+   fromage

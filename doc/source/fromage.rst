@@ -1,20 +1,20 @@
-cryspy package
-==============
+fromage package
+===============
 
 Subpackages
 -----------
 
 .. toctree::
 
-    cryspy.fdist
-    cryspy.io
-    cryspy.scripts
-    cryspy.utils
+    fromage.fdist
+    fromage.io
+    fromage.scripts
+    fromage.utils
 
 Module contents
 ---------------
 
-.. automodule:: cryspy
+.. automodule:: fromage
     :members:
     :undoc-members:
     :show-inheritance:

@@ -4,7 +4,7 @@ Miscellaneous scripts
 Assign charges
 ==============
 
-For the assignation of charges to moleculecular structures, cryspy uses their
+For the assignation of charges to moleculecular structures, fromage uses their
 connectivity. This is achieved through a set of tools all based on the
 definition of a bond from just the information in an .xyz file. Two atoms are
 considered bonded if their distance is below a certain threshold.
@@ -15,7 +15,7 @@ the same molecule. One important approximation is that atoms with equivalent
 connectivity (say the hydrogens in a methyl group) will have the same value: an
 average of the three original ones.
 
-This redistribution may be useful for other applications outside of cryspy, for
+This redistribution may be useful for other applications outside of fromage, for
 instance for the assignation of forcefield charges. To address this, the module
 ``assign_charges.py`` can be called as a script with as arguments the Gaussian
 .log file containing the molecular charges, followed by a .xyz file containing

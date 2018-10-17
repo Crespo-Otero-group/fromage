@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# cryspy documentation build configuration file, created by
+# fromage documentation build configuration file, created by
 # sphinx-quickstart on Tue Feb 13 10:35:39 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'cryspy'
+project = u'fromage'
 copyright = u'2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero'
 author = u'Miguel Rivera, Michael Dommett, Rachel Crespo-Otero'
 
@@ -106,7 +106,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'cryspydoc'
+htmlhelp_basename = 'fromagedoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -133,7 +133,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'cryspy.tex', u'cryspy Documentation',
+    (master_doc, 'fromage.tex', u'fromage Documentation',
      u'Miguel Rivera, Michael Dommett, Rachel Crespo-Otero', 'manual'),
 ]
 
@@ -143,7 +143,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'cryspy', u'cryspy Documentation',
+    (master_doc, 'fromage', u'fromage Documentation',
      [author], 1)
 ]
 
@@ -154,8 +154,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'cryspy', u'cryspy Documentation',
-     author, 'cryspy', 'One line description of project.',
+    (master_doc, 'fromage', u'fromage Documentation',
+     author, 'fromage', 'One line description of project.',
      'Miscellaneous'),
 ]
 

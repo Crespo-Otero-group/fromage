@@ -1,13 +1,13 @@
-cryspy.fdist package
-====================
+fromage.fdist package
+=====================
 
 Submodules
 ----------
 
-cryspy.fdist.fdist module
--------------------------
+fromage.fdist.fdist module
+--------------------------
 
-.. automodule:: cryspy.fdist.fdist
+.. automodule:: fromage.fdist.fdist
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ cryspy.fdist.fdist module
 Module contents
 ---------------
 
-.. automodule:: cryspy.fdist
+.. automodule:: fromage.fdist
     :members:
     :undoc-members:
     :show-inheritance:

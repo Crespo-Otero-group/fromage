@@ -2,7 +2,7 @@ Tutorial
 ########
 
 This tutorial will guide you step by step through a typical calculation done
-with **cryspy**. This page is meant to be self contained but for a refresher
+with **fromage**. This page is meant to be self contained but for a refresher
 on the abbreviations used, visit the :ref:`glossary<gloss>`. Everything
 discussed herein is elaborated upon in the rest of the documentation.
 
@@ -39,7 +39,7 @@ Make a directory where the preparatory calculation will take place:
 
   mkdir opt_1/
   cd opt_1/
-  cp path/to/cryspy/tutorial/* .
+  cp path/to/fromage/tutorial/* .
 
 The input files that you have just copied are:
 
@@ -48,7 +48,7 @@ The input files that you have just copied are:
     the unit cell
 
 * ``config``
-    The **cryspy** configuration file, described below
+    The **fromage** configuration file, described below
 
 * ``high_pop.log``
     A Gaussian output file of a population analysis for one
@@ -68,7 +68,7 @@ The input files that you have just copied are:
 Execution
 ---------
 
-If your installation was successful, all of the **cryspy** scripts should be in your
+If your installation was successful, all of the **fromage** scripts should be in your
 system path already. In that case, running the program simply involves typing:
 
 .. code-block:: bash
@@ -114,7 +114,7 @@ Input
 These are all the files needed for the geometry optimisation. Most of them
 were already generated from the previous step.
 
-* ``cryspy.in``
+* ``fromage.in``
     The input file which contains the specifications for the geometry
     optimisation
 
@@ -131,7 +131,7 @@ were already generated from the previous step.
 Execution
 ^^^^^^^^^
 
-An important part of calculations in **cryspy** is the assignement of memory to each
+An important part of calculations in **fromage** is the assignement of memory to each
 component calculation. Some times, depending on the system size and the
 combination of methods used, ``rl`` will need more memory than ``mh``. Make sure
 to adapt the memory requested in all three ``.temp`` files to match the capacity
@@ -141,7 +141,7 @@ When this is ready, submit your job with the command:
 
 .. code-block:: bash
 
-  run_cryspy.py
+  run_fromage.py
 
 On the command line or in your job queue.
 
@@ -153,7 +153,7 @@ computational resources. The convergence criterion of the optimisation is very
 strict by default so it is up to the user's judgement whether they wish to abort
 the calculation once they have achieved a satisfactory precision.
 
-* ``cryspy.out``
+* ``fromage.out``
     The main output file. This contains information about the energies and
     gradients at each step of the optimisation
 
@@ -236,7 +236,7 @@ As usual, type:
 
 .. code-block:: bash
 
-  run-cryspy.py
+  run-fromage.py
 
 Or submit it to your job scheduler.
 
@@ -246,7 +246,7 @@ Output
 This should typically take longer than your ground state calculation if you have
 succeeded in setting it up in a way that the limiting calculation is ``mh``.
 
-As described above, you will receive ``cryspy.out``, ``geom_mol.xyz`` and
+As described above, you will receive ``fromage.out``, ``geom_mol.xyz`` and
 ``geom_clust.xyz``.
 
 This time, you should be able to see the excited state proton transfer in
@@ -269,7 +269,7 @@ One final time, copy the whole directory:
 Edit the ``mol.init.xyz`` file with the final geometry of
 ``opt_2/geom_mol.xyz``.
 
-And in ``cryspy.in``, add a line at the bottom ``bool_ci 1``. This turns on MECI
+And in ``fromage.in``, add a line at the bottom ``bool_ci 1``. This turns on MECI
 search. Keep in mind that this calculation will use ``mg`` so change the memory
 requested in all of your ``.temp`` files accordingly.
 
@@ -280,17 +280,17 @@ Again:
 
 .. code-block:: bash
 
-  run-cryspy.py
+  run-fromage.py
 
 And wait a few days.
 
 Output
 ^^^^^^
 
-The usual ``cryspy.out``, ``geom_mol.xyz`` and ``geom_clust.xyz`` will be
+The usual ``fromage.out``, ``geom_mol.xyz`` and ``geom_clust.xyz`` will be
 generated.
 
-``cryspy.out`` will contain different information, pertaining to the value and
+``fromage.out`` will contain different information, pertaining to the value and
 gradients of the penalty function which is being minimised instead of the
 energy.
 
