@@ -1,6 +1,6 @@
 # fromage
 
-This program offers interface for 2-level ONIOM calculations in between quantum packages. There is a heavy emphasis on applications for molecular crystals and as such different Ewald embedding schemes are implemented.
+fromage (FRamewOrk for Molecular Aggregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates (oligomers, clusters, solids etc.) in the excited state.
 
 ## 1 Installation
 
@@ -9,7 +9,8 @@ This program offers interface for 2-level ONIOM calculations in between quantum 
   - Python 2.7 and above (Python 3 recommended)
   - numpy
   - scipy
-  - Hacked version of Ewald (the source code for this will be uploaded soon)
+  - swig
+  - Modified version of Ewald (only necessary for Ewald embedding calculations)
 
 2. Clone this repository to wherever you want to install it:
 
