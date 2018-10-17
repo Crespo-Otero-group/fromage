@@ -1,8 +1,8 @@
 import numpy as np
 
 import fromage.io.edit_file as ef
-import fromage.utils.per_table as pt
 from copy import deepcopy
+
 
 class CubeGrid(object):
     """
@@ -53,6 +53,7 @@ class CubeGrid(object):
         self.dimension = self.x_num * self.y_num * self.z_num
         # initiate grid
         self.grid = np.zeros((self.dimension, 4))
+
     def copy(self):
         return deepcopy(self)
 
@@ -75,7 +76,8 @@ class CubeGrid(object):
         return
 
     def grid_from_point(self, x, y, z, res=10, box=np.array([[20.0, 0.0, 0.0], [0.0, 20.0, 0.0], [0.0, 0.0, 20.0]])):
-        """Generate a grid from its centre , box dimension, and resolution
+        """
+        Generate a grid from its centre, box dimension, and resolution
 
         Parameters
         ----------
@@ -138,8 +140,7 @@ class CubeGrid(object):
         return
 
     def vdw_vol(self, mol):
-        """Give each point in the grid a value of 1 if it is inside the vdw
-        radius of one of the atoms in the molecule"""
+        """Give each point in the grid a value of 1 if it is inside the vdw radius of one of the atoms in the molecule"""
 
         for point in self.grid:
             # empty grid first
@@ -203,11 +204,11 @@ class CubeGrid(object):
 
         The original grid has the origin at 0,0,0 so we add grids at origins:
         -a, 0, 0
-         0,-b, 0
-         0, 0,-c
+        0,-b, 0
+        0, 0,-c
         -a,-b, 0
         -a, 0,-c
-         0,-b,-c
+        0,-b,-c
         -a,-b,-c
 
         """
@@ -318,13 +319,13 @@ class CubeGrid(object):
         """
         new_grid = self.grid.copy()
         # now we make sure that the points are on grid points of the mesh
-        xyz_nums = np.array([self.x_num,self.y_num,self.z_num,])
+        xyz_nums = np.array([self.x_num, self.y_num, self.z_num, ])
         new_grid[:, 0:3] *= xyz_nums
         if rounding:
-            new_grid[:, 0:3] = np.round(new_grid[:, 0:3],0)
+            new_grid[:, 0:3] = np.round(new_grid[:, 0:3], 0)
         new_grid[:, 0:3] /= xyz_nums
         # And now confine them to the cell
-        new_grid[:, 0:3] = np.mod(new_grid[:, 0:3],1)
+        new_grid[:, 0:3] = np.mod(new_grid[:, 0:3], 1)
         # get in the proper order for cube files
         if sorting:
             new_grid = new_grid[np.lexsort(np.rot90(new_grid))]
@@ -333,8 +334,8 @@ class CubeGrid(object):
 
     def frac_to_dir_pos(self):
         """Move all grid points to direct coordinates"""
-        lattice_vectors = self.get_enclosing_vectors()# + self.origin
-        #print(self.origin)
+        lattice_vectors = self.get_enclosing_vectors()  # + self.origin
+        # print(self.origin)
         # see dir_to_frac_pos for detils
         new_grid = np.einsum('ij,ki->kj', lattice_vectors, self.grid[:, 0:3])
         #self.grid[:, 0:3] = new_grid + self.origin
@@ -365,13 +366,13 @@ class CubeGrid(object):
         self.sort_adjust_frac_pos(sorting=False, rounding=False)
         self.frac_to_dir_pos()
 
-    def translate_grid(self,trans_vec):
+    def translate_grid(self, trans_vec):
         """Translate grid and origin by a numpy vector"""
         self.grid[:, 0:3] += trans_vec
         #self.origin += trans_vec
         return
 
-    def translate_inplace(self,trans_vec):
+    def translate_inplace(self, trans_vec):
         """
         Translate the cell and then confine it back to the enclosing box
 
@@ -386,17 +387,17 @@ class CubeGrid(object):
         """
         self.translate_grid(trans_vec)
         self.confine_sort()
-        #self.translate_grid(-trans_vec)
+        # self.translate_grid(-trans_vec)
         return
 
-    def unord_trans_inplace_grid(self,trans_vec):
+    def unord_trans_inplace_grid(self, trans_vec):
         """Get the unordered Cub after an inplace translation"""
         fresh_cub = self.copy()
         fresh_cub.translate_grid(trans_vec)
         fresh_cub.confine_unordered()
         return fresh_cub
 
-    def centered_quad(self,trans_vec):
+    def centered_quad(self, trans_vec):
         """
         Produce a 4x4x4 supercell centered at the origin after inplace translate
 
@@ -414,9 +415,9 @@ class CubeGrid(object):
         """
         new_cub = self.copy()
         new_cub.translate_inplace(trans_vec)
-        super_cub = new_cub.supergrid([4,4,4])
+        super_cub = new_cub.supergrid([4, 4, 4])
 
-        center = np.sum(super_cub.get_enclosing_vectors(),axis=0)/2
+        center = np.sum(super_cub.get_enclosing_vectors(), axis=0) / 2
         super_cub.origin -= center
 
         return super_cub
