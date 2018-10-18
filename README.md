@@ -26,7 +26,7 @@ fromage (FRamewOrk for Molecular Aggregate Excitations) is a Python framework de
   cd fromage/fdist/
   swig -c++ -python fdist.i
   cd ../../
-  sudo python setup.py build_ext --inplace install
+  sudo python setup.py build_ext install
   ```
   Voilà!
 
