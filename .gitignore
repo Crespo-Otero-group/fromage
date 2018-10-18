@@ -1,10 +1,10 @@
-cryspy/fdist/_fdist*
-cryspy/fdist/fdist_wrap.cxx
-cryspy/fdist/fdist.py
-cryspy/fdist/build
+fromage/fdist/_fdist*
+fromage/fdist/fdist_wrap.cxx
+fromage/fdist/fdist.py
+fromage/fdist/build
 **/*.swp
 **/*.pyc
-cryspy/test/.pytest_cache/**
+fromage/test/.pytest_cache/**
 build/*
 doc/build/*
 .cache
