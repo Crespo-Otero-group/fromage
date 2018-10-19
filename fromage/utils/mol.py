@@ -43,7 +43,7 @@ class Mol(object):
 
 
 
-    def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding = 'vdw', thresh = -0.3):
+    def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding = 'dis', thresh = 1.8):
         # In case the user feeds a lone atom:
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
@@ -213,12 +213,14 @@ class Mol(object):
             cont = False
             new_atoms = Mol([])
             for old in old_atoms:
+                tmp_remaining = remaining.copy()
                 for rem in remaining:
                     if self.bonded(old,rem):
                         new_atoms.append(rem)
                         selected.append(rem)
-                        remaining.remove(rem)
+                        tmp_remaining.remove(rem)
                         cont = True  # An atom was added so continue loop
+                remaining = tmp_remaining
             old_atoms = new_atoms
         return selected
 
@@ -274,6 +276,7 @@ class Mol(object):
             cont = False
             new_atoms = Mol([])
             for old in old_atoms:
+                tmp_remaining = remaining.copy()
                 for rem in remaining:
                     # contains the distance from the point or image and the
                     # coordinates of the point or image
@@ -283,9 +286,11 @@ class Mol(object):
                         new_atoms.append(per_img)
                         selected_old.append(rem)
                         selected_img.append(per_img)
-                        remaining.remove(rem)
+                        tmp_remaining.remove(rem)
                         cont = True  # An atom was added so continue loop
+                remaining = tmp_remaining
                 old_atoms = new_atoms
+
 
         if old_pos:
             return selected_img, selected_old
