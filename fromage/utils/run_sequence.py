@@ -30,7 +30,6 @@ class RunSeq(object):
         self.region_1 = region_1
         self.cell = cell
         self.inputs = inputs
-        self.output_file = open("prep.out", "w")
         if self.inputs["ewald"]:
             pref = "ew_"
         else:
@@ -71,20 +70,23 @@ class RunSeq(object):
         shell_low.populate(low_level_pop_mol)
         return shell_high, shell_low
 
-    def run_ewald(self):
+    def run_ewald(self, calc_name=None):
+        if calc_name == None:
+            calc_name = self.inputs["name"]
         if not os.path.exists(self.ewald_path):
             os.makedirs(self.ewald_path)
         os.chdir(self.ewald_path)
         # no stdout
         FNULL = open(os.devnull, 'w')
 
-        ef.write_uc(self.inputs["name"] + ".uc", self.inputs["vectors"], self.inputs["an"], self.inputs["bn"], self.inputs["cn"], self.cell)
-        ef.write_qc(self.inputs["name"] + ".qc", self.region_1)
-        ef.write_ew_in(self.inputs["name"], "ewald.in." + self.inputs["name"], self.inputs["nchk"], self.inputs["nat"])
+        ef.write_uc(calc_name + ".uc", self.inputs["vectors"], self.inputs["an"], self.inputs["bn"], self.inputs["cn"], self.cell)
+        ef.write_qc(calc_name + ".qc", self.region_1)
+        ef.write_ew_in(calc_name, "ewald.in." + calc_name, self.inputs["nchk"], self.inputs["nat"])
         ef.write_seed()
         # run Ewald
-        subprocess.call("$FRO_EWALD < ewald.in." + self.inputs["name"], stdout=FNULL, shell=True)
-        points = rf.read_points(self.inputs["name"]+".pts-fro")
+        subprocess.call("${FRO_EWALD} < ewald.in." + calc_name, shell=True)
+        #subprocess.call("${FRO_EWALD} < ewald.in." + calc_name, stdout=FNULL, shell=True)
+        points = rf.read_points(calc_name + ".pts-fro")
         os.chdir(self.here)
 
         return points
@@ -127,25 +129,27 @@ class RunSeq(object):
 
     def run_sceec(self):
         region_2_low , region_2_high = self.make_region_2()
-        self.self_consistent(None)
+        self.self_consistent(None) # here, the None argument means that the initial background has yet to be computed
         ew_points = self.run_ewald()
 
         return region_2_low, ew_points
 
-    def single_sc_loop(self, sc_loop, region_2):
+    def single_sc_loop(self, sc_loop, initial_bg):
         """Run a single iteration of the sc loop, with or without Ewald"""
         sc_name = "sc_" + self.inputs["name"]
-        sc_loop += 1
         # Initial charges in mol
         old_charges = self.region_1.charges()
 
-        if self.mode == "ewsc":
-            points = self.run_ewald()
-            ef.write_gauss(self.calc_name + ".com", self.region_1, points, self.calc_name + ".temp")
-        else:
-            ef.write_gauss(self.calc_name + ".com", self.region_1, region_2, self.calc_name + ".temp")
+        # if sc_eec then there is no initial_bg so it needs to be computed
+        if self.mode == "ew_sc":
+            points = self.run_ewald(calc_name = sc_name)
+            initial_bg = points
+        ef.write_gauss(sc_name + ".com", self.region_1, initial_bg, self.inputs["sc_temp"])
 
-        subprocess.Popen("${FRO_GAUSS} " + self.calc_name + ".com", shell=True)
+        print("start gauss")
+        print(os.getcwd())
+        subprocess.call("${FRO_GAUSS} " + sc_name + ".com", shell=True)
+        print("end gauss")
         # Calculate new charges
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(sc_name + ".log", self.inputs["high_pop_method"], debug=True)
@@ -174,16 +178,16 @@ class RunSeq(object):
 
         out_str = ("Iteration:", sc_loop, "Deviation:",
                    deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy - char_self)
-        self.output_file.write(
-            ("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str)))
-        self.output_file.flush()
+        with open("prep.out",'a') as output_file:
+            self.output_file.write("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str))
 
         return deviation
 
-    def self_consistent(self, region_2_high):
+    def self_consistent(self, initial_bg):
         """Run single iterations until the charge deviation is below the tol"""
         sc_iter = 0
-        dev  = float("str")
+        dev  = float("inf")
         while dev > self.inputs["dev_tol"]:
-            dev = self.single_sc_loop(sc_iter, region_2_high)
+            dev = self.single_sc_loop(sc_iter, initial_bg)
+            sc_iter += 1
         return

@@ -48,6 +48,7 @@ if __name__ == '__main__':
             Acceptable strings are "esp", "mulliken" and "hirshfeld"
 
         """
+        output_file = open("prep.out", "a")
         if program.lower() == "cp2k":
             charges = rf.read_cp2k(pop_file, method)[0]
             output_file.write("Read " + str(len(in_mol)) +
@@ -73,6 +74,7 @@ if __name__ == '__main__':
 
             # assign charges to the rest of the cell
             assign_charges(mol_char, in_mol)
+        output_file.close()
         return
 
     output_file = open("prep.out", "w")
@@ -90,8 +92,9 @@ if __name__ == '__main__':
     cell.vectors = inputs["vectors"]
     cell.bonding = inputs["bonding"]
     cell.thresh = inputs["bond_thresh"]
+
     output_file.write("Read " + str(len(cell)) + " atoms in cell_file\n")
-    output_file.flush()
+    output_file.close()
 
     # High level charge assignment
     populate_cell(cell, inputs["high_pop_program"], inputs["high_pop_file"], inputs["high_pop_method"])
@@ -139,6 +142,8 @@ if __name__ == '__main__':
                     os.path.join(here, "mg.template"))
     os.chdir(here)
     end_time = datetime.now()
+
+    output_file = open("prep.out", "a")
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
     output_file.write("ENDING TIME: " + str(end_time) + "\n")
     output_file.close()
