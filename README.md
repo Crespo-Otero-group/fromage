@@ -1,7 +1,8 @@
 <img align="left" height="100" src="doc/logo.png">
 
+# fromage
 
-fromage (FRamewOrk for Molecular Aggregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state.
+**fromage** (FRamewOrk for Molecular Aggregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state.
 
 ## 1 Installation
 
