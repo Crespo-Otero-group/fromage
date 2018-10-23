@@ -686,7 +686,7 @@ class Mol(object):
         arr_char = np.array(l_char)
         return arr_char
 
-    def assign_charges(self, charges):
+    def raw_assign_charges(self, charges):
         """Assign the charges from an array-like to the atoms"""
         for char,at in zip(charges,self.atoms):
             at.q=char

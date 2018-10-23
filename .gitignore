@@ -5,6 +5,7 @@ fromage/fdist/build
 **/*.swp
 **/*.pyc
 fromage/test/.pytest_cache/**
+.pytest_cache/**
 build/*
 doc/build/*
 .cache

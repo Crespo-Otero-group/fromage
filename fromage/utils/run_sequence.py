@@ -144,10 +144,9 @@ class RunSeq(object):
         if self.mode == "ew_sc":
             points = self.run_ewald(calc_name = sc_name)
             initial_bg = points
-        ef.write_gauss(sc_name + ".com", self.region_1, initial_bg, self.inputs["sc_temp"])
+        ef.write_gauss(sc_name + ".com", self.region_1, points, self.inputs["sc_temp"])
 
         print("start gauss")
-        print(os.getcwd())
         subprocess.call("${FRO_GAUSS} " + sc_name + ".com", shell=True)
         print("end gauss")
         # Calculate new charges
@@ -159,27 +158,33 @@ class RunSeq(object):
             temp_correct = sum(intact_charges) / len(intact_charges)
             intact_charges = [i - temp_correct for i in intact_charges]
 
+        dummy_mol = self.region_1.copy()
+        dummy_mol.raw_assign_charges(intact_charges)
+        self.region_1.populate(dummy_mol)
+
         # Damp the change in charges
-        new_charges = [new * (1 - self.inputs["damping"]) + old * self.inputs["damping"] for new, old in zip(intact_charges, old_charges)]
+        new_charges = [new * (1 - self.inputs["damping"]) + old * self.inputs["damping"] for new, old in zip(self.region_1.charges(), old_charges)]
 
         # Correct charges again (due to damping)
         if sum(new_charges) != 0.0:
             temp_correct = sum(new_charges) / len(new_charges)
             new_charges = [i - temp_correct for i in new_charges]
+
         # assign damped charges
-        self.region_1.assign_charges(new_charges)
+        self.region_1.raw_assign_charges(new_charges)
+        self.cell.populate(self.region_1)
 
         if self.mode == "noew_sc":
-            assign_charges(self.region_1, region_2)
+            assign_charges(self.region_1, initial_bg)
 
         # Calculate deviation between initial and new charges
         deviation = sum([abs(i - j)
-                         for (i, j) in zip(intact_charges, old_charges)]) / len(self.region_1)
+                         for (i, j) in zip(self.region_1.charges(), old_charges)]) / len(self.region_1)
 
         out_str = ("Iteration:", sc_loop, "Deviation:",
                    deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy - char_self)
         with open("prep.out",'a') as output_file:
-            self.output_file.write("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str))
+            output_file.write("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str))
 
         return deviation
 
@@ -188,6 +193,8 @@ class RunSeq(object):
         sc_iter = 0
         dev  = float("inf")
         while dev > self.inputs["dev_tol"]:
-            dev = self.single_sc_loop(sc_iter, initial_bg)
             sc_iter += 1
+            dev = self.single_sc_loop(sc_iter, initial_bg)
+        with open("prep.out","a") as output_file:
+            output_file.write("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dec_tol"]) + "\n")
         return
