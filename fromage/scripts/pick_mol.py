@@ -14,10 +14,9 @@ from copy import copy
 
 from fromage.io import read_file as rf
 from fromage.io import edit_file as ef
-from fromage.utils import handle_atoms as ha
 
 
-def picker(in_name, out_name, labels, max_bl, reverse=False):
+def picker(in_name, out_name, labels, bonding, thresh, reverse=False):
     """
     Pick out molecules from an xyz file
 
@@ -32,15 +31,20 @@ def picker(in_name, out_name, labels, max_bl, reverse=False):
     max_bl : float
         Maximun distance in Angstrom that constitutes a bond
     """
-    atoms = rf.read_xyz(in_name)[-1]
+    atoms = rf.mol_from_file(in_name)
+    if thresh == 999:
+        thresh = None
+    atoms.set_bonding(bonding=bonding, thresh=thresh)
 
     # if the label does not exist
     if max(labels) > len(atoms):
         raise ValueError("One or more atom labels were too high!")
 
-    selected = []
+    selected = atoms.copy()
+    selected.atoms = []
+
     for label in labels:
-        mol = ha.select(max_bl, atoms, label)
+        mol = atoms.select(label)
 
         # prevent double selecting
         if mol[0] in selected:
@@ -51,12 +55,13 @@ def picker(in_name, out_name, labels, max_bl, reverse=False):
     # to print out the non specified atoms
     if reverse:
         to_remove = [copy(i) for i in selected]
-        selected = []
+        selected = atoms.copy()
+        selected.atoms = []
         for atom in atoms:
             if atom not in to_remove:
                 selected.append(atom)
 
-    ef.write_xyz(out_name, selected)
+    selected.write_xyz(out_name)
 
 if __name__ == "__main__":
     # parse the input
@@ -67,8 +72,9 @@ if __name__ == "__main__":
                         default="out.xyz", type=str)
     parser.add_argument("labels", help="Number label(s) for the atom(s) in the picked molecule(s)",
                         default=[0], type=int, nargs='*')
-    parser.add_argument("-b", "--bond", help="Maximum length in Angstrom that qualifies as a bond",
-                        default=1.6, type=float)
+    parser.add_argument(
+        "-b", "--bonding", help="Type of bonding used for detecting full molecules. The options are dis, cov and vdw", default="dis", type=str)
+    parser.add_argument("-T", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.1, vdw:0.3. To select default, just use a threshold of 999", default=999, type=float)
     parser.add_argument(
         "-r", "--reverse", help="Print all atoms except selected molecules", action="store_true")
     user_input = sys.argv[1:]
@@ -79,4 +85,4 @@ if __name__ == "__main__":
 
     # call the main function
     picker(args.input, args.output, new_labels,
-           args.bond, reverse=args.reverse)
+           args.bonding, args.thresh, reverse=args.reverse)
