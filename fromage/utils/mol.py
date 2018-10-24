@@ -14,7 +14,7 @@ def try_ismol(to_test):
                         type(to_test).__name__ + " to Mol object")
 
 default_thresh = {'dis' : 1.8,
-                'cov' : -0.1,
+                'cov' : 0.2,
                 'vdw' : -0.3}
 
 class Mol(object):
@@ -74,8 +74,8 @@ class Mol(object):
         thresh : float, optional
             Threshold for the detection. If None, use defaults:
             'dis' -> 1.8
-            'cov' -> 0.1
-            'vdw' -> 0.3
+            'cov' -> 0.2
+            'vdw' -> -0.3
 
         """
         if bonding not in default_thresh:
