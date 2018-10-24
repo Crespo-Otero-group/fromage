@@ -46,11 +46,13 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, print_mono, trans, clust_rad):
+def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, print_mono, trans, clust_rad):
     atoms = rf.mol_from_file(in_xyz)
     vectors = rf.read_vectors(vectors_file)
     atoms.vectors = vectors
-    atoms.min_lap = min_lap
+    if thresh == 999:
+        thresh = None
+    atoms.set_bonding(bonding=bonding, thresh=thresh)
 
     if print_mono and not complete:
         print("-c is required for -m")
@@ -109,10 +111,10 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
                 dimer_distances = []
                 # get all of the interatomic distances across the dimer using the
                 # shortest lattice distance
-                for pair in it.product(mol_i, mol_j):
-                    dimer_distances.append(pair[0].dist_lat(pair[1].x, pair[1].y, pair[
-                                           1].z, vectors[0], vectors[1], vectors[2], order=2)[0])
-                    dimer_distances.sort()
+                for at_i in mol_i:
+                    for at_j in mol_j:
+                        dimer_distances.append(at_i.per_dist(at_j,vectors))
+                        dimer_distances.sort()
                 identity.append(dimer_distances)
                 identity.sort()
             identities.append(identity)
@@ -161,8 +163,9 @@ if __name__ == '__main__':
         "vectors", help="Input lattice vectors", default="vectors")
     parser.add_argument(
         "-o", "--output", help="Name of the output file", default="out_cell.xyz", type=str)
-    parser.add_argument("-l", "--overlap", help="Minimum distance that adjacent vdw spheres need to overlap to constitute a bond. Default 0.4 A",
-                        default=1.7, type=float)
+    parser.add_argument(
+        "-b", "--bonding", help="Type of bonding used for detecting full molecules. The options are dis, cov and vdw", default="dis", type=str)
+    parser.add_argument("-T", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.2, vdw:-0.3. To select default, just use a threshold of 999", default=999, type=float)
     parser.add_argument(
         "-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
     parser.add_argument(
@@ -180,6 +183,6 @@ if __name__ == '__main__':
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional,
-         args.remove_duplicate_atoms, args.output, args.overlap, args.mono, args.translations, args.radius)
+         args.remove_duplicate_atoms, args.output, args.bonding, args.thresh, args.mono, args.translations, args.radius)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
