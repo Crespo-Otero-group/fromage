@@ -119,7 +119,9 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, min_lap, 
         identities = np.array(identities)
 
         # list of each molecules paired with its identity
-        mols_ids = zip(mols, identities)
+        # in Python 2 we could just use a zip but for compatibility with Python3
+        # we need a list of tuples
+        mols_ids = [(mol_i,iden_i) for mol_i, iden_i in zip(mols, identities)]
 
         # list of each molecule paired with its identity separated by equivalent
         # molecule
