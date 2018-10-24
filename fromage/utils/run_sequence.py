@@ -58,13 +58,15 @@ class RunSeq(object):
         """
         if self.inputs["target_shell"]:
             shell_high = rf.mol_from_file(self.inputs["target_shell"])
-            high_level_pop_mol = rf.mol_from_gauss("high_pop_file", pop=self.inputs["high_pop_method"])
+            high_level_pop_mol = rf.mol_from_gauss(self.inputs["high_pop_file"], pop=self.inputs["high_pop_method"])
             shell_high.populate(high_level_pop_mol)
         else:
             shell_high = self.cell.make_cluster(self.inputs["clust_rad"])
-            for atom in self.region_1:
-                if atom in shell_high:
-                    shell_high.remove(atom)
+            for atom_i in self.region_1:
+                for atom_j in shell_high:
+                    if atom_i.very_close(atom_j):
+                        shell_high.remove(atom_j)
+                        break
         low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
         shell_low.populate(low_level_pop_mol)
@@ -146,9 +148,7 @@ class RunSeq(object):
             initial_bg = points
         ef.write_gauss(sc_name + ".com", self.region_1, points, self.inputs["sc_temp"])
 
-        print("start gauss")
         subprocess.call("${FRO_GAUSS} " + sc_name + ".com", shell=True)
-        print("end gauss")
         # Calculate new charges
 
         intact_charges, new_energy, char_self, char_int = rf.read_g_char(sc_name + ".log", self.inputs["high_pop_method"], debug=True)
@@ -196,5 +196,5 @@ class RunSeq(object):
             sc_iter += 1
             dev = self.single_sc_loop(sc_iter, initial_bg)
         with open("prep.out","a") as output_file:
-            output_file.write("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dec_tol"]) + "\n")
+            output_file.write("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dev_tol"]) + "\n")
         return

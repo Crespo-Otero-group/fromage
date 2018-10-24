@@ -73,7 +73,8 @@ if __name__ == '__main__':
                 mol_char[-1].q -= sum(charges)
 
             # assign charges to the rest of the cell
-            assign_charges(mol_char, in_mol)
+            in_mol.populate(mol_char)
+
         output_file.close()
         return
 
@@ -92,6 +93,7 @@ if __name__ == '__main__':
     cell.vectors = inputs["vectors"]
     cell.bonding = inputs["bonding"]
     cell.thresh = inputs["bond_thresh"]
+    cell = cell.confined()
 
     output_file.write("Read " + str(len(cell)) + " atoms in cell_file\n")
     output_file.close()
