@@ -199,12 +199,12 @@ def main(in_xyz, in_log, target, output, bonding, thresh, kind):
     if(in_xyz):
         mol = rf.mol_from_file(in_xyz)
     else:
-        mol = rf.read_g_pos(in_log)
+        mol = rf.mol_from_gauss(in_log)
     charges = rf.read_g_char(in_log, kind)[0]
     cluster = rf.mol_from_file(target)
 
     mol.set_bonding(bonding=bonding, thresh=thresh)
-    target.set_bonding(bonding=bonding, thresh=thresh)
+    cluster.set_bonding(bonding=bonding, thresh=thresh)
 
     for atom, char in zip(mol, charges):
         atom.q = char
@@ -219,6 +219,7 @@ def main(in_xyz, in_log, target, output, bonding, thresh, kind):
             bad_atoms.append(atom)
     if len(bad_atoms) > 0:
         print("WARNING: " + str(len(bad_atoms)) + " atoms have null charge!")
+        print(bad_atoms)
 
     out_file = open(output, "w")
     out_file.write(str(len(cluster)) + "\n\n")
