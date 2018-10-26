@@ -20,6 +20,7 @@ from scipy.optimize import minimize
 from fromage.io import read_file as rf
 from fromage.utils import handle_atoms as ha
 from fromage.utils import calc
+from fromage.io.parse_config_file import bool_cast
 
 
 def sequence(in_pos):
@@ -168,11 +169,11 @@ if __name__ == '__main__':
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     out_file = inputs["out_file"]
-    bool_ci = bool(int(inputs["bool_ci"]))
+    bool_ci = bool_cast(inputs["bool_ci"])
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
     gtol = inputs["gtol"]
-    single_point = bool(int(inputs["single_point"]))
+    single_point = bool_cast(inputs["single_point"])
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
     sigma = float(inputs["sigma"])
