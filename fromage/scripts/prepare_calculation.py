@@ -48,7 +48,7 @@ if __name__ == '__main__':
             Acceptable strings are "esp", "mulliken" and "hirshfeld"
 
         """
-        output_file = open("prep.out", "a")
+        output_file = open(here+"/prep.out", "a")
         if program.lower() == "cp2k":
             charges = rf.read_cp2k(pop_file, method)[0]
             output_file.write("Read " + str(len(in_mol)) +
@@ -78,7 +78,8 @@ if __name__ == '__main__':
         output_file.close()
         return
 
-    output_file = open("prep.out", "w")
+    here = os.getcwd()
+    output_file = open(here+"/prep.out", "w")
 
     # print start time
     start_time = datetime.now()
@@ -87,7 +88,6 @@ if __name__ == '__main__':
     # read config inputs
     inputs = pcf.parse_inputs("config")
 
-    here = os.getcwd()
     # read the input cell
     cell = rf.mol_from_file(inputs["cell_file"])
     cell.vectors = inputs["vectors"]
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     os.chdir(here)
     end_time = datetime.now()
 
-    output_file = open("prep.out", "a")
+    output_file = open(here+"/prep.out", "a")
     output_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
     output_file.write("ENDING TIME: " + str(end_time) + "\n")
     output_file.close()
