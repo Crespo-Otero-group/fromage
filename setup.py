@@ -21,4 +21,7 @@ setup(name='fromage',
                'fromage/scripts/pop_stat.py',
                'fromage/scripts/prepare_calculation.py',
                'fromage/scripts/uc_tools.py'],
+      install_requires=[
+          'numpy',
+          'scipy',],
       )
