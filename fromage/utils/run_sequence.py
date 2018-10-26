@@ -1,6 +1,8 @@
 """Defines the Ewa object which interfaces with Ewald"""
 import os
 import subprocess
+import time
+import sys
 
 import fromage.io.edit_file as ef
 import fromage.io.read_file as rf
@@ -42,6 +44,12 @@ class RunSeq(object):
         # dirs
         self.here = os.getcwd()
         self.ewald_path = os.path.join(self.here,"ewald/")
+        self.out_file = open("prep.out","a")
+        return
+
+    def write_out(self,string):
+        self.out_file.write(string)
+        self.out_file.flush()
         return
 
     def make_region_2(self):
@@ -58,6 +66,7 @@ class RunSeq(object):
         """
         if self.inputs["target_shell"]:
             shell_high = rf.mol_from_file(self.inputs["target_shell"])
+            self.write_out("Outer region read in with " + str(len(shell_high)) + " atoms.\n")
             high_level_pop_mol = rf.mol_from_gauss(self.inputs["high_pop_file"], pop=self.inputs["high_pop_method"])
             shell_high.populate(high_level_pop_mol)
         else:
@@ -67,6 +76,7 @@ class RunSeq(object):
                     if atom_i.very_close(atom_j):
                         shell_high.remove(atom_j)
                         break
+            self.write_out("Outer region generated with " + str(len(shell_high)) + " atoms.\n")
         low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
         shell_low.populate(low_level_pop_mol)
@@ -86,9 +96,15 @@ class RunSeq(object):
         ef.write_ew_in(calc_name, "ewald.in." + calc_name, self.inputs["nchk"], self.inputs["nat"])
         ef.write_seed()
         # run Ewald
-        subprocess.call("${FRO_EWALD} < ewald.in." + calc_name, shell=True)
-        #subprocess.call("${FRO_EWALD} < ewald.in." + calc_name, stdout=FNULL, shell=True)
+        self.write_out("Ewald calculation started\n")
+        ew_start = time.time()
+        subprocess.call("${FRO_EWALD} < ewald.in." + calc_name, stdout=FNULL, shell=True)
+        ew_end = time.time()
+        self.write_out("Ewald calculation finished after "+str(round(ew_end - ew_start,3))+" s\n")
         points = rf.read_points(calc_name + ".pts-fro")
+        if len(points) == 0:
+            self.write_out("Something went wrong with the Ewald calculation, stopping...\n")
+            sys.exit()
         os.chdir(self.here)
 
         return points
@@ -110,6 +126,7 @@ class RunSeq(object):
                     "ew_sc":self.run_sceec}
         # execute the appropriate run type
         region_2, high_points = run_types[self.mode]()
+        self.out_file.close()
         return region_2, high_points
 
     def run_ec(self):
@@ -183,8 +200,7 @@ class RunSeq(object):
 
         out_str = ("Iteration:", sc_loop, "Deviation:",
                    deviation, "Energy:", new_energy, "Charge self energy:", char_self, "Total - charge self:", new_energy - char_self)
-        with open("prep.out",'a') as output_file:
-            output_file.write("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str))
+        self.write_out("{:<6} {:<5} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f} {:<6} {:10.6f}\n".format(*out_str))
 
         return deviation
 
@@ -195,6 +211,5 @@ class RunSeq(object):
         while dev > self.inputs["dev_tol"]:
             sc_iter += 1
             dev = self.single_sc_loop(sc_iter, initial_bg)
-        with open("prep.out","a") as output_file:
-            output_file.write("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dev_tol"]) + "\n")
+        self.write_out("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dev_tol"]) + "\n")
         return

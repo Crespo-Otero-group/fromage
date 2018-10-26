@@ -9,7 +9,7 @@ high_pop_method ESP
 low_pop_program gaussian
 low_pop_file low_pop.log
 low_pop_method ESP
-max_bl 1.9
+bond_thresh 1.9
 label_atom 1
 nChk 1000
 nAt 500
