@@ -198,14 +198,11 @@ def fit_clust(in_cell, in_labels, in_cube):
     for atom in mol:
         if atom in shell:
             shell.remove(atom)
-    shell.write_xyz("foo.xyz")
-    mol.write_xyz("man.xyz")
 
     print("Remove kernel: done")
 
     print("Shell sampling: start")
     samples = shells_from_cell(in_cube, mol, trans, 0.9995, 1.0)
-    np.savetxt("bar.xyz",samples[:,0:3])
     print("Shell sampling: done")
 
     print("Fitting: start")
