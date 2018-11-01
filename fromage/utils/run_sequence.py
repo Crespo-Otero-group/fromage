@@ -163,7 +163,8 @@ class RunSeq(object):
         if self.mode == "ew_sc":
             points = self.run_ewald(calc_name = sc_name)
             initial_bg = points
-        ef.write_gauss(sc_name + ".com", self.region_1, points, self.inputs["sc_temp"])
+
+        ef.write_gauss(sc_name + ".com", self.region_1, initial_bg, self.inputs["sc_temp"])
 
         subprocess.call("${FRO_GAUSS} " + sc_name + ".com", shell=True)
         # Calculate new charges
