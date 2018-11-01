@@ -116,7 +116,7 @@ def expand(cub,cell):
 
 def supercell(cub,cell):
     new_cub = cub.supergrid([2,2,2])
-    new_cub.out_cube("sup.cub",cell)
+    #new_cub.out_cube("sup.cub",cell)
 
 def test_expand_benz(benz_pot_cub,benz_cell):
     expand(benz_pot_cub,benz_cell)
@@ -139,13 +139,13 @@ def test_dir_to_frac(pery_pot_cub,pery_cell):
 def test_translate(pery_pot_cub,pery_cell):
     trans = np.array([5,5,5])
     pery_pot_cub.translate_inplace(trans)
-    pery_pot_cub.out_cube("trans.cube",pery_cell)
+    #pery_pot_cub.out_cube("trans.cube",pery_cell)
 
 def test_quad(pery_pot_cub,pery_cell):
     trans = -np.array([5,5,5])
     quad_cub = pery_pot_cub.centered_quad(trans)
     pery_cell.translate(trans)
-    quad_cub.out_cube("trans.cube",pery_cell)
+    #quad_cub.out_cube("trans.cube",pery_cell)
 
 #def test_per_trans_shell(pery_pot_cub,pery_cell):
 #    mol, cell = pery_cell.complete_mol([76,86])
