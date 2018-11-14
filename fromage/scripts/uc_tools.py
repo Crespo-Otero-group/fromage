@@ -8,7 +8,6 @@ import argparse
 import numpy as np
 import sys
 from copy import deepcopy
-import itertools as it
 import time
 
 from fromage.io import read_file as rf
