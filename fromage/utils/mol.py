@@ -60,7 +60,7 @@ class Mol(object):
     def __str__(self):
         return self.__repr__()
 
-    def set_bonding(self, bonding='vdw', thresh=None):
+    def set_bonding(self, bonding='dis', thresh=None):
         """
         Set the type of bonding detection used in this Mol
 
