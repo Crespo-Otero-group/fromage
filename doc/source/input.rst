@@ -122,7 +122,7 @@ print_tweak
   ``off``
 
 fromage.in file
-==============
+===============
 
 The input structure is the same as for ``config``.
 
