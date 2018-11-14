@@ -31,6 +31,14 @@
   cd ../../
   sudo python setup.py build_ext install
   ```
+4. Set environment variables
+  In your `.bashrc`, write
+  ```bash
+  export FRO_GAUSS=g16
+  export FRO_EWALD=Ewald
+  ```
+  If you are using different binaries for Gaussian or Ewald, change accordingly.
+  
   Voilà!
 
 The main two modules in fromage are `prepare_calculation.py` and `fromage.py`. The former produces template files and geometry files to be used in the latter for geometry optimisation or minimal energy conical intersection (MECI) search. Following the standard ONIOM nomenclature, the central system which is only treated at the high level of theory is called the 'model' system. The whole system is called the 'real' system. As such the three parallel calculations which are carried out are called `mh` for `model high`, `ml` for `model low`, `rl` for `real low`. For MECI search, an additional calculation of the high level region for the ground state gradients is necessary and is labeled `mg`.
