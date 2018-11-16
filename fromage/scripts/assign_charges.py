@@ -70,7 +70,7 @@ def expand_connect(in_mat):
 
     Returns
     -------
-    out_mat: 2-d array-like
+    out_mat : 2-d array-like
         Once-expanded connectivity matrix
 
     """

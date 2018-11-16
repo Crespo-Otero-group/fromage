@@ -5,7 +5,7 @@ Essential glossary
 
 Throughout this documentation, we employ terms and abbreviations which may not
 be immediately clear to the new user. Herein is a compiled list of important
-terms accompanied by brief descriptions.  Furthur discussion for many of these
+terms accompanied by brief descriptions.  Further discussion for many of these
 terms is included in the user documentation.
 
 
@@ -19,9 +19,9 @@ embedding methods:
 .. glossary::
 
   ONIOM
-    Our own N-layered Integrated mlecular Orbital and Molecular
+    Our own N-layered Integrated molecular Orbital and Molecular
     mechanics. An extrapolative (subtractive) embedding paradigm for multilevel
-    calculations
+    calculations\ :cite:`Dapprich1999,Maseras1995,Humbel1996`
 
   EC
     Embedded Cluster. The application of the ONIOM method with
@@ -34,7 +34,7 @@ embedding methods:
 
   SCEEC
     Self-Consistent Ewald Embedded Scheme. The EEC model where the
-    embedding charges are computed self consistently in the excited state
+    embedding charges are computed self consistently
 
   Mechanical embedding
     ONIOM embedding where no point charges are included and the intersystem
@@ -95,4 +95,10 @@ General photochemistry
 .. glossary::
 
   MECI
-  Minimum Energy Conical intersection
+    Minimum Energy Conical Intersection. The minimum energy point in the
+    crossing seam between potential energy surfaces. This point is located in
+    **fromage** by using the penalty function method.\ :cite:`Levine2008`
+
+  Exciton coupling
+    A measure of the splitting of the excited state energy levels due to the
+    formation of a molecular dimer\ :cite:`Arag2015`

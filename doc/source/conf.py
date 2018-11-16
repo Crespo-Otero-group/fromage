@@ -33,7 +33,9 @@ sys.path.insert(0, os.path.abspath('.'))
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'sphinx.ext.mathjax']
+    'sphinx.ext.mathjax',
+    'sphinxcontrib.bibtex']
+
 
 napoleon_google_docstring = False
 napoleon_use_param = False
@@ -53,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'fromage'
-copyright = u'2018, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero'
+copyright = u'2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero'
 author = u'Miguel Rivera, Michael Dommett, Rachel Crespo-Otero'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -101,7 +103,6 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
 
 # -- Options for HTMLHelp output ------------------------------------------
 

@@ -2,8 +2,8 @@ Input file description
 ######################
 
 **fromage** uses input files at two points of its execution. During the preparatory
-calculation (using `prepare_calculation.py`), the `config` file is required.
-During the actual geometry optimisation (`run_fromage.py`), the file `fromage.in`
+calculation (using ``prepare_calculation.py``), the ``config`` file is required.
+During the actual geometry optimisation (``run_fromage.py``), the file ``fromage.in``
 is read if present.
 
 config file
@@ -15,13 +15,13 @@ then its value(s) after any number of whitespaces. Therefore:
 
 .. code-block:: python
 
-  max_bl 1.9
+  bond_thresh 1.9
 
 Is the same as:
 
 .. code-block:: python
 
-  max_bl      1.9
+  bond_thresh      1.9
 
 Below are listed the most important keywords available.
 
@@ -36,6 +36,21 @@ a_vec, b_vec and c_vec
   a_vec        8.9638004303         0.0000000000         0.0000000000
   b_vec        0.0000000000        10.5200004578         0.0000000000
   c_vec       -3.8748910079         0.0000000000        10.7924653741
+
+vectors_file
+  Alternatively the vectors can be stored in a file (called e.g. ``vectors``) of the form:
+
+.. code-block:: python
+
+  8.9638004303         0.0000000000         0.0000000000
+  0.0000000000        10.5200004578         0.0000000000
+  -3.8748910079         0.0000000000         10.7924653741
+
+In which case the file name should be specified in the config file:
+
+.. code-block:: python
+
+  vectors_file vectors
 
 cell_file
   The file containing the atomic positions in the unit cell in .xyz format.
@@ -61,9 +76,17 @@ low_pop_program
 low_pop_method
   The method of population analysis. "Mulliken" or "ESP". Default: ``ESP``
 
-max_bl
+bond_thresh
   The distance between two atoms in Angsrom below which **fromage** will consider the
-  atoms to be bonded together. Default: ``1.7``
+  atoms to be bonded together. The definition of bond_thresh can be altered by
+  using the keyword ``bonding``. Default: ``1.7``
+
+bonding
+  The method which determines whether two atoms are bonded. The options are
+  ``dis``, ``cov`` and ``vdw``. ``dis`` measures the distance between two nuclei
+  whereas ``cov`` measures the distance from the edge of the spheres of covalent
+  radius and ``vdw`` from the edge of the sphere of van der Waals radius.
+  Default: ``dis``
 
 atom_label
   The number of the atom in the ``cell_file`` which belongs to the molecule which
@@ -90,13 +113,8 @@ an, bn and cn
 
 clust_rad
   The radius in Angstrom used to generate the cluster which will constitute the
-  :term:`real system<Real system>`. Default: ``5``
-
-traan, trabn and tracn
-  Multiplications of the unit cell along each cell direction to generate a
-  supercell large enough to contain the desired cluster. The cell is multiplied
-  2N times per direction (N positive and N negative). Default: ``2``, ``2`` and
-  ``2``
+  :term:`real system<Real system>`. The cluster includes all molecules which fit
+  completely within the radius. Default: ``5``
 
 self_consistent
   Whether or not to use the Self Consistent Ewald Embedding. Be sure to also
@@ -118,8 +136,8 @@ damping
 
 print_tweak
   Whether or not to print the tweaked version of the cell with the selected
-  molecule(s) completed and the whole cell centred around its centroid. Default:
-  ``off``
+  molecule(s) completed and the whole cell centred around its centroid. This is
+  useful for debugging and more involved analysis. Default: ``off``
 
 fromage.in file
 ===============
@@ -147,9 +165,10 @@ sigma
   :term:`MECI`. Only use if ``bool_ci`` is on. Defualt: ``3.5``
 
 high_level
-  The program used for the high level calculation. The options are "gaussian",
-  "turbomole" and "molcas". Default: ``gaussian``
+  The program used for the high level calculation. The options are ``gaussian``,
+  ``dftb``, ``turbomole`` and ``molcas``. Default: ``gaussian``
 
 low_level
-  The program used for the low level calculation. The options are "gaussian",
-  "turbomole" and "molcas". Default: ``gaussian``
+  The program used for the low level calculation. The options are ``gaussian``,
+  ``dftb``, ``turbomole`` and ``molcas``. Default: ``gaussian``
+

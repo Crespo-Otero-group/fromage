@@ -406,8 +406,8 @@ class CubeGrid(object):
         origin and sample as much as we want without risking hitting the
         supercell walls
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         trans_vec : 3x1 numpy array
             The vector by which to translate inplace. The point which was
             originally at trans_vec ends up at the origin

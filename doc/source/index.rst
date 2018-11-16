@@ -3,16 +3,22 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-fromage
-==================================
 
-**fromage** is a library designed to support the manipulation and optimisation of
-molecular crystal structures. It provides an interface between popular
-electronic structure programs for cross-program ONIOM-style calculations. A
-suite of analysis tools is also included to calculate excitonic couplings,
-population analysis statistics and volumetric information. The program follows a
-modular object-oriented paradigm, making it ideal for integration with other
-scripts.
+.. image:: logo.png
+   :width: 400 px
+
+|
+
+**fromage** (FRamewOrk for Molecular AGgregate Excitation) is a library designed
+to support investigation of photophenomena in molecular crystals. Among the
+features are:
+
+ * Cross-program ONIOM-style calculations with different electrostatic embedding
+   methods
+ * Location of energy minima and minimal energy conical intersections
+ * Command line geometry manipulation tools
+ * Evaluation of exciton coupling values using multiple schemes (under
+   development)
 
 .. toctree::
    :maxdepth: 1
@@ -24,17 +30,29 @@ scripts.
    tutorial
    license
    contact
+   zrefs
 
 .. toctree::
    :maxdepth: 2
    :numbered:
-   :caption: Documentation
+   :caption: Theoretical background
 
    cluster_models
+   ewald
+   penalty_func
    pop
-   input
-   structure_manipulation
-   script
+
+.. toctree::
+  :maxdepth: 2
+  :numbered:
+  :caption: Program documentation
+
+  interfaces
+  input
+  structure_manipulation
+  script
+  modules
+
 
 References and indices
 ======================

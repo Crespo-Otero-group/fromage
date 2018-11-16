@@ -1,5 +1,5 @@
-fromage
-======
+fromage API
+===========
 
 .. toctree::
    :maxdepth: 4

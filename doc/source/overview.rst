@@ -5,8 +5,8 @@ Program overview and install
 Features
 ========
 
-* Cross-program ONIOM calculation [dapprich1999]_
-* Interface with Gaussian, Trubomole, Molcas
+* Cross-program ONIOM calculation
+* Interface with Gaussian, Turbomole, Molcas
 * Reads output from CP2K, Quantum Espresso
 * Mechanical, electrostatic, Ewald and Self-Consistent Ewald embedding
 * Unique dimer detection
@@ -21,7 +21,7 @@ Requirements
 * numpy
 * scipy
 * SWIG
-* Ewald (custom fork)
+* Ewald (custom fork; only necessary for Ewald embedding)
 
 Installation
 ============
@@ -41,7 +41,18 @@ Installation
   cd fromage/fdist/
   swig -c++ -python fdist.i
   cd ../../
-  sudo python setup.py build_ext --inplace install
+  sudo python setup.py build_ext install
+
+3. Set your environment variables
+
+In your ``.bashrc``, add
+
+.. code-block:: bash
+
+  export FRO_GAUSS=g16
+  export FRO_EWALD=Ewald
+
+If you are using different binaries for Gaussian or Ewald, change accordingly.
 
 Voilà!
 
