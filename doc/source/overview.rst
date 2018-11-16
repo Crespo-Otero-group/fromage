@@ -21,7 +21,7 @@ Requirements
 * numpy
 * scipy
 * SWIG
-* Ewald (custom fork; only necessary for Ewald embedding)
+* `Ewald <https://github.com/Crespo-Otero-group/Ewald>`_ (custom fork; only necessary for Ewald embedding)
 
 Installation
 ============
