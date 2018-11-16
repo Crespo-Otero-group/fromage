@@ -32,7 +32,7 @@ embedding methods:
     Ewald Embedded Cluster. Similar to EC but using an electrostatic
     embedding scheme aimed at reproducing the Ewald potential of the crystal
 
-  SCEEC
+  SC-EEC
     Self-Consistent Ewald Embedded Scheme. The EEC model where the
     embedding charges are computed self consistently
 

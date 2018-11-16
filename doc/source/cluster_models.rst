@@ -92,7 +92,7 @@ The method is adapted from the work of Wilbraham *et al*.\
 previously used in the determination of NMR parameters\ :cite:`Weber2010`
 
 This scheme is termed the Self-Consistent Ewald Embedded Cluster (\
-:term:`SCEEC` S\ :sub:`1`). It accurately represents short range electrostatic
+:term:`SC-EEC`-S\ :sub:`1`). It accurately represents short range electrostatic
 interactions from a mutually polarising delocalised excitation. Alternatively,
 the self consistent loop can be performed in the ground state which would give
-similar results to :term:`EEC` (:term:`SCEEC` S\ :sub:`0`).
+similar results to :term:`EEC` (:term:`SC-EEC`-S\ :sub:`0`).

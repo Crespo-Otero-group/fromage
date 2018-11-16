@@ -1,7 +1,7 @@
 """
 Scripts
 
-All of the executable files in cryspy.
+All of the executable files in fromage.
 
 Modules
 -------
@@ -16,11 +16,11 @@ Modules
     pop_stat
         General statistical analysis of a population analysis from Gaussian
     prepare_calculation
-        Generates all of the necessary initial files for a cryspy optimisation.
+        Generates all of the necessary initial files for a fromage optimisation.
         This may include several calls to Ewald, which needs to be in the $PATH
-    run_cryspy
+    run_fromage
         Geometry optimisation via energy minimisation or penatly function of the
         gap
 
 """
-#from cryspy.scripts import *
+#from fromage.scripts import *

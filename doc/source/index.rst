@@ -9,7 +9,7 @@
 
 |
 
-**fromage** (FRamewOrk for Molecular AGgregate Excitation) is a library designed
+**fromage** (FRamewOrk for Molecular AGgregate Excitations) is a library designed
 to support investigation of photophenomena in molecular crystals. Among the
 features are:
 

@@ -1,7 +1,7 @@
 """
-cryspy
+fromage
 
-General set of tools for manipulating and calculating molecular crystal.
+General set of tools for manipulating and calculating molecular fromage.
 Existing electronic structure programs are interfaced with each other for
 ONIOM calculations with different levels of sophistication in the embedding.
 
