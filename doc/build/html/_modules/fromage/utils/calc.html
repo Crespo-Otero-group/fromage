@@ -1,0 +1,838 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.utils.calc &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.utils.calc</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.utils.calc</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines the Calc objects which are used to run calculations</span>
+
+<span class="sd">The purpose of the concrete classes is to handle all of the specificities of</span>
+<span class="sd">each program so as to be able to call a calculation and read its output in</span>
+<span class="sd">the same way from the main program regardless of which program it is.</span>
+
+<span class="sd">As such if any clunky code is necessary due to an external program&#39;s specific</span>
+<span class="sd">preferences, it should be contained here in its Calc object member methods.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">fromage.io</span> <span class="k">import</span> <span class="n">edit_file</span> <span class="k">as</span> <span class="n">ef</span>
+<span class="kn">from</span> <span class="nn">fromage.io</span> <span class="k">import</span> <span class="n">read_file</span> <span class="k">as</span> <span class="n">rf</span>
+<span class="kn">from</span> <span class="nn">fromage.utils</span> <span class="k">import</span> <span class="n">handle_atoms</span> <span class="k">as</span> <span class="n">ha</span>
+
+
+<span class="n">bohrconv</span> <span class="o">=</span> <span class="mf">1.88973</span>  <span class="c1"># Something in Angstrom * bohrconv = Something in Bohr</span>
+
+
+<div class="viewcode-block" id="setup_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.setup_calc">[docs]</a><span class="k">def</span> <span class="nf">setup_calc</span><span class="p">(</span><span class="n">calc_name</span><span class="p">,</span> <span class="n">calc_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a calculation of the correct subclass</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">calc_type</span> <span class="o">=</span> <span class="n">calc_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">calc_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gaussian&quot;</span> <span class="p">:</span> <span class="n">Gauss_calc</span><span class="p">,</span>
+                  <span class="s2">&quot;gaussian_cas&quot;</span> <span class="p">:</span> <span class="n">Gauss_CAS_calc</span><span class="p">,</span>
+                  <span class="s2">&quot;molcas&quot;</span> <span class="p">:</span> <span class="n">Molcas_calc</span><span class="p">,</span>
+                  <span class="s2">&quot;turbomole&quot;</span> <span class="p">:</span> <span class="n">Turbo_calc</span><span class="p">,</span>
+                  <span class="s2">&quot;turbomole_scf&quot;</span> <span class="p">:</span> <span class="n">Turbo_SCF_calc</span><span class="p">,</span>
+                  <span class="s2">&quot;dftb&quot;</span> <span class="p">:</span> <span class="n">DFTB_calc</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">out_calc</span> <span class="o">=</span> <span class="n">calc_types</span><span class="p">[</span><span class="n">calc_type</span><span class="p">](</span><span class="n">calc_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unercognised program: &quot;</span> <span class="o">+</span> <span class="n">calc_type</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">out_calc</span>
+
+
+<div class="viewcode-block" id="Calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Calc">[docs]</a><span class="k">class</span> <span class="nc">Calc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for calculation objects</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    calc_name : str</span>
+<span class="sd">        Name of the calculation, typically rl, ml, mh or mg</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc_name_in</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_here</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor which sets the calculation name&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">=</span> <span class="n">calc_name_in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">here</span> <span class="o">=</span> <span class="n">in_here</span>
+
+<div class="viewcode-block" id="Calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write all of the variable inputs necessary for one calculations</span>
+
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Please Implement this method&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the output of the calculation and sometimes updates the geom_*.xyz files</span>
+
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Please Implement this method&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Calc.update_geom"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Calc.update_geom">[docs]</a>    <span class="k">def</span> <span class="nf">update_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the geom_mol.xyz and geom_cluster.xyz files</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates</span>
+<span class="sd">        in_mol : list of Atom objects</span>
+<span class="sd">            Atoms in the inner region</span>
+<span class="sd">        in_shell : list of Atom objects</span>
+<span class="sd">            Atoms in the middle region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;geom_mol.xyz&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">geom_m_file</span><span class="p">:</span>
+            <span class="n">geom_m_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_mol</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">geom_m_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">ha</span><span class="o">.</span><span class="n">array2atom</span><span class="p">(</span><span class="n">in_mol</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+                <span class="n">atom_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">geom_m_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atom_str</span><span class="p">)</span>
+        <span class="c1"># the inner and middle regions</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;geom_cluster.xyz&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">geom_c_file</span><span class="p">:</span>
+            <span class="n">geom_c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_shell</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">geom_c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">ha</span><span class="o">.</span><span class="n">array2atom</span><span class="p">(</span><span class="n">in_mol</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+                <span class="n">atom_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">geom_c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atom_str</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">in_shell</span><span class="p">:</span>
+                <span class="n">atom_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&gt;6}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2"> </span><span class="si">{:10.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">geom_c_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atom_str</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">subdir</span><span class="p">)</span></div></div>
+        <span class="k">return</span>
+
+
+<div class="viewcode-block" id="DFTB_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.DFTB_calc">[docs]</a><span class="k">class</span> <span class="nc">DFTB_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of DFTB+ tested with v18.2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DFTB_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.DFTB_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a DFTB .gen file and return a subprocess.Popen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with DFTB+</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dftb_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dftb_path</span><span class="p">)</span>
+
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;geom.xyz&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;xyz2gen geom.xyz&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Run DFTB+</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s2">&quot;dftb+ &gt; dftb_out&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="DFTB_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.DFTB_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a DFTB+ detailed.out file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region. Include to write geom files</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region. Include to write geom files</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by DFTB+ in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dftb_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dftb_path</span><span class="p">)</span>
+
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_dftb_out</span><span class="p">(</span><span class="s2">&quot;detailed.out&quot;</span><span class="p">)</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Gauss_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_calc">[docs]</a><span class="k">class</span> <span class="nc">Gauss_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation with Gaussian 09</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Gauss_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a Gaussian input file and return a subprocess.Popen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with Gaussian</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span>
+                       <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="s2">&quot;$</span><span class="si">{FRO_GAUSS}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="Gauss_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a Gaussian .chk file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by Gaussian in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="c1"># stdout=FNULL to not have to read the output of formchk</span>
+        <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;formchk gck.chk&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_fchk</span><span class="p">(</span><span class="s2">&quot;gck.fchk&quot;</span><span class="p">)</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Gauss_calc.read_out_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_calc.read_out_mol">[docs]</a>    <span class="k">def</span> <span class="nf">read_out_mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="s2">&quot;EPS&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the output log file and return Mol&quot;&quot;&quot;</span>
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+        <span class="n">out_mol</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">mol_from_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.log&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div></div>
+        <span class="k">return</span> <span class="n">out_mol</span>
+
+<div class="viewcode-block" id="Gauss_CAS_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_CAS_calc">[docs]</a><span class="k">class</span> <span class="nc">Gauss_CAS_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation with Gaussian 09 for CAS calculations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Gauss_CAS_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_CAS_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a Gaussian input file and return a subprocess.Popen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with Gaussian</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_gauss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span>
+                       <span class="p">[],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.temp&quot;</span><span class="p">)</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="s2">&quot;$</span><span class="si">{FRO_GAUSS}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="Gauss_CAS_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Gauss_CAS_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a Gaussian .chk file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by Gaussian in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gauss_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">gauss_path</span><span class="p">)</span>
+
+        <span class="n">energy_e</span><span class="p">,</span> <span class="n">grad_e</span><span class="p">,</span> <span class="n">energy_g</span><span class="p">,</span> <span class="n">grad_g</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_g_cas</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span> <span class="o">+</span> <span class="s2">&quot;.log&quot;</span><span class="p">)</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">grad_e</span> <span class="o">=</span> <span class="n">grad_e</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="n">grad_g</span> <span class="o">=</span> <span class="n">grad_g</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">grad_e</span> <span class="o">=</span> <span class="n">grad_e</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+        <span class="n">grad_g</span> <span class="o">=</span> <span class="n">grad_g</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy_e</span><span class="p">,</span> <span class="n">grad_e</span><span class="p">,</span> <span class="n">energy_g</span><span class="p">,</span> <span class="n">grad_g</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="turbo_redefine"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.turbo_redefine">[docs]</a><span class="k">def</span> <span class="nf">turbo_redefine</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update Turbomole mos and run actual&quot;&quot;&quot;</span>
+    <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">ef</span><span class="o">.</span><span class="n">write_coord</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="c1"># Update mos</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;rm -f mos&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;define_feed&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp_def_in</span><span class="p">:</span>
+        <span class="c1"># define input for Huckel guess</span>
+        <span class="n">tmp_def_in</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">eht</span><span class="se">\n\n\n\n\n\n\n\n</span><span class="s2">*</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;define &lt; define_feed&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;rm -f define_feed&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;actual -r&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="Turbo_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_calc">[docs]</a><span class="k">class</span> <span class="nc">Turbo_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of CC2 with Turbomole 7.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Turbo_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a Turbomole coord file and return a subprocess.Popen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with Gaussian</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+        <span class="n">turbo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">turbo_path</span><span class="p">)</span>
+
+        <span class="n">turbo_redefine</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+        <span class="c1"># Run Turbomole</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="s2">&quot;dscf &gt; dscf.out &amp;&amp; ricc2 &gt; ricc2.out&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="Turbo_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a Turbomole ricc2.out file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region. Include to write geom files</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region. Include to write geom files</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by Turbomole in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">turbo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">turbo_path</span><span class="p">)</span>
+
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_ricc2</span><span class="p">(</span><span class="s2">&quot;ricc2.out&quot;</span><span class="p">)</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Turbo_SCF_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_SCF_calc">[docs]</a><span class="k">class</span> <span class="nc">Turbo_SCF_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation of SCF like DFT or HF with Turbomole 7.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Turbo_SCF_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_SCF_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a Turbomole coord file and return a subprocess.Popen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with Gaussian</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">FNULL</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+        <span class="n">turbo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">turbo_path</span><span class="p">)</span>
+
+        <span class="n">turbo_redefine</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+        <span class="c1"># Run Turbomole</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="s2">&quot;dscf &gt; dscf.out &amp;&amp; grad &gt; grad.out&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">FNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="Turbo_SCF_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Turbo_SCF_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a Turbomole gradient file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region. Include to write geom files</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region. Include to write geom files</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by Gaussian in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">turbo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">turbo_path</span><span class="p">)</span>
+
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_tbgrad</span><span class="p">(</span><span class="s2">&quot;gradient&quot;</span><span class="p">)</span>
+        <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">energy</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Molcas_calc"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Molcas_calc">[docs]</a><span class="k">class</span> <span class="nc">Molcas_calc</span><span class="p">(</span><span class="n">Calc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculation with Molcas 8.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Molcas_calc.run"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Molcas_calc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a Molcas input file and return a subprocess.Popen</span>
+
+<span class="sd">        Make sure the input file is called [name of calculation].input</span>
+<span class="sd">        e.g. mh.input and the geometry file in Gateway is called geom.xyz</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : list of Atom objects</span>
+<span class="sd">            Atoms to be calculated with Gaussian</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        proc : subprocess.Popen object</span>
+<span class="sd">            the object should have a .wait() method</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">molcas_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">molcas_path</span><span class="p">)</span>
+
+        <span class="c1"># Write a temporary geom file for molcas to read</span>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s2">&quot;geom.xyz&quot;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="s2">&quot;molcas molcas.input -f&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">proc</span>
+
+<div class="viewcode-block" id="Molcas_calc.read_out"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.calc.Molcas_calc.read_out">[docs]</a>    <span class="k">def</span> <span class="nf">read_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_shell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyse a Molcas .input file while printing geometry updates</span>
+
+<span class="sd">        To update the geom files, include in_mol and in_shell. Also removes</span>
+<span class="sd">        molcas.*</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        positions : list of floats</span>
+<span class="sd">            List of atomic coordinates, important for truncation of gradients</span>
+<span class="sd">            if too many are calculated</span>
+<span class="sd">        in_mol : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the inner region. Include to write geom files</span>
+<span class="sd">        in_shell : list of Atom objects, optional</span>
+<span class="sd">            Atoms in the middle region. Include to write geom files</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        energy : float</span>
+<span class="sd">            Energy calculated by Gaussian in Hartree</span>
+<span class="sd">        gradients : list of floats</span>
+<span class="sd">            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom</span>
+<span class="sd">        scf_energy : float</span>
+<span class="sd">            The ground state energy in Hartree</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">molcas_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">molcas_path</span><span class="p">)</span>
+
+        <span class="n">energy</span><span class="p">,</span> <span class="n">gradients_b</span><span class="p">,</span> <span class="n">scf_energy</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_molcas</span><span class="p">(</span><span class="s2">&quot;molcas.log&quot;</span><span class="p">)</span>
+        <span class="c1"># fix gradients units to Hartree/Angstrom</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients_b</span> <span class="o">*</span> <span class="n">bohrconv</span>
+        <span class="c1"># update the geometry log</span>
+        <span class="k">if</span> <span class="n">in_mol</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_geom</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">in_mol</span><span class="p">,</span> <span class="n">in_shell</span><span class="p">)</span>
+
+        <span class="c1"># truncate gradients if too long</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)]</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">here</span><span class="p">)</span>
+
+        <span class="c1"># for large molcas wavefunction information</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;rm -rf molcas.*&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">scf_energy</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

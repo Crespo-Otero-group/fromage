@@ -1,0 +1,956 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.utils.mol &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.utils.mol</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.utils.mol</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The class used to manipulate lists of Atoms</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># from copy import copy</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">fromage.utils.atom</span> <span class="k">import</span> <span class="n">Atom</span>
+<span class="kn">import</span> <span class="nn">fromage.io.edit_file</span> <span class="k">as</span> <span class="nn">ef</span>
+
+<div class="viewcode-block" id="try_ismol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.try_ismol">[docs]</a><span class="k">def</span> <span class="nf">try_ismol</span><span class="p">(</span><span class="n">to_test</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Raise exception if the argument is not a Mol object&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_test</span><span class="p">,</span> <span class="n">Mol</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot cast &quot;</span> <span class="o">+</span></div>
+                        <span class="nb">type</span><span class="p">(</span><span class="n">to_test</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; to Mol object&quot;</span><span class="p">)</span>
+
+<span class="n">default_thresh</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dis&#39;</span> <span class="p">:</span> <span class="mf">1.8</span><span class="p">,</span>
+                <span class="s1">&#39;cov&#39;</span> <span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+                <span class="s1">&#39;vdw&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">}</span>
+
+<div class="viewcode-block" id="Mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol">[docs]</a><span class="k">class</span> <span class="nc">Mol</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object representing a list of atoms.</span>
+
+<span class="sd">    This class can be used to reflect any number of molecules, point charges or</span>
+<span class="sd">    unit cells. Although Mol shares many methods with list, it deliberately does</span>
+<span class="sd">    not inherit it in order to avoid nonsensical operations such as Mol1 &gt; Mol2</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Member atoms of Mol</span>
+<span class="sd">    vectors : 3 x 3 numpy array</span>
+<span class="sd">        Lattice vectors of the unit cell</span>
+<span class="sd">    bonding : string &#39;dist, &#39;cov&#39; or &#39;vdw&#39;</span>
+<span class="sd">        The method for detecting bonding in this molecule.</span>
+<span class="sd">        &#39;dis&#39; : distance between atoms &lt; threshold</span>
+<span class="sd">        &#39;cov&#39; : distance - (cov radius of atom a + of atom b) &lt; threshold</span>
+<span class="sd">        &#39;vdw&#39; : distance - (vwd radius of atom a + of atom b) &lt; threshold</span>
+<span class="sd">    thresh : float, optional</span>
+<span class="sd">        Threshold for the detection. If None, use defaults</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_atoms</span><span class="o">=</span><span class="p">[],</span> <span class="n">vectors</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">bonding</span> <span class="o">=</span> <span class="s1">&#39;dis&#39;</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mf">1.8</span><span class="p">):</span>
+        <span class="c1"># In case the user feeds a lone atom:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">,</span> <span class="n">Atom</span><span class="p">):</span>
+            <span class="n">in_atoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">in_atoms</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">in_atoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">vectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonding</span> <span class="o">=</span> <span class="n">bonding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">thresh</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">out_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">out_str</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">out_str</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Mol.set_bonding"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.set_bonding">[docs]</a>    <span class="k">def</span> <span class="nf">set_bonding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bonding</span><span class="o">=</span><span class="s1">&#39;dis&#39;</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the type of bonding detection used in this Mol</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bonding : string &#39;dist, &#39;cov&#39; or &#39;vdw&#39;</span>
+<span class="sd">            The method for detecting bonding in this molecule.</span>
+<span class="sd">            &#39;dis&#39; : distance between atoms &lt; threshold</span>
+<span class="sd">            &#39;cov&#39; : distance - (cov radius of atom a + of atom b) &lt; threshold</span>
+<span class="sd">            &#39;vdw&#39; : distance - (vwd radius of atom a + of atom b) &lt; threshold</span>
+<span class="sd">        thresh : float, optional</span>
+<span class="sd">            Threshold for the detection. If None, use defaults:</span>
+<span class="sd">            &#39;dis&#39; -&gt; 1.8</span>
+<span class="sd">            &#39;cov&#39; -&gt; 0.2</span>
+<span class="sd">            &#39;vdw&#39; -&gt; -0.3</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">bonding</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">default_thresh</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unrecognised bonding type: &quot;</span><span class="o">+</span> <span class="n">bonding</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonding</span> <span class="o">=</span> <span class="n">bonding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">default_thresh</span><span class="p">[</span><span class="n">bonding</span><span class="p">]</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.bonded"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.bonded">[docs]</a>    <span class="k">def</span> <span class="nf">bonded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom_a</span><span class="p">,</span> <span class="n">atom_b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if atom_a is bonded to atom_b given the bonding settings</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom_a, atom_b : Atom objects</span>
+<span class="sd">            The atoms to be compared</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bonded_bool : bool</span>
+<span class="sd">            True if the atoms are bonded and False if not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bonded_bool</span> <span class="o">=</span> <span class="n">atom_a</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">atom_b</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonding</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span></div>
+        <span class="k">return</span> <span class="n">bonded_bool</span>
+
+<div class="viewcode-block" id="Mol.per_bonded"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.per_bonded">[docs]</a>    <span class="k">def</span> <span class="nf">per_bonded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom_a</span><span class="p">,</span> <span class="n">atom_b</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if atom_a is bonded to atom_b given lattice conditions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom_a, atom_b : Atom objects</span>
+<span class="sd">            The atoms to be compared</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bonded_bool : bool</span>
+<span class="sd">            True if the atoms are bonded and False if not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bonded_bool</span> <span class="o">=</span> <span class="n">atom_a</span><span class="o">.</span><span class="n">per_dist</span><span class="p">(</span><span class="n">atom_b</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonding</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span></div>
+        <span class="k">return</span> <span class="n">bonded_bool</span>
+
+    <span class="c1"># list-y behaviour</span>
+<div class="viewcode-block" id="Mol.append"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.extend"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.extend">[docs]</a>    <span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_mol</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">other_mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.insert"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.remove"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.pop"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.clear"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Mol.count"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_mol</span><span class="p">):</span>
+        <span class="n">try_ismol</span><span class="p">(</span><span class="n">other_mol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Mol</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">atoms</span> <span class="o">+</span> <span class="n">other_mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">vectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span> <span class="n">bonding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonding</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">atoms</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.copy"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.write_xyz"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.write_xyz">[docs]</a>    <span class="k">def</span> <span class="nf">write_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write an xyz file of the Mol&quot;&quot;&quot;</span></div>
+        <span class="n">ef</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Mol.empty_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.empty_mol">[docs]</a>    <span class="k">def</span> <span class="nf">empty_mol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an empty mol with the same properties&quot;&quot;&quot;</span>
+        <span class="n">new_mol</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new_mol</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="k">return</span> <span class="n">new_mol</span>
+
+<div class="viewcode-block" id="Mol.select"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.select">[docs]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a molecule out of the current Mol.</span>
+
+<span class="sd">        The function returns a new Mol of selected atoms atoms. The selection is</span>
+<span class="sd">        done by measuring by how much adjacent vdw spheres overlap. The returned</span>
+<span class="sd">        Mol&#39;s attributes are new objects obtained via a deep copy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : int or list of ints</span>
+<span class="sd">            The number of the atoms from which the molecules are generated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        selected : Mol object</span>
+<span class="sd">            The selected molecule</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make sure that labels is a list</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+
+        <span class="c1"># Check for duplicate labels</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Some labels are repeated&quot;</span><span class="p">)</span>
+
+        <span class="n">selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">selected</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+                <span class="n">remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="n">old_atoms</span> <span class="o">=</span> <span class="n">selected</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># While there are atoms to add</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="n">cont</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">old_atoms</span><span class="p">:</span>
+                <span class="n">tmp_remaining</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonded</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="n">rem</span><span class="p">):</span>
+                        <span class="n">new_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+                        <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+                        <span class="n">tmp_remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+                        <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># An atom was added so continue loop</span>
+                <span class="n">remaining</span> <span class="o">=</span> <span class="n">tmp_remaining</span>
+            <span class="n">old_atoms</span> <span class="o">=</span> <span class="n">new_atoms</span></div>
+        <span class="k">return</span> <span class="n">selected</span>
+
+<div class="viewcode-block" id="Mol.per_select"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.per_select">[docs]</a>    <span class="k">def</span> <span class="nf">per_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">old_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select a molecule out of a Mol in a periodic system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        labels : int or list of ints</span>
+<span class="sd">            The number of the atoms from which the molecules are generated</span>
+<span class="sd">        old_pos : bool</span>
+<span class="sd">            Option to print the selected molecule at its original coordinates</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        selected_img : Mol object</span>
+<span class="sd">            The atoms belonging to the molecule which is selected with certain</span>
+<span class="sd">            atoms translated so that the molecule is fully connected without</span>
+<span class="sd">            periodic boundaries</span>
+<span class="sd">        selected_old : Mol object (optional)</span>
+<span class="sd">            The atoms belonging to the molecule which is selected before</span>
+<span class="sd">            translations</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make sure that labels is a list</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+
+        <span class="c1"># Check for duplicate labels</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Some labels are repeated&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Mol of selected atoms from the unit cell</span>
+        <span class="n">selected_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">selected_old</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+
+        <span class="c1"># Mol of selected atoms where the periodic image</span>
+        <span class="c1"># atoms are translated back to form a molecule</span>
+        <span class="n">selected_img</span> <span class="o">=</span> <span class="n">selected_old</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">selected_old</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+                <span class="n">remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="n">old_atoms</span> <span class="o">=</span> <span class="n">selected_old</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># While there are atoms to add</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">cont</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">cont</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">old_atoms</span><span class="p">:</span>
+                <span class="n">tmp_remaining</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+                    <span class="c1"># contains the distance from the point or image and the</span>
+                    <span class="c1"># coordinates of the point or image</span>
+                    <span class="n">dist</span><span class="p">,</span> <span class="n">per_img</span> <span class="o">=</span> <span class="n">old</span><span class="o">.</span><span class="n">per_dist</span><span class="p">(</span><span class="n">rem</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonding</span><span class="p">,</span> <span class="n">new_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="c1"># if the atom is close enough to be part of the molecule</span>
+                    <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thresh</span><span class="p">:</span>
+                        <span class="n">new_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">per_img</span><span class="p">)</span>
+                        <span class="n">selected_old</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+                        <span class="n">selected_img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">per_img</span><span class="p">)</span>
+                        <span class="n">tmp_remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+                        <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># An atom was added so continue loop</span>
+                <span class="n">remaining</span> <span class="o">=</span> <span class="n">tmp_remaining</span>
+                <span class="n">old_atoms</span> <span class="o">=</span> <span class="n">new_atoms</span>
+
+
+        <span class="k">if</span> <span class="n">old_pos</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">selected_img</span><span class="p">,</span> <span class="n">selected_old</span>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="n">selected_img</span>
+
+<div class="viewcode-block" id="Mol.segregate"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.segregate">[docs]</a>    <span class="k">def</span> <span class="nf">segregate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Separate current Mol in a list of Mols of different molecules&quot;&quot;&quot;</span>
+        <span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of molecules</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">molecule</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">molecule</span><span class="p">:</span>
+                <span class="n">remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">molecules</span>
+
+<div class="viewcode-block" id="Mol.complete_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.complete_mol">[docs]</a>    <span class="k">def</span> <span class="nf">complete_mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take a cell and complete certain molecules</span>
+
+<span class="sd">        The objective is to end up with a unit cell where the molecules of interest</span>
+<span class="sd">        are complete. The rest of the atoms of the cell must remain intact. Note that</span>
+<span class="sd">        the input atoms are transformed and are the same as are present in the</span>
+<span class="sd">        output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        labels : int or list of ints</span>
+<span class="sd">            The number of the atoms from which the molecules are generated</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        new_mol : Mol object</span>
+<span class="sd">            The now complete molecule</span>
+<span class="sd">        new_cell : Mol object</span>
+<span class="sd">            The cell with the completed molecule</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_mol</span><span class="p">,</span> <span class="n">scattered_mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">per_select</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">old_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">new_cell_atoms</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scattered_mol</span><span class="p">])</span>
+        <span class="n">new_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">new_cell</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">new_cell_atoms</span>
+
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">new_mol</span><span class="p">:</span>
+            <span class="n">new_cell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">new_mol</span><span class="p">,</span> <span class="n">new_cell</span>
+
+<div class="viewcode-block" id="Mol.complete_cell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.complete_cell">[docs]</a>    <span class="k">def</span> <span class="nf">complete_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a cell where atoms have been translated to complete all molecules of</span>
+<span class="sd">        the cell</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out_cell : Mol object</span>
+<span class="sd">            The new untruncated cell</span>
+<span class="sd">        full_mol_l : list of Mol objects</span>
+<span class="sd">            Each molecule in the untruncated cell</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full_mol_l</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">full_mol</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">complete_mol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">full_mol_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_mol</span><span class="p">)</span>
+            <span class="n">remaining</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">full_mol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">remaining</span><span class="p">:</span>
+                    <span class="n">remaining</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="c1"># Convinently, remaining is now an empty Mol</span>
+        <span class="n">out_cell</span> <span class="o">=</span> <span class="n">remaining</span>
+        <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">full_mol_l</span><span class="p">:</span>
+            <span class="n">out_cell</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">out_cell</span><span class="p">,</span> <span class="n">full_mol_l</span>
+
+<div class="viewcode-block" id="Mol.centroid"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.centroid">[docs]</a>    <span class="k">def</span> <span class="nf">centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return np array of the centroid&quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">centro</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">centro</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">centro</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">centro</span> <span class="o">=</span> <span class="n">centro</span> <span class="o">/</span> <span class="n">N</span></div>
+        <span class="k">return</span> <span class="n">centro</span>
+
+<div class="viewcode-block" id="Mol.center_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.center_mol">[docs]</a>    <span class="k">def</span> <span class="nf">center_mol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Translate molecules to center&quot;&quot;&quot;</span>
+        <span class="n">cen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">v_translate</span><span class="p">(</span><span class="o">-</span><span class="n">cen</span><span class="p">)</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.translate"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.translate">[docs]</a>    <span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Translate Mol by a vector</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vector : 3 x 1 numpy array</span>
+<span class="sd">            Translation vector</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">v_translate</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.supercell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.supercell">[docs]</a>    <span class="k">def</span> <span class="nf">supercell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a supercell of I x J x K</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trans : numpy array of length 3</span>
+<span class="sd">            Multiplications of the primitive cell</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        supercell : Mol object</span>
+<span class="sd">            New supercell with adjusted lattice vectors</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_mol</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a_mult</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">b_mult</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">c_mult</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">vector</span> <span class="o">=</span> <span class="n">a_mult</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b_mult</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_mult</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">v_translated</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">])</span>
+                    <span class="n">new_cell</span> <span class="o">+=</span> <span class="n">new_atoms</span>
+        <span class="n">out_vec</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">trans</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">new_cell</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">out_vec</span></div>
+        <span class="k">return</span> <span class="n">new_cell</span>
+
+<div class="viewcode-block" id="Mol.centered_supercell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.centered_supercell">[docs]</a>    <span class="k">def</span> <span class="nf">centered_supercell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">from_origin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a bigger supercell out of an input cell.</span>
+
+<span class="sd">        The cell is multiplied positively and negatively through each lattice</span>
+<span class="sd">        vector so that the supercluster ends up being</span>
+<span class="sd">        (1+2*trans[0])*(1+2*trans[1])*(1+2*trans[2]) times larger. For example if the</span>
+<span class="sd">        input is 1,1,1 for a cubic unit cell, the output will be the original unit</span>
+<span class="sd">        cell surrounded by 26 other unit cells forming a total 3x3x3 cube.</span>
+
+<span class="sd">        Alternatively, the multiplication can be centered around the origin, a corner of the</span>
+<span class="sd">        unit cell, instead of the centre. In that case the supercluster ends up being</span>
+<span class="sd">        only (2*trans[0])*(2*trans[1])*(2*trans[2])</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trans : numpy array of length 3</span>
+<span class="sd">            Multiplications of the primitive cell</span>
+<span class="sd">        from_origin : bool</span>
+<span class="sd">            Determines the kind of multiplication. True is corner of the cell as</span>
+<span class="sd">            the center, False is middle of the cell.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mega_cell : Mol object</span>
+<span class="sd">            The resulting supercell</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trans_series</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tra</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trans</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">from_origin</span><span class="p">:</span>
+                <span class="n">trans_series</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">tra</span><span class="p">,</span> <span class="n">tra</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">trans_series</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">tra</span><span class="p">,</span> <span class="n">tra</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">trans_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">trans_series</span><span class="p">)</span>
+
+        <span class="n">new_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_mol</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a_mult</span> <span class="ow">in</span> <span class="n">trans_series</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">b_mult</span> <span class="ow">in</span> <span class="n">trans_series</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c_mult</span> <span class="ow">in</span> <span class="n">trans_series</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                    <span class="n">vector</span> <span class="o">=</span> <span class="n">a_mult</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">b_mult</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">c_mult</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">v_translated</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">])</span>
+                    <span class="n">new_cell</span> <span class="o">+=</span> <span class="n">new_atoms</span>
+        <span class="n">out_vec</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">trans</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">new_cell</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">out_vec</span></div>
+        <span class="k">return</span> <span class="n">new_cell</span>
+
+<div class="viewcode-block" id="Mol.trans_from_rad"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.trans_from_rad">[docs]</a>    <span class="k">def</span> <span class="nf">trans_from_rad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clust_rad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate the translations necessary to encapsulate a sphere of given rad</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clust_rad : float</span>
+<span class="sd">            Radius defining a sphere</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        trans_count : 3 x 1 numpy array</span>
+<span class="sd">            The translations required for the unit cell to contain the sphere</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># determine how many unit cells we need</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+
+        <span class="c1"># vectors normal to faces</span>
+        <span class="n">a_perp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">b_perp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">c_perp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># the three normalised unit vectors</span>
+        <span class="n">perp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a_perp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a_perp</span><span class="p">),</span> <span class="n">b_perp</span> <span class="o">/</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b_perp</span><span class="p">),</span> <span class="n">c_perp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">c_perp</span><span class="p">)])</span>
+
+        <span class="n">trans_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># distances from faces</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+        <span class="n">new_vectors</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">trans_count</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">distances</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">new_vectors</span><span class="p">[</span><span class="n">comp</span><span class="p">],</span> <span class="n">perp</span><span class="p">[</span><span class="n">comp</span><span class="p">])</span>
+                <span class="n">new_vectors</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans_count</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">*</span> <span class="n">vectors</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">clust_rad</span><span class="p">:</span>
+                    <span class="k">break</span>
+        <span class="n">trans_count</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">trans_count</span>
+
+<div class="viewcode-block" id="Mol.make_cluster"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.make_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">make_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clust_rad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a cluster of molecules from a primitive cell</span>
+
+<span class="sd">        This first makes a supercell of the correct size which will contain with</span>
+<span class="sd">        one additional buffer shell. Then the sphere is generated from this new</span>
+<span class="sd">        supercell by connectivity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        clust_rad : float</span>
+<span class="sd">            Radius defining a sphere. All molecules with atoms in the sphere are</span>
+<span class="sd">            to be grabbed</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cluster : Mol object</span>
+<span class="sd">            Spherical cluster of molecules from their crystal positions</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans_from_rad</span><span class="p">(</span><span class="n">clust_rad</span><span class="p">)</span>
+        <span class="c1"># add a buffer of one cell in order to not chop the molecules up</span>
+        <span class="n">supercell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centered_supercell</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">from_origin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># atoms within the sphere of rad clust_rad</span>
+        <span class="n">seed_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">supercell</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">v_dist</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">clust_rad</span><span class="p">:</span>
+                <span class="n">seed_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+        <span class="n">max_mol_len</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">seed_atoms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mol</span> <span class="o">=</span> <span class="n">seed_atoms</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_mol_len</span><span class="p">:</span>
+                <span class="n">max_mol_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+                <span class="n">clust_atoms</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span> <span class="o">==</span> <span class="n">max_mol_len</span><span class="p">:</span>
+                <span class="n">clust_atoms</span> <span class="o">+=</span> <span class="n">mol</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">mol</span><span class="p">:</span>
+                <span class="n">seed_atoms</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">clust_atoms</span>
+
+<div class="viewcode-block" id="Mol.remove_duplicates"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.remove_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove the duplicate atoms&quot;&quot;&quot;</span>
+        <span class="n">purged_mol</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">atom_a</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">unique</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">atom_b</span> <span class="ow">in</span> <span class="n">purged_mol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">atom_a</span><span class="o">.</span><span class="n">very_close</span><span class="p">(</span><span class="n">atom_b</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">thresh</span><span class="p">):</span>
+                    <span class="n">unique</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">unique</span><span class="p">:</span>
+                <span class="n">purged_mol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_a</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">purged_mol</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.dir_to_frac_pos"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.dir_to_frac_pos">[docs]</a>    <span class="k">def</span> <span class="nf">dir_to_frac_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Move all atoms to fractional coordinates&quot;&quot;&quot;</span>
+
+        <span class="n">out_mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># transpose to get the transformation matrix</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+        <span class="c1"># inverse transformation matrix</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">out_mol</span><span class="p">:</span>
+            <span class="c1"># change of basis transformation</span>
+            <span class="n">dir_pos</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+            <span class="n">frac_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">dir_pos</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frac_pos</span><span class="p">):</span>
+                <span class="c1"># if the coordinate is out of range</span>
+                <span class="k">if</span> <span class="n">coord</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">coord</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="c1"># translate it to the range [0,1]</span>
+                    <span class="n">frac_pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">coord</span> <span class="o">%</span> <span class="mi">1</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">set_pos</span><span class="p">(</span><span class="n">frac_pos</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">out_mol</span>
+
+<div class="viewcode-block" id="Mol.frac_to_dir_pos"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.frac_to_dir_pos">[docs]</a>    <span class="k">def</span> <span class="nf">frac_to_dir_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Move all atoms to direct coordinates&quot;&quot;&quot;</span>
+        <span class="n">out_mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">out_mol</span><span class="p">:</span>
+            <span class="n">new_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">get_pos</span><span class="p">())</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">set_pos</span><span class="p">(</span><span class="n">new_pos</span><span class="p">)</span>
+</div>
+        <span class="k">return</span> <span class="n">out_mol</span>
+
+<div class="viewcode-block" id="Mol.confined"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.confined">[docs]</a>    <span class="k">def</span> <span class="nf">confined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Move all atoms to fit inside the primitive cell&quot;&quot;&quot;</span>
+        <span class="n">frac_mol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir_to_frac_pos</span><span class="p">()</span>
+        <span class="n">out_mol</span> <span class="o">=</span> <span class="n">frac_mol</span><span class="o">.</span><span class="n">frac_to_dir_pos</span><span class="p">()</span>
+</div>
+        <span class="k">return</span> <span class="n">out_mol</span>
+
+<div class="viewcode-block" id="Mol.centered_mols"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.centered_mols">[docs]</a>    <span class="k">def</span> <span class="nf">centered_mols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">return_trans</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the molecules translated at the origin with a corresponding cell</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        labels : int or list of ints</span>
+<span class="sd">            The labels of the atoms to select</span>
+<span class="sd">        print_centro : bool</span>
+<span class="sd">            Print the translation vector which was detected as -centroid</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mol : Mol object</span>
+<span class="sd">            The selected molecules with their centroid at the origin</span>
+<span class="sd">        mod_cell : Mol object</span>
+<span class="sd">            The new confined cell corresponding to the now translated molecules</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mol</span><span class="p">,</span> <span class="n">mod_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">complete_mol</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">centro</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="n">mol</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">centro</span><span class="p">)</span>
+        <span class="n">mod_cell</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">centro</span><span class="p">)</span>
+        <span class="n">mod_cell</span> <span class="o">=</span> <span class="n">mod_cell</span><span class="o">.</span><span class="n">confined</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">return_trans</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mod_cell</span><span class="p">,</span> <span class="o">-</span><span class="n">centro</span>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">mod_cell</span>
+
+
+<div class="viewcode-block" id="Mol.es_pot"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.es_pot">[docs]</a>    <span class="k">def</span> <span class="nf">es_pot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the electorstatic potential generated by this Mol</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : 3x1 np array</span>
+<span class="sd">            The point at which the potential should be evaluated</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tot_pot : float</span>
+<span class="sd">            The total potential</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tot_pot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">tot_pot</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">es_pot</span><span class="p">(</span><span class="n">position</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">tot_pot</span>
+
+<div class="viewcode-block" id="Mol.change_charges"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.change_charges">[docs]</a>    <span class="k">def</span> <span class="nf">change_charges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">charges</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change all of the charges of the constituent atoms at once</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        charges : array-like of floats</span>
+<span class="sd">            Contains all of the new charges. IMPORTANT: they need to be in the</span>
+<span class="sd">            order corresponding to self.atoms</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">charges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.charges"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.charges">[docs]</a>    <span class="k">def</span> <span class="nf">charges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an array of charges&quot;&quot;&quot;</span>
+        <span class="n">l_char</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">l_char</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">arr_char</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">l_char</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">arr_char</span>
+
+<div class="viewcode-block" id="Mol.raw_assign_charges"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.raw_assign_charges">[docs]</a>    <span class="k">def</span> <span class="nf">raw_assign_charges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">charges</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign the charges from an array-like to the atoms&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">char</span><span class="p">,</span><span class="n">at</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">charges</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>
+            <span class="n">at</span><span class="o">.</span><span class="n">q</span><span class="o">=</span><span class="n">char</span></div>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Mol.populate"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.mol.Mol.populate">[docs]</a>    <span class="k">def</span> <span class="nf">populate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_mol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign charges to the Mol by comparing to the connectivity of a</span>
+<span class="sd">        reference</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        reference_mol : Mol object</span>
+<span class="sd">            Charged molecule or cell</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># This is a naughty in-function import to prevent a circular dependency.</span>
+        <span class="c1"># The reason is that assign_charges functions are grouped up with the</span>
+        <span class="c1"># executable script which needs to read_file and in turn use mol.py</span>
+        <span class="c1"># Some careful refactoring should fix this</span>
+        <span class="kn">import</span> <span class="nn">fromage.scripts.assign_charges</span> <span class="k">as</span> <span class="nn">ac</span>
+        <span class="n">ac</span><span class="o">.</span><span class="n">assign_charges</span><span class="p">(</span><span class="n">reference_mol</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div></div>
+        <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

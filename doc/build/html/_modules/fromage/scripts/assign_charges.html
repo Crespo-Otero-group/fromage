@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.scripts.assign_charges &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.scripts.assign_charges</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.scripts.assign_charges</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;Functions useful for manipulating atom connectivity.</span>
+
+<span class="sd">The original use of these functions is to allow for assign_charges to work and</span>
+<span class="sd">be able to give a molecule, cluster or periodic cell of atoms the same charges as another</span>
+<span class="sd">molecule, cluster or periodic cell.</span>
+
+<span class="sd">Includes a utility to read a molecule xyz file, a population analysis in g09 and</span>
+<span class="sd">a target cluster xyz to assign the charges to the cluster.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">assign_charges.py mol.log clust.xyz</span>
+
+<span class="sd">Includes options for Mulliken or RESP and ouptut file names.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">import</span> <span class="nn">fromage.io.read_file</span> <span class="k">as</span> <span class="nn">rf</span>
+
+
+<div class="viewcode-block" id="detect_1_connect"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.detect_1_connect">[docs]</a><span class="k">def</span> <span class="nf">detect_1_connect</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a matrix of first connectivities of a list of atoms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_atoms : Mol object</span>
+<span class="sd">        Atoms which need their connectivity detected</span>
+<span class="sd">    vectors : 3x3 array-like or None</span>
+<span class="sd">        Lattice vectors of the system if it is periodic. If not use None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cnct : numpy matrix</span>
+<span class="sd">        The matrix where each row and each column correspond to one atom. If the</span>
+<span class="sd">        two atoms are bonded or the same, the matrix element is 1. Otherwise it</span>
+<span class="sd">        is 0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nat_mol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">)</span>
+    <span class="n">cnct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nat_mol</span><span class="p">,</span> <span class="n">nat_mol</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">i_atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">j_atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">in_atoms</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">in_atoms</span><span class="o">.</span><span class="n">bonded</span><span class="p">(</span><span class="n">i_atom</span><span class="p">,</span> <span class="n">j_atom</span><span class="p">):</span>
+                    <span class="n">cnct</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">in_atoms</span><span class="o">.</span><span class="n">per_bonded</span><span class="p">(</span><span class="n">i_atom</span><span class="p">,</span> <span class="n">j_atom</span><span class="p">):</span>
+                    <span class="n">cnct</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
+    <span class="k">return</span> <span class="n">cnct</span>
+
+
+<div class="viewcode-block" id="expand_connect"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.expand_connect">[docs]</a><span class="k">def</span> <span class="nf">expand_connect</span><span class="p">(</span><span class="n">in_mat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expand a connectivity matrix</span>
+
+<span class="sd">    For one atom, checks which other atoms are connected to it (connectors) and</span>
+<span class="sd">    which are not (dangles). Then for each dangle checks if it has connectors in</span>
+<span class="sd">    common with the original atom and if so assigns that matrix element the</span>
+<span class="sd">    smallest combination of connectors.</span>
+
+<span class="sd">    Parameter</span>
+<span class="sd">    ---------</span>
+<span class="sd">    in_mat : 2-d array-like</span>
+<span class="sd">        Connectivity matrix to be expanded</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_mat: 2-d array-like</span>
+<span class="sd">        Once-expanded connectivity matrix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">in_mat</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">in_mat</span><span class="p">):</span>
+        <span class="c1"># indices of unconnected atoms</span>
+        <span class="n">dangles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># indices of connected atoms</span>
+        <span class="n">connectors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">dangles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">element</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">connectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dangle</span> <span class="ow">in</span> <span class="n">dangles</span><span class="p">:</span>
+            <span class="n">orders</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">dangle_element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">in_mat</span><span class="p">[</span><span class="n">dangle</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">dangle_element</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">connectors</span><span class="p">:</span>
+                    <span class="n">orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dangle_element</span> <span class="o">+</span> <span class="n">in_mat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+                <span class="c1"># if orders is not empty</span>
+                <span class="k">if</span> <span class="n">orders</span><span class="p">:</span>
+                    <span class="n">out_mat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">dangle</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+                    <span class="n">out_mat</span><span class="p">[</span><span class="n">dangle</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out_mat</span>
+
+
+<div class="viewcode-block" id="complete_expand"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.complete_expand">[docs]</a><span class="k">def</span> <span class="nf">complete_expand</span><span class="p">(</span><span class="n">in_mat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Expand a matrix until it stops expanding.&quot;&quot;&quot;</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">in_mat</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">temp_mat</span> <span class="o">=</span> <span class="n">expand_connect</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">temp_mat</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">temp_mat</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">mat</span>
+
+
+<div class="viewcode-block" id="charged_kinds"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.charged_kinds">[docs]</a><span class="k">def</span> <span class="nf">charged_kinds</span><span class="p">(</span><span class="n">in_atoms</span><span class="p">,</span> <span class="n">in_kinds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get charged atom kinds from charged atoms and kinds.</span>
+
+<span class="sd">    For each kind of atom to be charged, goes through the list of atoms and</span>
+<span class="sd">    makes an average of the partial atomic charge of atoms of that type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_atoms : Mol object</span>
+<span class="sd">        The atoms should be charged and some of them at least should be of the</span>
+<span class="sd">        relevant kind</span>
+<span class="sd">    in_kinds : list of tuples</span>
+<span class="sd">        The tuples are of the form (a,b) where a is an element string (like &#39;C&#39;)</span>
+<span class="sd">        and b is a frozenset of ((element string,order of connection),amount of</span>
+<span class="sd">        connections). (a,b) is known as an atom kind</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    q_kinds : list of tuples</span>
+<span class="sd">        Each tuple is now (average charge,kind). This tuple is known as a</span>
+<span class="sd">        charged kind</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q_kinds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">in_kinds</span><span class="p">:</span>
+        <span class="n">charges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">in_atoms</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">kind</span><span class="p">:</span>
+                <span class="n">charges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">charges</span><span class="p">:</span>  <span class="c1"># if not empty</span>
+            <span class="n">avg_charge</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">charges</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">charges</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">avg_charge</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">q_kinds</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">avg_charge</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">q_kinds</span>
+
+
+<div class="viewcode-block" id="assign_charges"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.assign_charges">[docs]</a><span class="k">def</span> <span class="nf">assign_charges</span><span class="p">(</span><span class="n">char_atoms</span><span class="p">,</span> <span class="n">unchar_atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assign charges from one list of atoms to another list of atoms.</span>
+
+<span class="sd">    This is based on the connectivity of the charged atoms, as defined by a</span>
+<span class="sd">    maximum bond length. The function works for periodic or non periodic systems</span>
+<span class="sd">    in the input and the output. The uncharged atoms are changed and there is no</span>
+<span class="sd">    output.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    char_atoms : Mol object</span>
+<span class="sd">        Atoms which already have assigned charge</span>
+<span class="sd">    char_vectors : 3x3 array-like or None</span>
+<span class="sd">        Lattice vectors of the input system if it is periodic. If not use None</span>
+<span class="sd">    unchar_atoms : Mol object</span>
+<span class="sd">        Atoms which need charges assigned to them</span>
+<span class="sd">    unchar_vectors : 3x3 array-like or None</span>
+<span class="sd">        See char_vectors</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># detect the charged atom&#39;s connectivity matrix</span>
+    <span class="n">char_first</span> <span class="o">=</span> <span class="n">detect_1_connect</span><span class="p">(</span><span class="n">char_atoms</span><span class="p">)</span>
+    <span class="n">char_cnct</span> <span class="o">=</span> <span class="n">complete_expand</span><span class="p">(</span><span class="n">char_first</span><span class="p">)</span>
+
+    <span class="c1"># get charged atom kinds as a result</span>
+    <span class="n">kinds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">char_atoms</span><span class="p">):</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">set_connectivity</span><span class="p">(</span><span class="n">char_atoms</span><span class="p">,</span> <span class="n">char_cnct</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">kinds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
+    <span class="n">kinds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+    <span class="n">q_kinds</span> <span class="o">=</span> <span class="n">charged_kinds</span><span class="p">(</span><span class="n">char_atoms</span><span class="p">,</span> <span class="n">kinds</span><span class="p">)</span>
+
+    <span class="c1"># detect uncharged atom connectivity</span>
+    <span class="n">unchar_first</span> <span class="o">=</span> <span class="n">detect_1_connect</span><span class="p">(</span><span class="n">unchar_atoms</span><span class="p">)</span>
+    <span class="n">unchar_cnct</span> <span class="o">=</span> <span class="n">complete_expand</span><span class="p">(</span><span class="n">unchar_first</span><span class="p">)</span>
+
+    <span class="c1"># determine kind and cross check with charged kinds</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unchar_atoms</span><span class="p">):</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">set_connectivity</span><span class="p">(</span><span class="n">unchar_atoms</span><span class="p">,</span> <span class="n">unchar_cnct</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">q_kind</span> <span class="ow">in</span> <span class="n">q_kinds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">q_kind</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">atom</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q_kind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../fromage.scripts.html#fromage.scripts.assign_charges.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">in_xyz</span><span class="p">,</span> <span class="n">in_log</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">bonding</span><span class="p">,</span> <span class="n">thresh</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">in_xyz</span><span class="p">):</span>
+        <span class="n">mol</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">mol_from_file</span><span class="p">(</span><span class="n">in_xyz</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mol</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">mol_from_gauss</span><span class="p">(</span><span class="n">in_log</span><span class="p">)</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">read_g_char</span><span class="p">(</span><span class="n">in_log</span><span class="p">,</span> <span class="n">kind</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">mol_from_file</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="n">mol</span><span class="o">.</span><span class="n">set_bonding</span><span class="p">(</span><span class="n">bonding</span><span class="o">=</span><span class="n">bonding</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">thresh</span><span class="p">)</span>
+    <span class="n">cluster</span><span class="o">.</span><span class="n">set_bonding</span><span class="p">(</span><span class="n">bonding</span><span class="o">=</span><span class="n">bonding</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">thresh</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">atom</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">charges</span><span class="p">):</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">char</span>
+
+    <span class="n">assign_charges</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">cluster</span><span class="p">)</span>
+
+    <span class="c1"># warning if some atoms have not been assigned or if some original charges</span>
+    <span class="c1"># were 0</span>
+    <span class="n">bad_atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">cluster</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.000</span><span class="p">:</span>
+            <span class="n">bad_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bad_atoms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_atoms</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; atoms have null charge!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">bad_atoms</span><span class="p">)</span>
+
+    <span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">cluster</span><span class="p">:</span>
+        <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># parse the input</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;in_log&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input .log file with RESP analysis&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;gaussian.log&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target .xyz file to assign charges to&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;cluster.xyz&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--in_xyz&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input .xyz file of single molecule if the geometry in the log file is not good&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the output file&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;out_char&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--bonding&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Bonding type to be evaluated. Use &#39;dis&#39; (default), &#39;cov&#39; or &#39;vdw&#39; to start calculating the distance at the centre of the atoms, the surface of the covalent sphere or the surface of the vdw sphere.&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;dis&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--threshold&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Maximum length in Angstrom that qualifies as a bond. Default 1.7&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-k&quot;</span><span class="p">,</span> <span class="s2">&quot;--kind&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Kind of population, mulliken or esp&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;esp&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">user_input</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">in_xyz</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">in_log</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+         <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">bonding</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

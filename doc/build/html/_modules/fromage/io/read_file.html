@@ -1,0 +1,1115 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.io.read_file &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.io.read_file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.io.read_file</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions to read files from different pieces of chemistry</span>
+<span class="sd">softare. Most of these functions return lists of Atom objects.</span>
+<span class="sd">When it comes to energy and gradient values, the units generally</span>
+<span class="sd">the same as in the file being read. Keep further unit conversion</span>
+<span class="sd">outside of this file for clarity.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">fromage.utils.per_table</span> <span class="k">as</span> <span class="nn">pt</span>
+
+<span class="kn">from</span> <span class="nn">fromage.utils.mol</span> <span class="k">import</span> <span class="n">Mol</span>
+<span class="kn">from</span> <span class="nn">fromage.utils</span> <span class="k">import</span> <span class="n">per_table</span> <span class="k">as</span> <span class="n">per</span>
+<span class="kn">from</span> <span class="nn">fromage.utils.atom</span> <span class="k">import</span> <span class="n">Atom</span>
+<span class="kn">from</span> <span class="nn">fromage.utils.volume</span> <span class="k">import</span> <span class="n">CubeGrid</span>
+
+
+<div class="viewcode-block" id="read_vasp"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_vasp">[docs]</a><span class="k">def</span> <span class="nf">read_vasp</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read VASP POSCAR-like file.</span>
+
+<span class="sd">    The real use of this function is to handle one file which contains both</span>
+<span class="sd">    coordinates and vectors. The actual VASP program is not used anywhere else.</span>
+<span class="sd">    Make sure the &quot;lattice constant&quot; scaling is set to 1.0, &quot;selective dynamics&quot;</span>
+<span class="sd">    is not enabled and the file is in Cartesian coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    atoms : list of Atom types</span>
+<span class="sd">        Atoms in the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">vasp_file</span><span class="p">:</span>
+        <span class="n">vasp_content</span> <span class="o">=</span> <span class="n">vasp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># lattice vectors</span>
+
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">vasp_content</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">vec2</span> <span class="o">=</span> <span class="n">vasp_content</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">vec3</span> <span class="o">=</span> <span class="n">vasp_content</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="c1"># matrix from vectors</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec1</span>
+    <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec2</span>
+    <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec3</span>
+
+    <span class="c1"># reads names of elements and amounts</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="n">vasp_content</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">amounts_str</span> <span class="o">=</span> <span class="n">vasp_content</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">amounts</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">amounts_str</span><span class="p">)</span>
+
+    <span class="c1"># make Atom objects from file</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
+
+        <span class="c1"># position of the first and last atom of one kind</span>
+        <span class="c1"># in the vasp file</span>
+        <span class="n">firstAt</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">amounts</span><span class="p">[:</span><span class="n">species</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">element</span><span class="p">)])</span>
+        <span class="n">lastAt</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">amounts</span><span class="p">[:</span><span class="n">species</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">vasp_content</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vasp_content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">firstAt</span><span class="p">,</span> <span class="n">lastAt</span><span class="p">):</span>
+                <span class="n">xAtom</span><span class="p">,</span> <span class="n">yAtom</span><span class="p">,</span> <span class="n">zAtom</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Atom</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">xAtom</span><span class="p">,</span> <span class="n">yAtom</span><span class="p">,</span> <span class="n">zAtom</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">M</span><span class="p">,</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="read_xyz"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_xyz">[docs]</a><span class="k">def</span> <span class="nf">read_xyz</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a .xyz file.</span>
+
+<span class="sd">    Works for files containing several configurations e.g. a relaxation</span>
+<span class="sd">    trajectory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atom_step = list of lists of Atom objects</span>
+<span class="sd">        Each element of the list represents a configuration of atoms</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">xyz_file</span><span class="p">:</span>
+        <span class="n">xyz_content</span> <span class="o">=</span> <span class="n">xyz_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># main list where each element is a relaxation step</span>
+    <span class="n">atom_step</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xyz_content</span><span class="p">):</span>
+
+        <span class="c1"># if the line is the amount of atoms in the system</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+
+                <span class="c1"># list of atom objects inside on relaxation step</span>
+                <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># from 2 lines after the amount of atoms to the last atom line</span>
+                <span class="c1"># for the relaxation step</span>
+                <span class="k">for</span> <span class="n">line_in_step</span> <span class="ow">in</span> <span class="n">xyz_content</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="n">elemAtom</span> <span class="o">=</span> <span class="n">line_in_step</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">xAtom</span><span class="p">,</span> <span class="n">yAtom</span><span class="p">,</span> <span class="n">zAtom</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line_in_step</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+                    <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Atom</span><span class="p">(</span><span class="n">elemAtom</span><span class="p">,</span> <span class="n">xAtom</span><span class="p">,</span> <span class="n">yAtom</span><span class="p">,</span> <span class="n">zAtom</span><span class="p">))</span>
+
+                <span class="n">atom_step</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="n">xyz_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">atom_step</span>
+
+
+<div class="viewcode-block" id="read_pos"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_pos">[docs]</a><span class="k">def</span> <span class="nf">read_pos</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the last or only set of atomic positions in a file</span>
+
+<span class="sd">    Currently only .xyz files as they are the most common. To implement more</span>
+<span class="sd">    types, extend this function by parsing the extension but always return the</span>
+<span class="sd">    same. read_pos is to be preferred over read_xyz when only one set of</span>
+<span class="sd">    coordinates is relevant.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atom_step : list of Atom objects</span>
+<span class="sd">        The last or only set of atomic positions in the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read_xyz</span><span class="p">(</span><span class="n">in_name</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</div>
+    <span class="k">return</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="mol_from_file"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.mol_from_file">[docs]</a><span class="k">def</span> <span class="nf">mol_from_file</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a Mol object from a file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atom_step : Mol object</span>
+<span class="sd">        The atomic positions in the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">(</span><span class="n">read_pos</span><span class="p">(</span><span class="n">in_name</span><span class="p">))</span>
+</div>
+    <span class="k">return</span> <span class="n">mol</span>
+
+
+<div class="viewcode-block" id="read_cp2k"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_cp2k">[docs]</a><span class="k">def</span> <span class="nf">read_cp2k</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="s2">&quot;ESP&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the charges and energy in a cp2k output file.</span>
+
+<span class="sd">    Uses CP2K 4.1 formats. Choose between Mulliken, Hirshfeld or RESP charges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    pop : str</span>
+<span class="sd">        Kind of charge to read: mulliken, esp or hirshfeld</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    charges : list of floats</span>
+<span class="sd">        Each partial charge value in the file</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        CP2K calculated energy (Kohn-Sham or otherwise) in Hartree</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">cp2k_file</span><span class="p">:</span>
+        <span class="n">cp2k_content</span> <span class="o">=</span> <span class="n">cp2k_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;mulliken&quot;</span><span class="p">:</span>
+        <span class="n">start_tag</span> <span class="o">=</span> <span class="s2">&quot;Mulliken Population Analysis&quot;</span>
+        <span class="n">char_pos</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">line_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;esp&quot;</span> <span class="ow">or</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;resp&quot;</span><span class="p">:</span>
+        <span class="n">start_tag</span> <span class="o">=</span> <span class="s2">&quot; RESP charges:&quot;</span>
+        <span class="n">char_pos</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">line_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RESP&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;hirshfeld&quot;</span><span class="p">,</span> <span class="s2">&quot;hirsh&quot;</span><span class="p">):</span>
+        <span class="n">start_tag</span> <span class="o">=</span> <span class="s2">&quot;Hirshfeld Charges&quot;</span>
+        <span class="n">char_pos</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">line_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+
+    <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">cp2k_content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">start_tag</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">reading</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">reading</span> <span class="ow">and</span> <span class="n">line_test</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="n">charges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="n">char_pos</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="s2">&quot;Total&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;ENERGY|&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">8</span><span class="p">])</span>
+
+    <span class="n">cp2k_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">charges</span><span class="p">,</span> <span class="n">energy</span>
+
+
+<div class="viewcode-block" id="read_points"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_points">[docs]</a><span class="k">def</span> <span class="nf">read_points</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read point charges from an in-house Ewald.c output.</span>
+
+<span class="sd">    The modified version of Ewald.c is needed. The extension is .pts-cry</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    points : Mol object</span>
+<span class="sd">        Point charges in the file. They have element &quot;point&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">pts_file</span><span class="p">:</span>
+        <span class="n">pts_content</span> <span class="o">=</span> <span class="n">pts_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="c1"># store point charges here</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">pts_content</span><span class="p">:</span>
+        <span class="n">xIn</span><span class="p">,</span> <span class="n">yIn</span><span class="p">,</span> <span class="n">zIn</span><span class="p">,</span> <span class="n">qIn</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="s2">&quot;point&quot;</span><span class="p">,</span> <span class="n">xIn</span><span class="p">,</span> <span class="n">yIn</span><span class="p">,</span> <span class="n">zIn</span><span class="p">,</span> <span class="n">qIn</span><span class="p">)</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<div class="viewcode-block" id="read_g_char"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_g_char">[docs]</a><span class="k">def</span> <span class="nf">read_g_char</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="s2">&quot;ESP&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read charges and energy from a Gaussian log file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    pop : str, optional</span>
+<span class="sd">        Kind of charge to read, mulliken or esp</span>
+<span class="sd">    debug : bool, optional</span>
+<span class="sd">        Return extra energy information. Turn on with care</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    charges : list of floats</span>
+<span class="sd">        Each partial charge value in the file</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        Gaussian calculated energy in Hartree</span>
+<span class="sd">    char_ener : float</span>
+<span class="sd">        Self energy of the point charges</span>
+<span class="sd">    n_char : float</span>
+<span class="sd">        Nuclei-charge interaction energy</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">gauss_file</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">gauss_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># find last occurrence of Mulliken charges</span>
+    <span class="k">if</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;mulliken&quot;</span><span class="p">:</span>
+        <span class="n">last_mull</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> \
+            <span class="n">content</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot; Mulliken charges:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;esp&quot;</span> <span class="ow">or</span> <span class="n">pop</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;resp&quot;</span><span class="p">:</span>
+        <span class="n">last_mull</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> \
+            <span class="n">content</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot; ESP charges:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="n">last_mull</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">charges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># find each occurrence of Energy</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;SCF Done&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;Total Energy&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;Self energy of the charges&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">char_ener</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;Nuclei-charges interaction&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">n_char</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">charges</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">char_ener</span><span class="p">,</span> <span class="n">n_char</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">charges</span><span class="p">,</span> <span class="n">energy</span>
+
+
+<div class="viewcode-block" id="read_bader"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_bader">[docs]</a><span class="k">def</span> <span class="nf">read_bader</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read charges from a Bader program output file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    charges : list of floats</span>
+<span class="sd">        Charges in file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">bader_file</span><span class="p">:</span>
+        <span class="n">content_bader</span> <span class="o">=</span> <span class="n">bader_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># electron charge per atom</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content_bader</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">charge</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="n">charges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">charge</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">charges</span>
+
+
+<div class="viewcode-block" id="read_qe"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_qe">[docs]</a><span class="k">def</span> <span class="nf">read_qe</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the final positions of a QE calculation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Last set of atoms in the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_qe</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">file_qe</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">last_pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">&quot;ATOMIC_POSITIONS&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="n">last_pos</span> <span class="o">=</span> <span class="n">content</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="o">-</span><span class="n">last_pos</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;End final coordinates</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">elem</span><span class="p">,</span> <span class="n">xPos</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">zPos</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">atom_2_add</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">xPos</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">zPos</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_2_add</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="read_gauss"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_gauss">[docs]</a><span class="k">def</span> <span class="nf">read_gauss</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read atoms in a Gaussian input file.</span>
+
+<span class="sd">    The format is quite strict, better modify this function before using it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Last set of atoms in the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_gauss</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">file_gauss</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="n">last_pos</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="n">last_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">elem</span><span class="p">,</span> <span class="n">xPos</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">zPos</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">atom_2_add</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">xPos</span><span class="p">,</span> <span class="n">yPos</span><span class="p">,</span> <span class="n">zPos</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_2_add</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="mol_from_gauss"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.mol_from_gauss">[docs]</a><span class="k">def</span> <span class="nf">mol_from_gauss</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="s2">&quot;ESP&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read Mol from a Gaussian log file</span>
+
+<span class="sd">    Include the requested charges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        in_name : str</span>
+<span class="sd">            Name of the file to read</span>
+<span class="sd">        pop : str, optional</span>
+<span class="sd">            Type of charges requested</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        out_mol : Mol object</span>
+<span class="sd">            The atoms in the Gaussian log file, along with their charge</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read_g_pos</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span>
+    <span class="n">charges</span> <span class="o">=</span> <span class="n">read_g_char</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">charges</span><span class="p">):</span>
+        <span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">char</span>
+    <span class="n">out_mol</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">out_mol</span>
+
+
+<div class="viewcode-block" id="read_fchk"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_fchk">[docs]</a><span class="k">def</span> <span class="nf">read_fchk</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Gaussian .fchk.</span>
+
+<span class="sd">    Returns the total energy, gradients and ground state energy.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        Gaussian total calculated energy in Hartree</span>
+<span class="sd">    grad : list of floats</span>
+<span class="sd">        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr</span>
+<span class="sd">    scf_energy : float</span>
+<span class="sd">        Gaussian ground state calculated energy in Hartree</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+            <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">reading</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()):</span>
+                <span class="n">grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Cartesian Gradient&quot;</span><span class="p">):</span>
+            <span class="n">reading</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Total Energy&quot;</span><span class="p">):</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SCF Energy&quot;</span><span class="p">):</span>
+            <span class="n">scf_energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">energy</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">scf_energy</span>
+
+
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a fromage config file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    settings : dict</span>
+<span class="sd">        A dictionary with the keywords and the user inputs as strings</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">settings</span><span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">settings</span><span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span></div>
+    <span class="k">return</span> <span class="n">settings</span>
+
+
+<div class="viewcode-block" id="read_g_pos"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_g_pos">[docs]</a><span class="k">def</span> <span class="nf">read_g_pos</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read positions from a Gaussian log file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atomic positions at the beginning of the file for a single point .log</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">gauss_file</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">gauss_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="c1"># Input orientation</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;Input orientation:&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">ori_line</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">break</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="n">ori_line</span> <span class="o">+</span> <span class="mi">5</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>  <span class="c1"># if line not number</span>
+            <span class="k">break</span>
+        <span class="n">line_bits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+        <span class="n">symbol</span> <span class="o">=</span> <span class="n">per</span><span class="o">.</span><span class="n">num_to_elem</span><span class="p">(</span><span class="n">line_bits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">atom_to_add</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">line_bits</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line_bits</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line_bits</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_to_add</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="read_ricc2"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_ricc2">[docs]</a><span class="k">def</span> <span class="nf">read_ricc2</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read energies and gradients from a Turbomole ricc2.out file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        Excited state energy in Hartree if any, otherwise the ground state energy</span>
+<span class="sd">    grad : numpy array of floats</span>
+<span class="sd">        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr</span>
+<span class="sd">    scf_energy : float</span>
+<span class="sd">        Ground state energy in Hartree</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">grad_x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">grad_y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">grad_z</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;Total energy of excited state:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;Final CC2 energy&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">scf_energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dE&quot;</span><span class="p">:</span>
+                <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dE/dx&quot;</span><span class="p">:</span>
+                    <span class="n">grad_x</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dE/dy&quot;</span><span class="p">:</span>
+                    <span class="n">grad_y</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;dE/dz&quot;</span><span class="p">:</span>
+                    <span class="n">grad_z</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># combine in correct format</span>
+    <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span><span class="p">,</span> <span class="n">grad_z</span><span class="p">):</span>
+        <span class="n">grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="n">grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+        <span class="n">grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
+    <span class="c1"># for ground state</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">energy</span><span class="p">:</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="n">scf_energy</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">energy</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">scf_energy</span>
+
+
+<div class="viewcode-block" id="read_tbgrad"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_tbgrad">[docs]</a><span class="k">def</span> <span class="nf">read_tbgrad</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read energy gradients from a Turbomole gradient file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    energy : float</span>
+<span class="sd">        Total SCF energy in Hartree</span>
+<span class="sd">    grad : numpy array</span>
+<span class="sd">        Energy gradients of the form x1, y1, z1, x2, ... in Hartree/Bohr</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">sline</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;SCF energy&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sline</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sline</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sline</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;$grad&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">sline</span><span class="p">:</span>
+                    <span class="n">grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">number</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">)))</span>
+</div>
+    <span class="k">return</span> <span class="n">energy</span><span class="p">,</span> <span class="n">grad</span>
+
+
+<div class="viewcode-block" id="read_molcas"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_molcas">[docs]</a><span class="k">def</span> <span class="nf">read_molcas</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read energies and gradients from a Molcas .log file with 2 roots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ex_energy : float</span>
+<span class="sd">        Excited state energy in Hartree if any, otherwise the ground state energy</span>
+<span class="sd">    grad : numpy array of floats</span>
+<span class="sd">        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr</span>
+<span class="sd">    gr_energy : float</span>
+<span class="sd">        Ground state energy in Hartree</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">ex_energy</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">gr_energy</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="c1"># Energies</span>
+            <span class="k">if</span> <span class="s2">&quot;RASSCF root number  1 Total energy:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">gr_energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;RASSCF root number  2 Total energy:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">ex_energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Gradients</span>
+            <span class="k">if</span> <span class="s2">&quot;Molecular gradients&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">reading</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">reading</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+                    <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]]</span>
+                    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">grad</span><span class="p">,</span> <span class="n">nums</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ex_energy</span><span class="p">:</span>
+        <span class="n">ex_energy</span> <span class="o">=</span> <span class="n">gr_energy</span></div>
+    <span class="k">return</span> <span class="n">ex_energy</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">gr_energy</span>
+
+
+<div class="viewcode-block" id="read_dftb_out"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_dftb_out">[docs]</a><span class="k">def</span> <span class="nf">read_dftb_out</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a dftb+ gradient detailed.out file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ex_energy : None</span>
+<span class="sd">        There are no excited state gradients in dftb+ so this will always be empty</span>
+<span class="sd">    grad : numpy array of floats</span>
+<span class="sd">        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr</span>
+<span class="sd">    gr_energy : float</span>
+<span class="sd">        Ground state energy in Hartree</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">exci</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">read_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="n">read_grad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">read_grad</span><span class="p">:</span>
+                <span class="n">atom_grads</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+                <span class="n">grad</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">atom_grads</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;Total Forces&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">read_grad</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="s2">&quot;Total energy&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">gr_energy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;Excitation Energy&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">exci</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>
+    <span class="n">ex_energy</span> <span class="o">=</span> <span class="n">gr_energy</span> <span class="o">+</span> <span class="n">exci</span>
+</div>
+    <span class="k">return</span> <span class="n">ex_energy</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">gr_energy</span>
+
+
+<div class="viewcode-block" id="read_g_cas"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_g_cas">[docs]</a><span class="k">def</span> <span class="nf">read_g_cas</span><span class="p">(</span><span class="n">in_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a Gaussian .log file for CAS calculations</span>
+
+<span class="sd">    Returns the total energy, and gradients for two states</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_name : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    energy_e : float</span>
+<span class="sd">        Gaussian total calculated energy in Hartree for the excited state</span>
+<span class="sd">    grad_e : list of floats</span>
+<span class="sd">        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the excited state</span>
+<span class="sd">    energy_g : float</span>
+<span class="sd">        Gaussian total calculated energy in Hartree for the ground state</span>
+<span class="sd">    grad_g : list of floats</span>
+<span class="sd">        The gradients in form x1,y1,z1,x2,y2,z2 etc. Hartree/Bohr for the ground state</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">grad_g</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">grad_e</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+                <span class="n">reading_e</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">reading_g</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;( 1)     EIGENVALUE&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">energy_g</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;( 2)     EIGENVALUE&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">energy_e</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">reading_g</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                    <span class="n">grad_g</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">reading_e</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                    <span class="n">grad_e</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s2">&quot;Gradient of iOther State&quot;</span> <span class="o">==</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="n">reading_g</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="s2">&quot;Gradient of iVec State.&quot;</span> <span class="o">==</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="n">reading_e</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">grad_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grad_e</span><span class="p">)</span>
+    <span class="n">grad_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grad_g</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">energy_e</span><span class="p">,</span> <span class="n">grad_e</span><span class="p">,</span> <span class="n">energy_g</span><span class="p">,</span> <span class="n">grad_g</span>
+
+
+<div class="viewcode-block" id="read_g_dens"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_g_dens">[docs]</a><span class="k">def</span> <span class="nf">read_g_dens</span><span class="p">(</span><span class="n">in_file</span><span class="p">,</span> <span class="n">total_ci</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the density matrix from a gaussian fchk file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_file : str</span>
+<span class="sd">        Name of the file to read</span>
+<span class="sd">    total_ci : bool optional</span>
+<span class="sd">        If true, reads the total CI (excited state for e.g. TD-DFT) density.</span>
+<span class="sd">        Otherwise it will only read the ground state density.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dens_mat : numpy matrix</span>
+<span class="sd">        The density matrix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">total_ci</span><span class="p">:</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="s2">&quot;Total CI Density&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="s2">&quot;Total SCF Density&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">to_read</span><span class="p">:</span>
+        <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">to_read</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+                <span class="n">reading</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">reading</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]:</span>
+                    <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">reading</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># there are (N^2+N)/2 entries in the half of an N x N matrix, the number of</span>
+    <span class="c1"># the number of orbitals is therefore:</span>
+    <span class="n">n_orb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">dens_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_orb</span><span class="p">,</span> <span class="n">n_orb</span><span class="p">))</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_orb</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">dens_mat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">entries</span><span class="p">[</span><span class="n">count</span><span class="p">]</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</div>
+    <span class="k">return</span> <span class="n">dens_mat</span>
+
+
+<div class="viewcode-block" id="read_vectors"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_vectors">[docs]</a><span class="k">def</span> <span class="nf">read_vectors</span><span class="p">(</span><span class="n">in_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a set of unit cell vectors from a formatted vector file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_file : str</span>
+<span class="sd">        Input file name</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vectors : 3 x 3 numpy array</span>
+<span class="sd">        Unit cell vectors where vector a is vectors[0], b is vectors[1], c is</span>
+<span class="sd">        vectors[2]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">in_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The lattice vector file does not have 3 vectors&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">vectors</span>
+
+
+<div class="viewcode-block" id="read_cube"><a class="viewcode-back" href="../../../fromage.io.html#fromage.io.read_file.read_cube">[docs]</a><span class="k">def</span> <span class="nf">read_cube</span><span class="p">(</span><span class="n">in_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a cube file and return a Mol and a CubeGrid object</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_file : str</span>
+<span class="sd">        Input file name</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_mol : Mol object</span>
+<span class="sd">        The atoms in the cube file</span>
+<span class="sd">    out_cub : CubeGrid object</span>
+<span class="sd">        The grid in the cube file where all distances are in Angstrom</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">xyz_nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">out_mol</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">natoms</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">natoms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]])</span> <span class="o">/</span> <span class="n">pt</span><span class="o">.</span><span class="n">bohrconv</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">xyz_nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]])</span> <span class="o">/</span> <span class="n">pt</span><span class="o">.</span><span class="n">bohrconv</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">xyz_nums</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]])</span> <span class="o">/</span> <span class="n">pt</span><span class="o">.</span><span class="n">bohrconv</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">xyz_nums</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]])</span> <span class="o">/</span> <span class="n">pt</span><span class="o">.</span><span class="n">bohrconv</span>
+                <span class="n">out_cub</span> <span class="o">=</span> <span class="n">CubeGrid</span><span class="p">(</span><span class="n">vectors</span><span class="p">,</span> <span class="n">xyz_nums</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xyz_nums</span><span class="p">[</span>
+                                   <span class="mi">1</span><span class="p">],</span> <span class="n">xyz_nums</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">origin</span><span class="p">)</span>
+                <span class="n">out_cub</span><span class="o">.</span><span class="n">set_grid_coord</span><span class="p">()</span>
+            <span class="k">if</span> <span class="mi">6</span> <span class="o">&lt;=</span> <span class="n">ind</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">6</span> <span class="o">+</span> <span class="n">natoms</span><span class="p">):</span>
+                <span class="n">line_s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">new_atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">()</span>
+                <span class="n">new_atom</span><span class="o">.</span><span class="n">elem</span> <span class="o">=</span> <span class="n">per</span><span class="o">.</span><span class="n">num_to_elem</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line_s</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">new_atom</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">pt</span><span class="o">.</span><span class="n">bohrconv</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line_s</span><span class="p">[</span><span class="mi">2</span><span class="p">:]])</span>
+                <span class="n">out_mol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_atom</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ind</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">6</span> <span class="o">+</span> <span class="n">natoms</span><span class="p">):</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+            <span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">values_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">out_cub</span><span class="o">.</span><span class="n">grid</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_arr</span></div>
+    <span class="k">return</span> <span class="n">out_cub</span><span class="p">,</span> <span class="n">out_mol</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

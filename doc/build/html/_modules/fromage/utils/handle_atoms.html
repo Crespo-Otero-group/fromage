@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.utils.handle_atoms &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.utils.handle_atoms</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.utils.handle_atoms</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Some functions to handle lists of atoms</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
+
+<span class="kn">from</span> <span class="nn">fromage.utils.atom</span> <span class="k">import</span> <span class="n">Atom</span>
+
+
+<div class="viewcode-block" id="select"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.select">[docs]</a><span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select a molecule out of a list of atoms.</span>
+
+<span class="sd">    The function puts a labelled atom in a list of selected atoms. It then</span>
+<span class="sd">    checks for nearby atoms to the selected atoms. If any are found and are not</span>
+<span class="sd">    already selected, they are added to the list. The loop ends when it is</span>
+<span class="sd">    executed and not atoms are added.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_r : float</span>
+<span class="sd">        Maximum distance which is considered a bond</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Cluster of atoms which from which a molecule needs to be extracted</span>
+<span class="sd">    label : int</span>
+<span class="sd">        The number of the atom from which the molecule is generated. Note that</span>
+<span class="sd">        it is the Python label, so starting from 0, unlike the label in most</span>
+<span class="sd">        chemistry software which counts from 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    selected : list of Atom objects</span>
+<span class="sd">        The atoms belonging to the molecule which is selected</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">new_atoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">new_atoms</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">old_atoms</span> <span class="o">=</span> <span class="n">new_atoms</span>
+        <span class="n">new_atoms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">old_atoms</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="c1"># find atoms bonded to the newest atoms in the list</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_r</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+                    <span class="n">new_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="c1"># if no more atoms are found stop the loop</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="kc">True</span>
+</div>
+    <span class="k">return</span> <span class="n">selected</span>
+
+
+<div class="viewcode-block" id="select_per"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.select_per">[docs]</a><span class="k">def</span> <span class="nf">select_per</span><span class="p">(</span><span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select a molecule out of a list of atoms in a periodic system.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_r : float</span>
+<span class="sd">        Maximum distance which is considered a bond</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Cluster of atoms which from which a molecule needs to be extracted</span>
+<span class="sd">    label : int</span>
+<span class="sd">        The number of the atom from which the molecule is generated. Note that</span>
+<span class="sd">        it is the Python label, so starting from 0, unlike the label in most</span>
+<span class="sd">        chemistry software which counts from 1</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    selected : list of Atom objects</span>
+<span class="sd">        The atoms belonging to the molecule which is selected</span>
+<span class="sd">    selected_img : list of Atom objects</span>
+<span class="sd">        The atoms belonging to the molecule which is selected with certain</span>
+<span class="sd">        atoms translated so that the molecule is fully connected without</span>
+<span class="sd">        periodic boundaries</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># list of selected atoms from the unit cell</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span>
+    <span class="c1"># list of selected atoms where the periodic image</span>
+    <span class="c1"># atoms are translated back to form a molecule</span>
+    <span class="n">selected_img</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span>
+
+    <span class="c1"># n is true as long as there are still molecules to add to the list</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_img</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="c1"># contains the distance from the point or image and the</span>
+                <span class="c1"># coordinates of the point or image</span>
+                <span class="n">gamma</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">dist_lat</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">vectors</span><span class="p">[</span>
+                    <span class="mi">0</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+                <span class="c1"># if the atom is close enough to be part of the molecule</span>
+                <span class="c1"># and is not already part of the molecule</span>
+                <span class="k">if</span> <span class="n">gamma</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_r</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+                    <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                    <span class="n">k</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">selected_img</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="kc">True</span>
+</div>
+    <span class="k">return</span> <span class="n">selected</span><span class="p">,</span> <span class="n">selected_img</span>
+
+
+<div class="viewcode-block" id="multi_select"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.multi_select">[docs]</a><span class="k">def</span> <span class="nf">multi_select</span><span class="p">(</span><span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select multiple molecules in a periodic system</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_r : float</span>
+<span class="sd">        Maximum distance which is considered a bond</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Cluster of atoms which from which molecules needs to be extracted</span>
+<span class="sd">    labels : list of ints</span>
+<span class="sd">        The numbers of the atom from which the molecules are generated. Note</span>
+<span class="sd">        that it is the Python label, so starting from 0, unlike the label in</span>
+<span class="sd">        most chemistry software which counts from 1</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    selected : list of Atom objects</span>
+<span class="sd">        The atoms belonging to the molecules which are selected</span>
+<span class="sd">    selected_img : list of Atom objects</span>
+<span class="sd">        The atoms belonging to the molecules which are selected with certain</span>
+<span class="sd">        atoms translated so that the molecules are fully connected without</span>
+<span class="sd">        periodic boundaries</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">selected_mols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">selected_img_mols</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="n">selected_mol</span><span class="p">,</span> <span class="n">selected_img_mol</span> <span class="o">=</span> <span class="n">select_per</span><span class="p">(</span>
+            <span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">vectors</span><span class="p">)</span>
+        <span class="n">selected_mols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_mol</span><span class="p">)</span>
+        <span class="n">selected_img_mols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected_img_mol</span><span class="p">)</span>
+
+        <span class="c1"># checks to see if the user selected the same molecule twice</span>
+    <span class="k">for</span> <span class="n">moleculeI</span> <span class="ow">in</span> <span class="n">selected_mols</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">moleculeJ</span> <span class="ow">in</span> <span class="n">selected_mols</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">moleculeI</span> <span class="o">!=</span> <span class="n">moleculeJ</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">moleculeI</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">moleculeJ</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;You have selected several atoms in the same molecule!&quot;</span><span class="p">)</span>
+    <span class="n">tmp_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">selected_mols</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+    <span class="n">tmp_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">selected_img_mols</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+
+    <span class="n">selected_mols</span> <span class="o">=</span> <span class="n">tmp_a</span>
+    <span class="n">selected_img_mols</span> <span class="o">=</span> <span class="n">tmp_b</span>
+</div>
+    <span class="k">return</span> <span class="n">selected_mols</span><span class="p">,</span> <span class="n">selected_img_mols</span>
+
+
+<div class="viewcode-block" id="make_molecules"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.make_molecules">[docs]</a><span class="k">def</span> <span class="nf">make_molecules</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">bl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate list of molecules based on bond length bl</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms: list of Atom objects</span>
+<span class="sd">    bl: float</span>
+<span class="sd">        Bond length in unit of input file</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    molecules: list of lists</span>
+<span class="sd">        List L of length M molecules, where each member of L is a list of atom objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of molecules</span>
+    <span class="n">max_length</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># number of atoms in a molecule</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atom</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">molecules</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]:</span>
+            <span class="c1"># creates a molecule if atom not already in molecules list</span>
+            <span class="n">molecule</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">bl</span><span class="p">,</span> <span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">:],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_length</span><span class="p">:</span>
+                <span class="n">max_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+                <span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span> <span class="o">==</span> <span class="n">max_length</span><span class="p">:</span>
+                <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">molecules</span>
+
+
+<div class="viewcode-block" id="complete_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.complete_mol">[docs]</a><span class="k">def</span> <span class="nf">complete_mol</span><span class="p">(</span><span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Take a cell and complete one molecule.</span>
+
+<span class="sd">    The objective is to end up with a unit cell where the molecule of interest</span>
+<span class="sd">    is complete. The rest of the atoms of the cell can remain intact. Note that</span>
+<span class="sd">    the input atoms are transformed and are the same as are present in the</span>
+<span class="sd">    output.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    max_r : float</span>
+<span class="sd">        Maximum distance which is considered a bond</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Cluster of atoms which from which a molecule needs to be extracted</span>
+<span class="sd">    label : list of ints</span>
+<span class="sd">        The number of the atom from which the molecule is generated. Note that</span>
+<span class="sd">        it is the Python label, so starting from 0, unlike the label in most</span>
+<span class="sd">        chemistry software which counts from 1</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    full_mol_trans : list of Atom objects</span>
+<span class="sd">        The now complete molecule</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        The cell with the completed molecule. NB the Atom objects of the completed molecule</span>
+<span class="sd">        reference the same objects as full_mol_trans</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># the atoms which are part of the same selected molecule.</span>
+    <span class="c1"># first with intact coordinates and second with appropriate</span>
+    <span class="c1"># atoms translated to join up the molecule with their image</span>
+    <span class="n">full_mol</span><span class="p">,</span> <span class="n">full_mol_trans</span> <span class="o">=</span> <span class="n">multi_select</span><span class="p">(</span><span class="n">max_r</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">vectors</span><span class="p">)</span>
+
+    <span class="c1"># using an explicit loop does not work for some reason,</span>
+    <span class="c1"># use list comprehension</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">atoms</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">full_mol</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">full_mol_trans</span><span class="p">:</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">full_mol_trans</span><span class="p">,</span> <span class="n">atoms</span>
+
+
+<div class="viewcode-block" id="complete_cell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.complete_cell">[docs]</a><span class="k">def</span> <span class="nf">complete_cell</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">max_bl</span><span class="o">=</span><span class="mf">1.7</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a cell where atoms have been translated to complete all molecules of</span>
+<span class="sd">    the cell</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        The input truncated unit cell</span>
+<span class="sd">    vectors : 3 x 3 numpy array</span>
+<span class="sd">        The unit cell vectors</span>
+<span class="sd">    max_bl : float</span>
+<span class="sd">        The maximum interatomic distance which is considered a bond</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_cell : list of Atom objects</span>
+<span class="sd">        The new untruncated cell</span>
+<span class="sd">    full_mol_l : list of lists of Atom objects</span>
+<span class="sd">        Each molecule in the untruncated cell</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">full_mol_l</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">full_mol</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">complete_mol</span><span class="p">(</span><span class="n">max_bl</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vectors</span><span class="p">)</span>
+        <span class="n">full_mol_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_mol</span><span class="p">)</span>
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">cell</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">full_mol</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+    <span class="n">out_cell</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">full_mol_l</span><span class="p">:</span>
+        <span class="n">out_cell</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out_cell</span><span class="p">,</span> <span class="n">full_mol_l</span>
+
+
+<div class="viewcode-block" id="find_centroid"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.find_centroid">[docs]</a><span class="k">def</span> <span class="nf">find_centroid</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the centroid of a list of atoms.&quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="n">baryX</span><span class="p">,</span> <span class="n">baryY</span><span class="p">,</span> <span class="n">baryZ</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">baryX</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">N</span>
+        <span class="n">baryY</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="n">N</span>
+        <span class="n">baryZ</span> <span class="o">+=</span> <span class="n">atom</span><span class="o">.</span><span class="n">z</span> <span class="o">/</span> <span class="n">N</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">baryX</span><span class="p">,</span> <span class="n">baryY</span><span class="p">,</span> <span class="n">baryZ</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="center_mol"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.center_mol">[docs]</a><span class="k">def</span> <span class="nf">center_mol</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Translate molecules to center&quot;&quot;&quot;</span>
+    <span class="n">c_x</span><span class="p">,</span> <span class="n">c_y</span><span class="p">,</span> <span class="n">c_z</span> <span class="o">=</span> <span class="n">find_centroid</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">c_x</span><span class="p">,</span> <span class="o">-</span><span class="n">c_y</span><span class="p">,</span> <span class="o">-</span><span class="n">c_z</span><span class="p">)</span>
+</div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="translate_atoms"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.translate_atoms">[docs]</a><span class="k">def</span> <span class="nf">translate_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translate some atoms by a vector</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Untranslated atoms</span>
+<span class="sd">    vector : 3 x 1 numpy array</span>
+<span class="sd">        Translation vector</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">v_translate</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span></div>
+    <span class="k">return</span>
+
+
+<div class="viewcode-block" id="supercell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.supercell">[docs]</a><span class="k">def</span> <span class="nf">supercell</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a supercell of I x J x K</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Input cell atoms</span>
+<span class="sd">    vectors : 3 x 3 numpy array</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    trans : numpy array of length 3</span>
+<span class="sd">        Multiplications of the primitive cell</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    supercell : list of Atom objects</span>
+<span class="sd">        New supercell of Atoms</span>
+<span class="sd">    out_vec : 3 x 3 numpy array</span>
+<span class="sd">        The lattice vectors of the new cell</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cart</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">supercell</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">cart</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trans</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="n">comp</span><span class="p">])[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">new_atoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">v_translated</span><span class="p">(</span><span class="n">mult</span> <span class="o">*</span> <span class="n">vectors</span><span class="p">[</span><span class="n">comp</span><span class="p">])</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">supercell</span><span class="p">]</span>
+                <span class="n">supercell</span> <span class="o">+=</span> <span class="n">new_atoms</span>
+    <span class="n">out_vec</span> <span class="o">=</span> <span class="p">(</span><span class="n">vectors</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">trans</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span><span class="o">.</span><span class="n">T</span></div>
+    <span class="k">return</span> <span class="n">supercell</span><span class="p">,</span> <span class="n">out_vec</span>
+
+
+<div class="viewcode-block" id="make_mega_cell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.make_mega_cell">[docs]</a><span class="k">def</span> <span class="nf">make_mega_cell</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">traAN</span><span class="p">,</span> <span class="n">traBN</span><span class="p">,</span> <span class="n">traCN</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="n">alt_multi</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a bigger supercell out of an input cell.</span>
+
+<span class="sd">    The cell is multiplied positively and negatively through each lattice</span>
+<span class="sd">    vector so that the supercluster ends up being</span>
+<span class="sd">    (1+2*traAN)*(1+2*traBN)*(1+2*traCN) times larger. For example if the</span>
+<span class="sd">    input is 1,1,1 for a cubic unit cell, the output will be the original unit</span>
+<span class="sd">    cell surrounded by 26 other unit cells forming a total 3x3x3 cube.</span>
+
+<span class="sd">    Alternatively, the multiplication can be centered around a corner of the</span>
+<span class="sd">    unit cell instead of the centre. In that case the supercluster ends up being</span>
+<span class="sd">    only (2*traAN)*(2*traBN)*(2*traCN)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        Atoms in the cell</span>
+<span class="sd">    traAN,traBN,traCN : ints</span>
+<span class="sd">        Number of times the cell should be multiplied in each cell direction,</span>
+<span class="sd">        positively and negatively</span>
+<span class="sd">    vectors : 3x3 matrix</span>
+<span class="sd">        Lattice vectors</span>
+<span class="sd">    alt_multi : bool</span>
+<span class="sd">        Determines the kind of multiplication. True is centre of the cell as</span>
+<span class="sd">        the origin, False is corner of the cell.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mega_cell : list of Atom objects</span>
+<span class="sd">        The resulting supercell</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mega_cell</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">alt_multi</span><span class="p">:</span>
+        <span class="n">traA</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traAN</span><span class="p">,</span> <span class="n">traAN</span><span class="p">)</span>
+        <span class="n">traB</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traBN</span><span class="p">,</span> <span class="n">traBN</span><span class="p">)</span>
+        <span class="n">traC</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traCN</span><span class="p">,</span> <span class="n">traCN</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">traA</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traAN</span><span class="p">,</span> <span class="n">traAN</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># +1 because that is how range() works</span>
+        <span class="n">traB</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traBN</span><span class="p">,</span> <span class="n">traBN</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">traC</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">traCN</span><span class="p">,</span> <span class="n">traCN</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># multiplying the cell</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">traA</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">traB</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">traC</span><span class="p">:</span>
+                <span class="n">traX</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> \
+                    <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">k</span>
+                <span class="n">traY</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> \
+                    <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">k</span>
+                <span class="n">traZ</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> \
+                    <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">k</span>
+
+                <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+                    <span class="n">mega_cell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">translated</span><span class="p">(</span><span class="n">traX</span><span class="p">,</span> <span class="n">traY</span><span class="p">,</span> <span class="n">traZ</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">mega_cell</span>
+
+
+<div class="viewcode-block" id="make_cluster"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.make_cluster">[docs]</a><span class="k">def</span> <span class="nf">make_cluster</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">clust_rad</span><span class="p">,</span> <span class="n">max_bl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a cluster of molecules from a cluster of atoms.</span>
+
+<span class="sd">    Make sure the input cluster of atoms is large enough to contain the</span>
+<span class="sd">    desired cluster of molecules. You can generate a large cluster of atoms with</span>
+<span class="sd">    make_mega_cell. The molecules are defined as any with atoms falling within</span>
+<span class="sd">    a certain radius of the origin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms : list of Atom objects</span>
+<span class="sd">        A large cluster of atoms</span>
+<span class="sd">    clust_rad : float</span>
+<span class="sd">        Radius determining the initial atoms of the cluster of molecules. These</span>
+<span class="sd">        atoms are then the seed for full molecules</span>
+<span class="sd">    max_bl : float</span>
+<span class="sd">        Maximum distance which counts as a bond</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clust_atoms : list of Atom objects</span>
+<span class="sd">        A list of atoms which form a cluster of molecules</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># atoms within the sphere of rad clust_rad</span>
+    <span class="n">seed_atoms</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">clust_rad</span><span class="p">:</span>
+            <span class="n">seed_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+    <span class="c1"># atoms in the cluster (seed_atoms + atoms to complete molecules)</span>
+    <span class="n">clust_atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">seed_atoms</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atom</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">clust_atoms</span><span class="p">:</span>
+            <span class="n">mol2Add</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">max_bl</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">atoms</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">atom2Add</span> <span class="ow">in</span> <span class="n">mol2Add</span><span class="p">:</span>
+                <span class="n">clust_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom2Add</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">clust_atoms</span>
+
+
+<div class="viewcode-block" id="array2atom"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.handle_atoms.array2atom">[docs]</a><span class="k">def</span> <span class="nf">array2atom</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom</span>
+<span class="sd">    objects</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    template : list of Atom objects</span>
+<span class="sd">        A list of the same length of the desired one used to determine the</span>
+<span class="sd">        elements of the atoms</span>
+<span class="sd">    pos : list of floats</span>
+<span class="sd">        List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_atoms : list of Atom objects</span>
+<span class="sd">        Resulting atoms</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sliced_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span>
+    <span class="n">out_atoms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">sliced_pos</span><span class="p">):</span>
+        <span class="n">new_atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">atom</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">atom</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">atom</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">atom</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_atom</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out_atoms</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

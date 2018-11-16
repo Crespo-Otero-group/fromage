@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. ONIOM cluster models &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="index.html"/>
+        <link rel="next" title="2. Ewald point charge fitting" href="ewald.html"/>
+        <link rel="prev" title="6. References" href="zrefs.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. ONIOM cluster models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#embedded-cluster">1.1. Embedded Cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ewald-embedded-cluster">1.2. Ewald Embedded Cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#self-consistent-ewald-embedded-cluster">1.3. Self-Consistent Ewald Embedded Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. ONIOM cluster models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cluster_models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="oniom-cluster-models">
+<h1>1. ONIOM cluster models<a class="headerlink" href="#oniom-cluster-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="embedded-cluster">
+<h2>1.1. Embedded Cluster<a class="headerlink" href="#embedded-cluster" title="Permalink to this headline">¶</a></h2>
+<p>In order to investigate the local photochemical behaviour of molecular crystals,
+it is practical to use a multiscale method which partitions the system in an
+excited and a ground state region.</p>
+<p>First, a molecule (or several) is selected from the unit cell to become the
+<a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a>. It is placed in the middle of a large
+supercell from which a surrounding shell of molecules is selected, producing a
+cluster (the <a class="reference internal" href="gloss.html#term-real-system"><span class="xref std std-term">real system</span></a>). A molecule is selected if any of
+its atoms fall within a chosen distance of the centroid of the model system.</p>
+<p>With this partitioned cluster, we use the <a class="reference internal" href="gloss.html#term-oniom"><span class="xref std std-term">ONIOM</span></a> energy expression<a class="reference internal" href="zrefs.html#dapprich1999" id="id1">[5]</a> to recover a multiscale energy:</p>
+<div class="math notranslate">
+\[E_{ONIOM} = E_{mh} + E_{rl} - E_{ml}\]</div>
+<p>For straightforward <a class="reference internal" href="gloss.html#term-mechanical-embedding"><span class="xref std std-term">mechanical embedding</span></a>, the
+terms <span class="math notranslate">\(E_{mh}\)</span>, <span class="math notranslate">\(E_{rl}\)</span> and <span class="math notranslate">\(E_{ml}\)</span> are simply the energy of
+the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a> at a high level of theory, the
+<a class="reference internal" href="gloss.html#term-real-system"><span class="xref std std-term">real system</span></a> at a low level of theory, and the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model
+system</span></a> at a low level of theory.</p>
+<p>However this scheme only includes intersystem interactions at the low (ground
+state) level of theory. To include intersystem Coulombic interactions in the
+excited state, we use point charges. This is called <a class="reference internal" href="gloss.html#term-electrostatic-embedding"><span class="xref std std-term">electrostatic
+embedding</span></a> in the general <a class="reference internal" href="gloss.html#term-oniom"><span class="xref std std-term">ONIOM</span></a> literature and
+the <a class="reference internal" href="gloss.html#term-ec"><span class="xref std std-term">Embedded Cluster (EC) model</span></a> in this implementation.</p>
+<p>The <a class="reference internal" href="gloss.html#term-mh"><span class="xref std std-term">mh</span></a> calculation is embedded in point charges located at the atomic
+sites of the surrounding cluster molecules. The value of these point charges is
+not uniquely defined and a discussion is offered in a different
+<a class="reference internal" href="pop.html#pop"><span class="std std-ref">section</span></a>.  In order to avoid the double counting of electrostatic
+interactions, point charges must also be included in the <a class="reference internal" href="gloss.html#term-ml"><span class="xref std std-term">ml</span></a> term.</p>
+<p>Embedded cluster models have successfully been used by Ciofini’s group in
+characterising excited states in molecular crystals.<a class="reference internal" href="zrefs.html#presti2014" id="id2">[16]</a><a class="reference internal" href="zrefs.html#presti2016" id="id3">[17]</a><a class="reference internal" href="zrefs.html#presti2016a" id="id4">[18]</a></p>
+</div>
+<div class="section" id="ewald-embedded-cluster">
+<h2>1.2. Ewald Embedded Cluster<a class="headerlink" href="#ewald-embedded-cluster" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="gloss.html#term-ec"><span class="xref std std-term">EC</span></a> method described above represents short range interactions to a
+reasonable extent. However the long range interactions, which are predominantly
+electrostatic, are completely omitted. In fact they cannot be approximated by
+increasing the size of the real system because the Madelung sum is conditionally
+convergent<a class="reference internal" href="zrefs.html#kittel1986" id="id5">[12]</a>. To remedy this, we use an Ewald embedding
+scheme<a class="reference internal" href="zrefs.html#klintenberg2000" id="id6">[13]</a><a class="reference internal" href="zrefs.html#derenzo2000" id="id7">[6]</a> in <a class="reference internal" href="gloss.html#term-mh"><span class="xref std std-term">mh</span></a> where a large array of
+point charges at lattice positions is generated and then fitted to match the
+Ewald potential. The combination of point charge Ewald embedding and <a class="reference internal" href="gloss.html#term-ec"><span class="xref std std-term">EC</span></a>
+is the <a class="reference internal" href="gloss.html#term-eec"><span class="xref std std-term">Ewald Embedded Cluster (EEC) method</span></a>.</p>
+<p>This method requires some justification. First of all, the long range
+electrostatic charges of the crystal are not cancelled in the <a class="reference internal" href="gloss.html#term-ml"><span class="xref std std-term">ml</span></a> term.
+If we wished, we could embed <a class="reference internal" href="gloss.html#term-rl"><span class="xref std std-term">rl</span></a> and <a class="reference internal" href="gloss.html#term-ml"><span class="xref std std-term">ml</span></a> in Ewald fitted point
+charges. However when we perform geometry optimisation, the surrounding cluster
+is fixed in place. Therefore the additional computation of the Ewald point
+charges in the ground state Hamiltonians would only add a correcting constant
+term.</p>
+<p>Another first-glance objection is that the <a class="reference internal" href="gloss.html#term-mh"><span class="xref std std-term">mh</span></a> charges from the
+surrounding molecules which were included in the <a class="reference internal" href="gloss.html#term-ec"><span class="xref std std-term">EC</span></a> model have
+potentially been modified to match the Ewald potential, thus rendering the
+cancellation of ground state interactions by the embedding of <a class="reference internal" href="gloss.html#term-ml"><span class="xref std std-term">ml</span></a>
+inexact. However by definition the Ewald potential contains the totality of the
+Coulombic potential of the crystal, both short and long ranged. Furthermore a
+spherical region of the Ewald point charge array of a chosen radius can be
+chosen to remain of fixed charge, providing a ‘buffer zone’ from any highly
+deviated charges which might break the point charge approximation.</p>
+</div>
+<div class="section" id="self-consistent-ewald-embedded-cluster">
+<h2>1.3. Self-Consistent Ewald Embedded Cluster<a class="headerlink" href="#self-consistent-ewald-embedded-cluster" title="Permalink to this headline">¶</a></h2>
+<p>A major omission from the <a class="reference internal" href="gloss.html#term-ec"><span class="xref std std-term">EC</span></a> and <a class="reference internal" href="gloss.html#term-eec"><span class="xref std std-term">EEC</span></a> models is the electrostatic
+response to the excitation of the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a> by the
+surrounding cluster. To recover mutual polarisation effects, we employ an
+extreme model where the entire crystal is excited at an electrostatic
+equilibrium. The model system is embedded in Ewald point charges as in
+<a class="reference internal" href="gloss.html#term-eec"><span class="xref std std-term">EEC</span></a> at the optimised ground state position. A population analysis is
+carried out on the model system whose charges are then redistributed in the
+embedding supercell and gain fitted to the Ewald potential. This loop is
+repeated until self-consistency.</p>
+<p>The method is adapted from the work of Wilbraham <em>et al</em>.<a class="reference internal" href="zrefs.html#wilbraham2016a" id="id8">[21]</a><a class="reference internal" href="zrefs.html#presti2017" id="id9">[19]</a> Self-consistent Ewald embedding schemes were
+previously used in the determination of NMR parameters<a class="reference internal" href="zrefs.html#weber2010" id="id10">[20]</a></p>
+<p>This scheme is termed the Self-Consistent Ewald Embedded Cluster (<a class="reference internal" href="gloss.html#term-sc-eec"><span class="xref std std-term">SC-EEC</span></a>-S<sub>1</sub>). It accurately represents short range electrostatic
+interactions from a mutually polarising delocalised excitation. Alternatively,
+the self consistent loop can be performed in the ground state which would give
+similar results to <a class="reference internal" href="gloss.html#term-eec"><span class="xref std std-term">EEC</span></a> (<a class="reference internal" href="gloss.html#term-sc-eec"><span class="xref std std-term">SC-EEC</span></a>-S<sub>0</sub>).</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ewald.html" class="btn btn-neutral float-right" title="2. Ewald point charge fitting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="zrefs.html" class="btn btn-neutral" title="6. References" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

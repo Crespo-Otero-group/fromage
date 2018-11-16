@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. fromage API &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="index.html"/>
+        <link rel="next" title="5.1. fromage package" href="fromage.html"/>
+        <link rel="prev" title="4. Miscellaneous scripts" href="script.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. fromage API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fromage.html">5.1. fromage package</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>5. fromage API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fromage-api">
+<h1>5. fromage API<a class="headerlink" href="#fromage-api" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fromage.html">5.1. fromage package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fromage.html#subpackages">5.1.1. Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="fromage.fdist.html">5.1.1.1. fromage.fdist package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fromage.fdist.html#submodules">5.1.1.1.1. Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.fdist.html#module-fromage.fdist.fdist">5.1.1.1.2. fromage.fdist.fdist module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.fdist.html#module-fromage.fdist">5.1.1.1.3. Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fromage.io.html">5.1.1.2. fromage.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fromage.io.html#submodules">5.1.1.2.1. Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.io.html#module-fromage.io.edit_file">5.1.1.2.2. fromage.io.edit_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.io.html#module-fromage.io.parse_config_file">5.1.1.2.3. fromage.io.parse_config_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.io.html#module-fromage.io.read_file">5.1.1.2.4. fromage.io.read_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.io.html#module-fromage.io">5.1.1.2.5. Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fromage.scripts.html">5.1.1.3. fromage.scripts package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#submodules">5.1.1.3.1. Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.assign_charges">5.1.1.3.2. fromage.scripts.assign_charges module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.dimer_select">5.1.1.3.3. fromage.scripts.dimer_select module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.pick_mol">5.1.1.3.4. fromage.scripts.pick_mol module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.pop_stat">5.1.1.3.5. fromage.scripts.pop_stat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.prepare_calculation">5.1.1.3.6. fromage.scripts.prepare_calculation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.run_fromage">5.1.1.3.7. fromage.scripts.run_fromage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts.uc_tools">5.1.1.3.8. fromage.scripts.uc_tools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.scripts.html#module-fromage.scripts">5.1.1.3.9. Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fromage.utils.html">5.1.1.4. fromage.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#submodules">5.1.1.4.1. Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.atom">5.1.1.4.2. fromage.utils.atom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.calc">5.1.1.4.3. fromage.utils.calc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.fit">5.1.1.4.4. fromage.utils.fit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.handle_atoms">5.1.1.4.5. fromage.utils.handle_atoms module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.mol">5.1.1.4.6. fromage.utils.mol module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.per_table">5.1.1.4.7. fromage.utils.per_table module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils.volume">5.1.1.4.8. fromage.utils.volume module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fromage.utils.html#module-fromage.utils">5.1.1.4.9. Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fromage.html#module-fromage">5.1.2. Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fromage.html" class="btn btn-neutral float-right" title="5.1. fromage package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="script.html" class="btn btn-neutral" title="4. Miscellaneous scripts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

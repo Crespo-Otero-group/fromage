@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fromage.utils.fit &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../input.html">2. Input file description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>fromage.utils.fit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fromage.utils.fit</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fit point charges to match a given potential&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">fromage.utils.mol</span> <span class="k">import</span> <span class="n">Mol</span>
+
+<div class="viewcode-block" id="shell_region"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.shell_region">[docs]</a><span class="k">def</span> <span class="nf">shell_region</span><span class="p">(</span><span class="n">in_grid</span><span class="p">,</span> <span class="n">sample_atoms</span><span class="p">,</span> <span class="n">inner_r</span><span class="p">,</span> <span class="n">outer_r</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return grid points in shell regions around given points</span>
+
+<span class="sd">    The shell region is determined by inner and outer radii which are then</span>
+<span class="sd">    scaled by the wdv radii of the corresponding atoms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_grid : numpy array of N x 4</span>
+<span class="sd">        A real space grid representing a field with each row being</span>
+<span class="sd">        [x y z value]</span>
+<span class="sd">    sample_atoms : Mol object</span>
+<span class="sd">        The atoms which are to be enclosed by the shells</span>
+<span class="sd">    inner_r : float</span>
+<span class="sd">        The inner radius of the shell before wdv scaling</span>
+<span class="sd">    outer_r : float</span>
+<span class="sd">        The outer radius of the shell before scaling</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shell_points : numpy N x 4 array</span>
+<span class="sd">        The sampling points with rows as x1 y1 z1 value1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">shell_points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">in_grid</span><span class="p">:</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">sample_atoms</span><span class="p">:</span>
+            <span class="c1"># we compare squared distances to limit the amount of sqrt</span>
+            <span class="c1"># operations</span>
+            <span class="n">in_r_scaled2</span> <span class="o">=</span> <span class="p">(</span><span class="n">inner_r</span> <span class="o">*</span> <span class="n">atom</span><span class="o">.</span><span class="n">cov</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">out_r_scaled2</span> <span class="o">=</span> <span class="p">(</span><span class="n">outer_r</span> <span class="o">*</span> <span class="n">atom</span><span class="o">.</span><span class="n">cov</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">dist2</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">v_dist2</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">in_r_scaled2</span> <span class="o">&lt;=</span> <span class="n">dist2</span> <span class="o">&lt;=</span> <span class="n">out_r_scaled2</span><span class="p">:</span>
+                <span class="n">add</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
+            <span class="n">shell_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="n">shell_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shell_points</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">shell_points</span>
+
+<div class="viewcode-block" id="alt_shell_region"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.alt_shell_region">[docs]</a><span class="k">def</span> <span class="nf">alt_shell_region</span><span class="p">(</span><span class="n">in_grid</span><span class="p">,</span> <span class="n">sample_atoms</span><span class="p">,</span> <span class="n">inner_r</span><span class="p">,</span> <span class="n">outer_r</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return grid points in shell regions around given points</span>
+
+<span class="sd">    The shell region is determined by inner and outer radii which are then</span>
+<span class="sd">    scaled by the wdv radii of the corresponding atoms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_grid : numpy array of N x 4</span>
+<span class="sd">        A real space grid representing a field with each row being</span>
+<span class="sd">        [x y z value]</span>
+<span class="sd">    sample_atoms : Mol object</span>
+<span class="sd">        The atoms which are to be enclosed by the shells</span>
+<span class="sd">    inner_r : float</span>
+<span class="sd">        The inner radius of the shell before wdv scaling</span>
+<span class="sd">    outer_r : float</span>
+<span class="sd">        The outer radius of the shell before scaling</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shell_points : numpy N x 4 array</span>
+<span class="sd">        The sampling points with rows as x1 y1 z1 value1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># array full of False</span>
+    <span class="n">keep_bool_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">in_grid</span><span class="p">)),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">sample_atoms</span><span class="p">:</span>
+        <span class="n">scaled_inner_r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">vdw</span> <span class="o">*</span> <span class="n">inner_r</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">scaled_outer_r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">vdw</span> <span class="o">*</span> <span class="n">outer_r</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># array of vectors atom -&gt; points</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">in_grid</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">atom</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+        <span class="c1"># array of distances**2 atom -&gt; points</span>
+        <span class="n">distances2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ij-&gt;i&#39;</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="n">diff</span><span class="p">)</span>
+        <span class="n">bool_arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">scaled_inner_r2</span> <span class="o">&lt;</span> <span class="n">distances2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">distances2</span> <span class="o">&lt;</span> <span class="n">scaled_outer_r2</span><span class="p">)</span>
+        <span class="c1"># make True all of the indices that satisfied the condition</span>
+        <span class="n">keep_bool_arr</span> <span class="o">+=</span> <span class="n">bool_arr</span>
+
+    <span class="n">shell_points</span> <span class="o">=</span> <span class="n">in_grid</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">keep_bool_arr</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span></div>
+    <span class="k">return</span> <span class="n">shell_points</span>
+
+<div class="viewcode-block" id="coeff_mat"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.coeff_mat">[docs]</a><span class="k">def</span> <span class="nf">coeff_mat</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the coefficients matrix&quot;&quot;&quot;</span>
+    <span class="n">out_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_points</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+        <span class="n">out_mat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff_row</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">sam</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out_mat</span>
+
+
+<div class="viewcode-block" id="coeff_row"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.coeff_row">[docs]</a><span class="k">def</span> <span class="nf">coeff_row</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return row of the coefficients matrix&quot;&quot;&quot;</span>
+    <span class="n">l_row</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">var_points</span><span class="p">:</span>
+<span class="c1">#        entry = 1 / point.dist(sample)</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">point</span><span class="o">.</span><span class="n">v_dist</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+        <span class="n">l_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">l_row</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">row</span>
+
+
+<div class="viewcode-block" id="dep_var"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.dep_var">[docs]</a><span class="k">def</span> <span class="nf">dep_var</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">fix_points</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the dependent variable array&quot;&quot;&quot;</span>
+    <span class="n">l_dep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sam</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+        <span class="c1"># entry = sam.es - \</span>
+        <span class="c1">#     var_points.es_pot(sam.get_pos()) - fix_points.es_pot(sam.get_pos())</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">sam</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> \
+            <span class="n">var_points</span><span class="o">.</span><span class="n">es_pot</span><span class="p">(</span><span class="n">sam</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="n">fix_points</span><span class="o">.</span><span class="n">es_pot</span><span class="p">(</span><span class="n">sam</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">l_dep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="n">out_dep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">l_dep</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">out_dep</span>
+
+
+<div class="viewcode-block" id="fit_points"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.fit_points">[docs]</a><span class="k">def</span> <span class="nf">fit_points</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">fix_points</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a new set of point charges that matches the potential at points</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    var_points : Mol object</span>
+<span class="sd">        Point charges to be fitted</span>
+<span class="sd">    samples : list of Mol objects or just one Mol object</span>
+<span class="sd">        Sampling points each with an associated electrostatic potential</span>
+<span class="sd">    fix_points : Mol object</span>
+<span class="sd">        Point charges to remain in place</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out_points : Mol object</span>
+<span class="sd">        The points at their same position but with optimised charge value</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fix_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fix_points</span> <span class="o">=</span> <span class="n">Mol</span><span class="p">([])</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">coeff_mat</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="n">dep_var</span><span class="p">(</span><span class="n">var_points</span><span class="p">,</span> <span class="n">fix_points</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">deps</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RMSD: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">fitting</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fitting</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">var_points</span><span class="o">.</span><span class="n">change_charges</span><span class="p">(</span><span class="n">var_points</span><span class="o">.</span><span class="n">charges</span><span class="p">()</span> <span class="o">+</span> <span class="n">fitting</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">var_points</span>
+
+<div class="viewcode-block" id="shells_from_cell"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.shells_from_cell">[docs]</a><span class="k">def</span> <span class="nf">shells_from_cell</span><span class="p">(</span><span class="n">cell_cub</span><span class="p">,</span> <span class="n">central_mol</span><span class="p">,</span> <span class="n">trans_vec</span><span class="p">,</span> <span class="n">inner_r</span><span class="p">,</span> <span class="n">outer_r</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the points in shell regions of a cube file after translation</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cell_cub : CubeGrid object</span>
+<span class="sd">        The cube file of the unit cell before any translations</span>
+<span class="sd">    central_mol : Mol object</span>
+<span class="sd">        The atoms which need to be surrounded by shells. These have already been</span>
+<span class="sd">        selected from lattice positions and translated by trans_vec</span>
+<span class="sd">    trans_vec : 3x1 numpy object</span>
+<span class="sd">        Vector by which cental_mol was translated and which therefore needs to</span>
+<span class="sd">        translate the cell_cub.grid</span>
+<span class="sd">    inner_r : float</span>
+<span class="sd">        The inner radius of the shell region for sampling around atoms of the</span>
+<span class="sd">        central_mol. This distance is then scaled by wdv radius</span>
+<span class="sd">    outer_r : float</span>
+<span class="sd">        The outer radius of the shell region for sampling around atoms of the</span>
+<span class="sd">        central_mol. This distance is then scaled by wdv radius</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shell_points : numpy Nx4 array</span>
+<span class="sd">        The sampling points with rows as x1 y1 z1 value1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trans_cub</span> <span class="o">=</span> <span class="n">cell_cub</span><span class="o">.</span><span class="n">unord_trans_inplace_grid</span><span class="p">(</span><span class="n">trans_vec</span><span class="p">)</span>
+    <span class="n">sup_cube</span> <span class="o">=</span> <span class="n">trans_cub</span><span class="o">.</span><span class="n">supergrid_unsorted</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sup_cube</span><span class="o">.</span><span class="n">get_enclosing_vectors</span><span class="p">(),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">sup_cube</span><span class="o">.</span><span class="n">grid</span>
+    <span class="n">grid</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-=</span> <span class="n">center</span>
+    <span class="n">sample_points</span> <span class="o">=</span> <span class="n">alt_shell_region</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">central_mol</span><span class="p">,</span> <span class="n">inner_r</span><span class="p">,</span> <span class="n">outer_r</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">sample_points</span>
+
+<span class="c1">#def fit_clust(in_cell, in_label, inner_r, outer_r):</span>
+<div class="viewcode-block" id="fit_clust"><a class="viewcode-back" href="../../../fromage.utils.html#fromage.utils.fit.fit_clust">[docs]</a><span class="k">def</span> <span class="nf">fit_clust</span><span class="p">(</span><span class="n">in_cell</span><span class="p">,</span> <span class="n">in_labels</span><span class="p">,</span> <span class="n">in_cube</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start test&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Complete mols: start&quot;</span><span class="p">)</span>
+    <span class="n">mol</span><span class="p">,</span> <span class="n">mod_cell</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">in_cell</span><span class="o">.</span><span class="n">centered_mols</span><span class="p">(</span><span class="n">in_labels</span><span class="p">,</span> <span class="n">return_trans</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Complete mols: done&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Make cluster: start&quot;</span><span class="p">)</span>
+    <span class="n">shell</span> <span class="o">=</span> <span class="n">mod_cell</span><span class="o">.</span><span class="n">make_cluster</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Make cluster: done&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remove kernel: start&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">mol</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">shell</span><span class="p">:</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remove kernel: done&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shell sampling: start&quot;</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">shells_from_cell</span><span class="p">(</span><span class="n">in_cube</span><span class="p">,</span> <span class="n">mol</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="mf">0.9995</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shell sampling: done&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting: start&quot;</span><span class="p">)</span>
+    <span class="n">fit_points</span><span class="p">(</span><span class="n">shell</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting: done&quot;</span><span class="p">)</span>
+
+</div>
+    <span class="k">return</span>
+    <span class="c1"># atoms = rf.read_pos(cell_file)</span>
+    <span class="c1"># output_file.write(&quot;Read &quot; + str(len(atoms)) + &quot; atoms in cell_file\n&quot;)</span>
+    <span class="c1"># output_file.flush()</span>
+    <span class="c1"># # the molecule of interest and the atoms which now contain</span>
+    <span class="c1"># # the full, unchopped molecule</span>
+    <span class="c1"># # NB: all objects in mol are also referenced inside atoms</span>
+    <span class="c1"># mol, atoms = ha.complete_mol(max_bl, atoms, atom_label, vectors)</span>
+    <span class="c1">#</span>
+    <span class="c1"># # find the centroid of the molecule</span>
+    <span class="c1"># c_x, c_y, c_z = ha.find_centroid(mol)</span>
+    <span class="c1"># # translate the molecule and atoms to the centroid</span>
+    <span class="c1"># for atom in atoms:</span>
+    <span class="c1">#     atom.translate(-c_x, -c_y, -c_z)</span>
+    <span class="c1">#</span>
+    <span class="c1"># # write useful xyz and new cell</span>
+    <span class="c1"># ef.write_xyz(&quot;mol.init.xyz&quot;, mol)</span>
+    <span class="c1"># if print_tweak:</span>
+    <span class="c1">#     ef.write_xyz(&quot;tweaked_cell.xyz&quot;, atoms)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

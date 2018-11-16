@@ -7,5 +7,4 @@ fromage/fdist/build
 fromage/test/.pytest_cache/**
 .pytest_cache/**
 build/*
-doc/build/*
 .cache

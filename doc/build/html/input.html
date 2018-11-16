@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Input file description &mdash; fromage 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="fromage 1.0 documentation" href="index.html"/>
+        <link rel="next" title="3. Structure manipulation in fromage" href="structure_manipulation.html"/>
+        <link rel="prev" title="1. Interfaces" href="interfaces.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> fromage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. Program overview and install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gloss.html">2. Essential glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">3. Tutorial for geometry optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">4. License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">5. Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zrefs.html">6. References</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theoretical background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_models.html">1. ONIOM cluster models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ewald.html">2. Ewald point charge fitting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="penalty_func.html">3. Minimal Energy Conical Intersection optimisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pop.html">4. Population analysis</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Program documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="interfaces.html">1. Interfaces</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Input file description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#config-file">2.1. config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fromage-in-file">2.2. fromage.in file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="structure_manipulation.html">3. Structure manipulation in fromage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="script.html">4. Miscellaneous scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">5. fromage API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">fromage</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>2. Input file description</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/input.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="input-file-description">
+<h1>2. Input file description<a class="headerlink" href="#input-file-description" title="Permalink to this headline">¶</a></h1>
+<p><strong>fromage</strong> uses input files at two points of its execution. During the preparatory
+calculation (using <code class="docutils literal notranslate"><span class="pre">prepare_calculation.py</span></code>), the <code class="docutils literal notranslate"><span class="pre">config</span></code> file is required.
+During the actual geometry optimisation (<code class="docutils literal notranslate"><span class="pre">run_fromage.py</span></code>), the file <code class="docutils literal notranslate"><span class="pre">fromage.in</span></code>
+is read if present.</p>
+<div class="section" id="config-file">
+<h2>2.1. config file<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
+<p>All <strong>fromage</strong> input files follow the same input structure. The order of the
+keywords is irrelevant and blank lines are ignored. The keyword is stated and
+then its value(s) after any number of whitespaces. Therefore:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bond_thresh</span> <span class="mf">1.9</span>
+</pre></div>
+</div>
+<p>Is the same as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bond_thresh</span>      <span class="mf">1.9</span>
+</pre></div>
+</div>
+<p>Below are listed the most important keywords available.</p>
+<dl class="docutils">
+<dt>name</dt>
+<dd>The name of your calculation. Default: <code class="docutils literal notranslate"><span class="pre">fromage_calc</span></code></dd>
+<dt>a_vec, b_vec and c_vec</dt>
+<dd>The lattice vectors in Angstrom. This section has no default value. Example:</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_vec</span>        <span class="mf">8.9638004303</span>         <span class="mf">0.0000000000</span>         <span class="mf">0.0000000000</span>
+<span class="n">b_vec</span>        <span class="mf">0.0000000000</span>        <span class="mf">10.5200004578</span>         <span class="mf">0.0000000000</span>
+<span class="n">c_vec</span>       <span class="o">-</span><span class="mf">3.8748910079</span>         <span class="mf">0.0000000000</span>        <span class="mf">10.7924653741</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>vectors_file</dt>
+<dd>Alternatively the vectors can be stored in a file (called e.g. <code class="docutils literal notranslate"><span class="pre">vectors</span></code>) of the form:</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mf">8.9638004303</span>         <span class="mf">0.0000000000</span>         <span class="mf">0.0000000000</span>
+<span class="mf">0.0000000000</span>        <span class="mf">10.5200004578</span>         <span class="mf">0.0000000000</span>
+<span class="o">-</span><span class="mf">3.8748910079</span>         <span class="mf">0.0000000000</span>         <span class="mf">10.7924653741</span>
+</pre></div>
+</div>
+<p>In which case the file name should be specified in the config file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vectors_file</span> <span class="n">vectors</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>cell_file</dt>
+<dd>The file containing the atomic positions in the unit cell in .xyz format.
+Default: <code class="docutils literal notranslate"><span class="pre">cell.xyz</span></code></dd>
+<dt>high_pop_file</dt>
+<dd>The file containing the population analysis used for the embedding of <code class="docutils literal notranslate"><span class="pre">mh</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">gaussian_h.log</span></code></dd>
+<dt>high_pop_program</dt>
+<dd>The program used to calculate the above file. Default: <code class="docutils literal notranslate"><span class="pre">gaussian</span></code></dd>
+<dt>high_pop_method</dt>
+<dd>The method of population analysis. “Mulliken” or “ESP”. Default: <code class="docutils literal notranslate"><span class="pre">ESP</span></code></dd>
+<dt>low_pop_file</dt>
+<dd>The file containing the population analysis used for the embedding of <code class="docutils literal notranslate"><span class="pre">ml</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">gaussian_l.log</span></code></dd>
+<dt>low_pop_program</dt>
+<dd>The program used to calculate the above file. Default: <code class="docutils literal notranslate"><span class="pre">gaussian</span></code></dd>
+<dt>low_pop_method</dt>
+<dd>The method of population analysis. “Mulliken” or “ESP”. Default: <code class="docutils literal notranslate"><span class="pre">ESP</span></code></dd>
+<dt>bond_thresh</dt>
+<dd>The distance between two atoms in Angsrom below which <strong>fromage</strong> will consider the
+atoms to be bonded together. The definition of bond_thresh can be altered by
+using the keyword <code class="docutils literal notranslate"><span class="pre">bonding</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">1.7</span></code></dd>
+<dt>bonding</dt>
+<dd>The method which determines whether two atoms are bonded. The options are
+<code class="docutils literal notranslate"><span class="pre">dis</span></code>, <code class="docutils literal notranslate"><span class="pre">cov</span></code> and <code class="docutils literal notranslate"><span class="pre">vdw</span></code>. <code class="docutils literal notranslate"><span class="pre">dis</span></code> measures the distance between two nuclei
+whereas <code class="docutils literal notranslate"><span class="pre">cov</span></code> measures the distance from the edge of the spheres of covalent
+radius and <code class="docutils literal notranslate"><span class="pre">vdw</span></code> from the edge of the sphere of van der Waals radius.
+Default: <code class="docutils literal notranslate"><span class="pre">dis</span></code></dd>
+<dt>atom_label</dt>
+<dd>The number of the atom in the <code class="docutils literal notranslate"><span class="pre">cell_file</span></code> which belongs to the molecule which
+will become the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a>. Several atoms can be
+specified and must be separated by whitespaces, however they must not belong
+to the same molecule. Default: <code class="docutils literal notranslate"><span class="pre">1</span></code></dd>
+<dt>ewald</dt>
+<dd>Whether or not to use the Ewald embedding. To turn off, use “false”, “no”,
+“off”, “zero”, “none” or “nan” or any capitalisations. Default: <code class="docutils literal notranslate"><span class="pre">off</span></code></dd>
+<dt>nchk</dt>
+<dd>The number of random points sampled around the model system by <code class="docutils literal notranslate"><span class="pre">Ewald</span></code> to
+check the accuracy of the fit. Default: <code class="docutils literal notranslate"><span class="pre">1000</span></code></dd>
+<dt>nat</dt>
+<dd>The number of atoms included in the fixed charge region generated spherically
+by Ewald. Default: <code class="docutils literal notranslate"><span class="pre">500</span></code></dd>
+<dt>an, bn and cn</dt>
+<dd>Multiplications of the unit cell along each cell direction to generate the
+Ewald supercell. The cell is multiplied 2N times per direction (N positive and
+N negative). Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">2</span></code></dd>
+<dt>clust_rad</dt>
+<dd>The radius in Angstrom used to generate the cluster which will constitute the
+<a class="reference internal" href="gloss.html#term-real-system"><span class="xref std std-term">real system</span></a>. The cluster includes all molecules which fit
+completely within the radius. Default: <code class="docutils literal notranslate"><span class="pre">5</span></code></dd>
+<dt>self_consistent</dt>
+<dd>Whether or not to use the Self Consistent Ewald Embedding. Be sure to also
+turn on <code class="docutils literal notranslate"><span class="pre">ewald</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">off</span></code></dd>
+<dt>sc_temp</dt>
+<dd>The template file for the self consistent population analyses. Default:
+<code class="docutils literal notranslate"><span class="pre">sc_temp.template</span></code></dd>
+<dt>dev_tol</dt>
+<dd>The convergence threshold for the self consistent loop. This corresponds to
+the average deviation between two successive steps of the loop. Units in
+<span class="math notranslate">\(e^-\)</span> Default: <code class="docutils literal notranslate"><span class="pre">0.001</span></code></dd>
+<dt>damping</dt>
+<dd>Damping factor for the self-consistent loop to solve certain convergence
+problems. Choose a value between 0 to 1 with 0 being no damping and 1 being
+complete damping (won’t get you anywhere). Default: <code class="docutils literal notranslate"><span class="pre">0</span></code></dd>
+<dt>print_tweak</dt>
+<dd>Whether or not to print the tweaked version of the cell with the selected
+molecule(s) completed and the whole cell centred around its centroid. This is
+useful for debugging and more involved analysis. Default: <code class="docutils literal notranslate"><span class="pre">off</span></code></dd>
+</dl>
+</div>
+<div class="section" id="fromage-in-file">
+<h2>2.2. fromage.in file<a class="headerlink" href="#fromage-in-file" title="Permalink to this headline">¶</a></h2>
+<p>The input structure is the same as for <code class="docutils literal notranslate"><span class="pre">config</span></code>.</p>
+<dl class="docutils">
+<dt>mol_file</dt>
+<dd>File name for the .xyz file containing the inital position of the <a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model
+system</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">mol.init.xyz</span></code></dd>
+<dt>shell_file</dt>
+<dd>File name for the .xyz file containing the molecules surrounding the
+<a class="reference internal" href="gloss.html#term-model-system"><span class="xref std std-term">model system</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">shell.xyz</span></code></dd>
+<dt>out_file</dt>
+<dd>File name for the output file containing the geometry optimisation
+information. Default: <code class="docutils literal notranslate"><span class="pre">fromage.out</span></code></dd>
+<dt>bool_ci</dt>
+<dd>Whether or not to optimise for <a class="reference internal" href="gloss.html#term-meci"><span class="xref std std-term">MECI</span></a>. “1” for yes “0 for no. Default:
+<code class="docutils literal notranslate"><span class="pre">0</span></code></dd>
+<dt>sigma</dt>
+<dd>The Lagrangian multiplier for the penalty function method for the location of
+<a class="reference internal" href="gloss.html#term-meci"><span class="xref std std-term">MECI</span></a>. Only use if <code class="docutils literal notranslate"><span class="pre">bool_ci</span></code> is on. Defualt: <code class="docutils literal notranslate"><span class="pre">3.5</span></code></dd>
+<dt>high_level</dt>
+<dd>The program used for the high level calculation. The options are <code class="docutils literal notranslate"><span class="pre">gaussian</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dftb</span></code>, <code class="docutils literal notranslate"><span class="pre">turbomole</span></code> and <code class="docutils literal notranslate"><span class="pre">molcas</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">gaussian</span></code></dd>
+<dt>low_level</dt>
+<dd>The program used for the low level calculation. The options are <code class="docutils literal notranslate"><span class="pre">gaussian</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dftb</span></code>, <code class="docutils literal notranslate"><span class="pre">turbomole</span></code> and <code class="docutils literal notranslate"><span class="pre">molcas</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">gaussian</span></code></dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="structure_manipulation.html" class="btn btn-neutral float-right" title="3. Structure manipulation in fromage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="interfaces.html" class="btn btn-neutral" title="1. Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016-2019, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
