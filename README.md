@@ -13,7 +13,7 @@
   - numpy
   - scipy
   - swig
-  - Modified version of Ewald (only necessary for Ewald embedding calculations)
+  - [Modified version of Ewald](https://github.com/Crespo-Otero-group/Ewald) (only necessary for Ewald embedding calculations)
 
 2. Clone this repository to wherever you want to install it:
 
