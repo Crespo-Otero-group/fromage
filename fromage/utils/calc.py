@@ -10,6 +10,7 @@ preferences, it should be contained here in its Calc object member methods.
 import subprocess
 import os
 
+from fromage.utils.mol import Mol
 from fromage.io import edit_file as ef
 from fromage.io import read_file as rf
 from fromage.utils import handle_atoms as ha
@@ -129,7 +130,11 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        ef.write_xyz("geom.xyz", atoms)
+        mol_r1 = Mol(atoms)
+        mol_r2 = rf.mol_from_file("r2.xyz")
+
+        mol = mol_r1 + mol_r2
+        mol.write_xyz("geom.xyz")
         subprocess.call("xyz2gen geom.xyz", shell=True)
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
