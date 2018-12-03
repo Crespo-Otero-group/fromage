@@ -36,8 +36,7 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
   cd ../../
   sudo python setup.py build_ext install
   ```
-4. Set environment variables
-  In your `.bashrc`, write
+4. Set environment variables. In your `.bashrc`, write
   ```bash
   export FRO_GAUSS=g16
   export FRO_EWALD=Ewald
