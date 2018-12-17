@@ -129,6 +129,9 @@ class Mol(object):
     def remove(self, element):
         self.atoms.remove(element)
 
+    def index(self, element):
+        return self.atoms.index(element)
+
     def pop(self, i=-1):
         return self.atoms.pop(i)
 
@@ -524,7 +527,7 @@ class Mol(object):
         trans_count -= np.array([1, 1, 1])
         return trans_count
 
-    def make_cluster(self, clust_rad):
+    def make_cluster(self, clust_rad, mode = 'exc'):
         """
         Generate a cluster of molecules from a primitive cell
 
@@ -537,6 +540,11 @@ class Mol(object):
         clust_rad : float
             Radius defining a sphere. All molecules with atoms in the sphere are
             to be grabbed
+        inc : mode
+            Switches between inclusive and exclusive selecting. Inclusive,
+            'inc', selects all molecules which have atoms within the radius.
+            Exclusive, 'exc', selects all molecules fully in the radius.
+            Default: false
         Returns
         -------
         cluster : Mol object
@@ -544,7 +552,8 @@ class Mol(object):
 
         """
         trans = self.trans_from_rad(clust_rad)
-        # add a buffer of one cell in order to not chop the molecules up
+        if mode == 'inc':
+            trans += np.array([1,1,1]) # one buffer cell layer
         supercell = self.centered_supercell(trans, from_origin=True)
         # atoms within the sphere of rad clust_rad
         seed_atoms = Mol([])
@@ -552,15 +561,39 @@ class Mol(object):
             if atom.v_dist([0, 0, 0]) < clust_rad:
                 seed_atoms.append(atom)
         max_mol_len = 0
-        while len(seed_atoms) > 0:
-            mol = seed_atoms.select(0)
-            if len(mol) > max_mol_len:
-                max_mol_len = len(mol)
-                clust_atoms = Mol([])
-            if len(mol) == max_mol_len:
+        if mode == 'exc':
+            while len(seed_atoms) > 0:
+                mol = seed_atoms.select(0)
+                if len(mol) > max_mol_len:
+                    max_mol_len = len(mol)
+                    clust_atoms = Mol([])
+                if len(mol) == max_mol_len:
+                    clust_atoms += mol
+                for atom in mol:
+                    seed_atoms.remove(atom)
+        if mode == 'inc':
+            clust_atoms = Mol([])
+            max_mol_len = len(supercell.select(supercell.index(seed_atoms[0])))
+
+            while len(seed_atoms) > 0:
+                print(len(seed_atoms))
+                mol_tmp = seed_atoms.select(0) # The part of the mol detected in seed_atoms
+                if len(mol_tmp) < max_mol_len:
+                    # The whole mol, which could potentially include even more seed_atoms
+                    mol = supercell.select(supercell.index(seed_atoms[0]))
+                else:
+                    mol = mol_tmp
                 clust_atoms += mol
-            for atom in mol:
-                seed_atoms.remove(atom)
+                for atom in mol_tmp:
+                    seed_atoms.remove(atom)
+                for atom in mol:
+                    supercell.remove(atom)
+                    # remove all atoms of the mol which are part of seed_atoms
+                    try:
+                        seed_atoms.remove(atom)
+                    except ValueError:
+                        pass
+
         return clust_atoms
 
     def remove_duplicates(self, thresh=0.001):
