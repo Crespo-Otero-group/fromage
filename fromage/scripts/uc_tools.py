@@ -45,7 +45,7 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, print_mono, trans, clust_rad, center_label):
+def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, print_mono, trans, clust_rad, inclusivity, center_label):
     atoms = rf.mol_from_file(in_xyz)
     vectors = rf.read_vectors(vectors_file)
     atoms.vectors = vectors
@@ -64,7 +64,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, 
     print_now = True
     centered = False
     if center_label:
-        central_mol, atoms = atoms.centered_mols(center_label)
+        central_mol, atoms = atoms.centered_mols(center_label-1) # -1 for Python index
         centered = True
     if complete:
         # get the modified (uncropped) unit cell
@@ -97,7 +97,7 @@ def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, 
         ef.write_lat_vec("supercell_vectors", new_vec)
 
     if clust_rad > 0.0:
-        clust = atoms.make_cluster(clust_rad)
+        clust = atoms.make_cluster(clust_rad, mode = inclusivity)
         clust.write_xyz("cluster_out.xyz")
 
     if print_mono:
@@ -184,10 +184,11 @@ if __name__ == '__main__':
                         help="Purge duplicate atoms", action="store_true")
     parser.add_argument("-r", "--radius", help="Generate a cluster of molecules of the given radius. Radius 0.0 turns this off.",
                         default=0.0, type=float)
+    parser.add_argument("-i", "--inclusivity", help="Choose between inclusive (inc) or exclusive (exc) radius selecting.", default='exc', type=str),
     parser.add_argument("-e", "--center", help="Move the atoms of the cell such that the molecule containing the specified label is at the origin. To turn off: 0",default=0,type=int)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional,
-         args.remove_duplicate_atoms, args.output, args.bonding, args.thresh, args.mono, args.translations, args.radius, args.center)
+         args.remove_duplicate_atoms, args.output, args.bonding, args.thresh, args.mono, args.translations, args.radius, args.inclusivity, args.center)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))
