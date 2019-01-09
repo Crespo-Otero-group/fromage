@@ -64,7 +64,7 @@ And optionally:
 
 ### 2.1 Unit cell file
 
-This is the kind of file which is typically produced from a periodic DFT calculation. Avoid double counted atoms outside the unit cell which might be snuk in by visualization programs such as VESTA. For this kind of problem, the `uc_tools.py` utility can come in useful. Just make a file containing the unit cell vectors and run `uc_tools.py cell.xyz vectors -d`. If you deem that geometry optimisation of your cell is unnecessary (publish this result because I am interested) you will need to convert a `.cif` file into a unit cell `.xyz` file. For this I recommend [Open Babel](http://openbabel.org/wiki/Main_Page) which would use the syntax:
+This is the kind of file which is typically produced from a periodic DFT calculation. Avoid double counted atoms outside the unit cell which might be snuck in by visualization programs such as VESTA. For this kind of problem, the `uc_tools.py` utility can come in useful. Just make a file containing the unit cell vectors and run `uc_tools.py cell.xyz vectors -d`. If you deem that geometry optimisation of your cell is unnecessary (publish this result because I am interested) you will need to convert a `.cif` file into a unit cell `.xyz` file. For this I recommend [Open Babel](http://openbabel.org/wiki/Main_Page) which would use the syntax:
 
 ```bash
     babel -i -cif cell.cif -o -xyz cell.xyz --filluc
