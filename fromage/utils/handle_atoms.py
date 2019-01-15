@@ -43,7 +43,7 @@ def select(max_r, atoms, label):
         for i in old_atoms:
             for j in atoms:
                 # find atoms bonded to the newest atoms in the list
-                if i.dist(j.x, j.y, j.z) <= max_r and j not in selected:
+                if i.c_dist(j.x, j.y, j.z) <= max_r and j not in selected:
                     new_atoms.append(j)
                     selected.append(j)
                     # if no more atoms are found stop the loop
@@ -428,7 +428,7 @@ def make_cluster(atoms, clust_rad, max_bl):
     seed_atoms = []
 
     for atom in atoms:
-        if atom.dist(0, 0, 0) < clust_rad:
+        if atom.c_dist(0, 0, 0) < clust_rad:
             seed_atoms.append(atom)
 
     # atoms in the cluster (seed_atoms + atoms to complete molecules)
