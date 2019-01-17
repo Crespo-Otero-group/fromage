@@ -410,7 +410,7 @@ class Mol(object):
 
         Parameters
         ----------
-        trans : numpy array of length 3
+        trans : array-like of length 3
             Multiplications of the primitive cell
         Returns
         -------
@@ -418,6 +418,9 @@ class Mol(object):
             New supercell with adjusted lattice vectors
 
         """
+        # make the input into a np array
+        trans = np.array(trans)
+
         new_cell = self.empty_mol()
         for a_mult in range(trans[0]):
             for b_mult in range(trans[1]):
