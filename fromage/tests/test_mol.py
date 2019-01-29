@@ -201,3 +201,20 @@ def test_make_cluster(hc1_cell):
 def test_confine(hc1_complete_cell):
     conf = hc1_complete_cell.confined()
     assert conf[19].x == approx(-0.202155)
+
+def test_set_bonding_str(h2o_dimer):
+    h2o_dimer.set_bonding_str("dis")
+    assert h2o_dimer.bonding == "dis"
+    assert h2o_dimer.thresh == 1.8
+    h2o_dimer.set_bonding_str("1.5")
+    assert h2o_dimer.bonding == "dis"
+    assert h2o_dimer.thresh == 1.5
+    h2o_dimer.set_bonding_str("vdw")
+    assert h2o_dimer.bonding == "vdw"
+    assert h2o_dimer.thresh == -0.3
+    h2o_dimer.set_bonding_str("cov-0.1")
+    assert h2o_dimer.bonding == "cov"
+    assert h2o_dimer.thresh == -0.1
+    h2o_dimer.set_bonding_str("-0.1cov")
+    assert h2o_dimer.bonding == "cov"
+    assert h2o_dimer.thresh == -0.1

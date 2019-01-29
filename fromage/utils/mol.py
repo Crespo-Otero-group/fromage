@@ -66,7 +66,7 @@ class Mol(object):
 
         Parameters
         ----------
-        bonding : string 'dist, 'cov' or 'vdw'
+        bonding : string 'dis', 'cov' or 'vdw'
             The method for detecting bonding in this molecule.
             'dis' : distance between atoms < threshold
             'cov' : distance - (cov radius of atom a + of atom b) < threshold
@@ -81,7 +81,53 @@ class Mol(object):
         if bonding not in default_thresh:
             raise TypeError("Unrecognised bonding type: "+ bonding)
         self.bonding = bonding
-        self.thresh = default_thresh[bonding]
+        if thresh:
+            self.thresh = thresh
+        else:
+            self.thresh = default_thresh[bonding]
+        return
+
+    def set_bonding_str(self, in_str):
+        """
+        Set the type of bonding and threshold with one string
+
+        The string is of the type "cov0.2" or "dis1.7" etc. But giving just the
+        threshold or just the bonding gives the default for the ommitted part.
+        The order of the bonding and threshold does not matter, so "vdw2.2" is
+        the same as "2.2vdw"
+
+        Parameters
+        ----------
+        in_str : str
+            The string which determines the bonding where the threshold and the
+            distance are set to default if none are supplied
+
+        """
+        bondings = default_thresh.keys()
+        bonding = ''
+        thresh = None
+        # check if bonding has been specified
+        for i_bonding in bondings:
+            if i_bonding in in_str:
+                bonding = i_bonding
+        # if there is bonding, try to find threshold
+        if bonding:
+            stripped = in_str.replace(bonding,'')
+            # if there is still a thresh in this string
+            if stripped:
+                thresh = float(stripped)
+        # if only the thresh is specified
+        else:
+            thresh = float(in_str)
+        # if both present
+        if bonding and thresh:
+            self.set_bonding(bonding=bonding,thresh=thresh)
+        # if only bonding
+        if bonding and not thresh:
+            self.set_bonding(bonding=bonding)
+        # if only thresh
+        if thresh and not bonding:
+            self.set_bonding(thresh=thresh)
         return
 
     def bonded(self, atom_a, atom_b):
