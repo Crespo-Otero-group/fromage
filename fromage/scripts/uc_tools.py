@@ -45,13 +45,16 @@ def compare_id(id_i, id_j):
         return sdiff
 
 
-def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, print_mono, trans, clust_rad, inclusivity, center_label):
-    atoms = rf.mol_from_file(in_xyz)
+def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, bonding_str, print_mono, trans, clust_rad, inclusivity, center_label):
     vectors = rf.read_vectors(vectors_file)
-    atoms.vectors = vectors
+    atoms = rf.mol_from_file(in_xyz,vectors=vectors)
+
     if thresh == 999:
         thresh = None
     atoms.set_bonding(bonding=bonding, thresh=thresh)
+    # if the bonding is specified all in one string
+    if bonding_str:
+        atoms.set_bonding_str(bonding_str)
 
     if print_mono and not complete:
         print("-c is required for -m")
@@ -171,6 +174,8 @@ if __name__ == '__main__':
         "-b", "--bonding", help="Type of bonding used for detecting full molecules. The options are dis, cov and vdw", default="dis", type=str)
     parser.add_argument("-T", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.2, vdw:-0.3. To select default, just use a threshold of 999", default=999, type=float)
     parser.add_argument(
+        "-bs", "--bonding_string", help="Alternate specification of bonding. Here the threshold and bonding are lumped up in one string like 'cov-0.1' or 12dis'", default="", type=str)
+    parser.add_argument(
         "-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
     parser.add_argument(
         "-C", "--confine", help="Confine the molecule to the primitive cell. Incompatible with -c or -f", action="store_true")
@@ -189,6 +194,6 @@ if __name__ == '__main__':
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
     main(args.in_xyz, args.vectors, args.complete, args.confine, args.fractional,
-         args.remove_duplicate_atoms, args.output, args.bonding, args.thresh, args.mono, args.translations, args.radius, args.inclusivity, args.center)
+         args.remove_duplicate_atoms, args.output, args.bonding, args.thresh, args.bonding_string, args.mono, args.translations, args.radius, args.inclusivity, args.center)
     end = time.time()
     print("\nTotal time: {}s".format(round((end - start), 1)))

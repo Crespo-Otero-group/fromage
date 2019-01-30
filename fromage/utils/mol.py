@@ -105,7 +105,7 @@ class Mol(object):
         """
         bondings = default_thresh.keys()
         bonding = ''
-        thresh = None
+        thresh_str = ''
         # check if bonding has been specified
         for i_bonding in bondings:
             if i_bonding in in_str:
@@ -115,19 +115,21 @@ class Mol(object):
             stripped = in_str.replace(bonding,'')
             # if there is still a thresh in this string
             if stripped:
-                thresh = float(stripped)
+                thresh_str = stripped
         # if only the thresh is specified
-        else:
-            thresh = float(in_str)
+        elif in_str:
+            thresh_str = in_str
         # if both present
-        if bonding and thresh:
-            self.set_bonding(bonding=bonding,thresh=thresh)
+        if bonding and thresh_str:
+            self.set_bonding(bonding=bonding,thresh=float(thresh_str))
         # if only bonding
-        if bonding and not thresh:
+        if bonding and not thresh_str:
             self.set_bonding(bonding=bonding)
         # if only thresh
-        if thresh and not bonding:
-            self.set_bonding(thresh=thresh)
+        if thresh_str and not bonding:
+            self.set_bonding(thresh=float(thresh_str))
+        if not thresh_str and not bonding:
+            self.set_bonding()
         return
 
     def bonded(self, atom_a, atom_b):

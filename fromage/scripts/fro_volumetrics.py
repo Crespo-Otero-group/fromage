@@ -6,45 +6,46 @@ import numpy as np
 import time
 import sys
 
-start = time.time()
-in_atoms = sys.argv[1]
+def main():
+    start = time.time()
+    in_atoms = sys.argv[1]
 
 
-out_file = open("volumes","w")
-prox_grid = vo.CubeGrid()
-vdw_grid = vo.CubeGrid()
+    out_file = open("volumes","w")
+    prox_grid = vo.CubeGrid()
+    vdw_grid = vo.CubeGrid()
 
-atoms = rf.mol_from_file(in_atoms)
-mol = atoms.select(int(sys.argv[2])-1)
-c_x, c_y, c_z = mol.centroid()
-prox_grid.grid_from_point(c_x, c_y, c_z, res=100,box=np.array([[25.0, 0.0, 0.0], [0.0,25.0,0.0], [0.0, 0.0, 25.0]]))
-vdw_grid.grid_from_point(c_x, c_y, c_z, res=100,box=np.array([[25.0, 0.0, 0.0],[0.0, 25.0,0.0], [0.0, 0.0, 25.0]]))
+    atoms = rf.mol_from_file(in_atoms)
+    mol = atoms.select(int(sys.argv[2])-1)
+    c_x, c_y, c_z = mol.centroid()
+    prox_grid.grid_from_point(c_x, c_y, c_z, res=100,box=np.array([[25.0, 0.0, 0.0], [0.0,25.0,0.0], [0.0, 0.0, 25.0]]))
+    vdw_grid.grid_from_point(c_x, c_y, c_z, res=100,box=np.array([[25.0, 0.0, 0.0],[0.0, 25.0,0.0], [0.0, 0.0, 25.0]]))
 
-rest = []
-for atom in atoms:
-    if atom not in mol:
-        rest.append(atom)
+    rest = []
+    for atom in atoms:
+        if atom not in mol:
+            rest.append(atom)
 
-prox_grid.set_grid_coord()
-vdw_grid.set_grid_coord()
+    prox_grid.set_grid_coord()
+    vdw_grid.set_grid_coord()
 
-prox_grid.proximity(mol,rest)
-vdw_grid.vdw_vol(mol)
+    prox_grid.proximity(mol,rest)
+    vdw_grid.vdw_vol(mol)
 
-prox_grid.out_cube("prox.cube", atoms)
-out_file.write("Proximity volume: "+str(prox_grid.volume())+"\n")
+    prox_grid.out_cube("prox.cube", atoms)
+    out_file.write("Proximity volume: "+str(prox_grid.volume())+"\n")
 
-vdw_grid.out_cube("vdw.cube", atoms)
-out_file.write("VDW volume: "+str(vdw_grid.volume())+"\n")
+    vdw_grid.out_cube("vdw.cube", atoms)
+    out_file.write("VDW volume: "+str(vdw_grid.volume())+"\n")
 
-prox_grid.add_grid(vdw_grid.grid)
-out_file.write("Union volume: "+str(prox_grid.volume())+"\n")
-prox_grid.out_cube("add.cube", atoms)
+    prox_grid.add_grid(vdw_grid.grid)
+    out_file.write("Union volume: "+str(prox_grid.volume())+"\n")
+    prox_grid.out_cube("add.cube", atoms)
 
-end = time.time()
-out_file.write("Time Elapsed: "+ str(end - start)+"s")
+    end = time.time()
+    out_file.write("Time Elapsed: "+ str(end - start)+"s")
 
-out_file.close()
+    out_file.close()
 
 
 

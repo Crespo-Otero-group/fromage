@@ -139,7 +139,7 @@ def read_pos(in_name):
     return atoms
 
 
-def mol_from_file(in_name):
+def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
     """
     Return a Mol object from a file
 
@@ -147,6 +147,11 @@ def mol_from_file(in_name):
     ----------
     in_name : str
         Name of the file to read
+    bonding : str
+        A string determining the type of bonding in the molecule. Something like
+        'dis0.2' or '-13cov'
+    vectors : 3 x 3 np array
+        The unit cell vectors if pertinent
     Returns
     -------
     atom_step : Mol object
@@ -154,6 +159,8 @@ def mol_from_file(in_name):
 
     """
     mol = Mol(read_pos(in_name))
+    mol.vectors = vectors
+    mol.set_bonding_str(bonding)
 
     return mol
 
