@@ -22,6 +22,7 @@ setup(name='fromage',
                'fromage/scripts/pop_stat.py',
                'fromage/scripts/prepare_calculation.py',
                'fromage/scripts/fro_coupling.py',
+               'fromage/scripts/fro_volumetrics.py',
                'fromage/scripts/uc_tools.py'],
       install_requires=[
           'numpy',
