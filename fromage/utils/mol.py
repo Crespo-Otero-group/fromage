@@ -578,7 +578,7 @@ class Mol(object):
         trans_count -= np.array([1, 1, 1])
         return trans_count
 
-    def make_cluster(self, clust_rad, mode = 'exc'):
+    def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
         """
         Generate a cluster of molecules from a primitive cell
 
@@ -586,16 +586,23 @@ class Mol(object):
         one additional buffer shell. Then the sphere is generated from this new
         supercell by connectivity.
 
+        A central molecule can also be supplied which will turn the spheres
+        defining the clusters into the union of spheres stemming from each atom
+        of the central molecule.
+
         Parameters
         ----------
         clust_rad : float
             Radius defining a sphere. All molecules with atoms in the sphere are
             to be grabbed
-        inc : mode
+        mode : str
             Switches between inclusive and exclusive selecting. Inclusive,
             'inc', selects all molecules which have atoms within the radius.
             Exclusive, 'exc', selects all molecules fully in the radius.
             Default: false
+        central_mol : Mol
+            If this is supplied, the central molecule will act as a kernel for
+            the cluster which will end up being of the appropriate shape.
         Returns
         -------
         cluster : Mol object
@@ -606,11 +613,20 @@ class Mol(object):
         if mode == 'inc':
             trans += np.array([1,1,1]) # one buffer cell layer
         supercell = self.centered_supercell(trans, from_origin=True)
-        # atoms within the sphere of rad clust_rad
+
         seed_atoms = Mol([])
-        for atom in supercell:
-            if atom.v_dist([0, 0, 0]) < clust_rad:
-                seed_atoms.append(atom)
+        if central_mol:
+            trans += np.array([1,1,1])
+            for atom_i in supercell:
+                for atom_j in central_mol:
+                    if atom_i.dist(atom_j) < clust_rad:
+                        seed_atoms.append(atom_i)
+                        break
+        else:
+            # atoms within the sphere of rad clust_rad
+            for atom in supercell:
+                if atom.v_dist([0, 0, 0]) < clust_rad:
+                    seed_atoms.append(atom)
         max_mol_len = 0
         if mode == 'exc':
             while len(seed_atoms) > 0:
@@ -627,7 +643,6 @@ class Mol(object):
             max_mol_len = len(supercell.select(supercell.index(seed_atoms[0])))
 
             while len(seed_atoms) > 0:
-                print(len(seed_atoms))
                 mol_tmp = seed_atoms.select(0) # The part of the mol detected in seed_atoms
                 if len(mol_tmp) < max_mol_len:
                     # The whole mol, which could potentially include even more seed_atoms
