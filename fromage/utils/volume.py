@@ -119,14 +119,14 @@ class CubeGrid(object):
             close_to_mol = False
             min_dist2 = float("inf")
             for atom_i in mol:
-                r = atom_i.dist2(*point[:3])
+                r = atom_i.c_dist2(*point[:3])
                 if scaled:
                     r *= atom_i.vdw**2
                 if r < min_dist2:
                     min_dist2 = r
                     close_to_mol = True
             for atom_j in rest:
-                r = atom_j.dist2(*point[:3])
+                r = atom_j.c_dist2(*point[:3])
                 if scaled:
                     r *= atom_i.vdw**2
                 if r < min_dist2:
@@ -146,7 +146,7 @@ class CubeGrid(object):
             # empty grid first
             point[3] = 0
             for atom in mol:
-                if atom.dist2(*point[:3]) < atom.vdw**2:
+                if atom.c_dist2(*point[:3]) < atom.vdw**2:
                     point[3] = 1
                     break
         return

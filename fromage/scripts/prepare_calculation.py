@@ -26,7 +26,6 @@ import fromage.utils.run_sequence as rs
 
 
 if __name__ == '__main__':
-
     # a few functions to only be used in main
     def populate_cell(in_mol, program, pop_file, method):
         """

@@ -66,7 +66,7 @@ class Mol(object):
 
         Parameters
         ----------
-        bonding : string 'dist, 'cov' or 'vdw'
+        bonding : string 'dis', 'cov' or 'vdw'
             The method for detecting bonding in this molecule.
             'dis' : distance between atoms < threshold
             'cov' : distance - (cov radius of atom a + of atom b) < threshold
@@ -81,7 +81,55 @@ class Mol(object):
         if bonding not in default_thresh:
             raise TypeError("Unrecognised bonding type: "+ bonding)
         self.bonding = bonding
-        self.thresh = default_thresh[bonding]
+        if thresh:
+            self.thresh = thresh
+        else:
+            self.thresh = default_thresh[bonding]
+        return
+
+    def set_bonding_str(self, in_str):
+        """
+        Set the type of bonding and threshold with one string
+
+        The string is of the type "cov0.2" or "dis1.7" etc. But giving just the
+        threshold or just the bonding gives the default for the ommitted part.
+        The order of the bonding and threshold does not matter, so "vdw2.2" is
+        the same as "2.2vdw"
+
+        Parameters
+        ----------
+        in_str : str
+            The string which determines the bonding where the threshold and the
+            distance are set to default if none are supplied
+
+        """
+        bondings = default_thresh.keys()
+        bonding = ''
+        thresh_str = ''
+        # check if bonding has been specified
+        for i_bonding in bondings:
+            if i_bonding in in_str:
+                bonding = i_bonding
+        # if there is bonding, try to find threshold
+        if bonding:
+            stripped = in_str.replace(bonding,'')
+            # if there is still a thresh in this string
+            if stripped:
+                thresh_str = stripped
+        # if only the thresh is specified
+        elif in_str:
+            thresh_str = in_str
+        # if both present
+        if bonding and thresh_str:
+            self.set_bonding(bonding=bonding,thresh=float(thresh_str))
+        # if only bonding
+        if bonding and not thresh_str:
+            self.set_bonding(bonding=bonding)
+        # if only thresh
+        if thresh_str and not bonding:
+            self.set_bonding(thresh=float(thresh_str))
+        if not thresh_str and not bonding:
+            self.set_bonding()
         return
 
     def bonded(self, atom_a, atom_b):
@@ -128,6 +176,9 @@ class Mol(object):
 
     def remove(self, element):
         self.atoms.remove(element)
+
+    def index(self, element):
+        return self.atoms.index(element)
 
     def pop(self, i=-1):
         return self.atoms.pop(i)
@@ -407,7 +458,7 @@ class Mol(object):
 
         Parameters
         ----------
-        trans : numpy array of length 3
+        trans : array-like of length 3
             Multiplications of the primitive cell
         Returns
         -------
@@ -415,6 +466,9 @@ class Mol(object):
             New supercell with adjusted lattice vectors
 
         """
+        # make the input into a np array
+        trans = np.array(trans)
+
         new_cell = self.empty_mol()
         for a_mult in range(trans[0]):
             for b_mult in range(trans[1]):
@@ -524,7 +578,7 @@ class Mol(object):
         trans_count -= np.array([1, 1, 1])
         return trans_count
 
-    def make_cluster(self, clust_rad):
+    def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
         """
         Generate a cluster of molecules from a primitive cell
 
@@ -532,11 +586,23 @@ class Mol(object):
         one additional buffer shell. Then the sphere is generated from this new
         supercell by connectivity.
 
+        A central molecule can also be supplied which will turn the spheres
+        defining the clusters into the union of spheres stemming from each atom
+        of the central molecule.
+
         Parameters
         ----------
         clust_rad : float
             Radius defining a sphere. All molecules with atoms in the sphere are
             to be grabbed
+        mode : str
+            Switches between inclusive and exclusive selecting. Inclusive,
+            'inc', selects all molecules which have atoms within the radius.
+            Exclusive, 'exc', selects all molecules fully in the radius.
+            Default: false
+        central_mol : Mol
+            If this is supplied, the central molecule will act as a kernel for
+            the cluster which will end up being of the appropriate shape.
         Returns
         -------
         cluster : Mol object
@@ -544,23 +610,56 @@ class Mol(object):
 
         """
         trans = self.trans_from_rad(clust_rad)
-        # add a buffer of one cell in order to not chop the molecules up
+        if mode == 'inc':
+            trans += np.array([1,1,1]) # one buffer cell layer
         supercell = self.centered_supercell(trans, from_origin=True)
-        # atoms within the sphere of rad clust_rad
+
         seed_atoms = Mol([])
-        for atom in supercell:
-            if atom.v_dist([0, 0, 0]) < clust_rad:
-                seed_atoms.append(atom)
+        if central_mol:
+            trans += np.array([1,1,1])
+            for atom_i in supercell:
+                for atom_j in central_mol:
+                    if atom_i.dist(atom_j) < clust_rad:
+                        seed_atoms.append(atom_i)
+                        break
+        else:
+            # atoms within the sphere of rad clust_rad
+            for atom in supercell:
+                if atom.v_dist([0, 0, 0]) < clust_rad:
+                    seed_atoms.append(atom)
         max_mol_len = 0
-        while len(seed_atoms) > 0:
-            mol = seed_atoms.select(0)
-            if len(mol) > max_mol_len:
-                max_mol_len = len(mol)
-                clust_atoms = Mol([])
-            if len(mol) == max_mol_len:
+        if mode == 'exc':
+            while len(seed_atoms) > 0:
+                mol = seed_atoms.select(0)
+                if len(mol) > max_mol_len:
+                    max_mol_len = len(mol)
+                    clust_atoms = Mol([])
+                if len(mol) == max_mol_len:
+                    clust_atoms += mol
+                for atom in mol:
+                    seed_atoms.remove(atom)
+        if mode == 'inc':
+            clust_atoms = Mol([])
+            max_mol_len = len(supercell.select(supercell.index(seed_atoms[0])))
+
+            while len(seed_atoms) > 0:
+                mol_tmp = seed_atoms.select(0) # The part of the mol detected in seed_atoms
+                if len(mol_tmp) < max_mol_len:
+                    # The whole mol, which could potentially include even more seed_atoms
+                    mol = supercell.select(supercell.index(seed_atoms[0]))
+                else:
+                    mol = mol_tmp
                 clust_atoms += mol
-            for atom in mol:
-                seed_atoms.remove(atom)
+                for atom in mol_tmp:
+                    seed_atoms.remove(atom)
+                for atom in mol:
+                    supercell.remove(atom)
+                    # remove all atoms of the mol which are part of seed_atoms
+                    try:
+                        seed_atoms.remove(atom)
+                    except ValueError:
+                        pass
+
         return clust_atoms
 
     def remove_duplicates(self, thresh=0.001):

@@ -70,7 +70,7 @@ class RunSeq(object):
             high_level_pop_mol = rf.mol_from_gauss(self.inputs["high_pop_file"], pop=self.inputs["high_pop_method"])
             shell_high.populate(high_level_pop_mol)
         else:
-            shell_high = self.cell.make_cluster(self.inputs["clust_rad"])
+            shell_high = self.cell.make_cluster(self.inputs["clust_rad"], central_mol = self.region_1, mode = self.inputs["clust_mode"])
             for atom_i in self.region_1:
                 for atom_j in shell_high:
                     if atom_i.very_close(atom_j):
@@ -80,7 +80,7 @@ class RunSeq(object):
         low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
         shell_low.populate(low_level_pop_mol)
-        return shell_high, shell_low
+        return shell_low, shell_high
 
     def run_ewald(self, calc_name=None):
         if calc_name == None:

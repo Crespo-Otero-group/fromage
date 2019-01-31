@@ -113,8 +113,9 @@ an, bn and cn
 
 clust_rad
   The radius in Angstrom used to generate the cluster which will constitute the
-  :term:`real system<Real system>`. The cluster includes all molecules which fit
-  completely within the radius. Default: ``5``
+  :term:`real system<Real system>`. The cluster includes all molecules which
+  fall within the threshold distance from any of the atoms of the central region.
+  Default: ``5``
 
 self_consistent
   Whether or not to use the Self Consistent Ewald Embedding. Be sure to also

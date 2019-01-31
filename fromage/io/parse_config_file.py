@@ -34,6 +34,7 @@ def complete_config(name="config"):
         "c_vec": "",
         "vectors_file": "",
         "clust_rad": "5",
+        "clust_mode": "inc",
         "traan": "2",
         "trabn": "2",
         "tracn": "2",
