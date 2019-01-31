@@ -80,7 +80,7 @@ class RunSeq(object):
         low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
         shell_low.populate(low_level_pop_mol)
-        return shell_high, shell_low
+        return shell_low, shell_high
 
     def run_ewald(self, calc_name=None):
         if calc_name == None:
