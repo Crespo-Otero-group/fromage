@@ -609,24 +609,40 @@ class Mol(object):
             Spherical cluster of molecules from their crystal positions
 
         """
-        trans = self.trans_from_rad(clust_rad)
+        # if there is a central mol, account for nearest neighbour molecules
+        # bleeding out of the original radius
+        if central_mol:
+            central_rad = 0
+            for atom in central_mol:
+                dis = atom.v_dist([0,0,0])
+                if dis < central_rad:
+                    central_rad = dis
+            trans = self.trans_from_rad(clust_rad + central_rad)
+        # get the translations necessary to enclose the required mols
+        else:
+            trans = self.trans_from_rad(clust_rad)
+        # if the cluster is inclusive, then extra mols might be required from
+        # an additional layer of the supercell
         if mode == 'inc':
             trans += np.array([1,1,1]) # one buffer cell layer
         supercell = self.centered_supercell(trans, from_origin=True)
 
         seed_atoms = Mol([])
+
+        # get seedatoms in the shape of the central mol if pertinent
         if central_mol:
-            trans += np.array([1,1,1])
             for atom_i in supercell:
                 for atom_j in central_mol:
                     if atom_i.dist(atom_j) < clust_rad:
                         seed_atoms.append(atom_i)
                         break
+        # get spherical seedatoms
         else:
-            # atoms within the sphere of rad clust_rad
             for atom in supercell:
                 if atom.v_dist([0, 0, 0]) < clust_rad:
                     seed_atoms.append(atom)
+
+        
         max_mol_len = 0
         if mode == 'exc':
             while len(seed_atoms) > 0:
