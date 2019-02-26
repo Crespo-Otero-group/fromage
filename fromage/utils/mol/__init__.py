@@ -14,12 +14,12 @@ from copy import deepcopy
 from fromage.utils.atom import Atom
 import fromage.io.edit_file as ef
 
+
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
     if not isinstance(to_test, Mol):
         raise TypeError("Cannot cast " +
                         type(to_test).__name__ + " to Mol object")
-
 
 
 class Mol(object):
@@ -46,9 +46,7 @@ class Mol(object):
 
     """
 
-
-
-    def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding = 'dis', thresh = 1.8):
+    def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):
         # In case the user feeds a lone atom:
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
@@ -56,6 +54,7 @@ class Mol(object):
         self.vectors = vectors
         self.bonding = bonding
         self.thresh = thresh
+
     def __repr__(self):
         out_str = ""
         for atom in self.atoms:
@@ -180,13 +179,14 @@ class Mol(object):
         """
 
         if len(self) % 2 != 0:
-            raise ValueError("Trying to split a Mol with an odd number of atoms")
+            raise ValueError(
+                "Trying to split a Mol with an odd number of atoms")
 
         mol_a = self.copy()
         mol_b = self.copy()
 
         dim_len = len(self)
-        mol_a.atoms = self[:int(dim_len/2)]
-        mol_b.atoms = self[-int(dim_len/2):]
+        mol_a.atoms = self[:int(dim_len / 2)]
+        mol_b.atoms = self[-int(dim_len / 2):]
 
         return mol_a, mol_b

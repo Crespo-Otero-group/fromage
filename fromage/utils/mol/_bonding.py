@@ -1,6 +1,7 @@
-default_thresh = {'dis' : 1.8,
-                'cov' : 0.2,
-                'vdw' : -0.3}
+default_thresh = {'dis': 1.8,
+                  'cov': 0.2,
+                  'vdw': -0.3}
+
 
 def set_bonding(self, bonding='dis', thresh=None):
     """
@@ -21,13 +22,14 @@ def set_bonding(self, bonding='dis', thresh=None):
 
     """
     if bonding not in default_thresh:
-        raise TypeError("Unrecognised bonding type: "+ bonding)
+        raise TypeError("Unrecognised bonding type: " + bonding)
     self.bonding = bonding
     if thresh:
         self.thresh = thresh
     else:
         self.thresh = default_thresh[bonding]
     return
+
 
 def set_bonding_str(self, in_str):
     """
@@ -54,7 +56,7 @@ def set_bonding_str(self, in_str):
             bonding = i_bonding
     # if there is bonding, try to find threshold
     if bonding:
-        stripped = in_str.replace(bonding,'')
+        stripped = in_str.replace(bonding, '')
         # if there is still a thresh in this string
         if stripped:
             thresh_str = stripped
@@ -63,7 +65,7 @@ def set_bonding_str(self, in_str):
         thresh_str = in_str
     # if both present
     if bonding and thresh_str:
-        self.set_bonding(bonding=bonding,thresh=float(thresh_str))
+        self.set_bonding(bonding=bonding, thresh=float(thresh_str))
     # if only bonding
     if bonding and not thresh_str:
         self.set_bonding(bonding=bonding)
@@ -73,6 +75,7 @@ def set_bonding_str(self, in_str):
     if not thresh_str and not bonding:
         self.set_bonding()
     return
+
 
 def bonded(self, atom_a, atom_b):
     """
@@ -90,6 +93,7 @@ def bonded(self, atom_a, atom_b):
     bonded_bool = atom_a.dist(atom_b, ref=self.bonding) <= self.thresh
     return bonded_bool
 
+
 def per_bonded(self, atom_a, atom_b):
     """
     Check if atom_a is bonded to atom_b given lattice conditions
@@ -103,5 +107,6 @@ def per_bonded(self, atom_a, atom_b):
     bonded_bool : bool
         True if the atoms are bonded and False if not
     """
-    bonded_bool = atom_a.per_dist(atom_b, self.vectors, ref=self.bonding) <= self.thresh
+    bonded_bool = atom_a.per_dist(
+        atom_b, self.vectors, ref=self.bonding) <= self.thresh
     return bonded_bool

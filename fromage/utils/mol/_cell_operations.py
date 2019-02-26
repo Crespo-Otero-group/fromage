@@ -1,6 +1,7 @@
 from copy import deepcopy
 import numpy as np
 
+
 def complete_mol(self, labels):
     """
     Take a cell and complete certain molecules
@@ -30,6 +31,7 @@ def complete_mol(self, labels):
     for atom in new_mol:
         new_cell.append(atom.copy())
     return new_mol, new_cell
+
 
 def complete_cell(self):
     """
@@ -61,6 +63,7 @@ def complete_cell(self):
         out_cell.extend(mol)
     return out_cell, full_mol_l
 
+
 def supercell(self, trans):
     """
     Return a supercell of I x J x K
@@ -87,11 +90,12 @@ def supercell(self, trans):
                     self.vectors[0] + b_mult * \
                     self.vectors[1] + c_mult * self.vectors[2]
                 new_atoms = mol_init.Mol([i.v_translated(vector)
-                                 for i in self.atoms])
+                                          for i in self.atoms])
                 new_cell += new_atoms
     out_vec = (self.vectors.T * trans.transpose()).T
     new_cell.vectors = out_vec
     return new_cell
+
 
 def centered_supercell(self, trans, from_origin=False):
     """
@@ -139,11 +143,12 @@ def centered_supercell(self, trans, from_origin=False):
                     self.vectors[0] + b_mult * \
                     self.vectors[1] + c_mult * self.vectors[2]
                 new_atoms = mol_init.Mol([i.v_translated(vector)
-                                 for i in self.atoms])
+                                          for i in self.atoms])
                 new_cell += new_atoms
     out_vec = (self.vectors.T * trans.transpose()).T
     new_cell.vectors = out_vec
     return new_cell
+
 
 def trans_from_rad(self, clust_rad):
     """
@@ -190,7 +195,8 @@ def trans_from_rad(self, clust_rad):
     trans_count -= np.array([1, 1, 1])
     return trans_count
 
-def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
+
+def make_cluster(self, clust_rad, mode='exc', central_mol=None):
     """
     Generate a cluster of molecules from a primitive cell
 
@@ -228,7 +234,7 @@ def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
     if central_mol:
         central_rad = 0
         for atom in central_mol:
-            dis = atom.v_dist([0,0,0])
+            dis = atom.v_dist([0, 0, 0])
             if dis < central_rad:
                 central_rad = dis
         trans = self.trans_from_rad(clust_rad + central_rad)
@@ -238,7 +244,7 @@ def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
     # if the cluster is inclusive, then extra mols might be required from
     # an additional layer of the supercell
     if mode == 'inc':
-        trans += np.array([1,1,1]) # one buffer cell layer
+        trans += np.array([1, 1, 1])  # one buffer cell layer
     supercell = self.centered_supercell(trans, from_origin=True)
 
     seed_atoms = mol_init.Mol([])
@@ -256,7 +262,6 @@ def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
             if atom.v_dist([0, 0, 0]) < clust_rad:
                 seed_atoms.append(atom)
 
-
     max_mol_len = 0
     if mode == 'exc':
         while len(seed_atoms) > 0:
@@ -273,9 +278,11 @@ def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
         max_mol_len = len(supercell.select(supercell.index(seed_atoms[0])))
 
         while len(seed_atoms) > 0:
-            mol_tmp = seed_atoms.select(0) # The part of the mol detected in seed_atoms
+            # The part of the mol detected in seed_atoms
+            mol_tmp = seed_atoms.select(0)
             if len(mol_tmp) < max_mol_len:
-                # The whole mol, which could potentially include even more seed_atoms
+                # The whole mol, which could potentially include even more
+                # seed_atoms
                 mol = supercell.select(supercell.index(seed_atoms[0]))
             else:
                 mol = mol_tmp
@@ -292,7 +299,8 @@ def make_cluster(self, clust_rad, mode = 'exc', central_mol = None):
 
     return clust_atoms
 
-def centered_mols(self, labels, return_trans = False):
+
+def centered_mols(self, labels, return_trans=False):
     """
     Return the molecules translated at the origin with a corresponding cell
 

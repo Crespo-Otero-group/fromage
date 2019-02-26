@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+
 def select(self, labels):
     """
     Return a molecule out of the current Mol.
@@ -45,7 +46,7 @@ def select(self, labels):
         for old in old_atoms:
             tmp_remaining = remaining.copy()
             for rem in remaining:
-                if self.bonded(old,rem):
+                if self.bonded(old, rem):
                     new_atoms.append(rem)
                     selected.append(rem)
                     tmp_remaining.remove(rem)
@@ -53,6 +54,7 @@ def select(self, labels):
             remaining = tmp_remaining
         old_atoms = new_atoms
     return selected
+
 
 def per_select(self, labels, old_pos=False):
     """
@@ -111,7 +113,8 @@ def per_select(self, labels, old_pos=False):
             for rem in remaining:
                 # contains the distance from the point or image and the
                 # coordinates of the point or image
-                dist, per_img = old.per_dist(rem, self.vectors, ref=self.bonding, new_pos=True)
+                dist, per_img = old.per_dist(
+                    rem, self.vectors, ref=self.bonding, new_pos=True)
                 # if the atom is close enough to be part of the molecule
                 if dist <= self.thresh:
                     new_atoms.append(per_img)
@@ -122,11 +125,11 @@ def per_select(self, labels, old_pos=False):
             remaining = tmp_remaining
             old_atoms = new_atoms
 
-
     if old_pos:
         return selected_img, selected_old
     else:
         return selected_img
+
 
 def segregate(self):
     """Separate current Mol in a list of Mols of different molecules"""
