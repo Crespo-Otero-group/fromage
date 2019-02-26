@@ -154,8 +154,8 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
         The unit cell vectors if pertinent
     Returns
     -------
-    atom_step : Mol object
-        The atomic positions in the file
+    mol : Mol object
+        The atomic positions in the file as a Mol object
 
     """
     mol = Mol(read_pos(in_name))
