@@ -10,6 +10,7 @@ import fromage.utils.per_table as pt
 from fromage.utils.mol import Mol
 from fromage.utils import per_table as per
 from fromage.utils.atom import Atom
+from fromage.utils.dimer import Dimer
 from fromage.utils.volume import CubeGrid
 
 
@@ -164,6 +165,31 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
 
     return mol
 
+def dim_from_file(in_name, bonding=''):
+    """
+    Return a Dimer object from a file
+
+    The file should have the dimers stated one after the other. The order of
+    atoms does not matter as long as they are separated in two.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    bonding : str
+        A string determining the type of bonding in the molecule. Something like
+        'dis0.2' or '-13cov'
+    Returns
+    -------
+    dim : Dimer object
+        The dimer in the file
+
+    """
+    double_mol = mol_from_file(in_name)
+    mol_a, mol_b = double_mol.split_in_half()
+    dim = Dimer([mol_a, mol_b])
+
+    return dim
 
 def read_cp2k(in_name, pop="ESP"):
     """

@@ -642,7 +642,7 @@ class Mol(object):
                 if atom.v_dist([0, 0, 0]) < clust_rad:
                     seed_atoms.append(atom)
 
-        
+
         max_mol_len = 0
         if mode == 'exc':
             while len(seed_atoms) > 0:
@@ -825,3 +825,27 @@ class Mol(object):
         import fromage.scripts.assign_charges as ac
         ac.assign_charges(reference_mol, self)
         pass
+
+    def split_in_half(self):
+        """
+        Split the molecule in half by atom order
+
+        Returns
+        -------
+        mol_a, mol_b : Mol objects
+            Mol objects with the attributes of the original Mol but split in
+            half
+
+        """
+
+        if len(self) % 2 != 0:
+            raise ValueError("Trying to split a Mol with an odd number of atoms")
+
+        mol_a = self.copy()
+        mol_b = self.copy()
+
+        dim_len = len(self)
+        mol_a.atoms = self[:int(dim_len/2)]
+        mol_b.atoms = self[-int(dim_len/2):]
+
+        return mol_a, mol_b

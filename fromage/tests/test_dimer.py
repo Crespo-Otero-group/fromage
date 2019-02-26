@@ -7,9 +7,9 @@ def test_init():
     big_mol = rf.mol_from_file("h2o_dimer.xyz")
     mol_a = big_mol.select(0)
     mol_b = big_mol.select(2)
-    print(mol_a)
-    print(mol_b)
-
     dim = Dimer([mol_a,mol_b])
-    print(dim)
     return
+
+def test_dim_from_file():
+    dim = rf.dim_from_file("h2o_dimer.xyz")
+    print(dim)
