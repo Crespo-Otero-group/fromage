@@ -1,4 +1,11 @@
 """The class used to manipulate lists of Atoms
+
+This module is split into different files for ease of reading and maintainability.
+We define the class in __init__ along with basic functions, which means if the
+Mol.__init__() function needs to be invoked by any of the methods, this produces
+a circular import. The solution we have chosen is to have in-function imports of
+fromage.utils.mol every time this happens.
+
 """
 import numpy as np
 # from copy import copy
