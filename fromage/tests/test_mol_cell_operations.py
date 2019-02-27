@@ -1,4 +1,3 @@
-import pytest
 import numpy as np
 from pytest import approx
 
@@ -38,5 +37,3 @@ def test_make_cluster(hc1_cell):
 def test_confine(hc1_complete_cell):
     conf = hc1_complete_cell.confined()
     assert conf[19].x == approx(-0.202155)
-
-

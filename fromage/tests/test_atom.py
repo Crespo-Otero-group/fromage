@@ -1,10 +1,4 @@
-import pytest
 from pytest import approx
-import numpy as np
-
-from fromage.utils.atom import Atom
-
-
 
 def test_dist_to_atom(c_at, o_at):
     """Distance to atom is implemented"""

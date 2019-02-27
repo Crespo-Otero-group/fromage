@@ -1,4 +1,3 @@
-import pytest
 def test_select_h2o_dimer(h2o_dimer):
     water = h2o_dimer.select(3)
     assert len(water) == 3
@@ -37,6 +36,3 @@ def test_multi_per_select(hc1_cell, hc1_quad):
 def test_mol_segregation(hc1_quad):
     mols = hc1_quad.segregate()
     assert len(mols) == 4 and len(mols[1]) == 37
-
-
-

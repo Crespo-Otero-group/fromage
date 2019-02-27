@@ -1,6 +1,4 @@
-import pytest
 from pytest import approx
-import fromage.io.read_file as rf
 import numpy as np
 from fromage.utils.atom import Atom
 from fromage.utils.mol import Mol
@@ -79,5 +77,3 @@ def test_set_bonding_str(h2o_dimer):
     h2o_dimer.set_bonding_str("-0.1cov")
     assert h2o_dimer.bonding == "cov"
     assert h2o_dimer.thresh == -0.1
-
-

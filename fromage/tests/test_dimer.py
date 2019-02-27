@@ -1,6 +1,4 @@
-import pytest
 import fromage.io.read_file as rf
-from pytest import approx
 from fromage.utils.dimer import Dimer
 
 def test_init():
