@@ -45,6 +45,12 @@ class Mol(object):
         Threshold for the detection. If None, use defaults
 
     """
+    from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
+    from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
+    from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
+    from ._selecting import select, per_select, segregate
+    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
+    from ._geom import coord_array
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):
         # In case the user feeds a lone atom:
@@ -63,13 +69,6 @@ class Mol(object):
 
     def __str__(self):
         return self.__repr__()
-
-    from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
-    from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
-    from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
-    from ._selecting import select, per_select, segregate
-    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
-    from ._geom import coord_array
 
     def copy(self):
         return deepcopy(self)
