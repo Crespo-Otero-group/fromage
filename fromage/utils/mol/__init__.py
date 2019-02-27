@@ -50,7 +50,7 @@ class Mol(object):
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
     from ._selecting import select, per_select, segregate
     from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
-    from ._geom import coord_array, pairwise_distances2
+    from ._geom import coord_array, pairwise_distances
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):
         # In case the user feeds a lone atom:
