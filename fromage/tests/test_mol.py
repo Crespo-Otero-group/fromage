@@ -20,6 +20,7 @@ def test_duplicity(h2o_dup):
     h2o_dup.remove_duplicates()
     assert len(h2o_dup) == 3
 
+
 def test_len(h2o_dimer):
     """The len method is implemented"""
     assert len(h2o_dimer) == 6
@@ -52,14 +53,17 @@ def test_centroid(c_o):
     cen = c_o.centroid()
     assert cen[0] == approx(0.5)
 
+
 def test_center(c_o):
     c_o.center_mol()
     assert c_o[0].x == approx(-0.5)
 
+
 def test_translate(c_o):
-    vec = np.array([0.25,1.0,0.0])
+    vec = np.array([0.25, 1.0, 0.0])
     c_o.translate(vec)
     assert c_o[1].x == approx(1.25)
+
 
 def test_set_bonding_str(h2o_dimer):
     h2o_dimer.set_bonding_str("dis")
