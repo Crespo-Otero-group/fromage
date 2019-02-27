@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.spatial.distance import cdist
+import fromage.utils.array_operations as ao
 
 def coord_array(self):
     """
@@ -19,17 +19,21 @@ def coord_array(self):
         coord_arr[i][2] = atom.z
     return coord_arr
 
-def pairwise_distances(self):
+def extreme_at_pairs(self, n_pairs):
     """
-    Return a numpy array of the pairwise squared distances
+    Return a list of pairs of extreme atom coordinates
 
+    Parameters
+    ----------
+    n_pairs : int
+        Number of extreme atom pairs requested
     Returns
     -------
-    dis_arr : Nat x Nat numpy array
-        Squared distance matrix (lower triangular and 0 diagonal)
+    pairs : list of n_pairs x 3
 
     """
     coords = self.coord_array()
-    dis_arr = cdist(coords,coords)
+    dist_mat = ao.dist_mat(coords)
+    pairs = ao.find_largest(dist_mat,2)
 
-    return dis_arr
+    return pairs
