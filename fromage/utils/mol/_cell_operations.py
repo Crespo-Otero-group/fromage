@@ -328,3 +328,10 @@ def centered_mols(self, labels, return_trans=False):
         return mol, mod_cell, -centro
     else:
         return mol, mod_cell
+
+def confined(self):
+    """Move all atoms to fit inside the primitive cell"""
+    frac_mol = self.dir_to_frac_pos()
+    out_mol = frac_mol.frac_to_dir_pos()
+
+    return out_mol

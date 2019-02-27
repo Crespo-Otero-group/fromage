@@ -1,0 +1,19 @@
+import numpy as np
+
+def coord_array(self):
+    """
+    Return a numpy array of the coordinates
+
+    Returns
+    -------
+    arr : Nat x 3 numpy array
+        Array of the form [[x1,y1,z1],[x2,y2,z2],...]
+
+    """
+    nat = len(self)
+    arr = np.zeros((nat,3))
+    for i,atom in enumerate(self):
+        arr[i][0] = atom.x
+        arr[i][1] = atom.y
+        arr[i][2] = atom.z
+    return arr

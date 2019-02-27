@@ -5,32 +5,6 @@ import numpy as np
 from fromage.utils.atom import Atom
 
 
-@pytest.fixture
-def c_at():
-    """Return a C Atom object at origin"""
-    out_at = Atom("C", 0.0, 0.0, 0.0)
-    return out_at
-
-
-@pytest.fixture
-def o_at():
-    """Return am O Atom object at x = 0.8"""
-    out_at = Atom("O", 0.8, 0.0, 0.0)
-    return out_at
-
-@pytest.fixture
-def o_at_outside():
-    """Return am O Atom object outside of the 111 cell"""
-    out_at = Atom("O", 2.1, -0.3, 1.4)
-    return out_at
-
-@pytest.fixture
-def vectors():
-    vec_out = np.array([[1.0, 0.0, 0.0],
-                        [0.0, 1.0, 0.0],
-                        [0.0, 0.0, 1.0]])
-    return vec_out
-
 
 def test_dist_to_atom(c_at, o_at):
     """Distance to atom is implemented"""

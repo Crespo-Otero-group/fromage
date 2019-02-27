@@ -68,7 +68,8 @@ class Mol(object):
     from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
     from ._selecting import select, per_select, segregate
-    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols
+    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
+    from ._geom import coord_array
 
     def copy(self):
         return deepcopy(self)
@@ -156,13 +157,6 @@ class Mol(object):
         for atom in out_mol:
             new_pos = np.matmul(self.vectors.T, atom.get_pos())
             atom.set_pos(new_pos)
-
-        return out_mol
-
-    def confined(self):
-        """Move all atoms to fit inside the primitive cell"""
-        frac_mol = self.dir_to_frac_pos()
-        out_mol = frac_mol.frac_to_dir_pos()
 
         return out_mol
 
