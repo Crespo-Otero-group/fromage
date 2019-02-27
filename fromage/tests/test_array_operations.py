@@ -9,5 +9,6 @@ def test_dist_mat(h2o_dim_dist_arr):
 def test_find_largest(h2o_dim_dist_arr):
     largest_inds = ao.find_largest(h2o_dim_dist_arr,3)
     assert largest_inds == [(4, 0), (4, 2), (5, 0)]
-    return
 
+def test_plane_from_coord(hc1_array):
+    print(ao.plane_from_coord(hc1_array))

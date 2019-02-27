@@ -44,3 +44,38 @@ def find_largest(in_array, n_largest):
         indices.append(folded_index)
         new_arr[folded_index] = 0
     return  indices
+
+def plane_from_coord(coord_arr):
+    """
+    Return plane coefficients which best includes the coordinates
+
+    This is done via a singular value decomposition of the coordinates. Read
+    the following:
+    http://caves.org/section/commelect/DUSI/openmag/pdf/SphereFitting.pdf
+
+    Parameters
+    ----------
+    coord_arr : Nat x 3 numpy array
+        The input coordinates array
+    Returns
+    -------
+    a, b, c, d : floats
+        Plane equation coefficients such that a point on the plane is:
+        ax + by + cz + d = 0
+
+    """
+    centroid = np.average(coord_arr, axis=0)
+    # coordinates translated to origin
+    cen_coords = coord_arr - centroid
+
+    U, S, Vt = np.linalg.svd(cen_coords)
+    # The last row of V matrix indicate the eigenvectors of
+    # smallest eigenvalues (singular values).
+    N = Vt[-1]
+
+    # Extract a, b, c, d coefficients.
+    x0, y0, z0 = centroid
+    a, b, c = N
+    d = -(a * x0 + b * y0 + c * z0)
+
+    return a, b, c, d

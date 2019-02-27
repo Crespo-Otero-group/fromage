@@ -29,11 +29,15 @@ def extreme_at_pairs(self, n_pairs):
         Number of extreme atom pairs requested
     Returns
     -------
-    pairs : list of n_pairs x 3
+    pairs : numpy array of n_pairs x 2 x 3
 
     """
     coords = self.coord_array()
     dist_mat = ao.dist_mat(coords)
-    pairs = ao.find_largest(dist_mat,2)
+    pairs_inds = ao.find_largest(dist_mat,2)
+    pairs = np.zeros((n_pairs,2,3))
+    for i,ind in enumerate(pairs_inds):
+        pairs[i][0] = coords[ind[0]]
+        pairs[i][1] = coords[ind[1]]
 
     return pairs

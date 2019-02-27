@@ -112,3 +112,10 @@ def h2o_dim_array():
 def h2o_dim_dist_arr(h2o_dim_array):
     """Distance array for the H2O dimer"""
     return(ao.dist_mat(h2o_dim_array))
+
+@pytest.fixture
+def hc1_array():
+    mol = rf.mol_from_file("hc1_mol.xyz")
+    arr = mol.coord_array()
+    return arr
+
