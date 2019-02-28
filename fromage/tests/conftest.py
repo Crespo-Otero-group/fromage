@@ -115,7 +115,14 @@ def h2o_dim_dist_arr(h2o_dim_array):
 
 @pytest.fixture
 def hc1_array():
+    """Coordinate array for the HC1 monomer"""
     mol = rf.mol_from_file("hc1_mol.xyz")
     arr = mol.coord_array()
     return arr
 
+@pytest.fixture
+def rectangle_pairs_array():
+    """2 pairs of coordinates defining the 4 X 2 rectangle"""
+    lis_rectangle = [[[0.,0.,0.],[4.,2.,0.]],[[0.,2.,0.],[4.,0.,0.]]]
+    arr = np.array(lis_rectangle)
+    return arr

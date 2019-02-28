@@ -107,3 +107,57 @@ def extreme_pairs(coord_arr, n_pairs):
         pairs[i][1] = coord_arr[ind[1]]
 
     return pairs
+
+def embedded_pairs(coord_pairs):
+    """
+    Return the atom pairs defining the quadrilateral embedded in the input
+
+    The input is two pairs of atoms where each pair is the diagonal of the
+    quadrilateral, defined as the two most distant coordinate pairs. The output
+    is the corresponding pair.
+
+    Parameters
+    ----------
+    coord_pairs : numpy array of 2 x 2 x 3
+        Pairs of coordinates
+    Returns
+    -------
+    out_pairs : numpy array of 2 x 2 x 3
+        Pairs of coordinates where the first pair is the longer diagonal of the
+        new quadrilateral
+
+    """
+    first_pair = coord_pairs[0]
+    second_pair = coord_pairs[1]
+
+    # define the coordinates of the diagonal A
+    extremum_a_1 = np.mean([first_pair[0],second_pair[0]],axis=0)
+    extremum_a_2 = np.mean([first_pair[1],second_pair[1]],axis=0)
+    # same for the diagonal B
+    extremum_b_1 = np.mean([first_pair[0],second_pair[1]],axis=0)
+    extremum_b_2 = np.mean([first_pair[1],second_pair[0]],axis=0)
+
+    # now determine which diagonal is the long one
+
+    # measure the distance of atom 1 of pair 1 to atom 1 of pair 2
+    dis_1 = np.linalg.norm(first_pair[0] - second_pair[0])
+    # again for atom 1 of pair to atom 2 of pair 2
+    dis_2 = np.linalg.norm(first_pair[0] - second_pair[1])
+
+    # if firstpair_[0], second_pair[0] is the short side of the original
+    # quadrilateral
+    if dis_1 < dis_2:
+        long_1 = extremum_a_1
+        long_2 = extremum_a_2
+        short_1 = extremum_b_1
+        short_2 = extremum_b_2
+    # if it's the other way rond
+    else:
+        long_1 = extremum_b_1
+        long_2 = extremum_b_2
+        short_1 = extremum_a_1
+        short_2 = extremum_a_2
+
+    out_pairs = np.array([[long_1, long_2],[short_1, short_2]])
+
+    return out_pairs
