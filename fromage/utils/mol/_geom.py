@@ -76,6 +76,30 @@ def plane_coeffs(self):
 
     return plane_coeffs
 
+def calc_plane_coeffs(self):
+    """Set the plane coefficients in geom_info"""
+    self.geom_info.plane_coeffs = self.plane_coeffs()
+
+def axes(self):
+    """
+    Return principal and secondary axes of the Mol
+
+    Returns
+    -------
+    axes : 2 x 3 np array
+        Principal, followed by secondary axes of the molecule
+
+    """
+    if self.geom_info.plane_coeffs == None:
+        self.calc_plane_coeffs()
+    # get the two extreme coordinate pairs
+    extreme_pairs = ao.extreme_pairs(self.geom_info.coord_array,2)
+    # get the two embedded coordinate pairs
+    axis_pairs = ao.embedded_pairs(extreme_pairs)
+    # get vectors from projected pair
+    axes = ao.project_pairs_to_vectors(axis_pairs,self.geom_info.plane_coeffs)
+
+    return axes
 def calc_axes(self):
     """Calculate the principal and secondary axes of the molecule"""
     # get the coordinates in np array form

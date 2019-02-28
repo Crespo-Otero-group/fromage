@@ -146,13 +146,13 @@ def rectangle_plane_coeffs():
 @pytest.fixture
 def arbitrary_vector():
     """Pair of coordinates"""
-    lis_pair = [[-0.5,0.5,3.],[3.,1.,-1.]]
+    lis_pair = [[-0.5,0.5,3.],[3.,0.5,-1.]]
     arr = np.array(lis_pair)
     return arr
 
 @pytest.fixture
 def arbitrary_pairs_array():
     """2 pairs of coordinates defining a quadrangle"""
-    lis_pairs = [[[-0.5,0.5,3.],[3.,1.,-1.]],[[0.5,2.,0.],[0.5,-0.5,5.]]]
+    lis_pairs = [[[-0.5,0.5,3.],[3.,0.5,-1.]],[[0.5,2.,0.],[0.5,-0.5,5.]]]
     arr = np.array(lis_pairs)
     return arr

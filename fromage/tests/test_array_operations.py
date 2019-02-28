@@ -42,12 +42,12 @@ def test_project_on_plane(rectangle_array,rectangle_plane_coeffs):
 
 def test_project_pair_to_vector(arbitrary_vector,rectangle_plane_coeffs):
     projected_vec = ao.project_pair_to_vector(arbitrary_vector,rectangle_plane_coeffs)
-    expected = np.array([-3.5,-.5,0.])
+    expected = np.array([-1.,0.,0.])
     assert_allclose(projected_vec, expected)
     return
 
 def test_project_pairs_to_vectors(arbitrary_pairs_array,rectangle_plane_coeffs):
     projected_vecs = ao.project_pairs_to_vectors(arbitrary_pairs_array,rectangle_plane_coeffs)
-    expected = np.array([[-3.5,-.5,0.],[0.,2.5,0.]])
+    expected = np.array([[-1.,0.,0.],[0.,1.,0.]])
     assert_allclose(projected_vecs, expected)
     return

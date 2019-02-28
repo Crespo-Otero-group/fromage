@@ -193,7 +193,7 @@ def project_point(point, plane_coeffs):
 
 def project_pair_to_vector(coord_pair, plane_coeffs):
     """
-    Return the a vector formed by a coordinate pair projected onto a plane
+    Return the normalised vector formed by a coordinate pair projected onto a plane
 
     Parameters
     ----------
@@ -205,18 +205,22 @@ def project_pair_to_vector(coord_pair, plane_coeffs):
     Returns
     -------
     vector : length 3 numpy array
-        The vector resulting from the projection of the pair of points
+        The normalised vector resulting from the projection of the pair of
+        points
 
     """
     proj_a = project_point(coord_pair[0], plane_coeffs)
     proj_b = project_point(coord_pair[1], plane_coeffs)
 
     vector = proj_a - proj_b
+
+    vector /= np.linalg.norm(vector)
     return vector
 
 def project_pairs_to_vectors(coord_pairs, plane_coeffs):
     """
-    Return the a vector formed by 2 coordinate pairs projected onto a plane
+    Return the normalised vectors formed by 2 coordinate pairs projected onto a
+    plane
 
     Parameters
     ----------
@@ -228,7 +232,8 @@ def project_pairs_to_vectors(coord_pairs, plane_coeffs):
     Returns
     -------
     vectors : length 2 x 3 numpy array
-        The vectors resulting from the projection of the pairs of points
+        The normalised vectors resulting from the projection of the pairs of
+        points
 
     """
     lis_vectors = []
