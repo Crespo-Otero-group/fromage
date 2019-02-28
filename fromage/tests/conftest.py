@@ -48,6 +48,13 @@ def h2o_dimer(at_list):
     return out_mo
 
 @pytest.fixture
+def hc1_mol():
+    """HC1 monomer"""
+    mol = rf.mol_from_file("hc1_mol.xyz")
+    return mol
+
+
+@pytest.fixture
 def hc1_quad():
     """HC1 quadrimer"""
     out_mo = Mol(rf.read_pos("hc1_quad.xyz"))

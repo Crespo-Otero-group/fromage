@@ -8,7 +8,6 @@ fromage.utils.mol every time this happens.
 
 """
 import numpy as np
-# from copy import copy
 from copy import deepcopy
 
 from fromage.utils.atom import Atom
@@ -43,6 +42,9 @@ class Mol(object):
         'vdw' : distance - (vwd radius of atom a + of atom b) < threshold
     thresh : float, optional
         Threshold for the detection. If None, use defaults
+    geom_info : GeomInfo object
+        Geometry information, including numpy coordinate array, plane coeffs,
+        principal and secondary axes.
 
     """
     from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
@@ -50,7 +52,7 @@ class Mol(object):
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
     from ._selecting import select, per_select, segregate
     from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
-    from ._geom import coord_array
+    from ._geom import GeomInfo, coord_array, calc_coord_array, plane_coeffs
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):
         # In case the user feeds a lone atom:
@@ -60,6 +62,7 @@ class Mol(object):
         self.vectors = vectors
         self.bonding = bonding
         self.thresh = thresh
+        self.geom_info = self.GeomInfo()
 
     def __repr__(self):
         out_str = ""

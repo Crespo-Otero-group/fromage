@@ -222,7 +222,7 @@ def project_pairs_to_vectors(coord_pairs, plane_coeffs):
     ----------
     coord_pairs : numpy array 2 x 2 x 3
         Pairs of coordinates
-    plane_coeffs : length r numpy array
+    plane_coeffs : length 4 numpy array
         Plane equation coefficients such that a point on the plane is:
         ax + by + cz + d = 0. The array is [a,b,c,d]
     Returns
