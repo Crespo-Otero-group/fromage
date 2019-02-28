@@ -1,4 +1,5 @@
 import fromage.utils.array_operations as ao
+import numpy as np
 from pytest import approx
 
 def test_dist_mat(h2o_dim_dist_arr):
@@ -11,4 +12,7 @@ def test_find_largest(h2o_dim_dist_arr):
     assert largest_inds == [(4, 0), (4, 2), (5, 0)]
 
 def test_plane_from_coord(hc1_array):
-    print(ao.plane_from_coord(hc1_array))
+    results = ao.plane_from_coord(hc1_array)
+    arr = np.array(results)
+    desired = np.array([-0.29188565799088845, 0.742637122670864, -0.6027378092424318, 1.7825747834180873e-07])
+    np.testing.assert_allclose(arr,desired)
