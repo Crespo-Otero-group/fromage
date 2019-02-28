@@ -20,7 +20,7 @@ def dist_mat(in_array):
 
 def find_largest(in_array, n_largest):
     """
-    Return the coordinates of the N pairs of atoms furthest from each other
+    Return the coordinates of the N largest elements of an ND-array
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def find_largest(in_array, n_largest):
     Returns
     -------
     n_largest : n_largest X 2 array-like
-        The coordinates of the n_pairs of atoms. In fact it's an n_largest dimensional
+        The coordinates of the n_largest elements. It's an n_largest dimensional
         array of tuples.
 
     """
