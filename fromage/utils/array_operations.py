@@ -1,3 +1,6 @@
+"""Functions pertaining to numpy arrays. Many functions operate on coordinate
+arrays of the form [[x1,y1,z1],[x2,z2,y2],...] and are later on used in
+mol._geom"""
 import numpy as np
 from scipy.spatial.distance import cdist
 

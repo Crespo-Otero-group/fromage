@@ -1,5 +1,4 @@
 import numpy as np
-import fromage.utils.array_operations as ao
 
 def coord_array(self):
     """
