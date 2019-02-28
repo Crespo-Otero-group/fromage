@@ -62,9 +62,9 @@ def plane_from_coord(coord_arr):
         The input coordinates array
     Returns
     -------
-    a, b, c, d : floats
+    res : length 3 numpy array
         Plane equation coefficients such that a point on the plane is:
-        ax + by + cz + d = 0
+        ax + by + cz + d = 0. The array is [a,b,c,d]
 
     """
     centroid = np.average(coord_arr, axis=0)
@@ -81,7 +81,8 @@ def plane_from_coord(coord_arr):
     a, b, c = N
     d = -(a * x0 + b * y0 + c * z0)
 
-    return a, b, c, d
+    res = np.array([a,b,c,d])
+    return res
 
 def extreme_pairs(coord_arr, n_pairs):
     """
@@ -161,3 +162,28 @@ def embedded_pairs(coord_pairs):
     out_pairs = np.array([[long_1, long_2],[short_1, short_2]])
 
     return out_pairs
+
+def project_point(point, plane_coeffs):
+    """
+    Project a point onto a plane
+
+    Parameters
+    ----------
+    point : length 3 numpy array
+        The point to be projected on the plane
+    plane_coeffs : length 3 numpy array
+        Plane equation coefficients such that a point on the plane is:
+        ax + by + cz + d = 0. The array is [a,b,c,d]
+    Returns
+    -------
+    out_point : length 3 numpy array
+        The coordinates of the projected point
+
+    """
+    plane_normal_vector = plane_coeffs[:3]
+    point_norm2 = np.sum(plane_normal_vector*plane_normal_vector)
+    proj_parameter = plane_normal_vector * point / point_norm2 + plane_coeffs[3]
+
+    projection = point - plane_normal_vector * proj_parameter
+
+    return projection

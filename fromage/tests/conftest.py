@@ -121,6 +121,13 @@ def hc1_array():
     return arr
 
 @pytest.fixture
+def rectangle_array():
+    """Coordinate array for corners of a rectangle"""
+    lis_coord = [[0.,0.,0.],[4.,2.,0.],[0.,2.,0.],[4.,0.,0.]]
+    arr = np.array(lis_coord)
+    return arr
+
+@pytest.fixture
 def rectangle_pairs_array():
     """2 pairs of coordinates defining the 4 X 2 rectangle"""
     lis_rectangle = [[[0.,0.,0.],[4.,2.,0.]],[[0.,2.,0.],[4.,0.,0.]]]
