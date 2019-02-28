@@ -174,7 +174,7 @@ def project_point(point, plane_coeffs):
     ----------
     point : length 3 numpy array
         The point to be projected on the plane
-    plane_coeffs : length 3 numpy array
+    plane_coeffs : length 4 numpy array
         Plane equation coefficients such that a point on the plane is:
         ax + by + cz + d = 0. The array is [a,b,c,d]
     Returns
@@ -190,3 +190,51 @@ def project_point(point, plane_coeffs):
     projection = point - plane_normal_vector * proj_parameter
 
     return projection
+
+def project_pair_to_vector(coord_pair, plane_coeffs):
+    """
+    Return the a vector formed by a coordinate pair projected onto a plane
+
+    Parameters
+    ----------
+    coord_pair : numpy array of 2 x 3
+        Pair of coordinates
+    plane_coeffs : length r numpy array
+        Plane equation coefficients such that a point on the plane is:
+        ax + by + cz + d = 0. The array is [a,b,c,d]
+    Returns
+    -------
+    vector : length 3 numpy array
+        The vector resulting from the projection of the pair of points
+
+    """
+    proj_a = project_point(coord_pair[0], plane_coeffs)
+    proj_b = project_point(coord_pair[1], plane_coeffs)
+
+    vector = proj_a - proj_b
+    return vector
+
+def project_pairs_to_vectors(coord_pairs, plane_coeffs):
+    """
+    Return the a vector formed by 2 coordinate pairs projected onto a plane
+
+    Parameters
+    ----------
+    coord_pairs : numpy array 2 x 2 x 3
+        Pairs of coordinates
+    plane_coeffs : length r numpy array
+        Plane equation coefficients such that a point on the plane is:
+        ax + by + cz + d = 0. The array is [a,b,c,d]
+    Returns
+    -------
+    vectors : length 2 x 3 numpy array
+        The vectors resulting from the projection of the pairs of points
+
+    """
+    lis_vectors = []
+    for pair in coord_pairs:
+        projected_vec = project_pair_to_vector(pair, plane_coeffs)
+        lis_vectors.append(projected_vec)
+    vectors = np.array(lis_vectors)
+
+    return vectors

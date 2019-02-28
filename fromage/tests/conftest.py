@@ -34,7 +34,6 @@ def vectors():
                         [0.0, 0.0, 1.0]])
     return vec_out
 
-
 # Mol fixtures
 @pytest.fixture
 def at_list():
@@ -48,13 +47,11 @@ def h2o_dimer(at_list):
     out_mo = Mol(at_list)
     return out_mo
 
-
 @pytest.fixture
 def hc1_quad():
     """HC1 quadrimer"""
     out_mo = Mol(rf.read_pos("hc1_quad.xyz"))
     return out_mo
-
 
 @pytest.fixture
 def hc1_cell():
@@ -132,4 +129,23 @@ def rectangle_pairs_array():
     """2 pairs of coordinates defining the 4 X 2 rectangle"""
     lis_rectangle = [[[0.,0.,0.],[4.,2.,0.]],[[0.,2.,0.],[4.,0.,0.]]]
     arr = np.array(lis_rectangle)
+    return arr
+
+@pytest.fixture
+def rectangle_plane_coeffs():
+    plane_coeffs = np.array([0.,0.,1.,0.])
+    return plane_coeffs
+
+@pytest.fixture
+def arbitrary_vector():
+    """Pair of coordinates"""
+    lis_pair = [[-0.5,0.5,3.],[3.,1.,-1.]]
+    arr = np.array(lis_pair)
+    return arr
+
+@pytest.fixture
+def arbitrary_pairs_array():
+    """2 pairs of coordinates defining a quadrangle"""
+    lis_pairs = [[[-0.5,0.5,3.],[3.,1.,-1.]],[[0.5,2.,0.],[0.5,-0.5,5.]]]
+    arr = np.array(lis_pairs)
     return arr
