@@ -43,7 +43,7 @@ def find_largest(in_array, n_largest):
         folded_index = np.unravel_index(flat_index,shape)
         indices.append(folded_index)
         new_arr[folded_index] = 0
-    return  indices
+    return indices
 
 def plane_from_coord(coord_arr):
     """
@@ -79,3 +79,28 @@ def plane_from_coord(coord_arr):
     d = -(a * x0 + b * y0 + c * z0)
 
     return a, b, c, d
+
+def extreme_pairs(coord_arr, n_pairs):
+    """
+    Return a list of pairs of extreme coordinates
+
+    Parameters
+    ----------
+    coord_arr : Nat x 3 numpy array
+        The input coordinates array
+    n_pairs : int
+        Number of extreme atom pairs requested
+    Returns
+    -------
+    pairs : numpy array of n_pairs x 2 x 3
+        Coordinates of the N pairs of points
+
+    """
+    dmat = dist_mat(coord_arr)
+    pairs_inds = find_largest(dmat,2)
+    pairs = np.zeros((n_pairs,2,3))
+    for i,ind in enumerate(pairs_inds):
+        pairs[i][0] = coord_arr[ind[0]]
+        pairs[i][1] = coord_arr[ind[1]]
+
+    return pairs
