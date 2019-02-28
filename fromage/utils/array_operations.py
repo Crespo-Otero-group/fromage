@@ -55,6 +55,9 @@ def plane_from_coord(coord_arr):
     This is done via a singular value decomposition of the coordinates. Read
     the following:
     http://caves.org/section/commelect/DUSI/openmag/pdf/SphereFitting.pdf
+    Given the plane equation ax + by + cz + d = 0, this can be interpeted as
+    a unit vector (a,b,c), perpendicular to the plane and an origin-plane
+    distance of d
 
     Parameters
     ----------
