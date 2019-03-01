@@ -1,9 +1,9 @@
 import fromage.io.read_file as rf
 from fromage.utils.dimer import Dimer
-
+from fromage.tests.conftest import _in_data
 
 def test_init():
-    big_mol = rf.mol_from_file("h2o_dimer.xyz")
+    big_mol = rf.mol_from_file(_in_data("h2o_dimer.xyz"))
     mol_a = big_mol.select(0)
     mol_b = big_mol.select(2)
     dim = Dimer([mol_a, mol_b])
@@ -11,5 +11,5 @@ def test_init():
 
 
 def test_dim_from_file():
-    dim = rf.dim_from_file("h2o_dimer.xyz")
+    dim = rf.dim_from_file(_in_data("h2o_dimer.xyz"))
     print(dim)

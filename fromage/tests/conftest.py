@@ -1,3 +1,4 @@
+import os
 import pytest
 import fromage.io.read_file as rf
 import numpy as np
@@ -5,6 +6,13 @@ import fromage.utils.array_operations as ao
 from fromage.utils.mol import Mol
 from fromage.utils.atom import Atom
 from scipy.spatial.distance import cdist
+
+test_dir = os.path.dirname(os.path.abspath(__file__))
+test_data_dir = os.path.join(test_dir,'data')
+
+def _in_data(file_name):
+    """Return absolute name of file in data/ dir"""
+    return os.path.join(test_data_dir,file_name)
 
 # Atom fixtures
 @pytest.fixture
@@ -38,7 +46,7 @@ def vectors():
 @pytest.fixture
 def at_list():
     """Water dimer atom list"""
-    out_list = rf.read_pos("h2o_dimer.xyz")
+    out_list = rf.read_pos(_in_data("h2o_dimer.xyz"))
     return out_list
 
 @pytest.fixture
@@ -50,20 +58,20 @@ def h2o_dimer(at_list):
 @pytest.fixture
 def hc1_mol():
     """HC1 monomer"""
-    mol = rf.mol_from_file("hc1_mol.xyz")
+    mol = rf.mol_from_file(_in_data("hc1_mol.xyz"))
     return mol
 
 
 @pytest.fixture
 def hc1_quad():
     """HC1 quadrimer"""
-    out_mo = Mol(rf.read_pos("hc1_quad.xyz"))
+    out_mo = Mol(rf.read_pos(_in_data("hc1_quad.xyz")))
     return out_mo
 
 @pytest.fixture
 def hc1_cell():
     """HC1 cell"""
-    cell = Mol(rf.read_pos("hc1_cell.xyz"))
+    cell = Mol(rf.read_pos(_in_data("hc1_cell.xyz")))
     vectors = np.array([[12.1199998856, 0.0, 0.0],
                         [0.0, 10.2849998474, 0.0],
                         [-5.4720203118, 0.0, 11.2441994632]])
@@ -73,7 +81,7 @@ def hc1_cell():
 @pytest.fixture
 def hc1_complete_cell():
     """HC1 completed cell"""
-    cell = Mol(rf.read_pos("hc1_complete_cell.xyz"))
+    cell = Mol(rf.read_pos(_in_data("hc1_complete_cell.xyz")))
     vectors = np.array([[12.1199998856, 0.0, 0.0],
                         [0.0, 10.2849998474, 0.0],
                         [-5.4720203118, 0.0, 11.2441994632]])
@@ -101,14 +109,14 @@ def c_o():
 @pytest.fixture
 def h2o_dup():
     """H2O molecule with duplicate atoms"""
-    out_mol = rf.mol_from_file("h2o_repeated.xyz")
+    out_mol = rf.mol_from_file(_in_data("h2o_repeated.xyz"))
     return out_mol
 
 # Array fixtures
 @pytest.fixture
 def h2o_dim_array():
     """Coordinate array for H2O dimer"""
-    mol = rf.mol_from_file("h2o_dimer.xyz")
+    mol = rf.mol_from_file(_in_data("h2o_dimer.xyz"))
     arr = mol.coord_array()
     return arr
 
@@ -120,7 +128,7 @@ def h2o_dim_dist_arr(h2o_dim_array):
 @pytest.fixture
 def hc1_array():
     """Coordinate array for the HC1 monomer"""
-    mol = rf.mol_from_file("hc1_mol.xyz")
+    mol = rf.mol_from_file(_in_data("hc1_mol.xyz"))
     arr = mol.coord_array()
     return arr
 
