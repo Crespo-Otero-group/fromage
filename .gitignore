@@ -9,3 +9,4 @@ fromage/test/.pytest_cache/**
 build/*
 doc/build/*
 .cache
+fromage.egg-info/*
