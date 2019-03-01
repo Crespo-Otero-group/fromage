@@ -105,4 +105,6 @@ def calc_axes(self):
     """Set the principal and secondary axes in geom_info"""
     axes = self.axes()
     self.geom_info.sec_ax = axes[0]
-    self.geom_info.prin_ax = axes[1]
+    # here we add a minus so that the principal axis is in the direction of the
+    # shorter side, like the secondary axis is defined
+    self.geom_info.prin_ax = -axes[1]

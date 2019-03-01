@@ -141,10 +141,10 @@ def quadrangle_from_coord(coord_arr):
                 coord_arr[pairs_inds[1][1]]]
 
     # calculate the four sides
-    AC1_BD1_dis = distance(coord_arr[0],coord_arr[2])
-    AC1_BD2_dis = distance(coord_arr[0],coord_arr[3])
-    AC2_BD1_dis = distance(coord_arr[1],coord_arr[2])
-    AC2_BD2_dis = distance(coord_arr[1],coord_arr[3])
+    AC1_BD1_dis = distance(unordered[0],unordered[2])
+    AC1_BD2_dis = distance(unordered[0],unordered[3])
+    AC2_BD1_dis = distance(unordered[1],unordered[2])
+    AC2_BD2_dis = distance(unordered[1],unordered[3])
 
     # find the longest side
     max_side = max([AC1_BD1_dis,AC1_BD2_dis,AC2_BD1_dis,AC2_BD2_dis])
@@ -299,7 +299,7 @@ def vec_angle(vector_1, vector_2, degrees = True):
     norm_2 = np.linalg.norm(vector_2)
     dot = np.dot(vector_1,vector_2)
 
-    ang = np.arccos(dot/(norm_1*norm_2))
+    ang = np.arccos(dot/(norm_1*norm_2)) % (2 * np.pi)
 
     if degrees:
         ang = np.degrees(ang)

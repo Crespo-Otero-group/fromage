@@ -140,7 +140,7 @@ def rectangle_array():
     return arr
 
 @pytest.fixture
-def rectangle_plane_coeffs():
+def z_plane_coeffs():
     plane_coeffs = np.array([0.,0.,1.,0.])
     return plane_coeffs
 
@@ -152,10 +152,52 @@ def arbitrary_pair():
     return arr
 
 @pytest.fixture
+def arbitrary_flat_points():
+    """Sea of points in z=0"""
+    lis_coord = [[1.,2.,0.],
+                [0.1,-0.1,0.],
+                [3.,1.,0.],
+                [6.1,3.,0.],
+                [-0.1,3.1,0.],
+                [6.1,-0.1,0.]]
+    arr = np.array(lis_coord)
+    return arr
+
+@pytest.fixture
+def arbitrary_flat_vertices():
+    """Vertices of a quadrangle in z=0"""
+    lis_vert = [[-0.1,3.1,0.],
+                [6.1,3.,0.],
+                [6.1,-0.1,0.],
+                [0.1,-0.1,0.]]
+    arr = np.array(lis_vert)
+    return arr
+
+@pytest.fixture
 def arbitrary_vertices():
     """Vertices of a quadrangle"""
-    lis_pairs = [[-0.5,0.5,3.],[0.5,2.,0.],[3.,0.5,-1.],[0.5,-0.5,5.]]
-    arr = np.array(lis_pairs)
+    lis_vert = [[-0.5,0.5,3.],[0.5,2.,0.],[3.,0.5,-1.],[0.5,-0.5,5.]]
+    arr = np.array(lis_vert)
+    return arr
+
+@pytest.fixture
+def triangle_shape_coord():
+    """Set of coordinates in a triangle shape"""
+    lis_coord = [[2.,2.,0.],
+                 [1.,1.,0.],
+                 [1.,4.,0.],
+                 [6.,2.,0.],
+                 [3.,1.,0.]]
+    arr = np.array(lis_coord)
+    return arr
+
+@pytest.fixture
+def triangle_corners_4():
+    lis_coord = [[1.,4.,0.],
+                 [6.,2.,0.],
+                 [6.,2.,0.],
+                 [1.,1.,0.]]
+    arr = np.array(lis_coord)
     return arr
 
 @pytest.fixture
@@ -167,4 +209,3 @@ def vec_100():
 def vec_220():
     """The (2,2,0) vector"""
     return np.array([2.,2.,0.])
-
