@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial.distance import cdist
 
 from ._plane_operations import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
+from ._angles import vec_angle
 
 def distance(vector_1, vector_2):
     """Return the distance between two points"""
@@ -72,32 +73,3 @@ def find_largest(in_array, n_largest):
         indices.append(folded_index)
         new_arr[folded_index] = 0
     return indices
-
-
-def vec_angle(vector_1, vector_2, degrees = True):
-    """
-    Return the angle between two numpy vectors.
-
-    The angle is brought into the range [-180,180] for degrees or [-1,1] for
-    radians
-
-    Parameters
-    ----------
-    vector_1, vector_2 : N x 1 numpy array
-        The vectors whose angle needs to be calculated.
-    degrees : bool (optional)
-        Result in degrees or in radians. Default = True, so degrees
-    Returns
-    -------
-    out_angle : float
-        The angle between vectors
-    """
-    norm_1 = np.linalg.norm(vector_1)
-    norm_2 = np.linalg.norm(vector_2)
-    dot = np.dot(vector_1,vector_2)
-
-    ang = np.arccos(dot/(norm_1*norm_2)) % (2 * np.pi)
-
-    if degrees:
-        ang = np.degrees(ang)
-    return ang
