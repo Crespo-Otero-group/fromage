@@ -20,9 +20,14 @@ def test_calc_axes(hc1_mol):
     hc1_mol.calc_axes()
     expected_princ = np.array([0.97689076,0.08021028,-0.19811802])
     expected_sec = np.array([0.22187167,0.44072386,0.86979046])
-    import fromage.utils.array_operations as ao
-    print(ao.vec_angle(hc1_mol.geom_info.prin_ax,hc1_mol.geom_info.sec_ax))
-    print(hc1_mol.geom_info.perp_ax)
-    print(np.linalg.norm(hc1_mol.geom_info.perp_ax))
     assert_allclose(hc1_mol.geom_info.prin_ax,expected_princ)
     assert_allclose(hc1_mol.geom_info.sec_ax,expected_sec)
+
+def test_calc_axes(rectangle_mol):
+    rectangle_mol.calc_axes()
+    expected_princ = np.array([0.999966,  -0.008196,  0.      ])
+    expected_sec = np.array([ 0.03173 , -0.999496,  0.      ])
+    expected_perp = np.array([ 0., 0.,  -1.      ])
+    assert_allclose(rectangle_mol.geom_info.prin_ax,expected_princ, rtol=1e-4)
+    assert_allclose(rectangle_mol.geom_info.sec_ax,expected_sec, rtol=1e-4)
+    assert_allclose(rectangle_mol.geom_info.perp_ax,expected_perp, rtol=1e-4)

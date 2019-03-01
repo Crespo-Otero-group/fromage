@@ -42,6 +42,11 @@ def vectors():
                         [0.0, 0.0, 1.0]])
     return vec_out
 
+@pytest.fixture
+def newat():
+    """Atom object C at origin"""
+    return Atom("C", 0.0, 0.0, 0.0)
+
 # Mol fixtures
 @pytest.fixture
 def at_list():
@@ -87,12 +92,6 @@ def hc1_complete_cell():
                         [-5.4720203118, 0.0, 11.2441994632]])
     cell.vectors = vectors
     return cell
-
-@pytest.fixture
-def newat():
-    """Atom object C at origin"""
-    return Atom("C", 0.0, 0.0, 0.0)
-
 @pytest.fixture
 def empty_mol():
     """Empty Mol object"""
@@ -111,6 +110,12 @@ def h2o_dup():
     """H2O molecule with duplicate atoms"""
     out_mol = rf.mol_from_file(_in_data("h2o_repeated.xyz"))
     return out_mol
+
+@pytest.fixture
+def rectangle_mol():
+    """Roughly rectangular soup of atoms"""
+    mol = rf.mol_from_file(_in_data("rectangle_atom_soup.xyz"))
+    return mol
 
 # Array fixtures
 @pytest.fixture
