@@ -4,6 +4,31 @@ mol._geom"""
 import numpy as np
 from scipy.spatial.distance import cdist
 
+def distance(vector_1, vector_2):
+    """Return the distance between two points"""
+    dis = np.linalg.norm(vector_1-vector_2)
+    return dis
+
+def closest(reference,points):
+    """Return the closest point to the reference and the distance to it"""
+    min_dis = float('inf')
+    for point in points:
+        dis = distance(reference,point)
+        if dis < min_dis:
+            min_dis = dis
+            closest_point = point
+    return closest_point, min_dis
+
+def furthest(reference,points):
+    """Return the furthest point to the reference and the distance to it"""
+    max_dis = -float('inf')
+    for point in points:
+        dis = distance(reference,point)
+        if dis > max_dis:
+            max_dis = dis
+            closest_point = point
+    return closest_point, max_dis
+
 def dist_mat(in_array):
     """
     Return lower triangular distance matrix of coordinate array
@@ -87,84 +112,94 @@ def plane_from_coord(coord_arr):
     res = np.array([a,b,c,d])
     return res
 
-def extreme_pairs(coord_arr, n_pairs):
+def quadrangle_from_coord(coord_arr):
     """
-    Return a list of pairs of extreme coordinates
+    Return a list of ordered vertices of a quadrangle from extreme points
+
+    The quadrangle has, for diagonals, the two largest inter - coordinate distances.
+    Given the quadrangle ABCD the output is [A, B, C, D] such that
+    AC > BD > any other distance in the coordinate array. Furthermore, AB is the
+    longest side. This completely determines the quadrilateral.
 
     Parameters
     ----------
     coord_arr : Nat x 3 numpy array
         The input coordinates array
-    n_pairs : int
-        Number of extreme atom pairs requested
     Returns
     -------
-    pairs : numpy array of n_pairs x 2 x 3
-        Coordinates of the N pairs of points
+    vertices_out : 4 x 1 numpy array
+        Coordinates of the four extreme atoms
 
     """
     dmat = dist_mat(coord_arr)
     pairs_inds = find_largest(dmat,2)
-    pairs = np.zeros((n_pairs,2,3))
-    for i,ind in enumerate(pairs_inds):
-        pairs[i][0] = coord_arr[ind[0]]
-        pairs[i][1] = coord_arr[ind[1]]
+    # the first two are either A or C and the last two B or D
+    # We label [AC1,AC2,BD1,BD2]
+    unordered = [coord_arr[pairs_inds[0][0]],
+                coord_arr[pairs_inds[0][1]],
+                coord_arr[pairs_inds[1][0]],
+                coord_arr[pairs_inds[1][1]]]
 
-    return pairs
+    # calculate the four sides
+    AC1_BD1_dis = distance(coord_arr[0],coord_arr[2])
+    AC1_BD2_dis = distance(coord_arr[0],coord_arr[3])
+    AC2_BD1_dis = distance(coord_arr[1],coord_arr[2])
+    AC2_BD2_dis = distance(coord_arr[1],coord_arr[3])
 
-def embedded_pairs(coord_pairs):
+    # find the longest side
+    max_side = max([AC1_BD1_dis,AC1_BD2_dis,AC2_BD1_dis,AC2_BD2_dis])
+
+    if max_side == AC1_BD1_dis:
+        A = unordered[0]
+        B = unordered[2]
+        C = unordered[1]
+        D = unordered[3]
+    if max_side == AC1_BD2_dis:
+        A = unordered[0]
+        B = unordered[3]
+        C = unordered[1]
+        D = unordered[2]
+    if max_side == AC2_BD1_dis:
+        A = unordered[1]
+        B = unordered[2]
+        C = unordered[0]
+        D = unordered[3]
+    if max_side == AC2_BD2_dis:
+        A = unordered[1]
+        B = unordered[3]
+        C = unordered[0]
+        D = unordered[2]
+
+    vertices_out = np.array([A,B,C,D])
+    return vertices_out
+
+def embedded_vert(vertices):
     """
-    Return the atom pairs defining the quadrilateral embedded in the input
+    Return the vertices embedded in the original vertices
 
-    The input is two pairs of atoms where each pair is the diagonal of the
-    quadrilateral, defined as the two most distant coordinate pairs. The output
-    is the corresponding pair.
+    The input is four coordinates of a quadrangle in order ABCD. The output is
+    the four coordinates on the centres of the sides like: [AB,BC,CD,DA]
 
     Parameters
     ----------
-    coord_pairs : numpy array of 2 x 2 x 3
-        Pairs of coordinates
+    vertices : numpy array of 4 x 3
+        Four coordinates [A,B,C,D]
     Returns
     -------
-    out_pairs : numpy array of 2 x 2 x 3
-        Pairs of coordinates where the first pair is the longer diagonal of the
-        new quadrilateral
+    out_vertices : numpy array of 4 x 3
+        Four embedded coordinates [AB,BC,CD,DA]
 
     """
-    first_pair = coord_pairs[0]
-    second_pair = coord_pairs[1]
+    out_vertices = []
 
-    # define the coordinates of the diagonal A
-    extremum_a_1 = np.mean([first_pair[0],second_pair[0]],axis=0)
-    extremum_a_2 = np.mean([first_pair[1],second_pair[1]],axis=0)
-    # same for the diagonal B
-    extremum_b_1 = np.mean([first_pair[0],second_pair[1]],axis=0)
-    extremum_b_2 = np.mean([first_pair[1],second_pair[0]],axis=0)
+    out_vertices.append(np.mean([vertices[0],vertices[1]],axis=0))
+    out_vertices.append(np.mean([vertices[1],vertices[2]],axis=0))
+    out_vertices.append(np.mean([vertices[2],vertices[3]],axis=0))
+    out_vertices.append(np.mean([vertices[3],vertices[0]],axis=0))
 
-    # now determine which diagonal is the long one
+    out_vertices = np.array(out_vertices)
 
-    # measure the distance of atom 1 of pair 1 to atom 1 of pair 2
-    dis_1 = np.linalg.norm(first_pair[0] - second_pair[0])
-    # again for atom 1 of pair to atom 2 of pair 2
-    dis_2 = np.linalg.norm(first_pair[0] - second_pair[1])
-
-    # if firstpair_[0], second_pair[0] is the short side of the original
-    # quadrilateral
-    if dis_1 < dis_2:
-        long_1 = extremum_a_1
-        long_2 = extremum_a_2
-        short_1 = extremum_b_1
-        short_2 = extremum_b_2
-    # if it's the other way rond
-    else:
-        long_1 = extremum_b_1
-        long_2 = extremum_b_2
-        short_1 = extremum_a_1
-        short_2 = extremum_a_2
-
-    out_pairs = np.array([[long_1, long_2],[short_1, short_2]])
-
-    return out_pairs
+    return out_vertices
 
 def project_point(point, plane_coeffs):
     """
@@ -212,20 +247,19 @@ def project_pair_to_vector(coord_pair, plane_coeffs):
     proj_a = project_point(coord_pair[0], plane_coeffs)
     proj_b = project_point(coord_pair[1], plane_coeffs)
 
-    vector = proj_a - proj_b
+    vector = proj_b - proj_a
 
     vector /= np.linalg.norm(vector)
     return vector
 
-def project_pairs_to_vectors(coord_pairs, plane_coeffs):
+def project_quad_to_vectors(quad_vert, plane_coeffs):
     """
-    Return the normalised vectors formed by 2 coordinate pairs projected onto a
-    plane
+    Return the normalised vectors formed by the diagonals of a quadrangle
 
     Parameters
     ----------
-    coord_pairs : numpy array 2 x 2 x 3
-        Pairs of coordinates
+    quad_vert : numpy array 4 x 3
+        Four coordinates [A,B,C,D]
     plane_coeffs : length 4 numpy array
         Plane equation coefficients such that a point on the plane is:
         ax + by + cz + d = 0. The array is [a,b,c,d]
@@ -233,13 +267,40 @@ def project_pairs_to_vectors(coord_pairs, plane_coeffs):
     -------
     vectors : length 2 x 3 numpy array
         The normalised vectors resulting from the projection of the pairs of
-        points
+        points A -> C and B -> D
 
     """
-    lis_vectors = []
-    for pair in coord_pairs:
-        projected_vec = project_pair_to_vector(pair, plane_coeffs)
-        lis_vectors.append(projected_vec)
-    vectors = np.array(lis_vectors)
+    vec_1 = project_pair_to_vector([quad_vert[0],quad_vert[2]],plane_coeffs)
+    vec_2 = project_pair_to_vector([quad_vert[1],quad_vert[3]],plane_coeffs)
+
+    vectors = np.array([vec_1,vec_2])
 
     return vectors
+
+def vec_angle(vector_1, vector_2, degrees = True):
+    """
+    Return the angle between two numpy vectors.
+
+    The angle is brought into the range [-180,180] for degrees or [-1,1] for
+    radians
+
+    Parameters
+    ----------
+    vector_1, vector_2 : N x 1 numpy array
+        The vectors whose angle needs to be calculated.
+    degrees : bool (optional)
+        Result in degrees or in radians. Default = True, so degrees
+    Returns
+    -------
+    out_angle : float
+        The angle between vectors
+    """
+    norm_1 = np.linalg.norm(vector_1)
+    norm_2 = np.linalg.norm(vector_2)
+    dot = np.dot(vector_1,vector_2)
+
+    ang = np.arccos(dot/(norm_1*norm_2))
+
+    if degrees:
+        ang = np.degrees(ang)
+    return ang

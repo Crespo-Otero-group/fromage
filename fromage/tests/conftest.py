@@ -135,15 +135,8 @@ def hc1_array():
 @pytest.fixture
 def rectangle_array():
     """Coordinate array for corners of a rectangle"""
-    lis_coord = [[0.,0.,0.],[4.,2.,0.],[0.,2.,0.],[4.,0.,0.]]
+    lis_coord = [[0.,0.,0.],[0.,2.,0.],[4.,2.,0.],[4.,0.,0.]]
     arr = np.array(lis_coord)
-    return arr
-
-@pytest.fixture
-def rectangle_pairs_array():
-    """2 pairs of coordinates defining the 4 X 2 rectangle"""
-    lis_rectangle = [[[0.,0.,0.],[4.,2.,0.]],[[0.,2.,0.],[4.,0.,0.]]]
-    arr = np.array(lis_rectangle)
     return arr
 
 @pytest.fixture
@@ -152,15 +145,26 @@ def rectangle_plane_coeffs():
     return plane_coeffs
 
 @pytest.fixture
-def arbitrary_vector():
+def arbitrary_pair():
     """Pair of coordinates"""
     lis_pair = [[-0.5,0.5,3.],[3.,0.5,-1.]]
     arr = np.array(lis_pair)
     return arr
 
 @pytest.fixture
-def arbitrary_pairs_array():
-    """2 pairs of coordinates defining a quadrangle"""
-    lis_pairs = [[[-0.5,0.5,3.],[3.,0.5,-1.]],[[0.5,2.,0.],[0.5,-0.5,5.]]]
+def arbitrary_vertices():
+    """Vertices of a quadrangle"""
+    lis_pairs = [[-0.5,0.5,3.],[0.5,2.,0.],[3.,0.5,-1.],[0.5,-0.5,5.]]
     arr = np.array(lis_pairs)
     return arr
+
+@pytest.fixture
+def vec_100():
+    """The (1,0,0) vector"""
+    return np.array([1.,0.,0.])
+
+@pytest.fixture
+def vec_220():
+    """The (2,2,0) vector"""
+    return np.array([2.,2.,0.])
+

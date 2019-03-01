@@ -3,6 +3,16 @@ import numpy as np
 from numpy.testing import assert_allclose
 from pytest import approx
 
+def test_distance(vec_100,vec_220):
+    distance = ao.distance(vec_100,vec_220)
+    assert distance == approx(2.236,rel=0.001)
+
+def test_closest(vec_100,vec_220):
+    origin = np.array([0.,0.,0.])
+    close_point, dis = ao.closest(origin,[vec_100,vec_220])
+    assert_allclose(close_point,vec_100)
+    assert dis == approx(1.)
+
 def test_dist_mat(h2o_dim_dist_arr):
     dis = ao.dist_mat(h2o_dim_dist_arr)
     assert dis[1][0] == approx(0.91,rel=0.1)
@@ -23,15 +33,17 @@ def test_plane_from_coord(hc1_array):
     expected = np.array([-0.29188565799088845, 0.742637122670864, -0.6027378092424318, 1.7825747834180873e-07])
     assert_allclose(arr,expected)
 
-def test_extreme_pairs(h2o_dim_array):
-    res = ao.extreme_pairs(h2o_dim_array,2)
-    expected = np.array([[[ 3.758602,0.5,0.504284],[ 0.,0.,0.,]],
-        [[ 3.758602,0.5,0.504284],[ 0.260455,0.,-0.872893]]])
+def test_quadrangle_from_coord(h2o_dim_array):
+    res = ao.quadrangle_from_coord(h2o_dim_array)
+    expected = np.array([[ 3.758602,0.5,0.504284],
+                         [ 0.260455,0.,-0.872893],
+                         [ 0.,0.,0.,],
+                         [ 3.758602,0.5,0.504284]])
     assert_allclose(res,expected)
 
-def test_embedded_pairs(rectangle_pairs_array):
-    new_pairs = ao.embedded_pairs(rectangle_pairs_array)
-    expected = np.array([[[0.,1.,0.],[4.,1.,0.]],[[2.,0.,0.],[2.,2.,0.]]])
+def test_embedded_vert(rectangle_array):
+    new_pairs = ao.embedded_vert(rectangle_array)
+    expected = np.array([[0.,1.,0.],[2.,2.,0.],[4.,1.,0.],[2.,0.,0.]])
     assert_allclose(new_pairs,expected)
 
 def test_project_on_plane(rectangle_array,rectangle_plane_coeffs):
@@ -40,14 +52,17 @@ def test_project_on_plane(rectangle_array,rectangle_plane_coeffs):
     expected = np.array([1.,1.,0.])
     assert_allclose(projected,expected)
 
-def test_project_pair_to_vector(arbitrary_vector,rectangle_plane_coeffs):
-    projected_vec = ao.project_pair_to_vector(arbitrary_vector,rectangle_plane_coeffs)
-    expected = np.array([-1.,0.,0.])
+def test_project_pair_to_vector(arbitrary_pair,rectangle_plane_coeffs):
+    projected_vec = ao.project_pair_to_vector(arbitrary_pair,rectangle_plane_coeffs)
+    expected = np.array([1.,0.,0.])
     assert_allclose(projected_vec, expected)
     return
 
-def test_project_pairs_to_vectors(arbitrary_pairs_array,rectangle_plane_coeffs):
-    projected_vecs = ao.project_pairs_to_vectors(arbitrary_pairs_array,rectangle_plane_coeffs)
-    expected = np.array([[-1.,0.,0.],[0.,1.,0.]])
+def test_project_pairs_to_vectors(arbitrary_vertices,rectangle_plane_coeffs):
+    projected_vecs = ao.project_quad_to_vectors(arbitrary_vertices,rectangle_plane_coeffs)
+    expected = np.array([[1.,0.,0.],[0.,-1.,0.]])
     assert_allclose(projected_vecs, expected)
     return
+
+def test_angle_between_vectors(vec_100, vec_220):
+    print(ao.vec_angle(vec_100, vec_220))

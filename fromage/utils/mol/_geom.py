@@ -93,16 +93,16 @@ def axes(self):
     if self.geom_info.plane_coeffs == None:
         self.calc_plane_coeffs()
     # get the two extreme coordinate pairs
-    extreme_pairs = ao.extreme_pairs(self.geom_info.coord_array,2)
+    vertices = ao.quadrangle_from_coord(self.geom_info.coord_array)
     # get the two embedded coordinate pairs
-    axis_pairs = ao.embedded_pairs(extreme_pairs)
+    emb_vert = ao.embedded_vert(vertices)
     # get vectors from projected pair
-    axes_out = ao.project_pairs_to_vectors(axis_pairs,self.geom_info.plane_coeffs)
+    axes_out = ao.project_quad_to_vectors(emb_vert,self.geom_info.plane_coeffs)
 
     return axes_out
 
 def calc_axes(self):
     """Set the principal and secondary axes in geom_info"""
     axes = self.axes()
-    self.geom_info.prin_ax = axes[0]
-    self.geom_info.sec_ax = axes[1]
+    self.geom_info.sec_ax = axes[0]
+    self.geom_info.prin_ax = axes[1]
