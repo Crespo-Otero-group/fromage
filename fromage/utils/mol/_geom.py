@@ -92,11 +92,12 @@ def axes(self):
     """
     if self.geom_info.plane_coeffs == None:
         self.calc_plane_coeffs()
-    # get the two extreme coordinate pairs
+    # get the quadrangle which best describes the coordinates (possibly a
+    # triangle with the far point repeated twice)
     vertices = ao.quadrangle_from_coord(self.geom_info.coord_array)
-    # get the two embedded coordinate pairs
+    # get the embedded quadrangle vertices
     emb_vert = ao.embedded_vert(vertices)
-    # get vectors from projected pair
+    # get vectors from projected diagonals
     axes_out = ao.project_quad_to_vectors(emb_vert,self.geom_info.plane_coeffs)
 
     return axes_out
