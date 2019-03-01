@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.spatial.distance import cdist
 
-from ._plane_operations import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
+from ._planes import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
 from ._angles import vec_angle
 
 def distance(vector_1, vector_2):
