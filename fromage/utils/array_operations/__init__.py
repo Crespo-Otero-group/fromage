@@ -20,7 +20,7 @@ def vec_angle(vector_1, vector_2, degrees = True):
     Parameters
     ----------
     vector_1, vector_2 : N x 1 numpy array
-        The vectors whose angle needs to be calculated.
+        The vectors whose angle needs to be calculated
     degrees : bool (optional)
         Result in degrees or in radians. Default = True, so degrees
     Returns
@@ -101,3 +101,34 @@ def find_largest(in_array, n_largest):
         indices.append(folded_index)
         new_arr[folded_index] = 0
     return indices
+
+def orthogonalise_sym(vec_1, vec_2):
+    """
+    Return two orthogonal vectors based on the original ones
+
+    We wish to orthogonalise two vectors but moving each one by the same amount.
+    That is the angle of rotation of vec_1 should be negative that of vec_2 and
+    the two ending vectors should be orthogonal.
+
+    Parameters
+    ----------
+    vec_1, vec_2 : 3 x 1 numpy array
+        The vectors to be orthogonalised
+    Returns
+    -------
+    o_vec_1, o_vec_2 : 3 x 1 numpy array
+        Orthogonalised vectors
+    """
+    ang = vec_angle(vec_1,vec_2)
+    remainder = 90 - ang
+    disp = remainder/2
+    perp_unnormal = np.cross(vec_1,vec_2)
+    normal = perp_unnormal / np.linalg.norm(perp_unnormal)
+
+    rot_1 = rotation_matrix(normal,disp)
+    rot_2 = rotation_matrix(normal,-disp)
+
+    ovec_1 = np.dot(rot_1,vec_1)
+    ovec_2 = np.dot(rot_2,vec_2)
+
+    return ovec_1, ovec_2

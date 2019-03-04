@@ -15,3 +15,9 @@ def test_rotation_matrix(vec_100):
     res = np.dot(mat,np.array([0.,1.,0.]))
     expected = np.array([0.,0.,1.])
     assert_allclose(res,expected,atol=1e-7)
+
+def test_rotation_matrix_radians(vec_100):
+    mat = ao.rotation_matrix(vec_100,np.pi/2,degrees=False)
+    res = np.dot(mat,np.array([0.,1.,0.]))
+    expected = np.array([0.,0.,1.])
+    assert_allclose(res,expected,atol=1e-7)

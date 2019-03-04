@@ -51,18 +51,14 @@ def rotation_matrix(axis_vector, angle, degrees = True):
         Rotation matrix
 
     """
-    I = np.identity(3)
     ang = angle
     if degrees:
         ang = np.radians(ang)
-    cos_id = np.cos(ang) * I
-    print("cos_id",cos_id)
+    # the matrix the sum of 3 terms
+    cos_id = np.cos(ang) * np.identity(3)
     sin_cross = np.sin(ang) * cross_product_matrix(axis_vector)
-    print("sin_cross",sin_cross)
     cos_tens = (1-np.cos(ang)) * np.outer(axis_vector,axis_vector)
-    print("cos_tens",cos_tens)
+    # total
     rot_mat = cos_id + sin_cross + cos_tens
-
-    print(rot_mat)
 
     return rot_mat
