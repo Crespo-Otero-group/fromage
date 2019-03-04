@@ -40,13 +40,13 @@ class Dimer(object):
             The three angles alpha, beta, gamma
 
         """
-        if self.mol[0].geom_info.perp_ax == None:
-            self.mol[0].calc_axes()
-        if self.mol[1].geom_info.perp_ax == None:
-            self.mol[1].calc_axes()
-        out_lis = [ao.vec_angle(self.mol[0].prin_ax,self.mol[1].prin_ax),
-                    ao.vec_angle(self.mol[0].sec_ax,self.mol[1].sec_ax),
-                    ao.vec_angle(self.mol[0].perp_ax,self.mol[1].perp_ax)]
+        if self.mols[0].geom.perp_ax == None:
+            self.mols[0].calc_axes()
+        if self.mols[1].geom.perp_ax == None:
+            self.mols[1].calc_axes()
+        out_lis = [ao.vec_angle(self.mols[0].geom.prin_ax,self.mols[1].geom.prin_ax),
+                    ao.vec_angle(self.mols[0].geom.sec_ax,self.mols[1].geom.sec_ax),
+                    ao.vec_angle(self.mols[0].geom.perp_ax,self.mols[1].geom.perp_ax)]
         out_arr = np.array(out_lis)
 
         return out_arr

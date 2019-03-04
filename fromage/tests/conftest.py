@@ -219,3 +219,10 @@ def vec_220():
 def vec_111():
     """The (1,1,1) vector"""
     return np.array([1.,1.,1.])
+
+# Dimer fixtures
+@pytest.fixture
+def rectangle_dimer():
+    """Dimer object of two rectangle-like molecules"""
+    dim = rf.dim_from_file(_in_data("rectangle_mol_dimer.xyz"))
+    return dim
