@@ -1,4 +1,5 @@
 import fromage.io.read_file as rf
+import numpy as np
 from fromage.utils.dimer import Dimer
 from fromage.tests.conftest import _in_data
 from pytest import approx
@@ -32,3 +33,10 @@ def test_h2o_dimer_inter_distance(h2o_dimer):
     assert h2o_dimer.inter_distance(mode='cov') == approx(1.4412055,rel=10e-4)
     assert h2o_dimer.inter_distance(mode='vdw') == approx(-0.2587945,rel=10e-4)
     assert h2o_dimer.inter_distance(method='centroid') == approx(3.0413813,rel=10e-4)
+
+def test_he_images(he_dimer):
+    vectors = np.array([[20.0,0.0,0.0],
+                        [0.0,20.0,0.0],
+                        [0.0,0.0,20.0]])
+    lis = he_dimer.images(vectors)
+    print(lis)

@@ -237,3 +237,9 @@ def h2_dimer():
     """Dimer object of two H2 molecules in a line"""
     dim = rf.dim_from_file(_in_data("h2_linear_dimer.xyz"))
     return dim
+
+@pytest.fixture
+def he_dimer():
+    """Dimer object of two He atoms in a box at 0,0,0 and 10,10,10"""
+    dim = rf.dim_from_file(_in_data("he_cell.xyz"))
+    return dim

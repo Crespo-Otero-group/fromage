@@ -130,7 +130,7 @@ class Dimer(object):
 
         return min_dist
 
-    def dimer_images(self, vectors):
+    def images(self, vectors):
         """
         Return the 9 images of the dimer produced by translating monomer 2
 

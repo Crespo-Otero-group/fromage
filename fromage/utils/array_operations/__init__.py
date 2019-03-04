@@ -31,8 +31,9 @@ def vec_angle(vector_1, vector_2, degrees = True):
     norm_1 = np.linalg.norm(vector_1)
     norm_2 = np.linalg.norm(vector_2)
     dot = np.dot(vector_1,vector_2)
-
-    ang = np.arccos(dot/(norm_1*norm_2)) % (2 * np.pi)
+    # before arccos, put in the range [-1,1]
+    arg = ((dot/(norm_1*norm_2) + 1) % 2)-1
+    ang = np.arccos(arg)
 
     if degrees:
         ang = np.degrees(ang)
