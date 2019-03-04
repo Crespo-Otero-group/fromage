@@ -29,3 +29,18 @@ def test_angle_between_vectors(vec_100, vec_220):
 def test_angle_between_vectors_rad(vec_100, vec_220):
     ang = ao.vec_angle(vec_100, vec_220, degrees = False)
     assert ang == approx(45.*np.pi/180)
+
+# Orthog test
+def test_orthogonalise_sym():
+    vectors = np.array([[0.1,0.,1.],
+                        [-0.1,0.,1.]])
+
+    o_vecs = ao.orthogonalise_sym(vectors)
+    ovec_1 = o_vecs[0]/np.linalg.norm(o_vecs[0])
+    ovec_2 = o_vecs[1]/np.linalg.norm(o_vecs[1])
+
+    expected_1 = np.array([np.sqrt(2)/2,0.,np.sqrt(2)/2])
+    expected_2 = np.array([-np.sqrt(2)/2,0.,np.sqrt(2)/2])
+
+    assert_allclose(ovec_1,expected_1)
+    assert_allclose(ovec_2,expected_2)

@@ -102,7 +102,7 @@ def find_largest(in_array, n_largest):
         new_arr[folded_index] = 0
     return indices
 
-def orthogonalise_sym(vec_1, vec_2):
+def orthogonalise_sym(vectors):
     """
     Return two orthogonal vectors based on the original ones
 
@@ -112,23 +112,24 @@ def orthogonalise_sym(vec_1, vec_2):
 
     Parameters
     ----------
-    vec_1, vec_2 : 3 x 1 numpy array
+    vectors : 2 x 3 numpy array
         The vectors to be orthogonalised
     Returns
     -------
-    o_vec_1, o_vec_2 : 3 x 1 numpy array
+    o_vecs: 2 x 3 numpy array
         Orthogonalised vectors
     """
-    ang = vec_angle(vec_1,vec_2)
+    ang = vec_angle(vectors[0],vectors[1])
     remainder = 90 - ang
     disp = remainder/2
-    perp_unnormal = np.cross(vec_1,vec_2)
+    perp_unnormal = np.cross(vectors[0],vectors[1])
     normal = perp_unnormal / np.linalg.norm(perp_unnormal)
 
-    rot_1 = rotation_matrix(normal,disp)
-    rot_2 = rotation_matrix(normal,-disp)
+    rot_1 = rotation_matrix(normal,-disp)
+    rot_2 = rotation_matrix(normal,disp)
 
-    ovec_1 = np.dot(rot_1,vec_1)
-    ovec_2 = np.dot(rot_2,vec_2)
+    ovec_1 = np.dot(rot_1,vectors[0])
+    ovec_2 = np.dot(rot_2,vectors[1])
 
-    return ovec_1, ovec_2
+    o_vecs = np.array([ovec_1,ovec_2])
+    return o_vecs
