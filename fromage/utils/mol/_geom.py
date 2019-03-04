@@ -106,14 +106,18 @@ def axes(self):
     axes_out_raw = ao.project_quad_to_vectors(emb_vert,self.geom.plane_coeffs)
     # we want the first raw to be the secondary and vice versa and the principal
     # to be *(-1) in order to maintian a convention
-    axes_out = [-axes_out_raw[1], axes_out_raw[0]]
+    axes_out_unnormal = np.array([-axes_out_raw[1], axes_out_raw[0]])
+    # orthonogalise them
+    axes_out_prin_sec = ao.orthogonalise_sym(axes_out_unnormal)
     # get the perpendicular vector
-    perp = np.cross(axes_out[0], axes_out[1])
+    perp = np.cross(axes_out_prin_sec[0], axes_out_prin_sec[1])
     # ensure normalisation
     perp = perp/np.linalg.norm(perp)
 
-    axes_out.append(perp)
-    axes_out = np.array(axes_out)
+    lis_axes_out = list(axes_out_prin_sec)
+    lis_axes_out.append(perp)
+    axes_out = np.array(lis_axes_out)
+
     return axes_out
 
 def calc_axes(self):
