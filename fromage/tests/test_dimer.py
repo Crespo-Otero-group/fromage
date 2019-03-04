@@ -3,9 +3,9 @@ from fromage.utils.dimer import Dimer
 from fromage.tests.conftest import _in_data
 from pytest import approx
 
-def test_init(h2o_dimer):
-    mol_a = h2o_dimer.select(0)
-    mol_b = h2o_dimer.select(2)
+def test_init(h2o_dimer_mol):
+    mol_a = h2o_dimer_mol.select(0)
+    mol_b = h2o_dimer_mol.select(2)
     dim = Dimer([mol_a, mol_b])
     assert len(dim.mols[0]) == 3
     assert len(dim.mols[1]) == 3

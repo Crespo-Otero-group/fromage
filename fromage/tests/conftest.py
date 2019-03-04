@@ -5,7 +5,6 @@ import numpy as np
 import fromage.utils.array_operations as ao
 from fromage.utils.mol import Mol
 from fromage.utils.atom import Atom
-from scipy.spatial.distance import cdist
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 test_data_dir = os.path.join(test_dir,'data')
@@ -55,7 +54,7 @@ def at_list():
     return out_list
 
 @pytest.fixture
-def h2o_dimer(at_list):
+def h2o_dimer_mol(at_list):
     """Water dimer Mol object"""
     out_mo = Mol(at_list)
     return out_mo

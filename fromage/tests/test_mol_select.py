@@ -1,5 +1,5 @@
-def test_select_h2o_dimer(h2o_dimer):
-    water = h2o_dimer.select(3)
+def test_select_h2o_dimer_mol(h2o_dimer_mol):
+    water = h2o_dimer_mol.select(3)
     assert len(water) == 3
 
 

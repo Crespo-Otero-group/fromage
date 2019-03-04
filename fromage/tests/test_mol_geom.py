@@ -1,13 +1,13 @@
 import numpy as np
 from numpy.testing import assert_allclose
 
-def test_coord_array(h2o_dimer):
-    arr = h2o_dimer.coord_array()
+def test_coord_array(h2o_dimer_mol):
+    arr = h2o_dimer_mol.coord_array()
     assert np.shape(arr) == (6, 3)
 
-def test_calc_coord_array(h2o_dimer):
-    h2o_dimer.calc_coord_array()
-    assert np.shape(h2o_dimer.geom.coord_array) == (6,3)
+def test_calc_coord_array(h2o_dimer_mol):
+    h2o_dimer_mol.calc_coord_array()
+    assert np.shape(h2o_dimer_mol.geom.coord_array) == (6,3)
 
 def test_calc_plane_coeffs(hc1_mol):
     hc1_mol.calc_plane_coeffs()

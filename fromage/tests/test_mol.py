@@ -21,32 +21,32 @@ def test_duplicity(h2o_dup):
     assert len(h2o_dup) == 3
 
 
-def test_len(h2o_dimer):
+def test_len(h2o_dimer_mol):
     """The len method is implemented"""
-    assert len(h2o_dimer) == 6
+    assert len(h2o_dimer_mol) == 6
 
 
 def test_len_empty(empty_mol):
     assert len(empty_mol) == 0
 
 
-def test_for_loop(h2o_dimer):
+def test_for_loop(h2o_dimer_mol):
     counter = 0
-    for at in h2o_dimer:
+    for at in h2o_dimer_mol:
         counter += 1
     assert counter == 6
 
 
-def test_add(h2o_dimer, newat):
+def test_add(h2o_dimer_mol, newat):
     """Addition is implemented"""
-    new_mol = h2o_dimer + Mol(newat)
+    new_mol = h2o_dimer_mol + Mol(newat)
     assert len(new_mol) == 7
 
 
-def test_append(h2o_dimer, newat):
+def test_append(h2o_dimer_mol, newat):
     """Appending is implemented"""
-    h2o_dimer.append(newat)
-    assert len(h2o_dimer) == 7
+    h2o_dimer_mol.append(newat)
+    assert len(h2o_dimer_mol) == 7
 
 
 def test_centroid(c_o):
@@ -65,19 +65,19 @@ def test_translate(c_o):
     assert c_o[1].x == approx(1.25)
 
 
-def test_set_bonding_str(h2o_dimer):
-    h2o_dimer.set_bonding_str("dis")
-    assert h2o_dimer.bonding == "dis"
-    assert h2o_dimer.thresh == 1.8
-    h2o_dimer.set_bonding_str("1.5")
-    assert h2o_dimer.bonding == "dis"
-    assert h2o_dimer.thresh == 1.5
-    h2o_dimer.set_bonding_str("vdw")
-    assert h2o_dimer.bonding == "vdw"
-    assert h2o_dimer.thresh == -0.3
-    h2o_dimer.set_bonding_str("cov-0.1")
-    assert h2o_dimer.bonding == "cov"
-    assert h2o_dimer.thresh == -0.1
-    h2o_dimer.set_bonding_str("-0.1cov")
-    assert h2o_dimer.bonding == "cov"
-    assert h2o_dimer.thresh == -0.1
+def test_set_bonding_str(h2o_dimer_mol):
+    h2o_dimer_mol.set_bonding_str("dis")
+    assert h2o_dimer_mol.bonding == "dis"
+    assert h2o_dimer_mol.thresh == 1.8
+    h2o_dimer_mol.set_bonding_str("1.5")
+    assert h2o_dimer_mol.bonding == "dis"
+    assert h2o_dimer_mol.thresh == 1.5
+    h2o_dimer_mol.set_bonding_str("vdw")
+    assert h2o_dimer_mol.bonding == "vdw"
+    assert h2o_dimer_mol.thresh == -0.3
+    h2o_dimer_mol.set_bonding_str("cov-0.1")
+    assert h2o_dimer_mol.bonding == "cov"
+    assert h2o_dimer_mol.thresh == -0.1
+    h2o_dimer_mol.set_bonding_str("-0.1cov")
+    assert h2o_dimer_mol.bonding == "cov"
+    assert h2o_dimer_mol.thresh == -0.1
