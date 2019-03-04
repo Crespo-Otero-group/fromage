@@ -84,10 +84,10 @@ class Dimer(object):
         """
         if method == 'centroid':
             dis = self.inter_dist_centroid()
-        if method == 'atomic':
+        elif method == 'atomic':
             dis = self.inter_dist_atomic(mode=mode)
         else:
-            raise ValueError("The only methods available are 'atomic' and 'dis'.\
+            raise ValueError("The only methods available are 'atomic' and 'centroid'.\
         You requested: " + str(method))
 
         return dis
@@ -99,7 +99,7 @@ class Dimer(object):
 
         diff = cen_1 - cen_2
 
-        dis = diff/np.linalg.norm(diff)
+        dis = np.linalg.norm(diff)
 
         return dis
 
