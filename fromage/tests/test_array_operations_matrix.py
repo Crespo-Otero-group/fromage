@@ -9,3 +9,9 @@ def test_cross_product_matrix(vec_111):
                          [1.,0.,-1.],
                          [-1.,1.,0.]])
     assert_allclose(res,expected)
+
+def test_rotation_matrix(vec_100):
+    mat = ao.rotation_matrix(vec_100,90)
+    res = np.dot(mat,np.array([0.,1.,0.]))
+    expected = np.array([0.,0.,1.])
+    assert_allclose(res,expected,atol=1e-7)
