@@ -214,3 +214,8 @@ def vec_100():
 def vec_220():
     """The (2,2,0) vector"""
     return np.array([2.,2.,0.])
+
+@pytest.fixture
+def vec_111():
+    """The (1,1,1) vector"""
+    return np.array([1.,1.,1.])
