@@ -61,8 +61,8 @@ def coord_array(self):
     return coord_arr
 
 def calc_coord_array(self):
-    """Set the coordinate array in geom_info"""
-    self.geom_info.coord_array = self.coord_array()
+    """Set the coordinate array in geom"""
+    self.geom.coord_array = self.coord_array()
 
 def plane_coeffs(self):
     """
@@ -75,15 +75,15 @@ def plane_coeffs(self):
         ax + by + cz + d = 0. The array is [a,b,c,d]
 
     """
-    if self.geom_info.coord_array == None:
+    if self.geom.coord_array == None:
         self.calc_coord_array()
-    plane_coeffs = ao.plane_from_coord(self.geom_info.coord_array)
+    plane_coeffs = ao.plane_from_coord(self.geom.coord_array)
 
     return plane_coeffs
 
 def calc_plane_coeffs(self):
-    """Set the plane coefficients in geom_info"""
-    self.geom_info.plane_coeffs = self.plane_coeffs()
+    """Set the plane coefficients in geom"""
+    self.geom.plane_coeffs = self.plane_coeffs()
 
 def axes(self):
     """
@@ -95,15 +95,15 @@ def axes(self):
         Principal, followed by secondary and perpendicular axes of the molecule
 
     """
-    if self.geom_info.plane_coeffs == None:
+    if self.geom.plane_coeffs == None:
         self.calc_plane_coeffs()
     # get the quadrangle which best describes the coordinates (possibly a
     # triangle with the far point repeated twice)
-    vertices = ao.quadrangle_from_coord(self.geom_info.coord_array)
+    vertices = ao.quadrangle_from_coord(self.geom.coord_array)
     # get the embedded quadrangle vertices
     emb_vert = ao.embedded_vert(vertices)
     # get vectors from projected diagonals
-    axes_out_raw = ao.project_quad_to_vectors(emb_vert,self.geom_info.plane_coeffs)
+    axes_out_raw = ao.project_quad_to_vectors(emb_vert,self.geom.plane_coeffs)
     # we want the first raw to be the secondary and vice versa and the principal
     # to be *(-1) in order to maintian a convention
     axes_out = [-axes_out_raw[1], axes_out_raw[0]]
@@ -117,8 +117,8 @@ def axes(self):
     return axes_out
 
 def calc_axes(self):
-    """Set the principal and secondary axes in geom_info"""
+    """Set the principal and secondary axes in geom"""
     axes = self.axes()
-    self.geom_info.prin_ax = axes[0]
-    self.geom_info.sec_ax = axes[1]
-    self.geom_info.perp_ax = axes[2]
+    self.geom.prin_ax = axes[0]
+    self.geom.sec_ax = axes[1]
+    self.geom.perp_ax = axes[2]

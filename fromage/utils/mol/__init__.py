@@ -62,7 +62,7 @@ class Mol(object):
         self.vectors = vectors
         self.bonding = bonding
         self.thresh = thresh
-        self.geom_info = self.GeomInfo()
+        self.geom = self.GeomInfo()
 
     def __repr__(self):
         out_str = ""
