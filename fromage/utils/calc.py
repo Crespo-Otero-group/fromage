@@ -130,10 +130,13 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        mol_r1 = Mol(atoms)
-        mol_r2 = rf.mol_from_file("r2.xyz")
+        mol = Mol(atoms)
 
-        mol = mol_r1 + mol_r2
+        region_2_file = "r2.xyz"
+        if os.path.exists(region_2_file):
+            mol_r2 = rf.mol_from_file(region_2_file)
+            mol += mol_r2
+
         mol.write_xyz("geom.xyz")
         subprocess.call("xyz2gen geom.xyz", shell=True)
         # Run DFTB+
