@@ -118,6 +118,26 @@ class Mol(object):
             atom.v_translate(vector)
         return
 
+    def translated(self, vector):
+        """
+        Return translate Mol by a vector
+
+        Parameters
+        ----------
+        vector : 3 x 1 numpy array
+            Translation vector
+
+        Returns
+        -------
+        out_mol : Mol object
+            Translated Mol
+
+        """
+        new_mol = self.copy()
+        for atom in new_mol.atoms:
+            atom.v_translate(vector)
+        return new_mol
+
     def remove_duplicates(self, thresh=0.001):
         """Remove the duplicate atoms"""
         purged_mol = Mol([self.atoms[0]])

@@ -17,14 +17,15 @@ class Dimer(object):
 
     """
 
-    def __init__(self, mols=[]):
-        self.mols = mols
+    def __init__(self, mol_a=None, mol_b=None):
+        self.mol_a = mol_a
+        self.mol_b = mol_b
         self.alpha = None
         self.beta = None
         self.gamma = None
 
     def __repr__(self):
-        out_str = "Mol A\n" + self.mols[0].__str__() + "Mol B\n" + self.mols[1].__str__()
+        out_str = "Mol A\n" + self.mol_a.__str__() + "Mol B\n" + self.mol_b.__str__()
         return out_str
 
     def __str__(self):
@@ -40,13 +41,13 @@ class Dimer(object):
             The three angles alpha, beta, gamma
 
         """
-        if self.mols[0].geom.perp_ax == None:
-            self.mols[0].calc_axes()
-        if self.mols[1].geom.perp_ax == None:
-            self.mols[1].calc_axes()
-        out_lis = [ao.vec_angle(self.mols[0].geom.prin_ax,self.mols[1].geom.prin_ax),
-                    ao.vec_angle(self.mols[0].geom.sec_ax,self.mols[1].geom.sec_ax),
-                    ao.vec_angle(self.mols[0].geom.perp_ax,self.mols[1].geom.perp_ax)]
+        if self.mol_a.geom.perp_ax == None:
+            self.mol_a.calc_axes()
+        if self.mol_b.geom.perp_ax == None:
+            self.mol_b.calc_axes()
+        out_lis = [ao.vec_angle(self.mol_a.geom.prin_ax,self.mol_b.geom.prin_ax),
+                    ao.vec_angle(self.mol_a.geom.sec_ax,self.mol_b.geom.sec_ax),
+                    ao.vec_angle(self.mol_a.geom.perp_ax,self.mol_b.geom.perp_ax)]
         out_arr = np.array(out_lis)
 
         return out_arr
@@ -94,8 +95,8 @@ class Dimer(object):
 
     def inter_dist_centroid(self):
         """Return distance between centroids of constituent fragments"""
-        cen_1 = self.mols[0].centroid()
-        cen_2 = self.mols[1].centroid()
+        cen_1 = self.mol_a.centroid()
+        cen_2 = self.mol_b.centroid()
 
         diff = cen_1 - cen_2
 
@@ -121,10 +122,44 @@ class Dimer(object):
         """
         min_dist = float('inf')
 
-        for atom_i in self.mols[0]:
-            for atom_j in self.mols[1]:
+        for atom_i in self.mol_a:
+            for atom_j in self.mol_b:
                 tmp_dis = atom_i.dist(atom_j,ref=mode)
                 if tmp_dis < min_dist:
                     min_dist = tmp_dis
 
         return min_dist
+
+    def dimer_images(self, vectors):
+        """
+        Return the 9 images of the dimer produced by translating monomer 2
+
+        Monomer 2 is translated in every combination of -a,0,a ; -b,0,b and
+        -c,0,c. This includes the (0,0,0) translation which is the original
+        dimer.
+
+        Parameters
+        ----------
+        vectors : 3 x 3 numpy array
+            Vectors of the lattice periodicity
+        Returns
+        -------
+        images : list of 9 Dimer objects
+            The 9 images of the dimer, always with mol_a remaining in first
+            position.
+
+        """
+        translations = [-1,0,1]
+        static_mol = self.mol_a
+        moving_mol = self.mol_b
+        images = []
+        for tra_a in translations:
+            for tra_b in translations:
+                    for tra_c in translations:
+                        vector = vectors[0] * tra_a + \
+                                 vectors[1] * tra_b + \
+                                 vectors[2] * tra_c
+                        mol_image = moving_mol.translated(vector)
+                        new_dimer = Dimer(static_mol,mol_image)
+                        images.append(new_dimer)
+        return images

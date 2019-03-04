@@ -187,7 +187,7 @@ def dim_from_file(in_name, bonding=''):
     """
     double_mol = mol_from_file(in_name)
     mol_a, mol_b = double_mol.split_in_half()
-    dim = Dimer([mol_a, mol_b])
+    dim = Dimer(mol_a, mol_b)
 
     return dim
 
