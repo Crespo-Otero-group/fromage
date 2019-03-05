@@ -39,7 +39,7 @@ def test_he_images(he_dimer):
                         [0.0,20.0,0.0],
                         [0.0,0.0,20.0]])
     lis = he_dimer.images(vectors)
-    print(lis)
+    assert len(lis) == 27
 
 def test_identical_to(h2o_dimer, h2o_dimer_jumbled):
     assert h2o_dimer.identical_to(h2o_dimer_jumbled)
