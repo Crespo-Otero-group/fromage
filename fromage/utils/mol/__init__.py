@@ -76,6 +76,15 @@ class Mol(object):
     def copy(self):
         return deepcopy(self)
 
+    def same_atoms_as(self, other_mol):
+        """Check if all atoms are the same, even if the oredring differs"""
+        result = True
+        for atom in self:
+            if atom not in other_mol:
+                result = False
+                break
+        return result
+
     def write_xyz(self, name):
         """Write an xyz file of the Mol"""
         ef.write_xyz(name, self.atoms)

@@ -81,3 +81,17 @@ def test_set_bonding_str(h2o_dimer_mol):
     h2o_dimer_mol.set_bonding_str("-0.1cov")
     assert h2o_dimer_mol.bonding == "cov"
     assert h2o_dimer_mol.thresh == -0.1
+
+def test_same_atoms_as():
+    mol_a_lis = [Atom("C",1.,0.,0.),
+                 Atom("H",1.,1.,1.)]
+    mol_b_lis = [Atom("H",1.,1.,1.),
+                 Atom("C",1.,0.,0.)]
+    mol_c_lis = [Atom("C",1.,0.,0.),
+                 Atom("C",1.,1.,1.)]
+    mol_a = Mol(mol_a_lis)
+    mol_b = Mol(mol_b_lis)
+    mol_c = Mol(mol_c_lis)
+
+    assert mol_a.same_atoms_as(mol_b) == True
+    assert mol_a.same_atoms_as(mol_c) == False
