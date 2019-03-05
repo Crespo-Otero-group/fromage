@@ -5,7 +5,19 @@ import fromage.utils.array_operations as ao
 import numpy as np
 
 def make_dimer(mol_a,mol_b):
-    """Build a Dimer object"""
+    """
+    Build a Dimer object
+
+    Parameters
+    ----------
+    mol_a,mol_b : Mol objects
+        The molecules constituting the dimer
+    Returns
+    -------
+    dim_out : Dimer object
+        The dimer of the two molecules
+
+    """
     dim_out = Dimer(mol_a,mol_b)
     return dim_out
 
