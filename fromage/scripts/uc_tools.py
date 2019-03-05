@@ -176,7 +176,6 @@ if __name__ == '__main__':
         "-T", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.2, vdw:-0.3. To select default, just use a threshold of 999", default=999, type=float)
     parser.add_argument(
         "-bs", "--bonding_string", help="Alternate specification of bonding. Here the threshold and bonding are lumped up in one string like 'cov-0.1' or 12dis'", default="", type=str)
-
     parser.add_argument(
         "-c", "--complete", help="Complete the molecules in the cell. Incompatible with -C or -f", action="store_true")
     parser.add_argument(
