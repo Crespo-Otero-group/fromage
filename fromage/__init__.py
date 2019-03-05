@@ -6,9 +6,7 @@ Existing electronic structure programs are interfaced with each other for
 ONIOM calculations with different levels of sophistication in the embedding.
 
 """
-import sys
-import numpy as np
-from fromage import fdist
-from fromage import io
-from fromage import scripts
-from fromage import utils
+from fromage.utils.mol import make_mol
+from fromage.utils.dimer import make_dimer
+from fromage.io.read_file import mol_from_file
+from fromage.io.read_file import dim_from_file
