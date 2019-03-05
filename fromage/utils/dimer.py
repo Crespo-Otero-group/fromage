@@ -3,6 +3,12 @@ The class represents pairs of Mol objects
 """
 import fromage.utils.array_operations as ao
 import numpy as np
+
+def make_dimer(mol_a,mol_b):
+    """Build a Dimer object"""
+    dim_out = Dimer(mol_a,mol_b)
+    return dim_out
+
 class Dimer(object):
     """
     Object representing a pair of molecules
