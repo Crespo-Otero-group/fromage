@@ -20,7 +20,22 @@ def try_ismol(to_test):
         raise TypeError("Cannot cast " +
                         type(to_test).__name__ + " to Mol object")
 
+def make_mol(atoms):
+    """
+    Generate a Mol object
 
+    Parameters
+    ----------
+    atoms : list of Atom objects
+        The atoms constituting the Mol
+    Returns
+    -------
+    out_mol : Mol object
+        The atoms all in one new Mol object
+
+    """
+    out_mol = Mol(atoms)
+    return out_mol
 class Mol(object):
     """
     Object representing a list of atoms.
