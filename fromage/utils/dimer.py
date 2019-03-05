@@ -3,6 +3,7 @@ The class represents pairs of Mol objects
 """
 import fromage.utils.array_operations as ao
 import numpy as np
+from scipy.spatial.distance import cdist
 
 def make_dimer(mol_a,mol_b):
     """
@@ -192,3 +193,26 @@ class Dimer(object):
                         new_dimer = Dimer(static_mol,mol_image)
                         images.append(new_dimer)
         return images
+
+    def sorted_inter_distances(self):
+        """
+        Return the sorted intermolecular atomic distances
+
+        That is, only distances between an atom belonging to mol_a and an atom
+        belonging to mol_b
+
+        Returns
+        -------
+        inter_distances : Nat x Nat numpy array
+            The sorted distance matrix of interatomic distances across molecules
+
+        """
+        arr_a = self.mol_a.coord_array()
+        arr_b = self.mol_b.coord_array()
+
+        unsorted = cdist(arr_a,arr_b)
+        unsort_tril = np.tril(unsorted)
+        unsort_arr = unsort_tril[np.nonzero(unsort_tril)]
+        inter_distances = np.sort(unsort_arr)
+
+        return inter_distances

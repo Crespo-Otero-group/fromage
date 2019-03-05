@@ -143,7 +143,8 @@ def main(args):
     prints("{} dimers remaining after removing duplicates".format(len(selected_dimers)))
 
     for dimer in selected_dimers:
-        prints("HI")
+        mat = dimer.sorted_inter_distances()
+
 
     # # write the files
     # for dim_no, dim in enumerate(unique_dims):
