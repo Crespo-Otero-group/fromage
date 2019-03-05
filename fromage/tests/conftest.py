@@ -233,6 +233,12 @@ def h2o_dimer():
     return dim
 
 @pytest.fixture
+def h2o_dimer_jumbled():
+    """Dimer object of two water"""
+    dim = rf.dim_from_file(_in_data("h2o_dimer_jumbled.xyz"))
+    return dim
+
+@pytest.fixture
 def h2_dimer():
     """Dimer object of two H2 molecules in a line"""
     dim = rf.dim_from_file(_in_data("h2_linear_dimer.xyz"))

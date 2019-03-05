@@ -31,6 +31,17 @@ class Dimer(object):
     def __str__(self):
         return self.__repr__()
 
+    def identical_to(self,other_dimer):
+        """Check if the dimer is the same as another one"""
+        result = False
+        if self.mol_a.same_atoms_as(other_dimer.mol_a):
+            if self.mol_b.same_atoms_as(other_dimer.mol_b):
+                result = True
+        elif self.mol_a.same_atoms_as(other_dimer.mol_b):
+            if self.mol_b.same_atoms_as(other_dimer.mol_a):
+                result = True
+        return result
+
     def angles(self):
         """
         Return the three descriptor angles of the dimer
