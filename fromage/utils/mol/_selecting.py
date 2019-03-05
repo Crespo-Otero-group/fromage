@@ -1,7 +1,6 @@
 from copy import deepcopy
 
-
-def select(self, labels):
+def select(self, labels, natoms = 0):
     """
     Return a molecule out of the current Mol.
 
@@ -13,7 +12,9 @@ def select(self, labels):
     ----------
     label : int or list of ints
         The number of the atoms from which the molecules are generated.
-
+    natoms : int (optional)
+        Selecting from a large Mol can be slow. Specifying the expected number
+        of atoms can help speed up the process.
     Returns
     -------
     selected : Mol object
@@ -31,11 +32,6 @@ def select(self, labels):
 
     selected = self.copy()
     selected.atoms = deepcopy([self[i] for i in labels])
-    remaining = self.copy()
-    for atom in selected:
-        if atom in remaining:
-            remaining.remove(atom)
-
     old_atoms = selected.copy()
 
     # While there are atoms to add
@@ -44,14 +40,18 @@ def select(self, labels):
         cont = False
         new_atoms = mol_init.Mol([])
         for old in old_atoms:
-            tmp_remaining = remaining.copy()
-            for rem in remaining:
-                if self.bonded(old, rem):
-                    new_atoms.append(rem)
-                    selected.append(rem)
-                    tmp_remaining.remove(rem)
-                    cont = True  # An atom was added so continue loop
-            remaining = tmp_remaining
+            for candidate in self:
+                if self.bonded(old, candidate):
+                    if candidate not in selected:
+                        new_atoms.append(candidate)
+                        selected.append(candidate)
+                        if natoms:
+                            current_natoms = len(selected)
+                            if current_natoms == natoms:
+                                return selected
+                            if current_natoms > natoms:
+                                raise ValueError("There is inconsistenty the amount of atoms in the molecule")
+                        cont = True  # An atom was added so continue loop
         old_atoms = new_atoms
     return selected
 
@@ -131,13 +131,25 @@ def per_select(self, labels, old_pos=False):
         return selected_img
 
 
-def segregate(self):
-    """Separate current Mol in a list of Mols of different molecules"""
+def segregate(self,natoms = 0):
+    """
+    Separate current Mol in a list of Mols of different molecules
+
+    Parameters
+    ----------
+    natoms : int (optional)
+        Number of expected atoms. This can help speed up the selection process
+        if the number of atoms is certain. Otherwise, expect errors.
+
+    """
     molecules = []  # list of molecules
     remaining = self.copy()
 
+    natoms_current = 0
     while len(remaining) > 0:
-        molecule = remaining.select(0)
+        # natoms = 0 means use default selecting algorithm
+        molecule = remaining.select(0, natoms = natoms_current)
+        natoms_current = len(molecule)
         molecules.append(molecule)
         for atom in molecule:
             remaining.remove(atom)
