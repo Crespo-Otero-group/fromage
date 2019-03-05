@@ -223,29 +223,29 @@ def vec_111():
 @pytest.fixture
 def rectangle_dimer():
     """Dimer object of two rectangle-like molecules"""
-    dim = rf.dim_from_file(_in_data("rectangle_mol_dimer.xyz"))
+    dim = rf.dimer_from_file(_in_data("rectangle_mol_dimer.xyz"))
     return dim
 
 @pytest.fixture
 def h2o_dimer():
     """Dimer object of two water"""
-    dim = rf.dim_from_file(_in_data("h2o_dimer.xyz"))
+    dim = rf.dimer_from_file(_in_data("h2o_dimer.xyz"))
     return dim
 
 @pytest.fixture
 def h2o_dimer_jumbled():
     """Dimer object of two water"""
-    dim = rf.dim_from_file(_in_data("h2o_dimer_jumbled.xyz"))
+    dim = rf.dimer_from_file(_in_data("h2o_dimer_jumbled.xyz"))
     return dim
 
 @pytest.fixture
 def h2_dimer():
     """Dimer object of two H2 molecules in a line"""
-    dim = rf.dim_from_file(_in_data("h2_linear_dimer.xyz"))
+    dim = rf.dimer_from_file(_in_data("h2_linear_dimer.xyz"))
     return dim
 
 @pytest.fixture
 def he_dimer():
     """Dimer object of two He atoms in a box at 0,0,0 and 10,10,10"""
-    dim = rf.dim_from_file(_in_data("he_cell.xyz"))
+    dim = rf.dimer_from_file(_in_data("he_cell.xyz"))
     return dim

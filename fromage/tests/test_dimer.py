@@ -11,8 +11,8 @@ def test_init(h2o_dimer_mol):
     assert len(dim.mol_a) == 3
     assert len(dim.mol_b) == 3
 
-def test_dim_from_file():
-    dim = rf.dim_from_file(_in_data("h2o_dimer.xyz"))
+def test_dimer_from_file():
+    dim = rf.dimer_from_file(_in_data("h2o_dimer.xyz"))
     assert len(dim.mol_a) == 3
     assert len(dim.mol_b) == 3
 
