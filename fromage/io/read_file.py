@@ -165,7 +165,7 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
 
     return mol
 
-def dim_from_file(in_name, bonding=''):
+def dimer_from_file(in_name, bonding=''):
     """
     Return a Dimer object from a file
 
