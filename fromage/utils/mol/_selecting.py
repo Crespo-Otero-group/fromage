@@ -131,15 +131,15 @@ def per_select(self, labels, old_pos=False):
         return selected_img
 
 
-def segregate(self,natoms = 0):
+def segregate(self, diff_mols = True):
     """
     Separate current Mol in a list of Mols of different molecules
 
     Parameters
     ----------
-    natoms : int (optional)
-        Number of expected atoms. This can help speed up the selection process
-        if the number of atoms is certain. Otherwise, expect errors.
+    diff_mols : bool (optional)
+        If all molecules are of the same length, turn this off for a boost in
+        speed.
 
     """
     molecules = []  # list of molecules
@@ -147,9 +147,12 @@ def segregate(self,natoms = 0):
 
     natoms_current = 0
     while len(remaining) > 0:
-        # natoms = 0 means use default selecting algorithm
         molecule = remaining.select(0, natoms = natoms_current)
-        natoms_current = len(molecule)
+        # diff_mols = True means use slow algorithm
+        if diff_mols:
+            natoms_current = 0
+        else:
+            natoms_current = len(molecule)
         molecules.append(molecule)
         for atom in molecule:
             remaining.remove(atom)
