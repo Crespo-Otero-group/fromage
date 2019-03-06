@@ -211,8 +211,7 @@ class Dimer(object):
         arr_b = self.mol_b.coord_array()
 
         unsorted = cdist(arr_a,arr_b)
-        unsort_tril = np.tril(unsorted)
-        unsort_arr = unsort_tril[np.nonzero(unsort_tril)]
+        unsort_arr = unsorted.flatten()
         inter_distances = np.sort(unsort_arr)
 
         return inter_distances

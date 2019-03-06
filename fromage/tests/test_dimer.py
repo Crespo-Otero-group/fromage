@@ -2,6 +2,7 @@ import fromage.io.read_file as rf
 import numpy as np
 from fromage.utils.dimer import Dimer
 from fromage.tests.conftest import _in_data
+from numpy.testing import assert_allclose
 from pytest import approx
 
 def test_init(h2o_dimer_mol):
@@ -43,3 +44,8 @@ def test_he_images(he_dimer):
 
 def test_identical_to(h2o_dimer, h2o_dimer_jumbled):
     assert h2o_dimer.identical_to(h2o_dimer_jumbled)
+
+def test_inter_distance(h2_dimer):
+    res = h2_dimer.sorted_inter_distances()
+    expected = np.array([5.,6.,6.,7.])
+    assert_allclose(res,expected)
