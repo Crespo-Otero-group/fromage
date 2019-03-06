@@ -4,6 +4,10 @@ Utility for selecting unique dimers from a .xyz file
 
 The unique dimers are written to separate output files, *_dimer_*.xyz
 
+The routines herein are built upon implementations of the dimer_select.py module
+by Michael Dommett (see earlier commits) and collected personal scripts by
+Amir Sidat.
+
 """
 
 from __future__ import division
