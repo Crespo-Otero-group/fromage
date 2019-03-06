@@ -14,7 +14,7 @@ def vec_angle(vector_1, vector_2, degrees = True):
     """
     Return the angle between two numpy vectors.
 
-    The angle is brought into the range [-180,180] for degrees or [-1,1] for
+    The angle is in the range [0,180] for degrees or [0,1] for
     radians. arctan is used instead of e.g. arccos as it has a more robust
     definition for edge cases where floating point numbers might get
     arccos(1.000001) = NaN

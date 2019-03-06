@@ -48,7 +48,7 @@ def parse_args():
     parser.add_argument(
         "-r", "--remove_duplicate_dimers", help="Remove any dimers that may have appeared twice", default=True, type=bool)
     parser.add_argument(
-        "-l", "--tol_duplicate", help="RMSD tolerance for two dimers to be considered the same", default=10e-4, type=float)
+        "-l", "--tol_duplicate", help="RMSD tolerance for two dimers to be considered the same. Default 0.0001", default=10e-4, type=float)
     parser.add_argument(
         "-p", "--print_dimers", help="Write out each dimer in .xyz format", action="store_true")
     parser.add_argument(
