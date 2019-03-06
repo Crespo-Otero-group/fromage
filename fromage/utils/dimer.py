@@ -50,6 +50,11 @@ class Dimer(object):
     def __str__(self):
         return self.__repr__()
 
+    def write_xyz(self, name):
+        """Write an xyz file of the Dimer"""
+        whole_mol = self.mol_a + self.mol_b
+        whole_mol.write_xyz(name)
+
     def identical_to(self,other_dimer):
         """Check if the dimer is the same as another one"""
         result = False
@@ -71,9 +76,9 @@ class Dimer(object):
             The three angles alpha, beta, gamma
 
         """
-        if self.mol_a.geom.perp_ax == None:
+        if np.count_nonzero(self.mol_a.geom.perp_ax) == 0:
             self.mol_a.calc_axes()
-        if self.mol_b.geom.perp_ax == None:
+        if np.count_nonzero(self.mol_b.geom.perp_ax) == 0:
             self.mol_b.calc_axes()
         out_lis = [ao.vec_angle(self.mol_a.geom.prin_ax,self.mol_b.geom.prin_ax),
                     ao.vec_angle(self.mol_a.geom.sec_ax,self.mol_b.geom.sec_ax),
@@ -239,3 +244,7 @@ class Dimer(object):
         """
         dists_a = self.sorted_inter_distances()
         dists_b = other.sorted_inter_distances()
+
+        same = ao.rmsd(dists_a,dists_b) < tol
+
+        return same

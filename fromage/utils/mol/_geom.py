@@ -26,11 +26,11 @@ class GeomInfo(object):
 
     """
     def __init__(self):
-        self.coord_array = None
-        self.plane_coeffs = None
-        self.prin_ax = None
-        self.sec_ax = None
-        self.perp_ax = None
+        self.coord_array = np.array([0])
+        self.plane_coeffs = np.array([0])
+        self.prin_ax = np.array([0])
+        self.sec_ax = np.array([0])
+        self.perp_ax = np.array([0])
 
     def __str__(self):
         out_str = "Coordinate array:\n" + str(self.coord_array) + "\nPlane coefficients:\n" + str(
@@ -75,7 +75,7 @@ def plane_coeffs(self):
         ax + by + cz + d = 0. The array is [a,b,c,d]
 
     """
-    if self.geom.coord_array == None:
+    if np.count_nonzero(self.geom.coord_array) == 0:
         self.calc_coord_array()
     plane_coeffs = ao.plane_from_coord(self.geom.coord_array)
 
@@ -95,7 +95,7 @@ def axes(self):
         Principal, followed by secondary and perpendicular axes of the molecule
 
     """
-    if self.geom.plane_coeffs == None:
+    if np.count_nonzero(self.geom.plane_coeffs) == 0:
         self.calc_plane_coeffs()
     # get the quadrangle which best describes the coordinates (possibly a
     # triangle with the far point repeated twice)

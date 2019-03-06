@@ -49,3 +49,6 @@ def test_inter_distance(h2_dimer):
     res = h2_dimer.sorted_inter_distances()
     expected = np.array([5.,6.,6.,7.])
     assert_allclose(res,expected)
+
+def test_same_geom(h2o_dimer,h2o_dimer_jumbled_trans):
+    assert h2o_dimer.same_geom(h2o_dimer_jumbled_trans)

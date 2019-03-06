@@ -13,6 +13,12 @@ import time
 import fromage as fro
 from fromage.io import read_file as rf
 
+# safe printing
+def prints(*args_,**kwargs):
+    if args.verbose:
+        print(*args_, **kwargs)
+    return
+
 def all_dimers(mono_list):
     """
     Generate all possible dimers from a list of Mols
@@ -32,21 +38,23 @@ def parse_args():
     parser.add_argument(
         "-b", "--bonding", help="Type of bonding used for detecting full molecules. The options are dis, cov and vdw", default="cov", type=str)
     parser.add_argument(
-        "-T", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.2, vdw:-0.3. To select default, just use a threshold of 999", default=999, type=float)
+        "-t", "--thresh", help="Threshold distance to select a bond. The default pairs are dis:1.8, cov:0.2, vdw:-0.3", default=None, type=float)
     parser.add_argument(
         "-bs", "--bonding_string", help="Alternate specification of bonding. Here the threshold and bonding are lumped up in one string like 'cov-0.1' or 12dis'", default="", type=str)
-    parser.add_argument("-t", "--dimtype", help="Use centroid distance 'centroid' or shortest atomic distances 'dis' or covalent radius 'cov' or van der waals radii 'vdw' to define a dimer",
+    parser.add_argument("-T", "--dimtype", help="Use centroid distance 'centroid' or shortest atomic distances 'dis' or covalent radius 'cov' or van der waals radii 'vdw' to define a dimer",
                         default=str("centroid"), type=str)
     parser.add_argument("-d", "--dist", help="Distance criterion (in units of Angstrom) to define a dimer",
                         default=7, type=float)
     parser.add_argument(
         "-r", "--remove_duplicate_dimers", help="Remove any dimers that may have appeared twice", default=True, type=bool)
     parser.add_argument(
-        "-p", "--print_dimers", help="Write out each dimer in .xyz format", default=False, type=bool)
+        "-l", "--tol_duplicate", help="RMSD tolerance for two dimers to be considered the same", default=10e-4, type=float)
+    parser.add_argument(
+        "-p", "--print_dimers", help="Write out each dimer in .xyz format", action="store_true")
     parser.add_argument(
         "-o", "--output_geometry_data", help="Output file for geometry data analysis", default='dimers.dat', type=str)
     parser.add_argument(
-        "-v", "--verbose", help="Print verbose output", default=True, type=bool)
+        "-v", "--verbose", help="Print verbose output", action="store_true")
 
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
@@ -64,18 +72,10 @@ def test():
     print(all_dimers(lis))
 
 def main(args):
-    # safe printing
-    def prints(*args_,**kwargs):
-        if args.verbose:
-            print(*args_, **kwargs)
-        return
-
     # read input file
     all_atoms = fro.mol_from_file(args.input)
     # specify bonding
-    if args.thresh == 999:
-        thresh = None
-    all_atoms.set_bonding(bonding=args.bonding, thresh=thresh)
+    all_atoms.set_bonding(bonding=args.bonding, thresh=args.thresh)
     # if the bonding is specified all in one string
     if args.bonding_string:
         all_atoms.set_bonding_str(args.bonding_string)
@@ -131,9 +131,8 @@ def main(args):
     for i,dimer_i in enumerate(selected_dimers[:-1]):
         keep = True
         for dimer_j in selected_dimers[i+1:]:
-            if dimer_i.identical_to(dimer_j):
+            if dimer_i.same_geom(dimer_j):
                 keep = False
-                print(i)
                 break
         if keep:
             keep_these.append(dimer_i)
@@ -142,19 +141,24 @@ def main(args):
     selected_dimers = keep_these
     prints("{} dimers remaining after removing duplicates".format(len(selected_dimers)))
 
-    for dimer in selected_dimers:
-        mat = dimer.sorted_inter_distances()
-
-
-    # # write the files
-    # for dim_no, dim in enumerate(unique_dims):
-    #     outfile = str(args.input[:-4]) + "_dimer_" + str(dim_no) + ".xyz"
-    #     print("Writing {}".format(outfile))
-    #     ef.write_xyz(outfile, dim)
+    if args.output_geometry_data:
+        data_file = open(args.output_geometry_data, "w")
+        header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist")
+        data_file.write(header_str)
+    for i,dimer in enumerate(selected_dimers):
+        if args.output_geometry_data:
+            cen_dist = dimer.inter_distance(method='centroid')
+            angles = dimer.angles()
+            data_file.write("{:>7}{:17.3f}{:10.3f}{:10.3f}{:12.3f}\n".format(i+1,angles[0],angles[1],angles[2],cen_dist))
+        if args.print_dimers:
+            out_name = str(args.input[:-4]) + "_dimer_" + str(i+1) + ".xyz"
+            dimer.write_xyz(out_name)
+    if args.output_geometry_data:
+        data_file.close()
 
 if __name__ == '__main__':
     start = time.time()
     args = parse_args()
     main(args)
     end = time.time()
-    print("\nTotal time: {}s".format(round((end - start), 1)))
+    prints("\nTotal time: {}s".format(round((end - start), 1)))
