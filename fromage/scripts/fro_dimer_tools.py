@@ -54,7 +54,7 @@ def parse_args():
     parser.add_argument(
         "-o", "--output_geometry_data", help="Output file for geometry data analysis", default='dimers.dat', type=str)
     parser.add_argument(
-        "-v", "--verbose", help="Print verbose output", action="store_true")
+        "-v", "--verbose", help="Print full output", action="store_true")
 
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
@@ -131,7 +131,7 @@ def main(args):
     for i,dimer_i in enumerate(selected_dimers[:-1]):
         keep = True
         for dimer_j in selected_dimers[i+1:]:
-            if dimer_i.same_geom(dimer_j):
+            if dimer_i.same_geom(dimer_j,tol=args.tol_duplicate):
                 keep = False
                 break
         if keep:

@@ -49,3 +49,8 @@ def test_rmsd():
     ref = np.array([0.,0.,0.,0.,0.])
     alt = np.array([1.,-1.,-1.,-1.,1.])
     assert ao.rmsd(ref,alt) == 1.
+
+def test_misc():
+    a = np.array([-0.0959835,   0.99534852, -0.00827609])
+    b = np.array([ 0.0959835,  -0.99534852,  0.00827609])
+    print(ao.vec_angle(a,b))
