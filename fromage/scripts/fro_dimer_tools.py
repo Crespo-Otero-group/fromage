@@ -93,7 +93,7 @@ def main(args):
         prints("{} molecules detected after reconstitution".format(len(molecules)))
     else:
         # separate into molecules
-        molecules = all_atoms.segregate(diff_mol=False)
+        molecules = all_atoms.segregate(diff_mols=False)
         prints("{} molecules detected".format(len(molecules)))
 
 
