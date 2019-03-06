@@ -215,3 +215,27 @@ class Dimer(object):
         inter_distances = np.sort(unsort_arr)
 
         return inter_distances
+
+    def same_geom(self,other,tol=10e-4):
+        """
+        Checks whether the dimer has the same geometry as another
+
+        Atom types are ignored. The comparison is done by sorting all inter
+        molecular distances (atom to atom). This fingerprint should be
+        sufficient in general. The rmsd between dimers is checked and needs
+        to fall below a threshold
+
+        Parameters
+        ----------
+        other : Mol object
+            Molecule to compare with
+        tol : float
+            Tolerance for the RMSD of the two sorted distance arrays
+        Returns
+        -------
+        same : bool
+            True if the molecules have the same geometry, else False
+
+        """
+        dists_a = self.sorted_inter_distances()
+        dists_b = other.sorted_inter_distances()

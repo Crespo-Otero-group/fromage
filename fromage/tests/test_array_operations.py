@@ -44,3 +44,8 @@ def test_orthogonalise_sym():
 
     assert_allclose(ovec_1,expected_1)
     assert_allclose(ovec_2,expected_2)
+
+def test_rmsd():
+    ref = np.array([0.,0.,0.,0.,0.])
+    alt = np.array([1.,-1.,-1.,-1.,1.])
+    assert ao.rmsd(ref,alt) == 1.

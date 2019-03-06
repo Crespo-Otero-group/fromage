@@ -76,6 +76,28 @@ def dist_mat(in_array):
     dist_mat = np.tril(cdist(in_array,in_array))
     return dist_mat
 
+def rmsd(array_a, array_b):
+    """
+    Calculate the RMSD between two 1d arrays
+
+    Parameters
+    ----------
+    array_a, array_b : 1d numpy arrays
+        The arrays to be compared
+    Returns
+    -------
+    rmsd : float
+        The Root Mean Square Deviation of the elements of the array
+
+    """
+    diff = array_a - array_b
+    diff2 = np.square(diff)
+    diff2_sum = np.sum(diff2)
+    norm_diff2_sum = diff2_sum/len(array_a)
+    rmsd = np.sqrt(norm_diff2_sum)
+
+    return rmsd
+
 def find_largest(in_array, n_largest):
     """
     Return the coordinates of the N largest elements of an ND-array
