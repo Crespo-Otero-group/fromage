@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Adapted with permission from Michael Dommett's code available at
 # https://github.com/mdommett/exciton_coupling
-# This is an implementation of the diabatisation method by Aragó and Troisi in
-# Aragó, J. & Troisi, A. Dynamics of the Excitonic Coupling in Organic Crystals. Phys. Rev. Lett. 114, 026402 (2015).
+# This is an implementation of the diabatisation method by Arago and Troisi in
+# Arago, J. & Troisi, A. Dynamics of the Excitonic Coupling in Organic Crystals. Phys. Rev. Lett. 114, 026402 (2015).
 
 import numpy as np
 from sys import exit,argv
