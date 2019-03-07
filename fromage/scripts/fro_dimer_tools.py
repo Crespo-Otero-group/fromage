@@ -18,9 +18,9 @@ import fromage as fro
 from fromage.io import read_file as rf
 
 # safe printing
-def prints(*args_,**kwargs):
+def prints(arg_in):
     if args.verbose:
-        print(*args_, **kwargs)
+        print(arg_in)
     return
 
 def all_dimers(mono_list):
