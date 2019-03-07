@@ -10,3 +10,4 @@ from fromage.utils.mol import make_mol
 from fromage.utils.dimer import make_dimer
 from fromage.io.read_file import mol_from_file
 from fromage.io.read_file import dimer_from_file
+from fromage.io.read_file import read_vectors
