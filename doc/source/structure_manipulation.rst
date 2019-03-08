@@ -38,11 +38,11 @@ covalent radii. ``set_bonding()`` is used to tweak this definition.
 
 The Mol object has an attribute ``mol.geom`` of the type ``GeomInfo``. This is
 initialised as empty by default to save on computing effort, however useful
-information can be requested such as the atomic positions in numpy array form
-using ``mol.geom.coord_array()``. There are also functions to find the plane
-which best contains the atomic coordinates with ``mol.geom.plane_coeffs()`` or three
-orthonormal vectors giving a fingerprint to the molecular orientation:
-``mol.geom.axes()``.
+information can be stored and manipulated such as the atomic positions in numpy
+array form using ``mol.coord_array()``. There are also functions to find the
+plane which best contains the atomic coordinates with ``mol.plane_coeffs()`` or
+three orthonormal vectors giving a fingerprint to the molecular orientation:
+``mol.axes()``.
 
 The Dimer object
 ================
