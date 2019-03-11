@@ -23,6 +23,11 @@ def test_rectangle_dim_angles(rectangle_dimer):
     assert rectangle_dimer.beta == approx(5.643125,rel=10e-4)
     assert rectangle_dimer.gamma == approx(3.247717,rel=10e-4)
 
+def test_rectangle_dim_slip(rectangle_dimer):
+    ang_a, ang_b = rectangle_dimer.slip_angles()
+    assert ang_a == approx(14.7924,rel=10e-4)
+    assert ang_b == approx(16.1868,rel=10e-4)
+
 def test_h2_dimer_inter_distance(h2_dimer):
     assert h2_dimer.inter_distance() == approx(5.)
     assert h2_dimer.inter_distance(mode='cov') == approx(4.54)

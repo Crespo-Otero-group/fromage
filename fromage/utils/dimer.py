@@ -87,6 +87,42 @@ class Dimer(object):
 
         return out_arr
 
+    def slip_angles(self):
+        """
+        Return the slip angles for the dimer
+
+        If the dimer is arranged face-to-face, their centroids can be said
+        to be more or less slipped (deviating from being aligned). A measure
+        of this slip is the angle between the normal axis of one of the monomers
+        and the centroid-centroid vector. Note that the slip angle of dimer IJ
+        is not related to that of JI so both are returned. Depending on the
+        direction of the vectors, two definitions can be chosen for the angle
+        (both of them adding up to 180). We return the smalles one of the two.
+
+        Returns
+        -------
+        slip_angle_a, slip_angle_b : floats
+            The slip angles. First between the mol_a perpendicular axis and
+            the centroid-centroid vector, then using the mol_b perpendicular
+            axis.
+
+        """
+        if np.count_nonzero(self.mol_a.geom.perp_ax) == 0:
+            self.mol_a.calc_axes()
+        if np.count_nonzero(self.mol_b.geom.perp_ax) == 0:
+            self.mol_b.calc_axes()
+        # vector gonig from A to B
+        cen_cen = self.mol_b.centroid() - self.mol_a.centroid()
+        # test angle with positive cen_cen and negative cen_cen. keep smallest
+        slip_angle_a_pos = ao.vec_angle(self.mol_a.geom.perp_ax, cen_cen)
+        slip_angle_a_neg = 180 - slip_angle_a_pos
+        slip_angle_b_pos = ao.vec_angle(self.mol_b.geom.perp_ax, cen_cen)
+        slip_angle_b_neg = 180 - slip_angle_b_pos
+        slip_angle_a = min((slip_angle_a_pos,slip_angle_a_neg))
+        slip_angle_b = min((slip_angle_b_pos,slip_angle_b_neg))
+
+        return slip_angle_a, slip_angle_b
+
     def calc_angles(self):
         """Set the three descriptor angles"""
         descriptor_angles = self.angles()
