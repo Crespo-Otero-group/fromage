@@ -2,7 +2,7 @@
 
 from distutils.core import setup, Extension
 
-fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist_wrap.cxx', 'fromage/fdist/fdist.cpp'],)
+fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i'])
 
 setup(name='fromage',
       version='1.0',

@@ -18,8 +18,8 @@ Requirements
 
 * UNIX type system
 * Python 2.7+ or 3.3+
-* numpy
-* scipy
+* numpy (installed automatically)
+* scipy (installed automatically)
 * SWIG
 * `Ewald <https://github.com/Crespo-Otero-group/Ewald>`_ (custom fork; only necessary for Ewald embedding)
 
@@ -34,14 +34,11 @@ Installation
    git clone https://github.research.its.qmul.ac.uk/btx156/fromage.git
    cd fromage/
 
-2. Compile
+2. Install
 
 .. code-block:: bash
 
-  cd fromage/fdist/
-  swig -c++ -python fdist.i
-  cd ../../
-  sudo python setup.py build_ext install
+  sudo pip install .
 
 3. Set your environment variables
 

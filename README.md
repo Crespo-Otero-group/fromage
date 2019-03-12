@@ -12,11 +12,9 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
 
 ## 1 Installation
 
-1. Make sure that you have all the required dependencies:
+1. Make sure that you have the following installed:
 
   - Python 2.7 and above (Python 3 recommended)
-  - numpy
-  - scipy
   - swig
   - [Modified version of Ewald](https://github.com/Crespo-Otero-group/Ewald) (only necessary for Ewald embedding calculations)
 
@@ -28,14 +26,13 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
    cd fromage/
   ```
 
-3. Compile
+3. Install
 
   ```bash
-  cd fromage/fdist/
-  swig -c++ -python fdist.i
-  cd ../../
-  sudo python setup.py build_ext install
+  sudo pip install .
   ```
+  N.B. this will install `numpy` and `scipy` on your system.
+
 4. Set environment variables. In your `.bashrc`, write
   ```bash
   export FRO_GAUSS=g16
