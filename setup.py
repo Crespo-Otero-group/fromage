@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i'])
 
 setup(name='fromage',
       version='1.0',
+      description='FRamewOrk for Molecular Aggregate Excitations',
       author='Miguel Rivera, Michael Dommett, Rachel Crespo-Otero',
       author_email='r.crespo-otero@qmul.ac.uk',
+      license='MIT',
       ext_modules=[fdist_module],
       packages=['fromage',
                 'fromage.fdist',
