@@ -48,7 +48,7 @@ class GeomInfo(object):
         return self.__str__()
 
 
-def coord_array(self, no_hydrogens=False):
+def coord_array(self):
     """
     Return a numpy array of the coordinates
 
@@ -78,6 +78,7 @@ def coord_array(self, no_hydrogens=False):
             list_coord.append(new_row)
 
     coord_arr = np.array(list_coord)
+    print(np.shape(coord_arr))
     return coord_arr
 
 def calc_coord_array(self):
