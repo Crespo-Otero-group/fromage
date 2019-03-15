@@ -130,7 +130,7 @@ def main(args):
             selected_dimers.append(dimer)
     prints("{} dimers selected from distance criterion".format(len(selected_dimers)))
 
-    # remove duplicate dimers
+    # remove repeated dimers
     keep_these = []
     for i,dimer_i in enumerate(selected_dimers[:-1]):
         keep = True
