@@ -326,8 +326,11 @@ class Atom(object):
         """Return a new atom which is a translated copy."""
         old_pos = np.array([self.x, self.y, self.z])
         new_pos = old_pos + vec_trans
-        outAtom = Atom(self.elem, new_pos[0], new_pos[1], new_pos[2], self.q)
-        return outAtom
+        out_atom = self.copy()
+        out_atom.x = new_pos[0]
+        out_atom.y = new_pos[1]
+        out_atom.z = new_pos[2]
+        return out_atom
 
     def translate(self, x1, y1, z1):
         """Translate the atom by some vector."""

@@ -23,6 +23,10 @@ class GeomInfo(object):
     perp_ax : 3 x 1 np array
         Vector perpendicular to the other two such that
         perp_ax = prin_ax (cross) sec_ax
+    ignore_kinds : list of Atom.kinds
+        Specific atoms to be ignored in the geometry parameters
+    ignore_hydrogens : bool
+        Ignore hydrogens when calculating geometry parameters
 
     """
     def __init__(self):
@@ -31,6 +35,8 @@ class GeomInfo(object):
         self.prin_ax = np.array([0])
         self.sec_ax = np.array([0])
         self.perp_ax = np.array([0])
+        self.ignore_kinds = []
+        self.ignore_hydrogens = False
 
     def __str__(self):
         out_str = "Coordinate array:\n" + str(self.coord_array) + "\nPlane coefficients:\n" + str(
@@ -42,7 +48,7 @@ class GeomInfo(object):
         return self.__str__()
 
 
-def coord_array(self):
+def coord_array(self, no_hydrogens=False):
     """
     Return a numpy array of the coordinates
 
@@ -52,12 +58,26 @@ def coord_array(self):
         Array of the form [[x1,y1,z1],[x2,y2,z2],...]
 
     """
+    if self.geom.ignore_kinds:
+        self.set_connectivity
+    list_coord = []
     nat = len(self)
     coord_arr = np.zeros((nat,3))
-    for i,atom in enumerate(self):
-        coord_arr[i][0] = atom.x
-        coord_arr[i][1] = atom.y
-        coord_arr[i][2] = atom.z
+    for atom in self:
+        add_atom = True
+        # potentially remove hydrogen
+        if self.geom.ignore_hydrogens:
+            if atom.elem == 'H':
+                add_atom = False
+        # potentially remove a kind of atom
+        if self.geom.ignore_kinds:
+            if atom.kind in self.geom.ignore_kinds:
+                add_atom = False
+        if add_atom:
+            new_row = [atom.x,atom.y,atom.z]
+            list_coord.append(new_row)
+
+    coord_arr = np.array(list_coord)
     return coord_arr
 
 def calc_coord_array(self):

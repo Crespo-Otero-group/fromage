@@ -15,6 +15,7 @@ import sys
 import argparse
 import time
 import fromage as fro
+import numpy as np
 from fromage.io import read_file as rf
 
 # safe printing
@@ -50,7 +51,9 @@ def parse_args():
     parser.add_argument("-d", "--dist", help="Distance criterion (in units of Angstrom) to define a dimer",
                         default=7, type=float)
     parser.add_argument(
-        "-r", "--remove_duplicate_dimers", help="Remove any dimers that may have appeared twice", default=True, type=bool)
+        "-nh", "--no_hydrogens", help="Ignore hydrogens in the selection and analysis of dimers", action="store_true")
+    parser.add_argument(
+        "-na", "--no_atom_label", help="Ignore atoms of the same kind as the selected ones in the selection and analysis of dimers", default=[], type=int, nargs='*')
     parser.add_argument(
         "-l", "--tol_duplicate", help="RMSD tolerance for two dimers to be considered the same. Default 0.0001", default=10e-4, type=float)
     parser.add_argument(
@@ -89,13 +92,45 @@ def main(args):
         prints("Vectors detected")
         vectors = rf.read_vectors(args.vectors)
         all_atoms.vectors = vectors
+        # if we are forbidding some atoms
+        if args.no_atom_label:
+            forbidden_kinds = []
+            # for each atom to forbid
+            for label in args.no_atom_label:
+                mol_of_interest = all_atoms.per_select(label-1)
+                mol_of_interest.set_connectivity()
+                for atom in mol_of_interest:
+                    if atom == all_atoms[label-1]:
+                        forbidden_kinds.append(atom.kind)
         all_atoms, molecules = all_atoms.complete_cell()
         prints("{} molecules detected after reconstitution".format(len(molecules)))
     else:
+        # if we are forbidding some atoms
+        if args.no_atom_label:
+            forbidden_kinds = []
+            # for each atom to forbid
+            for label in args.no_atom_label:
+                mol_of_interest = all_atoms.select(label-1)
+                mol_of_interest.set_connectivity()
+                for atom in mol_of_interest:
+                    if atom == all_atoms[label-1]:
+                        forbidden_kinds.append(atom.kind)
         # separate into molecules
         molecules = all_atoms.segregate(diff_mols=False)
         prints("{} molecules detected".format(len(molecules)))
 
+    # ignore hydrogens
+    if args.no_hydrogens:
+        for mol in molecules:
+            mol.geom.ignore_hydrogens = True
+
+    # ignore certain atoms
+    if args.no_atom_label:
+        zero_vectors = np.array([[0.,0.,0.],[0.,0.,0.],[0.,0.,0.]])
+        for mol in molecules:
+            mol.vectors = zero_vectors
+            mol.set_connectivity()
+            mol.geom.ignore_kinds = forbidden_kinds
 
     # get dimers
     dimers_raw = all_dimers(molecules)

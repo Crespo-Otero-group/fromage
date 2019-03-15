@@ -64,7 +64,7 @@ class Mol(object):
     """
     from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
     from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
-    from ._char import es_pot, change_charges, charges, raw_assign_charges, populate
+    from ._char import es_pot, change_charges, charges, raw_assign_charges, populate, set_connectivity
     from ._selecting import select, per_select, segregate
     from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
     from ._geom import GeomInfo, coord_array, calc_coord_array, plane_coeffs, calc_plane_coeffs, axes, calc_axes
