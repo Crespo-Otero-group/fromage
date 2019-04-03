@@ -177,7 +177,7 @@ class Mol(object):
         return
 
     def dir_to_frac_pos(self):
-        """New mol with atoms in fractional coordinates"""
+        """Move all atoms to fractional coordinates"""
 
         out_mol = self.copy()
         # transpose to get the transformation matrix
