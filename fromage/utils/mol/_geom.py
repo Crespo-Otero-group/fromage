@@ -78,7 +78,6 @@ def coord_array(self):
             list_coord.append(new_row)
 
     coord_arr = np.array(list_coord)
-    print(np.shape(coord_arr))
     return coord_arr
 
 def calc_coord_array(self):
