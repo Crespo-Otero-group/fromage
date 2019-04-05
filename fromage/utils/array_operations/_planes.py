@@ -147,11 +147,9 @@ def project_point(point, plane_coeffs):
         The coordinates of the projected point
 
     """
-    plane_normal_vector = plane_coeffs[:3]
-    point_norm2 = np.sum(plane_normal_vector*plane_normal_vector)
-    proj_parameter = plane_normal_vector * point / point_norm2 + plane_coeffs[3]
 
-    projection = point - plane_normal_vector * proj_parameter
+    t = (-plane_coeffs[3]-plane_coeffs[0]*point[0]-plane_coeffs[1]*point[1]-plane_coeffs[2]*point[2])
+    projection = np.array([point[0]+t*plane_coeffs[0],point[1]+t*plane_coeffs[1],point[2]+t*plane_coeffs[2]])
 
     return projection
 
@@ -183,7 +181,8 @@ def project_pair_to_vector(coord_pair, plane_coeffs):
 
 def project_quad_to_vectors(quad_vert, plane_coeffs):
     """
-    Return the normalised vectors formed by the diagonals of a quadrangle
+    Return the normalised vectors, projected onto a plane, formed by the
+    diagonals of a quadrangle
 
     Parameters
     ----------

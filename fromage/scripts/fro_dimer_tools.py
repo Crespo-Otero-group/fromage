@@ -51,6 +51,9 @@ def parse_args():
     parser.add_argument("-d", "--dist", help="Distance criterion (in units of Angstrom) to define a dimer",
                         default=7, type=float)
     parser.add_argument(
+        "-lin", "--linear", help="The molecule is linear-like. This means that the principal axis will simply be the longest interatomic axis.", action="store_true")
+
+    parser.add_argument(
         "-nh", "--no_hydrogens", help="Ignore hydrogens in the selection and analysis of dimers", action="store_true")
     parser.add_argument(
         "-na", "--no_atom_label", help="Ignore atoms of the same kind as the selected ones in the selection and analysis of dimers", default=[], type=int, nargs='*')
@@ -146,6 +149,9 @@ def main(args):
         dimers_raw = dimers_per
         prints("{} dimers considering peridicity".format(len(dimers_raw)))
 
+    if args.linear:
+        for dimer in dimers_raw:
+            dimer.mols_are_linear()
     # filter out dimers
     if args.dimtype == 'centroid':
         method = 'centroid'
@@ -185,6 +191,7 @@ def main(args):
         header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}{:>13}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist","Slip angle")
         data_file.write(header_str)
     for i,dimer in enumerate(selected_dimers):
+
         if args.output_geometry_data:
             cen_dist = dimer.inter_distance(method='centroid')
             angles = dimer.angles()

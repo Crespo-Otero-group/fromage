@@ -17,8 +17,8 @@ def test_calc_plane_coeffs(hc1_mol):
 
 def test_calc_axes_hc1(hc1_mol):
     hc1_mol.calc_axes()
-    expected_princ = np.array([0.970348,0.062753,-0.233425])
-    expected_sec = np.array([0.183283,0.438568,0.87981])
+    expected_princ = np.array([0.949849,  0.151143, -0.273755])
+    expected_sec = np.array([0.112201, 0.652415, 0.74951])
     assert_allclose(hc1_mol.geom.prin_ax,expected_princ, rtol=1e-4)
     assert_allclose(hc1_mol.geom.sec_ax,expected_sec, rtol=1e-4)
 

@@ -87,7 +87,7 @@ class Dimer(object):
 
         return out_arr
 
-    def slip_angles(self):
+    def slip_angle(self):
         """
         Return the slip angles for the dimer
 
@@ -101,10 +101,8 @@ class Dimer(object):
 
         Returns
         -------
-        slip_angle_a, slip_angle_b : floats
-            The slip angles. First between the mol_a perpendicular axis and
-            the centroid-centroid vector, then using the mol_b perpendicular
-            axis.
+        slip_angle : floats
+            The slip angle
 
         """
         if np.count_nonzero(self.mol_a.geom.perp_ax) == 0:
@@ -121,7 +119,8 @@ class Dimer(object):
         slip_angle_a = min((slip_angle_a_pos,slip_angle_a_neg))
         slip_angle_b = min((slip_angle_b_pos,slip_angle_b_neg))
 
-        return slip_angle_a, slip_angle_b
+        final_slip = min(slip_angle_a, slip_angle_b)
+        return final_slip
 
     def calc_angles(self):
         """Set the three descriptor angles"""
@@ -284,3 +283,8 @@ class Dimer(object):
         same = ao.rmsd(dists_a,dists_b) < tol
 
         return same
+
+    def mols_are_linear(self):
+        """State that the geometries of the molecules are linear-like"""
+        self.mol_a.geom.linear = True
+        self.mol_b.geom.linear = True

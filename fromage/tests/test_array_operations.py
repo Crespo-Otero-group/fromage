@@ -45,12 +45,23 @@ def test_orthogonalise_sym():
     assert_allclose(ovec_1,expected_1)
     assert_allclose(ovec_2,expected_2)
 
+def test_orthogonalise_asym():
+    vectors = np.array([[0.,0.,1.],
+                        [0.,1.,1.]])
+
+    o_vecs = ao.orthogonalise_asym(vectors)
+    ovec_1 = o_vecs[0]/np.linalg.norm(o_vecs[0])
+    ovec_2 = o_vecs[1]/np.linalg.norm(o_vecs[1])
+
+    expected_1 = np.array([0.,0.,1.])
+    expected_2 = np.array([0.,1.,0.])
+
+    assert_allclose(ovec_1,expected_1)
+    assert_allclose(ovec_2,expected_2,atol=1e-05)
+
+
 def test_rmsd():
     ref = np.array([0.,0.,0.,0.,0.])
     alt = np.array([1.,-1.,-1.,-1.,1.])
     assert ao.rmsd(ref,alt) == 1.
 
-def test_misc():
-    a = np.array([-0.0959835,   0.99534852, -0.00827609])
-    b = np.array([ 0.0959835,  -0.99534852,  0.00827609])
-    print(ao.vec_angle(a,b))

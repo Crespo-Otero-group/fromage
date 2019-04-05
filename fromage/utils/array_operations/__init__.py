@@ -125,7 +125,7 @@ def find_largest(in_array, n_largest):
 
 def orthogonalise_sym(vectors):
     """
-    Return two orthogonal vectors based on the original ones
+    Return two orthogonal vectors based on the original ones, both rotated
 
     We wish to orthogonalise two vectors but moving each one by the same amount.
     That is the angle of rotation of vec_1 should be negative that of vec_2 and
@@ -150,6 +150,37 @@ def orthogonalise_sym(vectors):
     rot_2 = rotation_matrix(normal,disp)
 
     ovec_1 = np.dot(rot_1,vectors[0])
+    ovec_2 = np.dot(rot_2,vectors[1])
+
+    o_vecs = np.array([ovec_1,ovec_2])
+    return o_vecs
+
+def orthogonalise_asym(vectors):
+    """
+    Return two orthogonal vectors based on the original ones, both rotated
+
+    Here, we only rotate the second vector in order to make it perpendicular to
+    the first one
+
+    Parameters
+    ----------
+    vectors : 2 x 3 numpy array
+        The vectors to be orthogonalised
+    Returns
+    -------
+    o_vecs: 2 x 3 numpy array
+        Orthogonalised vectors where the second one has been rotated to become
+        orthogonal
+    """
+    ang = vec_angle(vectors[0],vectors[1])
+    remainder = 90 - ang
+    disp = remainder
+    perp_unnormal = np.cross(vectors[0],vectors[1])
+    normal = perp_unnormal / np.linalg.norm(perp_unnormal)
+
+    rot_2 = rotation_matrix(normal,disp)
+
+    ovec_1 = vectors[0]
     ovec_2 = np.dot(rot_2,vectors[1])
 
     o_vecs = np.array([ovec_1,ovec_2])

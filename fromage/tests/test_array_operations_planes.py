@@ -9,7 +9,7 @@ def test_plane_from_coord(rectangle_array):
     expected = np.array([0.,0.,1.,0.])
     assert_allclose(arr,expected)
 
-def test_plane_from_coord(hc1_array):
+def test_plane_from_coord2(hc1_array):
     results = ao.plane_from_coord(hc1_array)
     arr = results
     expected = np.array([-0.29188565799088845, 0.742637122670864, -0.6027378092424318, 1.7825747834180873e-07])
@@ -42,7 +42,7 @@ def test_embedded_vert(rectangle_array):
     expected = np.array([[0.,1.,0.],[2.,2.,0.],[4.,1.,0.],[2.,0.,0.]])
     assert_allclose(new_vert,expected)
 
-def test_project_on_plane(rectangle_array,z_plane_coeffs):
+def test_project_on_plane(z_plane_coeffs):
     point = np.array([1.,1.,2.5])
     projected = ao.project_point(point,z_plane_coeffs)
     expected = np.array([1.,1.,0.])

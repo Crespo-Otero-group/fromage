@@ -37,6 +37,8 @@ class GeomInfo(object):
         self.perp_ax = np.array([0])
         self.ignore_kinds = []
         self.ignore_hydrogens = False
+        # this is useful for determining axes differently
+        self.linear = False
 
     def __str__(self):
         out_str = "Coordinate array:\n" + str(self.coord_array) + "\nPlane coefficients:\n" + str(
@@ -98,7 +100,6 @@ def plane_coeffs(self):
     if np.count_nonzero(self.geom.coord_array) == 0:
         self.calc_coord_array()
     plane_coeffs = ao.plane_from_coord(self.geom.coord_array)
-
     return plane_coeffs
 
 def calc_plane_coeffs(self):
@@ -120,15 +121,26 @@ def axes(self):
     # get the quadrangle which best describes the coordinates (possibly a
     # triangle with the far point repeated twice)
     vertices = ao.quadrangle_from_coord(self.geom.coord_array)
-    # get the embedded quadrangle vertices
-    emb_vert = ao.embedded_vert(vertices)
+    # if the mol is linear, we need to reorder the quadrangle
+    if self.geom.linear:
+        vertices = np.array([vertices[1],vertices[2],vertices[3],vertices[0]])
+    # if the mole is rectangular, we want an embedded quadrangle
+    else:
+        # get the embedded quadrangle vertices
+        vertices = ao.embedded_vert(vertices)
+        print(vertices)
     # get vectors from projected diagonals
-    axes_out_raw = ao.project_quad_to_vectors(emb_vert,self.geom.plane_coeffs)
+    axes_out_raw = ao.project_quad_to_vectors(vertices,self.geom.plane_coeffs)
     # we want the first raw to be the secondary and vice versa and the principal
-    # to be *(-1) in order to maintian a convention
+    # to be *(-1) in order to maintain a convention
     axes_out_unnormal = np.array([-axes_out_raw[1], axes_out_raw[0]])
     # orthonogalise them
-    axes_out_prin_sec = ao.orthogonalise_sym(axes_out_unnormal)
+    # if the mol is linear, just move the secondary axis
+    if self.geom.linear:
+        axes_out_prin_sec = ao.orthogonalise_asym(axes_out_unnormal)
+    # if the mol is not linear, move principal and secondary axes equally
+    else:
+        axes_out_prin_sec = ao.orthogonalise_sym(axes_out_unnormal)
     # get the perpendicular vector
     perp = np.cross(axes_out_prin_sec[0], axes_out_prin_sec[1])
     # ensure normalisation
@@ -137,7 +149,6 @@ def axes(self):
     lis_axes_out = list(axes_out_prin_sec)
     lis_axes_out.append(perp)
     axes_out = np.array(lis_axes_out)
-
     return axes_out
 
 def calc_axes(self):
