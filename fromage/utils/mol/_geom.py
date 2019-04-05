@@ -128,7 +128,6 @@ def axes(self):
     else:
         # get the embedded quadrangle vertices
         vertices = ao.embedded_vert(vertices)
-        print(vertices)
     # get vectors from projected diagonals
     axes_out_raw = ao.project_quad_to_vectors(vertices,self.geom.plane_coeffs)
     # we want the first raw to be the secondary and vice versa and the principal
