@@ -182,13 +182,14 @@ def main(args):
 
     if args.output_geometry_data:
         data_file = open(args.output_geometry_data, "w")
-        header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist")
+        header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}{:>13}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist","Slip angle")
         data_file.write(header_str)
     for i,dimer in enumerate(selected_dimers):
         if args.output_geometry_data:
             cen_dist = dimer.inter_distance(method='centroid')
             angles = dimer.angles()
-            data_file.write("{:>7}{:17.3f}{:10.3f}{:10.3f}{:12.3f}\n".format(i+1,angles[0],angles[1],angles[2],cen_dist))
+            slip_angle = dimer.slip_angle()
+            data_file.write("{:>7}{:17.3f}{:10.3f}{:10.3f}{:12.3f}{:15.3f}\n".format(i+1,angles[0],angles[1],angles[2],cen_dist,slip_angle))
         if args.print_dimers:
             out_name = str(args.input[:-4]) + "_dimer_" + str(i+1) + ".xyz"
             dimer.write_xyz(out_name)
