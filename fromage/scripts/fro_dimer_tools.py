@@ -147,7 +147,7 @@ def main(args):
             images = dimer.images(vectors)
             dimers_per.extend(images)
         dimers_raw = dimers_per
-        prints("{} dimers considering peridicity".format(len(dimers_raw)))
+        prints("{} dimers considering periodicity".format(len(dimers_raw)))
 
     if args.linear:
         for dimer in dimers_raw:
