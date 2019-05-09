@@ -202,7 +202,7 @@ class Dimer(object):
 
     def images(self, vectors):
         """
-        Return the 9 images of the dimer produced by translating monomer 2
+        Return the 27 images of the dimer produced by translating monomer 2
 
         Monomer 2 is translated in every combination of -a,0,a ; -b,0,b and
         -c,0,c. This includes the (0,0,0) translation which is the original
@@ -214,8 +214,8 @@ class Dimer(object):
             Vectors of the lattice periodicity
         Returns
         -------
-        images : list of 9 Dimer objects
-            The 9 images of the dimer, always with mol_a remaining in first
+        images : list of 27 Dimer objects
+            The 27 images of the dimer, always with mol_a remaining in first
             position.
 
         """
