@@ -121,17 +121,18 @@ class CubeGrid(object):
             for atom_i in mol:
                 r = atom_i.c_dist2(*point[:3])
                 if scaled:
-                    r *= atom_i.vdw**2
+                    r /= atom_i.vdw**2
                 if r < min_dist2:
                     min_dist2 = r
                     close_to_mol = True
             for atom_j in rest:
                 r = atom_j.c_dist2(*point[:3])
                 if scaled:
-                    r *= atom_i.vdw**2
+                    r /= atom_j.vdw**2
                 if r < min_dist2:
                     min_dist2 = r
                     close_to_mol = False
+                    break
             if close_to_mol:
                 point[3] = 1
             else:
