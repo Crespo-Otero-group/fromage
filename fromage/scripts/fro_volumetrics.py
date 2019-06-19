@@ -58,7 +58,7 @@ def main(args):
     vdw_grid.vdw_vol(mol)
 
     prox_grid.out_cube("voro.cube", atoms)
-    out_file.write("Proximity volume: " + str(prox_grid.volume()) + "\n")
+    out_file.write("Voronoi volume: " + str(prox_grid.volume()) + "\n")
 
     vdw_grid.out_cube("vdw.cube", atoms)
     out_file.write("VDW volume: " + str(vdw_grid.volume()) + "\n")
