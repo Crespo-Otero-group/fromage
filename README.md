@@ -22,7 +22,7 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
 
   ```bash
    cd /path/to/dir/
-   git clone https://github.research.its.qmul.ac.uk/btx156/fromage.git
+   git clone https://github.com/Crespo-Otero-group/fromage.git
    cd fromage/
   ```
 
