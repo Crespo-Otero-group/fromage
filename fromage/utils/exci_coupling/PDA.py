@@ -18,9 +18,10 @@ def centre_of_mass(symbols,coordinates):
     coordinates: Nx3 array of floats
         Array of x,y,z coordinates
     Returns
-    ----------
+    -------
     COM: np.array
         Array of x,y,z component of COM
+
     """
     if len(symbols)!=len(coordinates):
         exit("Inputs not of the same dimension!")
@@ -58,10 +59,12 @@ def PDA_coupling(TD_A,TD_B,COM_A,COM_B):
 
     coordinates: Nx3 array of floats
         Array of x,y,z coordinates
+
     Returns
     ----------
     Coupling: Float
         Coupling in atomic units
+
     """
     ang2bohr=1.8897259885789
     COM_A=COM_A*ang2bohr

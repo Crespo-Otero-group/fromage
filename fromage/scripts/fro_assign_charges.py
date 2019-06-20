@@ -110,6 +110,12 @@ def complete_expand(in_mat):
 
     return mat
 
+def get_connectivity_mat(in_mol):
+    """Return the connectivity matrix of the Mol"""
+    first_connect = detect_1_connect(in_mol)
+    connect_mat = complete_expand(first_connect)
+
+    return connect_mat
 
 def charged_kinds(in_atoms, in_kinds):
     """

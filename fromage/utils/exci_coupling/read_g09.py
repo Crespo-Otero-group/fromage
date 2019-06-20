@@ -6,16 +6,17 @@ au2ev=27.211396132
 def read_xyz(g09_file):
     """
     Opens a g09 log file and returns the first geometry in Input orientation.
+
     Iterators are used so that the file is not all loaded into memory, which
     can be expensive.
 
     The function searches for the following text pattern in the log file:
 
-                            Input orientation:
-    ---------------------------------------------------------------------
-    Center     Atomic      Atomic             Coordinates (Angstroms)
-    Number     Number       Type             X           Y           Z
-    ---------------------------------------------------------------------
+>                            Input orientation:
+>    ---------------------------------------------------------------------
+>    Center     Atomic      Atomic             Coordinates (Angstroms)
+>    Number     Number       Type             X           Y           Z
+>    ---------------------------------------------------------------------
 
     And will save the coordinates and the atomic symbols succeeding it
 
@@ -25,7 +26,7 @@ def read_xyz(g09_file):
         File path
 
     Returns
-    ----------
+    -------
     coordinates: List of lists
         Outer list is whole xyz file, each inner list is a line of the file containing
         the symbol and x,y,z coordinates
@@ -72,8 +73,9 @@ def read_natoms(g09_file):
         File path
 
     Returns
-    ----------
+    -------
     natoms: Integer
+
     """
     with open(g09_file) as f:
         # Get the number of atoms so we can iterate without loading the file into memory
@@ -96,9 +98,10 @@ def read_TD(g09_file,state):
         File path
 
     Returns
-    ----------
+    -------
     TD: np.array
         1x3 array of x,y,z components of TD vector
+
     """
     with open(g09_file) as f:
         # Get the number of atoms so we can iterate without loading the file into memory
@@ -126,9 +129,10 @@ def read_NTO(g09_file,natoms):
     natoms: Integer
         Number of atoms
     Returns
-    ----------
+    -------
     NTO: np.array
         N array of NTO charges in order of atomic positions
+
     """
     NTO=np.zeros(natoms)
     with open(g09_file) as f:
@@ -188,7 +192,7 @@ def read_ES(g09_file,state):
     state: Integer
         Excited state number (<1)
     Returns
-    ----------
+    -------
     ES: float
         Energy difference in atomic units between the ground and specified state
 

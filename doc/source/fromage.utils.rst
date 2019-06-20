@@ -1,6 +1,15 @@
 fromage.utils package
 =====================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    fromage.utils.array_operations
+    fromage.utils.exci_coupling
+    fromage.utils.mol
+
 Submodules
 ----------
 
@@ -16,6 +25,14 @@ fromage.utils.calc module
 -------------------------
 
 .. automodule:: fromage.utils.calc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fromage.utils.dimer module
+--------------------------
+
+.. automodule:: fromage.utils.dimer
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,18 +53,18 @@ fromage.utils.handle\_atoms module
     :undoc-members:
     :show-inheritance:
 
-fromage.utils.mol module
-------------------------
-
-.. automodule:: fromage.utils.mol
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 fromage.utils.per\_table module
 -------------------------------
 
 .. automodule:: fromage.utils.per_table
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+fromage.utils.run\_sequence module
+----------------------------------
+
+.. automodule:: fromage.utils.run_sequence
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,29 +1,33 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
-fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist_wrap.cxx', 'fromage/fdist/fdist.cpp'],)
+fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i'])
 
 setup(name='fromage',
       version='1.0',
+      description='FRamewOrk for Molecular AGgregate Excitations',
       author='Miguel Rivera, Michael Dommett, Rachel Crespo-Otero',
       author_email='r.crespo-otero@qmul.ac.uk',
+      license='MIT',
       ext_modules=[fdist_module],
       packages=['fromage',
                 'fromage.fdist',
                 'fromage.io',
                 'fromage.scripts',
                 'fromage.utils',
-                'fromage.utils.exci_coupling'],
-      scripts=['fromage/scripts/assign_charges.py',
-               'fromage/scripts/run_fromage.py',
-               'fromage/scripts/dimer_select.py',
-               'fromage/scripts/pick_mol.py',
-               'fromage/scripts/pop_stat.py',
-               'fromage/scripts/prepare_calculation.py',
+                'fromage.utils.exci_coupling',
+                'fromage.utils.array_operations',
+                'fromage.utils.mol'],
+      scripts=['fromage/scripts/fro_assign_charges.py',
+               'fromage/scripts/fro_run.py',
+               'fromage/scripts/fro_dimer_tools.py',
+               'fromage/scripts/fro_pick_mol.py',
+               'fromage/scripts/fro_pop_stat.py',
+               'fromage/scripts/fro_prep_run.py',
                'fromage/scripts/fro_coupling.py',
                'fromage/scripts/fro_volumetrics.py',
-               'fromage/scripts/uc_tools.py'],
+               'fromage/scripts/fro_uc_tools.py'],
       install_requires=[
           'numpy',
           'scipy',],

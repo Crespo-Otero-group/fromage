@@ -7,7 +7,7 @@ import sys
 import fromage.io.edit_file as ef
 import fromage.io.read_file as rf
 
-from fromage.scripts.assign_charges import assign_charges
+from fromage.scripts.fro_assign_charges import assign_charges
 
 class RunSeq(object):
     """
