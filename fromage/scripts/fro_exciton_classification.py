@@ -203,8 +203,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("rwf_file", help="The .rwf file from the excited state calculation",default="gaussian.rwf")
     parser.add_argument("log_file", help="The .log file from the excited state calculation",default="gaussian.rwf")
+    parser.add_argument("rwf_file", help="The .rwf file from the excited state calculation",default="gaussian.rwf")
     parser.add_argument("exci_num", help="The excitation to classify",default=1, type=int)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
