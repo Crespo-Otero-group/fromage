@@ -8,7 +8,7 @@ The major detail for the implementation can be found in the supplementary inform
 the manuscript.
 """
 import numpy as np
-def diabatize(dims1,dims2,monA,monB,E1,E2):
+def diabatize(dimprops,monprops,energies):
     """
     Uses the either the TDMs or ATCs of the s1 and s2 states of the dimer and the s1 state of the two monomers, to
     diabatize the adiabatic Hamiltonian of first two excited states (E1 and E1) to the diabatic
@@ -18,24 +18,28 @@ def diabatize(dims1,dims2,monA,monB,E1,E2):
 
     Parameters
     ----------
-    ATCs1,ATCs2,ATCA,ATCB: 1x3 matrices
-    E1,E2: floats of the energy of the s1 and s2 states of the dimer
+    dimprops : numpy array
+        The excited state property for the dimer where dimprops[n] corresponds
+        to the nth excited state
+    monprops : numpy array
+        The excited state property for the monomers where monprops[n] corresponds
+        to the nth monomer
+    energies : numpy array
+        The energies of the dimer in the excited states in increasing order
+
     Returns
-    ----------
-    2x2 matrix
+    -------
+    H : numpy array
+        Diabatic Hamiltonian
+
     """
-
-    dim=np.concatenate((dims1,dims2)).reshape(2,len(dims1))
-    mon=np.concatenate((monA,monB)).reshape(2,len(monA))
-
-
-    M=np.dot(dim,mon.T)
+    M=np.dot(dimprops,monprops.T)
 
     U,s,Vt= np.linalg.svd(M)
 
     C=(np.dot(U,Vt)).transpose()
 
-    E=np.matrix(([E1,0],[0,E2]))
+    E=np.diag(energies)
 
     H=np.dot(np.dot(C,E),C.transpose())
 
