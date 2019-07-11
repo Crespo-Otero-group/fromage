@@ -190,7 +190,15 @@ This utility does operations on xyz files paired up with unit cell vector files.
 ```
 Options include extracting the nonequivalent monomers from the cell, generating a tessalating cell but with all complete molecules (therefore spilling out of the bounding box of the unit cell vectors), confining a cell to the bounding box and creating supercells.
 
-## 5 Some parting words
+## 5 Common installation pitfalls
+
+On Linux, when installing, you might find the error:
+```
+Python.h: No such file or directory
+```
+In order to install Python packages which contain C or C++ on Linux, you need `python-dev` or `python3-dev` which provides the header `Python.h`.
+
+## 6 Some parting words
 
 If you find yourself with a bunch of error files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
 
