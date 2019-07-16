@@ -26,6 +26,7 @@ setup(name='fromage',
                'fromage/scripts/fro_pop_stat.py',
                'fromage/scripts/fro_prep_run.py',
                'fromage/scripts/fro_coupling.py',
+               'fromage/scripts/fro_exciton_classification.py',
                'fromage/scripts/fro_volumetrics.py',
                'fromage/scripts/fro_uc_tools.py'],
       install_requires=[
