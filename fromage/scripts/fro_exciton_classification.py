@@ -198,14 +198,33 @@ def main(args):
             delta_p += tmp_delta
             counter += 1
 
-    print("SIGMA",sigma_p*2)
-    print("DELTA",delta_p*2)
+    sigma_p *= 2
+    delta_p *= 2
+
+    classi = ""
+    if sigma_p <= args.thresh:
+        classi += "LOC(B)\n"
+    elif 2-sigma_p <= args.thresh:
+        classi += "LOC(A)\n"
+    elif delta_p <= args.thresh:
+        classi += "CT A->B"
+    elif 1-delta_p <= args.thresh:
+        classi += "CT B->A"
+    else:
+        classi = "Delocalised"
+
+    print("Excitation: " + str(args.exci_num))
+    print("SIGMA A:",sigma_p)
+    print("DELTA A:",delta_p)
+    print(classi.rstrip("\n"))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("log_file", help="The .log file from the excited state calculation",default="gaussian.rwf")
     parser.add_argument("rwf_file", help="The .rwf file from the excited state calculation",default="gaussian.rwf")
     parser.add_argument("exci_num", help="The excitation to classify",default=1, type=int)
+    parser.add_argument("-t", "--thresh", help="Threshold for categorising excitons based on output indices. Default: 0.5",default=0.5, type=float)
     user_input = sys.argv[1:]
     args = parser.parse_args(user_input)
 
