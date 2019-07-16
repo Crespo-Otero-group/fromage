@@ -2,7 +2,7 @@ import pytest
 from pytest import approx
 import fromage.io.read_file as rf
 import fromage.utils.fit as fi
-import fromage.scripts.assign_charges as ac
+import fromage.scripts.fro_assign_charges as ac
 from fromage.utils.atom import Atom
 from fromage.utils.mol import Mol
 import numpy as np

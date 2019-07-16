@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Adapted with permission from Michael Dommett's code available at
 # https://github.com/mdommett/exciton_coupling
-# This is an implementation of the diabatisation method by Aragó and Troisi in
-# Aragó, J. & Troisi, A. Dynamics of the Excitonic Coupling in Organic Crystals. Phys. Rev. Lett. 114, 026402 (2015).
+# This is an implementation of the diabatisation method by Arago and Troisi in
+# Arago, J. & Troisi, A. Dynamics of the Excitonic Coupling in Organic Crystals. Phys. Rev. Lett. 114, 026402 (2015).
 
 import numpy as np
 from sys import exit,argv
@@ -14,26 +14,11 @@ from fromage.utils.exci_coupling import read_g09
 from fromage.utils.exci_coupling import CATC
 from fromage.utils.exci_coupling import diabatize
 
-if __name__=='__main__':
+def main(args):
+
     au2ev=27.211396132
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-m","--method",help="[PDA] Point Dipole Approximation or \
-    [CATC] Coulomb Atomic Transition Charges or\
-    [dE] Energy Difference or \
-    [DIA] Diabatization",required="True")
-    parser.add_argument("-p","--property",help="[TDM] Transition Dipole Moments [TDM] \
-    or [ATC] Atomic Transition Charges",default="TDM")
-    parser.add_argument("-mf","--monomerfiles",help="The log files of the monomer calculations\
-    for the diabatization procedure",nargs=2)
-    parser.add_argument("-df","--dimerfiles",help="The log files of the dimer calculation",nargs='*')
-    parser.add_argument("-ms","--monstate",help="Excited state to use for the monomer", default=1,type=int)
-    parser.add_argument("-ds","--dimerstates",help="Excited state of dimer to use",nargs=2,default=[1,2],type=int)
-    parser.add_argument("-u","--units",help="Output unit [ev] electronvolts or [au] Hartrees",type=str,required="True")
+    oli_states = list(range(1,args.oligomerstates+1))
 
-
-    parser.add_argument("input",help="Input files",type=str,nargs='*')
-    user_input = argv[1:]
-    args = parser.parse_args(user_input)
 
     ############################
     # Point Dipole Approximation
@@ -91,11 +76,11 @@ if __name__=='__main__':
     # dE Method
     ############################
     elif args.method.upper()=="DE":
-        if args.dimerfiles is not None:
-            if len(args.dimerfiles)==1:
-                g09_1=args.dimerfiles[0]
-                ES_1=read_g09.read_ES(g09_1,min(args.dimerstates))
-                ES_2=read_g09.read_ES(g09_1,max(args.dimerstates))
+        if args.oligomerfiles is not None:
+            if len(args.oligomerfiles)==1:
+                g09_1=args.oligomerfiles[0]
+                ES_1=read_g09.read_ES(g09_1,min(oli_states))
+                ES_2=read_g09.read_ES(g09_1,max(oli_states))
                 dE_coupling=(ES_2-ES_1)/2
                 if args.units=="au":
                     print("dE coupling: {:.3f} H".format(dE_coupling))
@@ -110,58 +95,58 @@ if __name__=='__main__':
     ############################
 
     elif args.method.upper()=="DIA":
-        if len(args.monomerfiles)==2:
-            if args.property.upper()=="TDM":
-                dimer=args.dimerfiles[0]
-                monomer_A=args.monomerfiles[0]
-                monomer_B=args.monomerfiles[1]
-                TD_1=read_g09.read_TD(dimer,min(args.dimerstates))
-                TD_2=read_g09.read_TD(dimer,max(args.dimerstates))
-                E_1=read_g09.read_ES(dimer,min(args.dimerstates))
-                E_2=read_g09.read_ES(dimer,max(args.dimerstates))
-                TD_A=read_g09.read_TD(monomer_A,args.monstate)
-                TD_B=read_g09.read_TD(monomer_B,args.monstate)
+        Es = [read_g09.read_ES(args.oligomerfiles[-1],i) for i in oli_states]
 
-                H=diabatize.diabatize(TD_1,TD_2,TD_A,TD_B,E_1,E_2)
-                DIA_J=H[0,1]
-                if args.units=="au":
-                    print("Diabatic coupling: {:.3f} eV".format(DIA_J))
-                else:
-                    print("Diabatic coupling: {:.3f} eV".format(DIA_J*au2ev))
+        if args.property.upper()=="TDM":
+            TDs_oli = [read_g09.read_TD(args.oligomerfiles[0],i) for i in oli_states]
+            TDs_oli = np.array(TDs_oli)
+            TDs_mono = [read_g09.read_TD(mono,args.monstate) for mono in args.monomerfiles]
+            TDs_mono = np.array(TDs_mono)
 
-            elif args.property.upper()=="ATC":
-                if len(args.dimerfiles)==3:
+            oli_props = TDs_oli
+            mon_props = TDs_mono
 
-                    dimer=args.dimerfiles[0]
-                    dimer_state_1=args.dimerfiles[1]
-                    dimer_state_2=args.dimerfiles[2]
+        elif args.property.upper()=="ATC":
+            oli_nat = read_g09.read_natoms(args.oligomerfiles[0])
+            # for each state
+            ATC_oli = [read_g09.read_NTO(i,oli_nat) for i in args.oligomerfiles]
+            ATC_oli = np.array(ATC_oli)
+            monomers_natoms = [read_g09.read_natoms(i) for i in args.monomerfiles]
+            ATC_mono = [list(read_g09.read_NTO(i,j))*len(args.monomerfiles) for i,j in zip(args.monomerfiles,monomers_natoms)]
 
-                    monomer_A=args.monomerfiles[0]
-                    monomer_B=args.monomerfiles[1]
+            ATC_mono= np.array(ATC_mono)
 
-                    dimer_natoms=read_g09.read_natoms(dimer)
-                    monomer_A_natoms=read_g09.read_natoms(monomer_A)
-                    monomer_B_natoms=read_g09.read_natoms(monomer_B)
+            oli_props = ATC_oli
+            mon_props = ATC_mono
 
-                    ATC_dimer_state_1=read_g09.read_NTO(dimer_state_1,dimer_natoms)
-                    ATC_dimer_state_2=read_g09.read_NTO(dimer_state_2,dimer_natoms)
+        H=diabatize.diabatize(oli_props,mon_props,Es)
 
-                    E_1=read_g09.read_ES(dimer,min(args.dimerstates))
-                    E_2=read_g09.read_ES(dimer,max(args.dimerstates))
-
-                    ATC_monomer_A=read_g09.read_NTO(monomer_A,monomer_A_natoms)
-                    ATC_monomer_B=read_g09.read_NTO(monomer_B,monomer_B_natoms)
-
-                    ATC_monomer_AA=np.concatenate((ATC_monomer_A,ATC_monomer_A),axis=0)
-                    ATC_monomer_BB=np.concatenate((ATC_monomer_B,ATC_monomer_B),axis=0)
-
-                    H=diabatize.diabatize(ATC_dimer_state_1,ATC_dimer_state_2,ATC_monomer_AA,ATC_monomer_BB,E_1,E_2)
-                    DIA_J=H[0,1]
-                    if args.units=="au":
-                        print("Diabatic coupling: {:.3f} eV".format(DIA_J))
-                    else:
-                        print("Diabatic coupling: {:.3f} eV".format(DIA_J*au2ev))
-
+        J=H[0,1]
+        if args.units=="au":
+            print("Diabatic Hamiltonian H:\n{}\n".format(H))
+            print("Diabatic coupling: {:.3f} a.u.".format(J))
         else:
-            exit("Error! Two monomer files (-mf) and one dimer file (-df) must\
-            be given!")
+            print("Diabatic Hamiltonian H:\n{}\n".format(H*au2ev))
+            print("Diabatic coupling: {:.3f} eV".format(J*au2ev))
+    else:
+        exit("ERROR: Unrecognised method")
+
+if __name__=='__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input",help="Input files",type=str,nargs='*')
+    parser.add_argument("-m","--method",help="[PDA] Point Dipole Approximation or \
+    [CATC] Coulomb Atomic Transition Charges or\
+    [dE] Energy Difference or \
+    [DIA] Diabatization",required="True")
+    parser.add_argument("-p","--property",help="[TDM] Transition Dipole Moments [TDM] \
+    or [ATC] Atomic Transition Charges",default="TDM")
+    parser.add_argument("-mf","--monomerfiles",help="The log files of the monomer calculations\
+    for the diabatization procedure",nargs='*')
+    parser.add_argument("-of","--oligomerfiles",help="The log files of the oligomer calculation",nargs='*')
+    parser.add_argument("-ms","--monstate",help="Excited state to use for the monomer", default=1,type=int)
+    parser.add_argument("-os","--oligomerstates",help="Excited state of oligomer to use",default=2,type=int)
+    parser.add_argument("-u","--units",help="Output unit [ev] electronvolts or [au] Hartrees",type=str,default='eV')
+    user_input = argv[1:]
+    args = parser.parse_args(user_input)
+
+    main(args)

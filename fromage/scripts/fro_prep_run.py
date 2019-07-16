@@ -20,7 +20,7 @@ from datetime import datetime
 from fromage.io import read_file as rf
 from fromage.io import edit_file as ef
 from fromage.io import parse_config_file as pcf
-from fromage.scripts.assign_charges import assign_charges
+from fromage.scripts.fro_assign_charges import assign_charges
 import fromage.utils.run_sequence as rs
 
 

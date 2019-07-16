@@ -77,7 +77,7 @@ system path already. In that case, running the program simply involves typing:
 
 .. code-block:: bash
 
-  prepare_calculation.py
+  fro_prep_calc.py
 
 Output
 ------
@@ -145,7 +145,7 @@ When this is ready, submit your job with the command:
 
 .. code-block:: bash
 
-  run_fromage.py
+  fro_run.py
 
 On the command line or in your job queue.
 
@@ -239,7 +239,7 @@ As usual, type:
 
 .. code-block:: bash
 
-  run_fromage.py
+  fro_run.py
 
 Or submit it to your job scheduler.
 
@@ -283,7 +283,7 @@ Again:
 
 .. code-block:: bash
 
-  run_fromage.py
+  fro_run.py
 
 And wait however long it takes.
 
