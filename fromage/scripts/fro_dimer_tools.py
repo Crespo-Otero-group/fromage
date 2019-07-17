@@ -188,7 +188,7 @@ def main(args):
 
     if args.output_geometry_data:
         data_file = open(args.output_geometry_data, "w")
-        header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}{:>13}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist","Slip angle")
+        header_str = "{:>13}{:>10}{:>10}{:>10}{:>17}{:>13}{:>11}\n".format("Dimer number","Alpha","Beta","Gamma","Centroid dist","Slip angle","Category")
         data_file.write(header_str)
     for i,dimer in enumerate(selected_dimers):
 
@@ -196,7 +196,14 @@ def main(args):
             cen_dist = dimer.inter_distance(method='centroid')
             angles = dimer.angles()
             slip_angle = dimer.slip_angle()
-            data_file.write("{:>7}{:17.3f}{:10.3f}{:10.3f}{:12.3f}{:15.3f}\n".format(i+1,angles[0],angles[1],angles[2],cen_dist,slip_angle))
+            # classify
+            if 20 < angles[2] < 160:
+                category = "E-F"
+            elif slip_angle > 60:
+                category = "S-S"
+            else:
+                category = "F-F"
+            data_file.write("{:>7}{:17.3f}{:10.3f}{:10.3f}{:12.3f}{:15.3f}{:>10}\n".format(i+1,angles[0],angles[1],angles[2],cen_dist,slip_angle,category))
         if args.print_dimers:
             out_name = str(args.input[:-4]) + "_dimer_" + str(i+1) + ".xyz"
             dimer.write_xyz(out_name)
