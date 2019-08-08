@@ -2,7 +2,8 @@
 
 from setuptools import setup, Extension
 
-fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i'])
+fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i','fromage/fdist/fdist.cpp'],swig_opts=['-c++'])
+
 
 setup(name='fromage',
       version='1.0',

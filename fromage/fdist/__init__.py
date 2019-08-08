@@ -11,4 +11,4 @@ Module
     fdist
         Contains _fdist and _fdist2 for fast distance calculations
 """
-#from fromage.fdist import fdist
+#from ._fidst import dist, dist2

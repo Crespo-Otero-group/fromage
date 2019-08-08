@@ -4,7 +4,7 @@ import numpy as np
 from collections import Counter
 from copy import deepcopy
 from fromage.utils import per_table as per
-from fromage.fdist import fdist as fd
+from fromage.fdist import _fdist as fd
 
 
 class Atom(object):
