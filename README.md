@@ -3,7 +3,7 @@
   <img height="150" src="doc/logo.png">
 </p>
 
-**fromage** (FRamewOrk for Molecular AGgregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state. 
+**fromage** (FRamewOrk for Molecular AGgregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state. It contains utilities for geometry manipulation going from periodic to finite models, exciton analysis and ONIOM calculations.
 
 **fromage** is developed at Queen Mary University of London by the [Crespo-Otero group](https://crespootero.wordpress.com/).
 
@@ -11,7 +11,7 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
 
 
 ## 1 Installation
-
+### 1.1 Easy installation using pip
 1. Make sure that you have the following installed:
 
   - Python 2.7 and above (Python 3 recommended)
@@ -41,8 +41,14 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
   If you are using different binaries for Gaussian or Ewald, change accordingly.
   
   Voilà!
+  
+### 1.2 Common pitfall
 
-The main two modules in fromage are `prepare_calculation.py` and `fro_run.py`. The former produces template files and geometry files to be used in the latter for geometry optimisation or minimal energy conical intersection (MECI) search. Following the standard ONIOM nomenclature, the central system which is only treated at the high level of theory is called the 'model' system. The whole system is called the 'real' system. As such the three parallel calculations which are carried out are called `mh` for `model high`, `ml` for `model low`, `rl` for `real low`. For MECI search, an additional calculation of the high level region for the ground state gradients is necessary and is labeled `mg`.
+When installing, you might find the error:
+```
+Python.h: No such file or directory
+```
+In order to install Python packages which contain C or C++ on Linux, you need `python-dev` or `python3-dev` which provides the header `Python.h`.
 
 ## 2 Preparing the calculation
 
@@ -190,15 +196,7 @@ This utility does operations on xyz files paired up with unit cell vector files.
 ```
 Options include extracting the nonequivalent monomers from the cell, generating a tessalating cell but with all complete molecules (therefore spilling out of the bounding box of the unit cell vectors), confining a cell to the bounding box and creating supercells.
 
-## 5 Common installation pitfalls
-
-On Linux, when installing, you might find the error:
-```
-Python.h: No such file or directory
-```
-In order to install Python packages which contain C or C++ on Linux, you need `python-dev` or `python3-dev` which provides the header `Python.h`.
-
-## 6 Some parting words
+## 5 Some parting words
 
 If you find yourself with a bunch of error files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
 
