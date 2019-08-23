@@ -583,7 +583,7 @@ def read_ricc2(in_name):
     for line in lines:
         if "Total energy of excited state:" in line:
             energy = float(line.split()[5])
-        if "Final CC2 energy" in line:
+        if "Final" in line:
             scf_energy = float(line.split()[5])
         if line.strip():
             if line[0:2] == "dE":
@@ -606,6 +606,60 @@ def read_ricc2(in_name):
         energy = scf_energy
     grad = np.array(grad)
     return energy, grad, scf_energy
+
+def read_tb_grout(in_name):
+    """
+    Read energies and gradients from a Turbomole grad.out TDDFT file.
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    energy : float
+        Excited state energy in Hartree
+    grad : numpy array of floats
+        Energy gradients in the form x1,y1,z1,x2,y2,z2 etc. in Hartree/Bohr
+    scf_energy : float
+        Ground state energy in Hartree
+
+    """
+    with open(in_name) as data:
+        lines = data.readlines()
+
+    grad_x = []
+    grad_y = []
+    grad_z = []
+    ground_done = False
+
+    for line in lines:
+        if "Total energy:" in line:
+            if ground_done:
+                energy = float(line.split()[2])
+            else:
+                scf_energy = float(line.split()[2])
+                ground_done = True
+        if line.strip():
+            if line[0:2] == "dE":
+                nums = [float(i.replace("D", "E")) for i in line.split()[1:]]
+                if line.split()[0] == "dE/dx":
+                    grad_x.extend(nums)
+                if line.split()[0] == "dE/dy":
+                    grad_y.extend(nums)
+                if line.split()[0] == "dE/dz":
+                    grad_z.extend(nums)
+    grad = []
+
+    # combine in correct format
+    for dx, dy, dz in zip(grad_x, grad_y, grad_z):
+        grad.append(dx)
+        grad.append(dy)
+        grad.append(dz)
+    grad = np.array(grad)
+
+    return energy, grad, scf_energy
+
 
 
 def read_tbgrad(in_name):

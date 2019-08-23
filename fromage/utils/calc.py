@@ -30,6 +30,7 @@ def setup_calc(calc_name, calc_type):
                   "molcas" : Molcas_calc,
                   "turbomole" : Turbo_calc,
                   "turbomole_scf" : Turbo_SCF_calc,
+                  "turbomole_tddft" : Turbo_calc_TDDFT,
                   "dftb" : DFTB_calc}
     try:
         out_calc = calc_types[calc_type](calc_name)
@@ -363,6 +364,82 @@ def turbo_redefine(atoms):
     subprocess.call("rm -f define_feed", shell=True)
     subprocess.call("actual -r", shell=True)
     return
+
+class Turbo_calc_TDDFT(Calc):
+    """
+    Calculation of TDDFT energy and gradients with Turbomole 7.0
+
+    """
+
+    def run(self, atoms):
+        """
+        Write a Turbomole coord file and return a subprocess.Popen
+
+        Parameters
+        ----------
+        atoms : list of Atom objects
+            Atoms to be calculated with Gaussian
+        Returns
+        -------
+        proc : subprocess.Popen object
+            the object should have a .wait() method
+
+        """
+        FNULL = open(os.devnull, 'w')
+
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+
+        turbo_redefine(atoms)
+
+        # Run Turbomole
+        proc = subprocess.Popen(
+            "dscf > dscf.out && egrad > grad.out", stdout=FNULL, shell=True)
+
+        os.chdir(self.here)
+
+        return proc
+
+    def read_out(self, positions, in_mol=None, in_shell=None):
+        """
+        Analyse a Turbomole grad.out file while printing geometry updates
+
+        To update the geom files, include in_mol and in_shell
+
+        Parameters
+        ----------
+        positions : list of floats
+            List of atomic coordinates, important for truncation of gradients
+            if too many are calculated
+        in_mol : list of Atom objects, optional
+            Atoms in the inner region. Include to write geom files
+        in_shell : list of Atom objects, optional
+            Atoms in the middle region. Include to write geom files
+        Returns
+        -------
+        energy : float
+            Energy calculated by Turbomole in Hartree
+        gradients : list of floats
+            The gradients in form x1,y1,z1,x2,y2,z2 etc. in Hartree/Angstrom
+        scf_energy : float
+            The ground state energy in Hartree
+
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+
+        energy, gradients_b, scf_energy = rf.read_tb_grout("grad.out")
+        # fix gradients units to Hartree/Angstrom
+        gradients = gradients_b * bohrconv
+        # update the geometry log
+        if in_mol != None:
+            self.update_geom(positions, in_mol, in_shell)
+
+        # truncate gradients if too long
+        gradients = gradients[:len(positions)]
+
+        os.chdir(self.here)
+        return (energy, gradients, scf_energy)
 
 
 class Turbo_calc(Calc):
