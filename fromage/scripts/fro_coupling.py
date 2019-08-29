@@ -17,7 +17,7 @@ from fromage.utils.exci_coupling import diabatize
 def main(args):
 
     au2ev=27.211396132
-    oli_states = list(range(1,args.oligomerstates+1))
+    oli_states = list(range(1,args.nmerstates+1))
 
 
     ############################
@@ -76,9 +76,9 @@ def main(args):
     # dE Method
     ############################
     elif args.method.upper()=="DE":
-        if args.oligomerfiles is not None:
-            if len(args.oligomerfiles)==1:
-                g09_1=args.oligomerfiles[0]
+        if args.nmerfiles is not None:
+            if len(args.nmerfiles)==1:
+                g09_1=args.nmerfiles[0]
                 ES_1=read_g09.read_ES(g09_1,min(oli_states))
                 ES_2=read_g09.read_ES(g09_1,max(oli_states))
                 dE_coupling=(ES_2-ES_1)/2
@@ -95,10 +95,10 @@ def main(args):
     ############################
 
     elif args.method.upper()=="DIA":
-        Es = [read_g09.read_ES(args.oligomerfiles[-1],i) for i in oli_states]
+        Es = [read_g09.read_ES(args.nmerfiles[-1],i) for i in oli_states]
 
         if args.property.upper()=="TDM":
-            TDs_oli = [read_g09.read_TD(args.oligomerfiles[0],i) for i in oli_states]
+            TDs_oli = [read_g09.read_TD(args.nmerfiles[0],i) for i in oli_states]
             TDs_oli = np.array(TDs_oli)
             TDs_mono = [read_g09.read_TD(mono,args.monstate) for mono in args.monomerfiles]
             TDs_mono = np.array(TDs_mono)
@@ -107,9 +107,9 @@ def main(args):
             mon_props = TDs_mono
 
         elif args.property.upper()=="ATC":
-            oli_nat = read_g09.read_natoms(args.oligomerfiles[0])
+            oli_nat = read_g09.read_natoms(args.nmerfiles[0])
             # for each state
-            ATC_oli = [read_g09.read_NTO(i,oli_nat) for i in args.oligomerfiles]
+            ATC_oli = [read_g09.read_NTO(i,oli_nat) for i in args.nmerfiles]
             ATC_oli = np.array(ATC_oli)
             monomers_natoms = [read_g09.read_natoms(i) for i in args.monomerfiles]
             ATC_mono = [list(read_g09.read_NTO(i,j))*len(args.monomerfiles) for i,j in zip(args.monomerfiles,monomers_natoms)]
@@ -142,9 +142,9 @@ if __name__=='__main__':
     or [ATC] Atomic Transition Charges",default="TDM")
     parser.add_argument("-mf","--monomerfiles",help="The log files of the monomer calculations\
     for the diabatization procedure",nargs='*')
-    parser.add_argument("-of","--oligomerfiles",help="The log files of the oligomer calculation",nargs='*')
+    parser.add_argument("-nf","--nmerfiles",help="The log files of the N-mer calculation",nargs='*')
     parser.add_argument("-ms","--monstate",help="Excited state to use for the monomer", default=1,type=int)
-    parser.add_argument("-os","--oligomerstates",help="Excited state of oligomer to use",default=2,type=int)
+    parser.add_argument("-ns","--nmerstates",help="Excited state of N-mer to use",default=2,type=int)
     parser.add_argument("-u","--units",help="Output unit [ev] electronvolts or [au] Hartrees",type=str,default='eV')
     user_input = argv[1:]
     args = parser.parse_args(user_input)
