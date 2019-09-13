@@ -9,5 +9,4 @@ before_install:
 install:
     pip install -e .
 script:
-    ls fromage/fdist/
-    pytest fromage/tests/
+    - pytest fromage/tests/
