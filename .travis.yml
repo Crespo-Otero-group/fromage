@@ -1,0 +1,12 @@
+dist: xenial
+language: python
+compiler:
+    -gcc
+python:
+    - "3.6"
+before_install:
+    sudo apt-get install swig
+install:
+    pip install .
+script:
+    pytest fromage/tests/
