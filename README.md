@@ -31,7 +31,7 @@ The documentation can be found [here](https://fromage.readthedocs.io/).
   ```bash
   sudo pip install .
   ```
-  N.B. this will install `numpy` and `scipy` on your system.
+  N.B. this will install `numpy`, `scipy` and `pytest`  on your system.
 
 4. Set environment variables. In your `.bashrc`, write
   ```bash
