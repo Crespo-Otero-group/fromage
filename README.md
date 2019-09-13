@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage)
 <p align="left">
   <img height="150" src="doc/logo.png">
 </p>
