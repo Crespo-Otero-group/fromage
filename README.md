@@ -1,4 +1,7 @@
-[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage)
+[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage) [![Docs](
+https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](https://fromage.readthedocs.io/en/latest/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 <p align="left">
   <img height="150" src="doc/logo.png">
 </p>
