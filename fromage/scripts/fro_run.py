@@ -18,7 +18,7 @@ from datetime import datetime
 from scipy.optimize import minimize
 
 from fromage.io import read_file as rf
-from fromage.utils import handle_atoms as ha
+from fromage.utils import array_operations as ao
 from fromage.utils import calc
 from fromage.io.parse_config_file import bool_cast
 
@@ -61,12 +61,12 @@ def sequence(in_pos):
     # Run the calculations as subprocesses with a maximum of 2 simultameous ones
     # at the same time. This order is optimised for the mh calculation being
     # the longest
-    mh_proc = mh.run(ha.array2atom(mol_atoms, in_pos))
+    mh_proc = mh.run(ao.array2atom(mol_atoms, in_pos))
     if bool_ci and high_level != "gaussian_cas":
-        mg_proc = mg.run(ha.array2atom(mol_atoms, in_pos))
-    rl_proc = rl.run(ha.array2atom(mol_atoms, in_pos))
+        mg_proc = mg.run(ao.array2atom(mol_atoms, in_pos))
+    rl_proc = rl.run(ao.array2atom(mol_atoms, in_pos))
     rl_proc.wait()
-    ml_proc = ml.run(ha.array2atom(mol_atoms, in_pos))
+    ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos))
     ml_proc.wait()
     mh_proc.wait()
     if bool_ci and high_level != "gaussian_cas":

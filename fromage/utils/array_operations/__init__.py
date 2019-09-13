@@ -1,6 +1,7 @@
 """Functions relating to numpy arrays"""
 import numpy as np
 from scipy.spatial.distance import cdist
+from fromage.utils.atom import Atom
 
 from ._planes import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
 from ._matrix import cross_product_matrix, rotation_matrix
@@ -185,3 +186,28 @@ def orthogonalise_asym(vectors):
 
     o_vecs = np.array([ovec_1,ovec_2])
     return o_vecs
+
+def array2atom(template, pos):
+    """
+    Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
+    objects
+
+    Parameters
+    ----------
+    template : list of Atom objects
+        A list of the same length of the desired one used to determine the
+        elements of the atoms
+    pos : list of floats
+        List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.
+    Returns
+    -------
+    out_atoms : list of Atom objects
+        Resulting atoms
+
+    """
+    sliced_pos = [pos[i:i + 3] for i in range(0, len(pos), 3)]
+    out_atoms = []
+    for atom in zip(template, sliced_pos):
+        new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
+        out_atoms.append(new_atom)
+    return out_atoms

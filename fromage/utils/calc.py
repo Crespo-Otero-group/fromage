@@ -13,7 +13,7 @@ import os
 from fromage.utils.mol import Mol
 from fromage.io import edit_file as ef
 from fromage.io import read_file as rf
-from fromage.utils import handle_atoms as ha
+from fromage.utils import array_operations as ao
 
 
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
@@ -87,7 +87,7 @@ class Calc(object):
         with open("geom_mol.xyz", "a") as geom_m_file:
             geom_m_file.write(str(len(in_mol)) + "\n")
             geom_m_file.write(self.calc_name + "\n")
-            for atom in ha.array2atom(in_mol, positions):
+            for atom in ao.array2atom(in_mol, positions):
                 atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_m_file.write(atom_str)
@@ -96,7 +96,7 @@ class Calc(object):
             geom_c_file.write(
                 str(int((len(positions) / 3) + len(in_shell))) + "\n")
             geom_c_file.write(self.calc_name + "\n")
-            for atom in ha.array2atom(in_mol, positions):
+            for atom in ao.array2atom(in_mol, positions):
                 atom_str = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 geom_c_file.write(atom_str)
