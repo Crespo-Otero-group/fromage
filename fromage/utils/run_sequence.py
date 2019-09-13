@@ -83,7 +83,7 @@ class RunSeq(object):
         return shell_low, shell_high
 
     def run_ewald(self, calc_name=None):
-        if calc_name == None:
+        if calc_name is None:
             calc_name = self.inputs["name"]
         if not os.path.exists(self.ewald_path):
             os.makedirs(self.ewald_path)

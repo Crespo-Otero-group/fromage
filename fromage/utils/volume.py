@@ -130,7 +130,6 @@ class CubeGrid(object):
                 if scaled:
                     r /= atom_j.vdw**2
                 if r < min_dist2:
-                    min_dist2 = r
                     close_to_mol = False
                     break
             if close_to_mol:

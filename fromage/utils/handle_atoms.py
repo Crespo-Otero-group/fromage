@@ -1,6 +1,5 @@
 """Some functions to handle lists of atoms
 """
-import numpy as np
 from copy import copy
 
 from fromage.utils.atom import Atom

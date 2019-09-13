@@ -60,7 +60,6 @@ def read_xyz(g09_file):
                         coordinates.append([symb,x,y,z])
                         line=next(f)
                     break
-                    f.close()
         return coordinates
 
 def read_natoms(g09_file):
@@ -141,7 +140,7 @@ def read_NTO(g09_file,natoms):
             # Ensures line is not blank
             if line.strip():
                 if " Mulliken charges:" in line:
-                    line = next(f)
+                    next(f)
                     line = next(f)
                     for i in range(natoms):
                         charge_line = line.split()
@@ -199,7 +198,6 @@ def read_ES(g09_file,state):
     """
     if state <1 :
         exit("Specified state must be an excited state (>0)")
-    SCF=read_SCF(g09_file)
     energies=[]
     with open(g09_file) as f:
         for line in f:

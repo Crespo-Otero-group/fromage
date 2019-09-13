@@ -97,10 +97,6 @@ def trans_coeffs(file_name, exci_info):
 
         exci_coeffs_sub.append(np.array([trans_a,trans_b]))
 
-    ket_x_lis = [(i+j)/2 for i,j in zip(exci_coeffs_add,exci_coeffs_sub)]
-    ket_y_lis = [(i-j)/2 for i,j in zip(exci_coeffs_add,exci_coeffs_sub)]
-
-
     ket_x_lis = []
     ket_y_lis = []
 
@@ -135,14 +131,11 @@ def main(args):
 
     # orbital info
     n_orb_a = ei.nocc_a + ei.nvirt_a
-    n_orb_b = ei.nocc_b + ei.nvirt_b
     n_core = ei.ncore
     nbas = n_orb_a + n_core
 
     # assigning AOs to molecules
     ao_A_labels = list(range(0,int(nbas/2)))
-    ao_B_labels = list(range(int(nbas/2),nbas))
-    ao_all_labels = list(range(0,nbas))
 
     laps_array = read_gauss_rwf("overlap.dat")
     # make the overlaps into a lower triangular matrix (with diagonal)

@@ -42,7 +42,7 @@ def compare_id(id_i, id_j):
             denom += len(i)
         sdiff = np.sum(sdiffs) / denom
 #        sdiff = max(sdiffs)/len(id_i[0])
-        return sdiff
+    return sdiff
 
 
 def main(in_xyz, vectors_file, complete, confine, frac, dupli, output, bonding, thresh, bonding_str, print_mono, trans, clust_rad, inclusivity, center_label):

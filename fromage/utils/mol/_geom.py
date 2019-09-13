@@ -64,7 +64,6 @@ def coord_array(self):
         self.set_connectivity
     list_coord = []
     nat = len(self)
-    coord_arr = np.zeros((nat,3))
     for atom in self:
         add_atom = True
         # potentially remove hydrogen

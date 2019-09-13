@@ -69,7 +69,7 @@ def populate(self, reference_mol):
     # Some careful refactoring should fix this
     import fromage.scripts.fro_assign_charges as ac
     ac.assign_charges(reference_mol, self)
-    pass
+    return
 
 def set_connectivity(self):
     """Set the connectivity of all atoms in the Mol"""

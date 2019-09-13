@@ -11,10 +11,7 @@ pick_mol.py input_file.xyz 7 13 42
 import sys
 import argparse
 from copy import copy
-
 from fromage.io import read_file as rf
-from fromage.io import edit_file as ef
-
 
 def picker(in_name, out_name, labels, bonding, thresh, reverse=False):
     """
