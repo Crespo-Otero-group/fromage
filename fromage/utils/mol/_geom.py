@@ -12,7 +12,7 @@ class GeomInfo(object):
 
     Attributes
     ----------
-    coord_array : np array of shape Nat X 3
+    coord_array : np array of shape (number of atoms) X 3
         Atom coordinates
     plane_coeffs : 3 x 1 np array
         Coefficients for the plane which averages coord_array
