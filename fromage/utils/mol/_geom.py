@@ -63,7 +63,6 @@ def coord_array(self):
     if self.geom.ignore_kinds:
         self.set_connectivity
     list_coord = []
-    nat = len(self)
     for atom in self:
         add_atom = True
         # potentially remove hydrogen
