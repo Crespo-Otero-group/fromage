@@ -137,7 +137,7 @@ if __name__=='__main__':
     parser.add_argument("-m","--method",help="[PDA] Point Dipole Approximation or \
     [CATC] Coulomb Atomic Transition Charges or\
     [dE] Energy Difference or \
-    [DIA] Diabatization",required="True",default="DIA")
+    [DIA] Diabatization",default="DIA")
     parser.add_argument("-p","--property",help="[TDM] Transition Dipole Moments [TDM] \
     or [ATC] Atomic Transition Charges",default="TDM")
     parser.add_argument("-mf","--monomerfiles",help="The log files of the monomer calculations\
