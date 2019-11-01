@@ -1,7 +1,7 @@
 %chk=gck.chk
 %mem=28GB
 %nproc=4
-#wb97xd 6-311++g** charge force symmetry=none
+#pbepbe 6-31g* charge force symmetry=none
 
 mh
 
