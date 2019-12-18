@@ -50,7 +50,7 @@ def select(self, labels, natoms = 0):
                             if current_natoms == natoms:
                                 return selected
                             if current_natoms > natoms:
-                                raise ValueError("There is inconsistenty the amount of atoms in the molecule")
+                                raise ValueError("There is inconsistenty in the amount of atoms in the molecule")
                         cont = True  # An atom was added so continue loop
         old_atoms = new_atoms
     return selected
