@@ -55,7 +55,7 @@ In order to install Python packages which contain C or C++ on Linux, you need `p
 
 ## 2 Preparing the calculation
 
-`fro_prep_calc.py` requires:
+`fro_prep_run.py` requires:
 
 - A `.xyz` file of a unit cell
 - A `config`
@@ -108,14 +108,13 @@ This is the Gaussian template file used if the Ewald charge background is comput
 
 ### 2.7 Outputs of the preparation
 
-Once you have finished running `fro_prep_calc.py`, you will end up with a few files:
+Once you have finished running `fro_prep_run.py`, you will end up with a few files:
 
 - `prep.out` which gives you information about how your preparation went. If the last line gives you an ending time, that is good news
 - `mol.init.xyz` will be the initial position of your molecule for the optimisation
-- `fixed_cell.xyz` is the unit cell after any necessary transformations have been applied to complete important molecules
-- `clust.xyz` is the real system i.e. a cluster of molecules with `mol.init.xyz` in the middle
 - `shell.xyz` is the cluster of molecules without the central one
 - `mh`, `ml`, `rl` and `mg` directories containing `.temp` files corresponding to all of the parallel calculations
+- `ewald` directory where the ewald calculation is run
 
 ## 3 Running the calculation
 
@@ -209,7 +208,7 @@ Hacking this program for your own personal needs is a perfectly good idea and yo
 
 If all you want to do is integrate your favourite quantum chemistry package into fromage, all you need to do is a) add new io routines in `read_file` and `edit_file` b) make a new `Calc` object modeled after one of the existing ones in the `calc` module c) Add the class and corresponding keyword to the `calc_types` at the top of the `calc` module
 
-The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with `fro_prep_calc.py`.
+The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with `fro_prep_run.py`.
 
 --------------------------------------------------------------------------------
 
