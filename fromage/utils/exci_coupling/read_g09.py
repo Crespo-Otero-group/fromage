@@ -5,24 +5,24 @@ import numpy as np
 au2ev=27.211396132
 def read_xyz(g09_file):
     """
-    Opens a g09 log file and returns the first geometry in Input orientation.
+    Open a g09 log file and returns the first geometry in Input orientation
 
     Iterators are used so that the file is not all loaded into memory, which
     can be expensive.
 
     The function searches for the following text pattern in the log file:
 
->                            Input orientation:
->    ---------------------------------------------------------------------
->    Center     Atomic      Atomic             Coordinates (Angstroms)
->    Number     Number       Type             X           Y           Z
->    ---------------------------------------------------------------------
+    >                            Input orientation:
+    >    ---------------------------------------------------------------------
+    >    Center     Atomic      Atomic             Coordinates (Angstroms)
+    >    Number     Number       Type             X           Y           Z
+    >    ---------------------------------------------------------------------
 
     And will save the coordinates and the atomic symbols succeeding it
 
     Parameters
     ----------
-    g09_file: Path to g09 log file
+    g09_file: str
         File path
 
     Returns

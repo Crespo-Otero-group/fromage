@@ -12,6 +12,13 @@ https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](h
 
 The documentation can be found [here](https://fromage.readthedocs.io/).
 
+To cite the use of the program, please use:
+
+Rivera, M., Dommett, M., Sidat, A., Rahim, W., Crespo‐Otero, R. fromage: A library for the study of molecular crystal excited states at the aggregate scale. *J Comput Chem* 2020; 1– 14. https://doi.org/10.1002/jcc.26144
+
+And if you are using one of the ONIOM implementations:
+
+Rivera, M., Dommett, M., Crespo-Otero, R. ONIOM(QM:QM′) Electrostatic Embedding Schemes for Photochemistry in Molecular Crystals. *J. Chem. Theory Comput.* 2019; 15, 4, 2504-2516 https://doi.org/10.1021/acs.jctc.8b01180
 
 ## 1 Installation
 ### 1.1 Easy installation using pip

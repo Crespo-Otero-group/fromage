@@ -63,8 +63,8 @@ def expand_connect(in_mat):
     common with the original atom and if so assigns that matrix element the
     smallest combination of connectors.
 
-    Parameter
-    ---------
+    Parameters
+    ----------
     in_mat : 2-d array-like
         Connectivity matrix to be expanded
 
@@ -95,7 +95,6 @@ def expand_connect(in_mat):
                     out_mat[i][dangle] = min(orders)
                     out_mat[dangle][i] = min(orders)
     return out_mat
-
 
 def complete_expand(in_mat):
     """Expand a matrix until it stops expanding."""

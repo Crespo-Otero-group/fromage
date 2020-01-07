@@ -45,14 +45,6 @@ fromage.utils.fit module
     :undoc-members:
     :show-inheritance:
 
-fromage.utils.handle\_atoms module
-----------------------------------
-
-.. automodule:: fromage.utils.handle_atoms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 fromage.utils.per\_table module
 -------------------------------
 
