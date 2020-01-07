@@ -66,7 +66,7 @@ class Mol(object):
     from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate, set_connectivity
     from ._selecting import select, per_select, segregate
-    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, make_cluster, centered_mols, confined
+    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, supercell_for_cluster, gen_exclusive_clust, gen_inclusive_clust, make_cluster, centered_mols, confined
     from ._geom import GeomInfo, coord_array, calc_coord_array, plane_coeffs, calc_plane_coeffs, axes, calc_axes
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):

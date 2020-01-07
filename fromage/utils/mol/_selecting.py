@@ -4,14 +4,14 @@ def select(self, labels, natoms = 0):
     """
     Return a molecule out of the current Mol.
 
-    The function returns a new Mol of selected atoms atoms. The selection is
-    done by measuring by how much adjacent vdw spheres overlap. The returned
-    Mol's attributes are new objects obtained via a deep copy.
+    The function returns a new Mol of selected atoms. The selection is done by
+    detecting bonding between atoms and finding an enclosed network. The
+    returned Mol's attributes are new objects obtained via a deep copy.
 
     Parameters
     ----------
     label : int or list of ints
-        The number of the atoms from which the molecules are generated.
+        The number of the atoms from which the molecule(s) is(are) generated.
     natoms : int (optional)
         Selecting from a large Mol can be slow. Specifying the expected number
         of atoms can help speed up the process.
@@ -19,25 +19,29 @@ def select(self, labels, natoms = 0):
     -------
     selected : Mol object
         The selected molecule
+
     """
     import fromage.utils.mol as mol_init
 
-    # Make sure that labels is a list
+    # make sure that labels is a list
     if isinstance(labels, int):
         labels = [labels]
 
-    # Check for duplicate labels
+    # check for duplicate labels
     if len(labels) > len(set(labels)):
         raise TypeError("Some labels are repeated")
 
     selected = self.copy()
+
+    # initialise the selection using the input labels
     selected.atoms = deepcopy([self[i] for i in labels])
     old_atoms = selected.copy()
 
-    # While there are atoms to add
+    # while there are atoms to add
     cont = True
     while cont:
         cont = False
+        # new batch of atoms to add
         new_atoms = mol_init.Mol([])
         for old in old_atoms:
             for candidate in self:
@@ -51,7 +55,7 @@ def select(self, labels, natoms = 0):
                                 return selected
                             if current_natoms > natoms:
                                 raise ValueError("There is inconsistenty in the amount of atoms in the molecule")
-                        cont = True  # An atom was added so continue loop
+                        cont = True  # an atom was added so continue loop
         old_atoms = new_atoms
     return selected
 
