@@ -182,6 +182,7 @@ def trans_from_rad(self, clust_rad):
 
     new_vectors = deepcopy(self.vectors)
 
+    # loop over lattice vectors
     for comp in range(3):
         while distances[comp] <= clust_rad:
             trans_count[comp] += 1
