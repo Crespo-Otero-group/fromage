@@ -186,8 +186,8 @@ def trans_from_rad(self, clust_rad):
     for comp in range(3):
         while distances[comp] <= clust_rad:
             trans_count[comp] += 1
-            distances[comp] = np.dot(new_vectors[comp], perp[comp])
             new_vectors[comp] = trans_count[comp] * self.vectors[comp]
+            distances[comp] = np.dot(new_vectors[comp], perp[comp])
 
     return trans_count
 
