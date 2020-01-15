@@ -177,20 +177,20 @@ def trans_from_rad(self, clust_rad):
     # dimensions of the final supercell (translations)
     trans_count = np.array([0, 0, 0])
 
-    # distances from faces
-    distances = np.array([0.0, 0.0, 0.0])
+    # lattice vectors of the quadrant supercell
+    supercell_vectors = deepcopy(self.vectors)
 
-    new_vectors = deepcopy(self.vectors)
+    # distances from origin to each face
+    distances = np.array([0.0, 0.0, 0.0])
 
     # loop over lattice vectors
     for comp in range(3):
         while distances[comp] <= clust_rad:
             trans_count[comp] += 1
-            new_vectors[comp] = trans_count[comp] * self.vectors[comp]
-            distances[comp] = np.dot(new_vectors[comp], perp[comp])
+            supercell_vectors[comp] = trans_count[comp] * self.vectors[comp]
+            distances[comp] = np.dot(supercell_vectors[comp], perp[comp])
 
     return trans_count
-
 def supercell_for_cluster(self, clust_rad, mode='exc', central_mol=None):
     """
     Make a supercell which will be used to make a cluster
