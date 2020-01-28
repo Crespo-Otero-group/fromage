@@ -170,6 +170,30 @@ using either TDDFT or CIS. Make sure that all of the atoms of one molecule (A)
 appear before all of the atoms of the second molecule (B). Also make sure to
 print the ``.rwf`` file by using the input tag ``%rwf=filename.rwf``.
 
+Here is an example Gaussian input for a range-separated hybrid TDDFT calculation
+up to the fourth excited state:
+
+.. code-block:: html
+
+    %chk=title.chk
+    %mem=[X]GB
+    %nproc=[X]
+    #p wb97xd 6-31g* gfprint pop=full
+
+    title
+
+    0 1
+         H   0.00 0.00 0.00
+         C   0.00 0.00 0.00
+         .
+         .
+         .
+
+    --link1--
+        %chk=1.chk
+        %rwf=1
+        #p wb97xd 6-31g* td(nstates=4,root=4) gfprint pop=full IOP(3/33=3) geom=allcheck guess=read density=current
+
 Now run:
 
 .. code-block:: bash
