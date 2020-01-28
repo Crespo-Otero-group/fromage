@@ -28,7 +28,7 @@ class Dimer(object):
 
     Attributes
     ----------
-    mols : list of two Mol objects
+    mol_a,mol_b : Mol objects
         The two molecules constituting the dimer
     alpha, beta, gamma : floats
         The describing angles. alpha is the angle between principal axes,
