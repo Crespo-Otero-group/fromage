@@ -190,9 +190,9 @@ up to the fourth excited state:
          .
 
     --link1--
-        %chk=1.chk
-        %rwf=1
-        #p wb97xd 6-31g* td(nstates=4,root=4) gfprint pop=full IOP(3/33=3) geom=allcheck guess=read density=current
+    %chk=title.chk
+    %rwf=title
+    #p wb97xd 6-31g* td(nstates=4,root=4) gfprint pop=full IOP(3/33=3) geom=allcheck guess=read density=current
 
 Now run:
 
