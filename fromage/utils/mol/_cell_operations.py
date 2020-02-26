@@ -165,34 +165,31 @@ def trans_from_rad(self, clust_rad):
         The translations required for the unit cell to contain the sphere
 
     """
-
-    # determine how many unit cells we need
-    vectors = deepcopy(self.vectors)
-
     # vectors normal to faces
-    a_perp = np.cross(vectors[1], vectors[2])
-    b_perp = np.cross(vectors[2], vectors[0])
-    c_perp = np.cross(vectors[0], vectors[1])
+    a_perp = np.cross(self.vectors[1], self.vectors[2])
+    b_perp = np.cross(self.vectors[2], self.vectors[0])
+    c_perp = np.cross(self.vectors[0], self.vectors[1])
 
     # the three normalised unit vectors
     perp = np.array([a_perp / np.linalg.norm(a_perp), b_perp /
                      np.linalg.norm(b_perp), c_perp / np.linalg.norm(c_perp)])
 
-    trans_count = np.array([1, 1, 1])
+    # dimensions of the final supercell (translations)
+    trans_count = np.array([0, 0, 0])
 
-    # distances from faces
+    # lattice vectors of the quadrant supercell
+    supercell_vectors = np.zeros((3,3))
+
+    # distances from origin to each face
     distances = np.array([0.0, 0.0, 0.0])
 
-    new_vectors = deepcopy(vectors)
-
+    # loop over lattice vectors
     for comp in range(3):
-        while True:
+        while distances[comp] <= clust_rad:
             trans_count[comp] += 1
-            distances[comp] = np.dot(new_vectors[comp], perp[comp])
-            new_vectors[comp] = trans_count[comp] * vectors[comp]
-            if distances[comp] > clust_rad:
-                break
-    trans_count -= np.array([1, 1, 1])
+            supercell_vectors[comp] = trans_count[comp] * self.vectors[comp]
+            distances[comp] = np.dot(supercell_vectors[comp], perp[comp])
+
     return trans_count
 
 def supercell_for_cluster(self, clust_rad, mode='exc', central_mol=None):
@@ -371,6 +368,11 @@ def make_cluster(self, clust_rad, mode='exc', central_mol=None):
     # seed_atoms will initialise the cluster
     seed_atoms = mol_init.Mol([])
 
+    # conserve the bonding properties of the original cell
+    seed_atoms.bonding = supercell.bonding
+    seed_atoms.thresh = supercell.thresh
+
+
     # get seed atoms in the shape of the central mol if pertinent
     if central_mol:
         for atom_i in supercell:
@@ -385,8 +387,6 @@ def make_cluster(self, clust_rad, mode='exc', central_mol=None):
             if atom.v_dist([0, 0, 0]) < clust_rad:
                 seed_atoms.append(atom)
 
-    # refine seed atoms
-    max_mol_len = 0
     # remove incomplete molecules
     if mode == 'exc':
         clust_atoms = self.gen_exclusive_clust(seed_atoms)

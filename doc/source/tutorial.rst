@@ -118,9 +118,10 @@ Input
 These are all the files needed for the geometry optimisation. Most of them
 were already generated from the previous step.
 
-* ``fromage.in``
+* ``fromage.in`` (not required for this tutorial)
     The input file which contains the specifications for the geometry
-    optimisation
+    optimisation. This tutorial uses default specifications, so this is not
+    required
 
 * ``mol.init.xyz``
     See above
