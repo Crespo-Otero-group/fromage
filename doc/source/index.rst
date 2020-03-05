@@ -24,7 +24,7 @@ The current version is 1.0
 
 To cite the use of the program, please use:
 
-Rivera, M., Dommett, M., Sidat, A., Rahim, W., Crespo‐Otero, R. fromage: A library for the study of molecular crystal excited states at the aggregate scale. *J Comput Chem* 2020; 1– 14. https://doi.org/10.1002/jcc.26144
+Rivera, M., Dommett, M., Sidat, A., Rahim, W., Crespo‐Otero, R. fromage: A library for the study of molecular crystal excited states at the aggregate scale. *J Comput Chem* 2020; 14, 1045-1058 https://doi.org/10.1002/jcc.26144
 
 And if you are using one of the ONIOM implementations:
 
