@@ -13,9 +13,6 @@ bond_thresh 1.9
 label_atom 1
 nChk 1000
 nAt 500
-aN 2
-bN 2
-cN 2
 clust_rad 3
 traAN 3
 traBN 3

@@ -77,7 +77,7 @@ system path already. In that case, running the program simply involves typing:
 
 .. code-block:: bash
 
-  fro_prep_calc.py
+  fro_prep_run.py
 
 Output
 ------

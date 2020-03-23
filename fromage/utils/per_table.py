@@ -5,7 +5,7 @@ This module contains the information from the periodic table
 # This list is for reverse searching e.g. having the atomic number but not the
 # symbol. The format is:
 # Lower case symbol, symbol, atomic number, number of valence electrons,
-# covalent radiuys in Angstrom, vdw radius in Angstrom, mass in Da
+# covalent radius in Angstrom, vdw radius in Angstrom, mass in Da
 # Data are taken from the Cambridge Structural Database
 periodic_list = [("", "", 0, 0, 0.0, 0.0,0.0),
                  ("point", "point", 0, 0, 0.0, 0.0, 0.0),
@@ -15,9 +15,13 @@ periodic_list = [("", "", 0, 0, 0.0, 0.0,0.0),
                  ("n", "N", 7, 5, 0.68, 1.55, 14.007),
                  ("o", "O", 8, 6, 0.68, 1.52, 15.999),
                  ("f", "F", 9, 7, 0.64, 1.47, 18.998),
+                 ("si", "Si", 14, 4, 1.2, 2.1, 28.086),
                  ("s", "S", 16, 6, 1.02, 1.80, 32.066),
+                 ("cl", "Cl", 17, 7, 0.99, 1.75, 35.453),
                  ("cu", "Cu", 29, 1, 1.32, 1.4, 63.546),
                  ("zn", "Zn", 30, 2, 1.22, 1.39, 65.39),
+                 ("se", "Se", 34, 6, 1.22, 1.9, 78.96),
+                 ("br", "Br", 35, 7, 1.21, 1.85, 79.904),
                  ("au", "Au", 79, 1, 1.36, 1.66, 196.967)]
 
 periodic = {}
