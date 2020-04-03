@@ -14,7 +14,7 @@ label_atom 1
 nChk 1000
 nAt 500
 clust_rad 3
-traAN 3
-traBN 3
-traCN 3
 ewald true
+aN 2
+bN 2
+cN 2
