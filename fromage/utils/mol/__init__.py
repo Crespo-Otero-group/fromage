@@ -36,9 +36,10 @@ def make_mol(atoms):
     """
     out_mol = Mol(atoms)
     return out_mol
+
 class Mol(object):
     """
-    Object representing a list of atoms.
+    Class representing a list of atoms.
 
     This class can be used to reflect any number of molecules, point charges or
     unit cells. Although Mol shares many methods with list, it deliberately does
