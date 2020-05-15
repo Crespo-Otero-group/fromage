@@ -255,3 +255,10 @@ def he_dimer():
     """Dimer object of two He atoms in a box at 0,0,0 and 10,10,10"""
     dim = rf.dimer_from_file(_in_data("he_cell.xyz"))
     return dim
+
+@pytest.fixture
+def h2o_dimer_traj():
+    """Traj object of two H2O molecules where one oxygen moves a bit"""
+    traj = rf.traj_from_file(_in_data("h2o_dimer_trajectory.xyz"))
+    return traj
+
