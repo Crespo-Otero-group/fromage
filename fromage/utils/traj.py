@@ -42,5 +42,5 @@ class Traj(object):
 
     def write_xyz(self, name):
         """Write an xyz file containing all geometries"""
-        ef.write(name, self)
+        ef.write_traj_xyz(name, self)
 

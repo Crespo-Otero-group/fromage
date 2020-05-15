@@ -109,7 +109,7 @@ def write_traj_xyz(in_name, in_traj):
         # number of atoms
         out_file.write(str(len(frame))+"\n")
         # stem label
-        out_file.write("Step " + str(i+1) + "\n")
+        out_file.write("step: " + str(i+1) + "\n")
         for atom in frame:
             out_file.write(atom.xyz_str() + "\n")
     out_file.close()
