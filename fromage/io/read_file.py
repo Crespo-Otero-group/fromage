@@ -8,6 +8,7 @@ import numpy as np
 import fromage.utils.per_table as pt
 
 from fromage.utils.mol import Mol
+from fromage.utils.traj import Traj
 from fromage.utils import per_table as per
 from fromage.utils.atom import Atom
 from fromage.utils.dimer import Dimer
@@ -164,6 +165,25 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
     mol.set_bonding_str(bonding)
 
     return mol
+
+def traj_from_file(in_name):
+    """
+    Return a Traj object from a
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    traj : Traj object
+        The Traj made up of one Mol per frame of the file
+
+    """
+    # this works for xyz files
+    traj = Traj(read_xyz(in_name))
+
+    return traj
 
 def dimer_from_file(in_name, bonding=''):
     """
