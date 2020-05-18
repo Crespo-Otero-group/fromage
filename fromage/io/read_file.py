@@ -180,10 +180,92 @@ def traj_from_file(in_name):
         The Traj made up of one Mol per frame of the file
 
     """
-    # this works for xyz files
-    traj = Traj(read_xyz(in_name))
+    # if it's an xyz file
+    if in_name[-4:] == '.xyz':
+        traj = Traj(read_xyz(in_name))
+    if in_name[-6:] == 'OUTCAR':
+        traj = read_outcar_traj(in_name)
 
     return traj
+
+def read_outcar_traj(in_name):
+    """
+    Return a Traj object from a VASP OUTCAR file
+
+    Parameters
+    ----------
+    in_name : str
+        Name of the file to read
+    Returns
+    -------
+    traj : Traj object
+        The Traj made up of one Mol for each optimisation step
+
+    """
+    with open(in_name) as outcar_file:
+        traj = Traj()
+        ion_types = []
+        ion_numbers=[]
+        coords = []
+        reading_types = False
+        reading_coords = False
+        skip_line = False
+
+        for line in outcar_file:
+            # read atom types
+            if reading_types:
+                if 'POTCAR:' in line:
+                    ion_types.append(line.split()[2])
+                else:
+                    reading_types = False
+            if 'INCAR:' in line:
+                reading_types = True
+
+            # read number of atoms per type
+            if 'ions per type' in line:
+                ion_numbers = [int(i) for i in line.split()[4:]]
+                # a list e.g. [['H','H'],['O']] for water
+                ion_type_expanded_nested = [i*[j] for i,j in zip(ion_numbers,ion_types)]
+                # a list e.g. ['H','H','O']
+                ion_type_expanded = []
+                for sublist in ion_type_expanded_nested:
+                    ion_type_expanded += sublist
+
+            # reading the atom coordinates
+            if reading_coords == True:
+                coords.append([float(i) for i in line.split()[0:3]])
+
+            # start reading coordinates
+            if skip_line:
+                coords = []
+                reading_coords = True
+                skip_line = False
+
+            # skip line
+            if 'POSITION' in line:
+                skip_line = True
+
+            # if we have finished reading the frame
+            if ion_numbers: # not empty
+                if len(coords) == sum(ion_numbers):
+                    reading_coords = False
+                    # make an atom list
+                    atoms_to_add = [Atom(i,j[0],j[1],j[2]) for i,j in zip(ion_type_expanded,coords)]
+                    # put atom list in Mol and put Mol in Traj
+                    traj.append(Mol(atoms_to_add))
+                    # empty coords again
+                    coords = []
+
+    # if the last read did not complete, discard it
+    if len(traj[-1]) != sum(ion_numbers):
+        traj = traj.pop()
+
+    traj.write_xyz('foo.xyz')
+
+    return traj
+
+
+
 
 def dimer_from_file(in_name, bonding=''):
     """

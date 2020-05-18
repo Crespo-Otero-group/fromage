@@ -29,7 +29,7 @@ def index(self, element):
 
 
 def pop(self, i=-1):
-    return getattr(self,self.chief_list).pop(i)
+    return getattr(self,self.chief_list).Pop(i)
 
 
 def clear(self):
