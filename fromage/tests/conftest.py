@@ -262,3 +262,8 @@ def h2o_dimer_traj():
     traj = rf.traj_from_file(_in_data("h2o_dimer_trajectory.xyz"))
     return traj
 
+@pytest.fixture
+def mbi_opt_traj():
+    """Traj object of a VASP optimisation"""
+    traj = rf.traj_from_file(_in_data("MBI.OUTCAR"))
+    return traj
