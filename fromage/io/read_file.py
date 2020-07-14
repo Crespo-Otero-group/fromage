@@ -260,8 +260,6 @@ def read_outcar_traj(in_name):
     if len(traj[-1]) != sum(ion_numbers):
         traj = traj.pop()
 
-    traj.write_xyz('foo.xyz')
-
     return traj
 
 
