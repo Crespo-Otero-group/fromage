@@ -2,7 +2,7 @@
 
 This can be used for MD trajectories, or optimisation steps.
 """
-import fromage.utils.listyness
+import fromage.utils.listyness as listy # this looks like it is unused, but makes Traj list-like
 from fromage.utils.mol import Mol
 import copy
 import fromage.io.edit_file as ef

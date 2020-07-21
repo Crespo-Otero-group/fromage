@@ -7,7 +7,7 @@ a circular import. The solution we have chosen is to have in-function imports of
 fromage.utils.mol every time this happens.
 
 """
-import fromage.utils.listyness
+import fromage.utils.listyness as listy # this looks like it is unused, but makes Mol list-like
 import numpy as np
 from copy import deepcopy
 
