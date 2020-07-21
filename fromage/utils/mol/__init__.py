@@ -21,6 +21,7 @@ def try_ismol(to_test):
         raise TypeError("Cannot cast " +
                         type(to_test).__name__ + " to Mol object")
 
+
 def make_mol(atoms):
     """
     Generate a Mol object
@@ -37,6 +38,7 @@ def make_mol(atoms):
     """
     out_mol = Mol(atoms)
     return out_mol
+
 
 class Mol(object):
     """
@@ -76,7 +78,7 @@ class Mol(object):
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
         self.atoms = in_atoms
-        self.chief_list = 'atoms' # required to import listyness
+        self.chief_list = 'atoms'  # required to import listyness
         self.vectors = vectors
         self.bonding = bonding
         self.thresh = thresh
@@ -94,8 +96,6 @@ class Mol(object):
     def __add__(self, other_mol):
         try_ismol(other_mol)
         return Mol(deepcopy(self).atoms + other_mol.atoms, vectors=self.vectors, bonding=self.bonding, thresh=self.thresh)
-
-
 
     def copy(self):
         return deepcopy(self)
