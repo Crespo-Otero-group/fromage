@@ -62,3 +62,26 @@ def rotation_matrix(axis_vector, angle, degrees = True):
     rot_mat = cos_id + sin_cross + cos_tens
 
     return rot_mat
+
+def reflection_matrix(normal_vec):
+    """
+    Return the reflection axis corresponding to a plane defined by and vector
+
+    The vector must be normalised. The plane must cross the origin.
+    For more information, see:
+    https://en.wikipedia.org/wiki/Transformation_matrix#Reflection_2
+
+    Parameters
+    ----------
+    normal_vec : 3 x 1 numpy array
+        Unit vector normal to the plane of reflection
+    Returns
+    -------
+    refl_mat : 3 x 3 numpy array
+        Reflection matrix
+
+    """
+    refl_mat = np.identity(3)-2*np.outer(normal_vec,normal_vec.T)
+
+    return refl_mat
+

@@ -219,6 +219,11 @@ def vec_111():
     """The (1,1,1) vector"""
     return np.array([1.,1.,1.])
 
+@pytest.fixture
+def vecs_102_202():
+    """The two vectors (1,0,2) and (2,0,2)"""
+    return np.array([[1.,0.,2.],[2.,0.,2.]])
+
 # Dimer fixtures
 @pytest.fixture
 def rectangle_dimer():
