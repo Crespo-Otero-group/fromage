@@ -13,7 +13,7 @@ from copy import deepcopy
 from fromage.utils.atom import Atom
 import fromage.io.edit_file as ef
 # the following looks like it is unused, but makes Mol list-like
-import fromage.utils.listyness as listy # lgtm [py/import-and-import-from]
+import fromage.utils.listyness # lgtm [py/import-and-import-from]
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
