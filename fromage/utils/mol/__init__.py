@@ -7,13 +7,13 @@ a circular import. The solution we have chosen is to have in-function imports of
 fromage.utils.mol every time this happens.
 
 """
-import fromage.utils.listyness as listy # this looks like it is unused, but makes Mol list-like
 import numpy as np
 from copy import deepcopy
 
 from fromage.utils.atom import Atom
 import fromage.io.edit_file as ef
-
+# the following looks like it is unused, but makes Mol list-like
+import fromage.utils.listyness as listy # lgtm [py/import-and-import-from]
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""

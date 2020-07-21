@@ -2,11 +2,11 @@
 
 This can be used for MD trajectories, or optimisation steps.
 """
-import fromage.utils.listyness as listy # this looks like it is unused, but makes Traj list-like
 from fromage.utils.mol import Mol
 import copy
 import fromage.io.edit_file as ef
-
+# the following looks like it is unused, but makes Traj list-like
+import fromage.utils.listyness as listy # lgtm [py/import-and-import-from] lgtm [py/unused-import]
 class Traj(object):
     """
     Class representing a list of Mols.
