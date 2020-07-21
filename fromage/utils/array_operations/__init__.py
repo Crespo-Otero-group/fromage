@@ -4,7 +4,7 @@ from scipy.spatial.distance import cdist
 from fromage.utils.atom import Atom
 
 from ._planes import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
-from ._matrix import cross_product_matrix, rotation_matrix
+from ._matrix import cross_product_matrix, rotation_matrix, reflection_matrix
 
 def distance(vector_1, vector_2):
     """Return the distance between two points"""

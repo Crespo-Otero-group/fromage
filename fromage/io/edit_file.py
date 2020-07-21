@@ -91,6 +91,30 @@ def write_xyz(in_name, atoms, char=False):
     out_file.close()
     return
 
+def write_traj_xyz(in_name, in_traj):
+    """
+    Write an xyz file of a trajectory or optimisation sequence
+
+    Parameters
+    ----------
+    in_name : string
+        Name of the xyz file. Include the file extension
+    in_traj : Traj object
+        The sequence of frames which are to appear in the xyz file
+
+    """
+    out_file = open(in_name, "w")
+
+    for i, frame in enumerate(in_traj):
+        # number of atoms
+        out_file.write(str(len(frame))+"\n")
+        # stem label
+        out_file.write("step: " + str(i+1) + "\n")
+        for atom in frame:
+            out_file.write(atom.xyz_str() + "\n")
+    out_file.close()
+
+
 
 def write_uc(in_name, vectors, aN, bN, cN, atoms):
     """

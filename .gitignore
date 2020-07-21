@@ -1,5 +1,6 @@
 fromage/fdist/_fdist*
 fromage/fdist/fdist_wrap.cxx
+fromage/fdist/fdist_wrap.cpp
 fromage/fdist/fdist.py
 fromage/fdist/build
 **/*.swp

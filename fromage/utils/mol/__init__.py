@@ -12,13 +12,15 @@ from copy import deepcopy
 
 from fromage.utils.atom import Atom
 import fromage.io.edit_file as ef
-
+# the following looks like it is unused, but makes Mol list-like
+import fromage.utils.listyness# lgtm [py/import-and-import-from]
 
 def try_ismol(to_test):
     """ Raise exception if the argument is not a Mol object"""
     if not isinstance(to_test, Mol):
         raise TypeError("Cannot cast " +
                         type(to_test).__name__ + " to Mol object")
+
 
 def make_mol(atoms):
     """
@@ -36,9 +38,11 @@ def make_mol(atoms):
     """
     out_mol = Mol(atoms)
     return out_mol
+
+
 class Mol(object):
     """
-    Object representing a list of atoms.
+    Class representing a list of atoms.
 
     This class can be used to reflect any number of molecules, point charges or
     unit cells. Although Mol shares many methods with list, it deliberately does
@@ -62,7 +66,7 @@ class Mol(object):
         principal and secondary axes.
 
     """
-    from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
+    from fromage.utils.listyness import append, extend, insert, remove, index, pop, clear, count, __len__, __getitem__, __setitem__, __contains__
     from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate, set_connectivity
     from ._selecting import select, per_select, segregate
@@ -74,6 +78,7 @@ class Mol(object):
         if isinstance(in_atoms, Atom):
             in_atoms = [in_atoms]
         self.atoms = in_atoms
+        self.chief_list = 'atoms'  # required to import listyness
         self.vectors = vectors
         self.bonding = bonding
         self.thresh = thresh
@@ -87,6 +92,10 @@ class Mol(object):
 
     def __str__(self):
         return self.__repr__()
+
+    def __add__(self, other_mol):
+        try_ismol(other_mol)
+        return Mol(deepcopy(self).atoms + other_mol.atoms, vectors=self.vectors, bonding=self.bonding, thresh=self.thresh)
 
     def copy(self):
         return deepcopy(self)

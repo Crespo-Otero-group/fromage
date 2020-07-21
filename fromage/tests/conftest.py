@@ -219,6 +219,11 @@ def vec_111():
     """The (1,1,1) vector"""
     return np.array([1.,1.,1.])
 
+@pytest.fixture
+def vecs_102_202():
+    """The two vectors (1,0,2) and (2,0,2)"""
+    return np.array([[1.,0.,2.],[2.,0.,2.]])
+
 # Dimer fixtures
 @pytest.fixture
 def rectangle_dimer():
@@ -255,3 +260,15 @@ def he_dimer():
     """Dimer object of two He atoms in a box at 0,0,0 and 10,10,10"""
     dim = rf.dimer_from_file(_in_data("he_cell.xyz"))
     return dim
+
+@pytest.fixture
+def h2o_dimer_traj():
+    """Traj object of two H2O molecules where one oxygen moves a bit"""
+    traj = rf.traj_from_file(_in_data("h2o_dimer_trajectory.xyz"))
+    return traj
+
+@pytest.fixture
+def mbi_opt_traj():
+    """Traj object of a VASP optimisation"""
+    traj = rf.traj_from_file(_in_data("MBI.OUTCAR"))
+    return traj
