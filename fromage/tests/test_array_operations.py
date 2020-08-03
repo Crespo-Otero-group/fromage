@@ -65,3 +65,9 @@ def test_rmsd():
     alt = np.array([1.,-1.,-1.,-1.,1.])
     assert ao.rmsd(ref,alt) == 1.
 
+def test_coord_rmsd():
+    """Test the rmsd of two points"""
+    ref = np.array([[0., 0., 0.], [1.,0.,0.]])
+    alt = np.array([[0.,0.,1.], [1.,0.,0.]])
+    assert ao.coord_rmsd(ref,alt) == approx(np.sqrt(0.5))
+

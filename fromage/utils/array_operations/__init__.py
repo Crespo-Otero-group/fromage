@@ -85,7 +85,7 @@ def rmsd(array_a, array_b):
         The arrays to be compared
     Returns
     -------
-    rmsd : float
+    rmsd_val : float
         The Root Mean Square Deviation of the elements of the array
 
     """
@@ -93,9 +93,33 @@ def rmsd(array_a, array_b):
     diff2 = np.square(diff)
     diff2_sum = np.sum(diff2)
     norm_diff2_sum = diff2_sum/len(array_a)
-    rmsd = np.sqrt(norm_diff2_sum)
+    rmsd_val = np.sqrt(norm_diff2_sum)
 
-    return rmsd
+    return rmsd_val
+
+def coord_rmsd(array_a, array_b):
+    """
+    Calculate the distance RMSD between sets of coordinates
+
+    Parameters
+    ----------
+    array_a, array_b : N x 3 numpy arrays
+        The arrays [[x1, y1, z1], [x2, y2, z2], ...]
+    Returns
+    -------
+    rmsd_val : float
+        The Root Mean Square Deviation of the distance between points
+
+    """
+    displacement_vectors = array_a - array_b
+    distances = np.linalg.norm(displacement_vectors, axis=1)
+    # rmsd with 0 distances
+    rmsd_val = rmsd(np.zeros(len(distances)), distances)
+
+    return rmsd_val
+
+    return rmsd_val
+
 
 def find_largest(in_array, n_largest):
     """
