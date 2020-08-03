@@ -7,11 +7,13 @@ from fromage.utils.mol import Mol
 from fromage.utils.atom import Atom
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
-test_data_dir = os.path.join(test_dir,'data')
+test_data_dir = os.path.join(test_dir, "data")
+
 
 def _in_data(file_name):
     """Return absolute name of file in data/ dir"""
-    return os.path.join(test_data_dir,file_name)
+    return os.path.join(test_data_dir, file_name)
+
 
 # Atom fixtures
 @pytest.fixture
@@ -27,24 +29,26 @@ def o_at():
     out_at = Atom("O", 0.8, 0.0, 0.0)
     return out_at
 
+
 @pytest.fixture
 def o_at_outside():
     """O Atom object outside of the 111 cell"""
     out_at = Atom("O", 2.1, -0.3, 1.4)
     return out_at
 
+
 @pytest.fixture
 def vectors():
     """Eye 3x3 vectors"""
-    vec_out = np.array([[1.0, 0.0, 0.0],
-                        [0.0, 1.0, 0.0],
-                        [0.0, 0.0, 1.0]])
+    vec_out = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
     return vec_out
+
 
 @pytest.fixture
 def newat():
     """Atom object C at origin"""
     return Atom("C", 0.0, 0.0, 0.0)
+
 
 # Mol fixtures
 @pytest.fixture
@@ -53,11 +57,13 @@ def at_list():
     out_list = rf.read_pos(_in_data("h2o_dimer.xyz"))
     return out_list
 
+
 @pytest.fixture
 def h2o_dimer_mol(at_list):
     """Water dimer Mol object"""
     out_mo = Mol(at_list)
     return out_mo
+
 
 @pytest.fixture
 def hc1_mol():
@@ -72,29 +78,42 @@ def hc1_quad():
     out_mo = Mol(rf.read_pos(_in_data("hc1_quad.xyz")))
     return out_mo
 
+
 @pytest.fixture
 def hc1_cell():
     """HC1 cell"""
     cell = Mol(rf.read_pos(_in_data("hc1_cell.xyz")))
-    vectors = np.array([[12.1199998856, 0.0, 0.0],
-                        [0.0, 10.2849998474, 0.0],
-                        [-5.4720203118, 0.0, 11.2441994632]])
+    vectors = np.array(
+        [
+            [12.1199998856, 0.0, 0.0],
+            [0.0, 10.2849998474, 0.0],
+            [-5.4720203118, 0.0, 11.2441994632],
+        ]
+    )
     cell.vectors = vectors
     return cell
+
 
 @pytest.fixture
 def hc1_complete_cell():
     """HC1 completed cell"""
     cell = Mol(rf.read_pos(_in_data("hc1_complete_cell.xyz")))
-    vectors = np.array([[12.1199998856, 0.0, 0.0],
-                        [0.0, 10.2849998474, 0.0],
-                        [-5.4720203118, 0.0, 11.2441994632]])
+    vectors = np.array(
+        [
+            [12.1199998856, 0.0, 0.0],
+            [0.0, 10.2849998474, 0.0],
+            [-5.4720203118, 0.0, 11.2441994632],
+        ]
+    )
     cell.vectors = vectors
     return cell
+
+
 @pytest.fixture
 def empty_mol():
     """Empty Mol object"""
     return Mol([])
+
 
 @pytest.fixture
 def c_o():
@@ -104,17 +123,20 @@ def c_o():
     out_mol = Mol([c_at, o_at])
     return out_mol
 
+
 @pytest.fixture
 def h2o_dup():
     """H2O molecule with duplicate atoms"""
     out_mol = rf.mol_from_file(_in_data("h2o_repeated.xyz"))
     return out_mol
 
+
 @pytest.fixture
 def rectangle_mol():
     """Roughly rectangular soup of atoms"""
     mol = rf.mol_from_file(_in_data("rectangle_atom_soup.xyz"))
     return mol
+
 
 # Array fixtures
 @pytest.fixture
@@ -124,10 +146,12 @@ def h2o_dim_array():
     arr = mol.coord_array()
     return arr
 
+
 @pytest.fixture
 def h2o_dim_dist_arr(h2o_dim_array):
     """Distance array for the H2O dimer"""
-    return(ao.dist_mat(h2o_dim_array))
+    return ao.dist_mat(h2o_dim_array)
+
 
 @pytest.fixture
 def hc1_array():
@@ -136,93 +160,104 @@ def hc1_array():
     arr = mol.coord_array()
     return arr
 
+
 @pytest.fixture
 def rectangle_array():
     """Coordinate array for corners of a rectangle"""
-    lis_coord = [[0.,0.,0.],[0.,2.,0.],[4.,2.,0.],[4.,0.,0.]]
+    lis_coord = [[0.0, 0.0, 0.0], [0.0, 2.0, 0.0], [4.0, 2.0, 0.0], [4.0, 0.0, 0.0]]
     arr = np.array(lis_coord)
     return arr
 
+
 @pytest.fixture
 def z_plane_coeffs():
-    plane_coeffs = np.array([0.,0.,1.,0.])
+    plane_coeffs = np.array([0.0, 0.0, 1.0, 0.0])
     return plane_coeffs
+
 
 @pytest.fixture
 def arbitrary_pair():
     """Pair of coordinates"""
-    lis_pair = [[-0.5,0.5,3.],[3.,0.5,-1.]]
+    lis_pair = [[-0.5, 0.5, 3.0], [3.0, 0.5, -1.0]]
     arr = np.array(lis_pair)
     return arr
+
 
 @pytest.fixture
 def arbitrary_flat_points():
     """Sea of points in z=0"""
-    lis_coord = [[1.,2.,0.],
-                [0.1,-0.1,0.],
-                [3.,1.,0.],
-                [6.1,3.,0.],
-                [-0.1,3.1,0.],
-                [6.1,-0.1,0.]]
+    lis_coord = [
+        [1.0, 2.0, 0.0],
+        [0.1, -0.1, 0.0],
+        [3.0, 1.0, 0.0],
+        [6.1, 3.0, 0.0],
+        [-0.1, 3.1, 0.0],
+        [6.1, -0.1, 0.0],
+    ]
     arr = np.array(lis_coord)
     return arr
+
 
 @pytest.fixture
 def arbitrary_flat_vertices():
     """Vertices of a quadrangle in z=0"""
-    lis_vert = [[-0.1,3.1,0.],
-                [6.1,3.,0.],
-                [6.1,-0.1,0.],
-                [0.1,-0.1,0.]]
+    lis_vert = [[-0.1, 3.1, 0.0], [6.1, 3.0, 0.0], [6.1, -0.1, 0.0], [0.1, -0.1, 0.0]]
     arr = np.array(lis_vert)
     return arr
+
 
 @pytest.fixture
 def arbitrary_vertices():
     """Vertices of a quadrangle"""
-    lis_vert = [[-0.5,0.5,3.],[0.5,2.,0.],[3.,0.5,-1.],[0.5,-0.5,5.]]
+    lis_vert = [[-0.5, 0.5, 3.0], [0.5, 2.0, 0.0], [3.0, 0.5, -1.0], [0.5, -0.5, 5.0]]
     arr = np.array(lis_vert)
     return arr
+
 
 @pytest.fixture
 def triangle_shape_coord():
     """Set of coordinates in a triangle shape"""
-    lis_coord = [[2.,2.,0.],
-                 [1.,1.,0.],
-                 [1.,4.,0.],
-                 [6.,2.,0.],
-                 [3.,1.,0.]]
+    lis_coord = [
+        [2.0, 2.0, 0.0],
+        [1.0, 1.0, 0.0],
+        [1.0, 4.0, 0.0],
+        [6.0, 2.0, 0.0],
+        [3.0, 1.0, 0.0],
+    ]
     arr = np.array(lis_coord)
     return arr
 
+
 @pytest.fixture
 def triangle_corners_4():
-    lis_coord = [[1.,4.,0.],
-                 [6.,2.,0.],
-                 [6.,2.,0.],
-                 [1.,1.,0.]]
+    lis_coord = [[1.0, 4.0, 0.0], [6.0, 2.0, 0.0], [6.0, 2.0, 0.0], [1.0, 1.0, 0.0]]
     arr = np.array(lis_coord)
     return arr
+
 
 @pytest.fixture
 def vec_100():
     """The (1,0,0) vector"""
-    return np.array([1.,0.,0.])
+    return np.array([1.0, 0.0, 0.0])
+
 
 @pytest.fixture
 def vec_220():
     """The (2,2,0) vector"""
-    return np.array([2.,2.,0.])
+    return np.array([2.0, 2.0, 0.0])
+
 
 @pytest.fixture
 def vec_111():
     """The (1,1,1) vector"""
-    return np.array([1.,1.,1.])
+    return np.array([1.0, 1.0, 1.0])
+
 
 @pytest.fixture
 def vecs_102_202():
     """The two vectors (1,0,2) and (2,0,2)"""
-    return np.array([[1.,0.,2.],[2.,0.,2.]])
+    return np.array([[1.0, 0.0, 2.0], [2.0, 0.0, 2.0]])
+
 
 # Dimer fixtures
 @pytest.fixture
@@ -231,11 +266,13 @@ def rectangle_dimer():
     dim = rf.dimer_from_file(_in_data("rectangle_mol_dimer.xyz"))
     return dim
 
+
 @pytest.fixture
 def h2o_dimer():
     """Dimer object of two water"""
     dim = rf.dimer_from_file(_in_data("h2o_dimer.xyz"))
     return dim
+
 
 @pytest.fixture
 def h2o_dimer_jumbled():
@@ -243,11 +280,13 @@ def h2o_dimer_jumbled():
     dim = rf.dimer_from_file(_in_data("h2o_dimer_jumbled.xyz"))
     return dim
 
+
 @pytest.fixture
 def h2o_dimer_jumbled_trans():
     """Dimer object of two water"""
     dim = rf.dimer_from_file(_in_data("h2o_dimer_jumbled_trans.xyz"))
     return dim
+
 
 @pytest.fixture
 def h2_dimer():
@@ -255,17 +294,20 @@ def h2_dimer():
     dim = rf.dimer_from_file(_in_data("h2_linear_dimer.xyz"))
     return dim
 
+
 @pytest.fixture
 def he_dimer():
     """Dimer object of two He atoms in a box at 0,0,0 and 10,10,10"""
     dim = rf.dimer_from_file(_in_data("he_cell.xyz"))
     return dim
 
+
 @pytest.fixture
 def h2o_dimer_traj():
     """Traj object of two H2O molecules where one oxygen moves a bit"""
     traj = rf.traj_from_file(_in_data("h2o_dimer_trajectory.xyz"))
     return traj
+
 
 @pytest.fixture
 def mbi_opt_traj():
