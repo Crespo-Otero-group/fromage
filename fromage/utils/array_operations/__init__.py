@@ -338,9 +338,4 @@ def per_dist_mat(coord_a, coord_b, lat_vec=None):
 
     return dis_mat
 
-
-
-
-
-
-
+def translate()
