@@ -3,15 +3,24 @@ import numpy as np
 from scipy.spatial.distance import cdist
 from fromage.utils.atom import Atom
 
-from ._planes import plane_from_coord, quadrangle_from_coord, embedded_vert, project_point, project_pair_to_vector, project_quad_to_vectors
+from ._planes import (
+    plane_from_coord,
+    quadrangle_from_coord,
+    embedded_vert,
+    project_point,
+    project_pair_to_vector,
+    project_quad_to_vectors,
+)
 from ._matrix import cross_product_matrix, rotation_matrix, reflection_matrix
+
 
 def distance(vector_1, vector_2):
     """Return the distance between two points"""
-    dis = np.linalg.norm(vector_1-vector_2)
+    dis = np.linalg.norm(vector_1 - vector_2)
     return dis
 
-def vec_angle(vector_1, vector_2, degrees = True):
+
+def vec_angle(vector_1, vector_2, degrees=True):
     """
     Return the angle between two numpy vectors.
 
@@ -31,32 +40,35 @@ def vec_angle(vector_1, vector_2, degrees = True):
     out_angle : float
         The angle between vectors
     """
-    dot = np.dot(vector_1,vector_2)
-    cross_norm = np.linalg.norm(np.cross(vector_1,vector_2))
-    ang = np.arctan2(cross_norm,dot)
+    dot = np.dot(vector_1, vector_2)
+    cross_norm = np.linalg.norm(np.cross(vector_1, vector_2))
+    ang = np.arctan2(cross_norm, dot)
     if degrees:
         ang = np.degrees(ang)
     return ang
 
-def closest(reference,points):
+
+def closest(reference, points):
     """Return the closest point to the reference and the distance to it"""
-    min_dis = float('inf')
+    min_dis = float("inf")
     for point in points:
-        dis = distance(reference,point)
+        dis = distance(reference, point)
         if dis < min_dis:
             min_dis = dis
             closest_point = point
     return closest_point, min_dis
 
-def furthest(reference,points):
+
+def furthest(reference, points):
     """Return the furthest point to the reference and the distance to it"""
-    max_dis = -float('inf')
+    max_dis = -float("inf")
     for point in points:
-        dis = distance(reference,point)
+        dis = distance(reference, point)
         if dis > max_dis:
             max_dis = dis
             closest_point = point
     return closest_point, max_dis
+
 
 def dist_mat(in_array):
     """
@@ -72,8 +84,9 @@ def dist_mat(in_array):
         Lower triangular distance matrix
 
     """
-    dist_mat = np.tril(cdist(in_array,in_array))
+    dist_mat = np.tril(cdist(in_array, in_array))
     return dist_mat
+
 
 def rmsd(array_a, array_b):
     """
@@ -92,10 +105,11 @@ def rmsd(array_a, array_b):
     diff = array_a - array_b
     diff2 = np.square(diff)
     diff2_sum = np.sum(diff2)
-    norm_diff2_sum = diff2_sum/len(array_a)
+    norm_diff2_sum = diff2_sum / len(array_a)
     rmsd_val = np.sqrt(norm_diff2_sum)
 
     return rmsd_val
+
 
 def coord_rmsd(array_a, array_b):
     """
@@ -143,10 +157,11 @@ def find_largest(in_array, n_largest):
     indices = []
     while len(indices) < n_largest:
         flat_index = np.argmax(new_arr)
-        folded_index = np.unravel_index(flat_index,shape)
+        folded_index = np.unravel_index(flat_index, shape)
         indices.append(folded_index)
         new_arr[folded_index] = 0
     return indices
+
 
 def orthogonalise_sym(vectors):
     """
@@ -165,20 +180,21 @@ def orthogonalise_sym(vectors):
     o_vecs: 2 x 3 numpy array
         Orthogonalised vectors
     """
-    ang = vec_angle(vectors[0],vectors[1])
+    ang = vec_angle(vectors[0], vectors[1])
     remainder = 90 - ang
-    disp = remainder/2
-    perp_unnormal = np.cross(vectors[0],vectors[1])
+    disp = remainder / 2
+    perp_unnormal = np.cross(vectors[0], vectors[1])
     normal = perp_unnormal / np.linalg.norm(perp_unnormal)
 
-    rot_1 = rotation_matrix(normal,-disp)
-    rot_2 = rotation_matrix(normal,disp)
+    rot_1 = rotation_matrix(normal, -disp)
+    rot_2 = rotation_matrix(normal, disp)
 
-    ovec_1 = np.dot(rot_1,vectors[0])
-    ovec_2 = np.dot(rot_2,vectors[1])
+    ovec_1 = np.dot(rot_1, vectors[0])
+    ovec_2 = np.dot(rot_2, vectors[1])
 
-    o_vecs = np.array([ovec_1,ovec_2])
+    o_vecs = np.array([ovec_1, ovec_2])
     return o_vecs
+
 
 def orthogonalise_asym(vectors):
     """
@@ -197,19 +213,20 @@ def orthogonalise_asym(vectors):
         Orthogonalised vectors where the second one has been rotated to become
         orthogonal
     """
-    ang = vec_angle(vectors[0],vectors[1])
+    ang = vec_angle(vectors[0], vectors[1])
     remainder = 90 - ang
     disp = remainder
-    perp_unnormal = np.cross(vectors[0],vectors[1])
+    perp_unnormal = np.cross(vectors[0], vectors[1])
     normal = perp_unnormal / np.linalg.norm(perp_unnormal)
 
-    rot_2 = rotation_matrix(normal,disp)
+    rot_2 = rotation_matrix(normal, disp)
 
     ovec_1 = vectors[0]
-    ovec_2 = np.dot(rot_2,vectors[1])
+    ovec_2 = np.dot(rot_2, vectors[1])
 
-    o_vecs = np.array([ovec_1,ovec_2])
+    o_vecs = np.array([ovec_1, ovec_2])
     return o_vecs
+
 
 def array2atom(template, pos):
     """
@@ -229,16 +246,19 @@ def array2atom(template, pos):
         Resulting atoms
 
     """
-    sliced_pos = [pos[i:i + 3] for i in range(0, len(pos), 3)]
+    sliced_pos = [pos[i : i + 3] for i in range(0, len(pos), 3)]
     out_atoms = []
     for atom in zip(template, sliced_pos):
         new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
         out_atoms.append(new_atom)
     return out_atoms
 
+
 def dist_vec(coord_a, coord_b):
     """
     Return the vectors associate with the distance matrix between two sets of coordinates
+
+    The vectors are in the direction A->B
 
     Parameters
     ----------
@@ -251,9 +271,6 @@ def dist_vec(coord_a, coord_b):
         The matrix containing the vectors between all points
 
     """
-    displacements = coord_a[:,np.newaxis,:] - coord_b[np.newaxis,:,:]
+    displacements = coord_b[np.newaxis, :, :] - coord_a[:, np.newaxis, :]
 
     return displacements
-
-
-

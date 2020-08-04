@@ -79,8 +79,21 @@ def test_coord_rmsd():
     assert ao.coord_rmsd(ref, alt) == approx(np.sqrt(0.5))
 
 
-def test_dist_vectors():
-    """Test the zmatrix between three points and themselves"""
+def test_dist_vectors(set_of_points):
+    """Test the distance vectors between three points and themselves"""
+    test_vecs = np.array(
+        [
+            [[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]],
+            [[0.0, 0.0, -3.0], [0.0, 0.0, 0.0], [0.0, 4.0, -3.0]],
+            [[0.0, -4.0, 0.0], [0.0, -4.0, 3.0], [0.0, 0.0, 0.0]],
+        ]
+    )
+
+    assert ao.dist_vec(set_of_points, set_of_points) == approx(test_vecs)
+
+
+def test_dist_vectors_periodic():
+    """Test the distance vectors between three points and themselves in a cell"""
     points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]])
     test_zmat = np.array([[0.0, 3.0, 4.0], [3.0, 0.0, 5,], [4.0, 5.0, 0.0]])
 

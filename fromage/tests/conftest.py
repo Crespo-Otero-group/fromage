@@ -314,3 +314,10 @@ def mbi_opt_traj():
     """Traj object of a VASP optimisation"""
     traj = rf.traj_from_file(_in_data("MBI.OUTCAR"))
     return traj
+
+@pytest.fixture
+def set_of_points():
+    """Three points in cartesian space"""
+    points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]])
+    return points
+
