@@ -235,3 +235,25 @@ def array2atom(template, pos):
         new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
         out_atoms.append(new_atom)
     return out_atoms
+
+def dist_vec(coord_a, coord_b):
+    """
+    Return the vectors associate with the distance matrix between two sets of coordinates
+
+    Parameters
+    ----------
+    coord_a, coord_b : (M or N) x 3 numpy arrays
+        The coordinate arrays [[x1, y1, z1], [x2, y2, z2], ...]
+
+    Returns
+    -------
+    displacements : M x N x 3 numpy array
+        The matrix containing the vectors between all points
+
+    """
+    displacements = coord_a[:,np.newaxis,:] - coord_b[np.newaxis,:,:]
+
+    return displacements
+
+
+

@@ -77,3 +77,11 @@ def test_coord_rmsd():
     ref = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]])
     alt = np.array([[0.0, 0.0, 1.0], [1.0, 0.0, 0.0]])
     assert ao.coord_rmsd(ref, alt) == approx(np.sqrt(0.5))
+
+
+def test_dist_vectors():
+    """Test the zmatrix between three points and themselves"""
+    points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]])
+    test_zmat = np.array([[0.0, 3.0, 4.0], [3.0, 0.0, 5,], [4.0, 5.0, 0.0]])
+
+    ao.dist_vec(points, points) == approx(test_zmat)
