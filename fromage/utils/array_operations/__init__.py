@@ -1,5 +1,6 @@
 """Functions relating to numpy arrays"""
 import numpy as np
+import itertools
 from scipy.spatial.distance import cdist
 from fromage.utils.atom import Atom
 
@@ -253,6 +254,31 @@ def array2atom(template, pos):
         out_atoms.append(new_atom)
     return out_atoms
 
+def possible_translations(lat_vectors):
+    """
+    Return possible first order translations from a set of lattice vectors
+
+    Includes possitive and negative translations
+
+    Parameters
+    ----------
+    lat_vectors : 3 x 3 numpy array
+        Lattice vectors
+    Returns
+    -------
+    possible_trans : 27 x 3 numpy array
+        The 27 translations that can be made by adding together lattice vectors
+
+    """
+    multi = np.array([-1, 0, 1])
+    # NB the iterable needs to become a list before an array because the iterable
+    # loses its elements as soon as they get accessed, and arrays parse the
+    # elements by accessing them several times
+    multi_sets = np.array(list(itertools.product(multi,multi,multi)))
+    possible_trans = np.einsum('ij,jk->ij',multi_sets,lat_vectors)
+
+    return possible_trans
+
 
 def dist_vec(coord_a, coord_b):
     """
@@ -274,3 +300,47 @@ def dist_vec(coord_a, coord_b):
     displacements = coord_b[np.newaxis, :, :] - coord_a[:, np.newaxis, :]
 
     return displacements
+
+def per_dist_mat(coord_a, coord_b, lat_vec=None):
+    """
+    Return the distance matrix between two sets of coordinates
+
+    There is an option to do so within a periodic cell.
+
+    Parameters
+    ----------
+    coord_a, coord_b : (M or N) x 3 numpy arrays
+        The coordinate arrays [[x1, y1, z1], [x2, y2, z2], ...]
+    lat_vec: 3 x 3 numpy array or None
+        If lattice vectors are supplied, the distance vectors are chosen such that the
+        distance is the lowest, considering periodic images
+
+    Returns
+    -------
+    dis_mat : M x N numpy array
+        The distance matrix
+
+    """
+    displacements = dist_vec(coord_a, coord_b)
+
+    # not periodic case
+    if lat_vec is None:
+        dis_mat = np.linalg.norm(displacements,axis=-1)
+    # periodic case
+    else:
+        # get an array where, for each displacement, an additional axis of size
+        # 27 gives its results with the added possible translations
+        possible_disp = displacements[:,:,np.newaxis,:] + possible_translations(lat_vec)
+        # get the norms, in the shape M x N x 27
+        possible_norms = np.linalg.norm(possible_disp,axis=-1)
+        # pick the smallest of the 27 for each distance
+        dis_mat = np.min(possible_norms,axis=-1)
+
+    return dis_mat
+
+
+
+
+
+
+

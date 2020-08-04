@@ -315,9 +315,24 @@ def mbi_opt_traj():
     traj = rf.traj_from_file(_in_data("MBI.OUTCAR"))
     return traj
 
+
 @pytest.fixture
-def set_of_points():
+def three_points():
     """Three points in cartesian space"""
     points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]])
     return points
 
+
+@pytest.fixture
+def two_points():
+    """Three points in cartesian space"""
+    points = np.array([[0.0, 1.0, 0.0], [0.0, 0.0, 2.0]])
+    return points
+
+
+@pytest.fixture
+def lattice_vectors_555():
+    """Lattice vectors for a 5 Angstrom high cube"""
+    vecs = np.array([[5.0, 0.0, 0.0], [0.0, 5.0, 0.0], [0.0, 0.0, 5.0]])
+
+    return vecs

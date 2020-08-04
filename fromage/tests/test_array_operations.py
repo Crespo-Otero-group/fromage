@@ -79,7 +79,7 @@ def test_coord_rmsd():
     assert ao.coord_rmsd(ref, alt) == approx(np.sqrt(0.5))
 
 
-def test_dist_vectors(set_of_points):
+def test_dist_vectors_three_by_three(three_points):
     """Test the distance vectors between three points and themselves"""
     test_vecs = np.array(
         [
@@ -89,12 +89,35 @@ def test_dist_vectors(set_of_points):
         ]
     )
 
-    assert ao.dist_vec(set_of_points, set_of_points) == approx(test_vecs)
+    assert ao.dist_vec(three_points, three_points) == approx(test_vecs)
 
 
-def test_dist_vectors_periodic():
-    """Test the distance vectors between three points and themselves in a cell"""
-    points = np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 3.0], [0.0, 4.0, 0.0]])
-    test_zmat = np.array([[0.0, 3.0, 4.0], [3.0, 0.0, 5,], [4.0, 5.0, 0.0]])
+def test_dist_vectors_three_by_two(three_points, two_points):
+    """Test the distance vectors between three and two points"""
+    test_vecs = np.array(
+        [
+            [[0.0, 1.0, 0.0], [0.0, 0.0, 2.0]],
+            [[0.0, 1.0, -3.0], [0.0, 0.0, -1.0]],
+            [[0.0, -3.0, 0.0], [0.0, -4.0, 2.0]],
+        ]
+    )
 
-    ao.dist_vec(points, points) == approx(test_zmat)
+    assert ao.dist_vec(three_points, two_points) == approx(test_vecs)
+
+
+def test_dist_three_by_three(three_points):
+    """Test the distance vectors between three and themselves"""
+    test_dists = np.array([[0.0, 3.0, 4.0], [3.0, 0.0, 5.0], [4.0, 5.0, 0.0]])
+
+    assert ao.per_dist_mat(three_points, three_points) == approx(test_dists)
+
+
+def test_dist_three_by_three_per(three_points, lattice_vectors_555):
+    """Test the distance vectors between three and themselves in a cell"""
+    test_dists = np.array(
+        [[0.0, 2.0, 1.0], [2.0, 0.0, np.sqrt(5)], [1.0, np.sqrt(5), 0.0]]
+    )
+
+    assert ao.per_dist_mat(
+        three_points, three_points, lat_vec=lattice_vectors_555
+    ) == approx(test_dists)
