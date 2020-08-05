@@ -389,7 +389,29 @@ def frac_to_dir(coords, lat_vec):
 
     return dir_coords
 
-def per_translated(coords, trans, lat_vec):
+
+def confine(coords, lat_vec):
+    """
+    Translate all coordinates so that they fit in the conventional unit cell
+
+    Parameters
+    ----------
+    coords : N x 3 numpy array
+        Input coordinates
+    lat_vec : 3 x 3 numpy array
+        Lattice vectors
+    Returns
+    -------
+    confined_coords = N x 3 numpy array
+        Coordinates in direct space after being translated in the cell
+
+    """
+    confined_coords = frac_to_dir(dir_to_frac(coords, lat_vec), lat_vec)
+
+    return confined_coords
+
+
+def per_translate(coords, trans, lat_vec):
     """
     Translate atoms and then confine them to a conventional cell
 
@@ -407,4 +429,6 @@ def per_translated(coords, trans, lat_vec):
         Coordinate array after translation
 
     """
-    return 1
+    new_coords = confine(coords + trans, lat_vec)
+
+    return new_coords

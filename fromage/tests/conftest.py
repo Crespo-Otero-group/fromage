@@ -337,6 +337,7 @@ def lattice_vectors_555():
 
     return vecs
 
+
 @pytest.fixture
 def lattice_vectors_444():
     """Lattice vectors for a 4 Angstrom high cube"""

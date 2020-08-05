@@ -132,3 +132,16 @@ def test_frac_to_dir(vec_100, lattice_vectors_444):
     dir_coord = ao.frac_to_dir(frac_coord, lattice_vectors_444)
     assert_allclose(dir_coord, vec_100)
 
+def test_confine(lattice_vectors_444):
+    out_vec = np.array([6.0, 0.0, 0.0])
+    in_vec = ao.confine(out_vec, lattice_vectors_444)
+    test_in_vec = np.array([2.0, 0.0, 0.0])
+    assert_allclose(in_vec, test_in_vec)
+
+def test_per_translate(two_points, lattice_vectors_555):
+    translation = np.array([0.0, 6.0, 0.0])
+    new_points = ao.per_translate(two_points, translation, lattice_vectors_555)
+    test_translated = np.array([[0.0, 2.0, 0.0],[0.0, 1.0, 2.0]])
+    assert_allclose(new_points, test_translated)
+
+
