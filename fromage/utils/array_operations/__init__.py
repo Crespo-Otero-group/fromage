@@ -254,6 +254,7 @@ def array2atom(template, pos):
         out_atoms.append(new_atom)
     return out_atoms
 
+
 def possible_translations(lat_vectors):
     """
     Return possible first order translations from a set of lattice vectors
@@ -274,8 +275,8 @@ def possible_translations(lat_vectors):
     # NB the iterable needs to become a list before an array because the iterable
     # loses its elements as soon as they get accessed, and arrays parse the
     # elements by accessing them several times
-    multi_sets = np.array(list(itertools.product(multi,multi,multi)))
-    possible_trans = np.einsum('ij,jk->ij',multi_sets,lat_vectors)
+    multi_sets = np.array(list(itertools.product(multi, multi, multi)))
+    possible_trans = np.einsum("ij,jk->ij", multi_sets, lat_vectors)
 
     return possible_trans
 
@@ -301,6 +302,7 @@ def dist_vec(coord_a, coord_b):
 
     return displacements
 
+
 def per_dist_mat(coord_a, coord_b, lat_vec=None):
     """
     Return the distance matrix between two sets of coordinates
@@ -325,16 +327,84 @@ def per_dist_mat(coord_a, coord_b, lat_vec=None):
 
     # not periodic case
     if lat_vec is None:
-        dis_mat = np.linalg.norm(displacements,axis=-1)
+        dis_mat = np.linalg.norm(displacements, axis=-1)
     # periodic case
     else:
         # get an array where, for each displacement, an additional axis of size
         # 27 gives its results with the added possible translations
-        possible_disp = displacements[:,:,np.newaxis,:] + possible_translations(lat_vec)
+        possible_disp = displacements[:, :, np.newaxis, :] + possible_translations(
+            lat_vec
+        )
         # get the norms, in the shape M x N x 27
-        possible_norms = np.linalg.norm(possible_disp,axis=-1)
+        possible_norms = np.linalg.norm(possible_disp, axis=-1)
         # pick the smallest of the 27 for each distance
-        dis_mat = np.min(possible_norms,axis=-1)
+        dis_mat = np.min(possible_norms, axis=-1)
 
     return dis_mat
 
+
+def dir_to_frac(coords, lat_vec):
+    """
+    Return coordinates in fractional coordinates
+
+    Parameters
+    ----------
+     coords : N x 3 numpy array
+        Direct coordinate array
+    lat_vec: 3 x 3 numpy array or None
+        Lattice vectors
+    Returns
+    -------
+    frac_coords : N x 3 numpy array
+        Fractional coordinate array
+
+    """
+    # transpose lattice vectors
+    M = np.transpose(lat_vec)
+    # inverse transformation matrix
+    U = np.linalg.inv(M)
+    # apply transform and modulo 1
+    frac_coords = np.mod(np.dot(U, coords.T).T, 1)
+
+    return frac_coords
+
+
+def frac_to_dir(coords, lat_vec):
+    """
+    Return coordinates in direct coordinates
+
+    Parameters
+    ----------
+     coords : N x 3 numpy array
+        Fractional coordinate array
+    lat_vec: 3 x 3 numpy array or None
+        Lattice vectors
+    Returns
+    -------
+    dir_coords : N x 3 numpy array
+        Direct coordinate array
+
+    """
+    dir_coords = np.matmul(lat_vec.T, coords.T).T
+
+    return dir_coords
+
+def per_translated(coords, trans, lat_vec):
+    """
+    Translate atoms and then confine them to a conventional cell
+
+    Parameters
+    ----------
+    coords : N x 3 numpy array
+        Coordinate array
+    trans : length 3 numpy array
+        Translation vector
+    lat_vec: 3 x 3 numpy array or None
+        Lattice vectors
+    Returns
+    -------
+    new_coords : N x 3 numpy array
+        Coordinate array after translation
+
+    """
+    return 1

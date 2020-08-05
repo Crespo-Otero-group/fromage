@@ -154,3 +154,4 @@ def calc_axes(self):
     self.geom.prin_ax = axes[0]
     self.geom.sec_ax = axes[1]
     self.geom.perp_ax = axes[2]
+

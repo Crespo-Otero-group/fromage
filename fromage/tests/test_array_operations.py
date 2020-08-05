@@ -121,3 +121,14 @@ def test_dist_three_by_three_per(three_points, lattice_vectors_555):
     assert ao.per_dist_mat(
         three_points, three_points, lat_vec=lattice_vectors_555
     ) == approx(test_dists)
+
+def test_dir_to_frac(vec_100, lattice_vectors_444):
+    test_frac = np.array([0.25, 0.0, 0.0])
+    frac_coord = ao.dir_to_frac(vec_100, lattice_vectors_444)
+    assert_allclose(frac_coord, test_frac)
+
+def test_frac_to_dir(vec_100, lattice_vectors_444):
+    frac_coord = ao.dir_to_frac(vec_100, lattice_vectors_444)
+    dir_coord = ao.frac_to_dir(frac_coord, lattice_vectors_444)
+    assert_allclose(dir_coord, vec_100)
+

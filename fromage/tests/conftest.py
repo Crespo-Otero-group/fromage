@@ -336,3 +336,10 @@ def lattice_vectors_555():
     vecs = np.array([[5.0, 0.0, 0.0], [0.0, 5.0, 0.0], [0.0, 0.0, 5.0]])
 
     return vecs
+
+@pytest.fixture
+def lattice_vectors_444():
+    """Lattice vectors for a 4 Angstrom high cube"""
+    vecs = np.array([[4.0, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 4.0]])
+
+    return vecs
