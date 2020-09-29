@@ -54,7 +54,7 @@ def read_vasp(in_name):
     # reads names of elements and amounts
     species = vasp_content[5].split()
     amounts_str = vasp_content[6].split()
-    amounts = map(int, amounts_str)
+    amounts = [int(i) for i in amounts_str]
 
     # make Atom objects from file
     atoms = []
@@ -85,7 +85,7 @@ def read_xyz(in_name):
         Name of the file to read
     Returns
     -------
-    atom_step = list of lists of Atom objects
+    atom_step : list of lists of Atom objects
         Each element of the list represents a configuration of atoms
 
     """
@@ -121,9 +121,9 @@ def read_pos(in_name):
     """
     Return the last or only set of atomic positions in a file
 
-    Currently only .xyz files as they are the most common. To implement more
-    types, extend this function by parsing the extension but always return the
-    same. read_pos is to be preferred over read_xyz when only one set of
+    Currently only .xyz and vaspfiles as they are the most common. To implement
+    more types, extend this function by parsing the extension but always return
+    the same. read_pos is to be preferred over read_xyz when only one set of
     coordinates is relevant.
 
     Parameters
@@ -160,8 +160,14 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
         The atomic positions in the file as a Mol object
 
     """
-    mol = Mol(read_pos(in_name))
-    mol.vectors = vectors
+
+    if in_name.endswith('.xyz') or in_name.endswith('OUTCAR'):
+        mol = Mol(traj_from_file(in_name)[-1])
+        mol.vectors = vectors
+    elif in_name.endswith('POSCAR') or in_name.endswith('CONTCAR') or in_name.endswith('.vasp'):
+        vecs, atoms = read_vasp(in_name)
+        mol = Mol(atoms)
+        Mol.vectors = vecs
     mol.set_bonding_str(bonding)
 
     return mol
@@ -181,9 +187,9 @@ def traj_from_file(in_name):
 
     """
     # if it's an xyz file
-    if in_name[-4:] == '.xyz':
+    if in_name.endswith('.xyz'):
         traj = Traj(read_xyz(in_name))
-    if in_name[-6:] == 'OUTCAR':
+    elif in_name.endswith('OUTCAR'):
         traj = read_outcar_traj(in_name)
 
     return traj
