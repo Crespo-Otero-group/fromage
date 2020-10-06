@@ -30,46 +30,42 @@ def read_vasp(in_name):
         Name of the file to read
     Returns
     -------
-    M : 3x3 matrix
-        Lattice vectors
-    atoms : list of Atom types
-        Atoms in the file
+    mol : Mol object
+        Atomic positions
 
     """
+    vectors = np.zeros((3,3))
+    species = None
+    amounts = []
+    positions = []
     with open(in_name) as vasp_file:
-        vasp_content = vasp_file.readlines()
+        counter = 0
+        reading_pos = False
+        for line in vasp_file:
+            if counter == 2:
+                vectors[0] == np.array([float(i) for i in line.split()])
+            if counter == 3:
+                vectors[1] == np.array([float(i) for i in line.split()])
+            if counter == 4:
+                vectors[2] == np.array([float(i) for i in line.split()])
+            if counter == 5:
+                species = line.split()
+            if counter == 6:
+                amounts = [int(i) for i in line.split()]
+            if 8 <= counter <= 8 + sum(amounts):
+                reading_pos = True
+            if counter > 8 + sum(amounts):
+                break
+            if reading_pos:
+                pos = [float(i) for i in line.split()]
+                positions.append(pos)
+            counter += 1
+    elems_nested = [i*[j] for i,j in zip(amounts,species)]
+    elems_flat = [item for sublist in elems_nested for item in sublist]
 
-    # lattice vectors
-
-    vec1 = vasp_content[2].split()
-    vec2 = vasp_content[3].split()
-    vec3 = vasp_content[4].split()
-
-    # matrix from vectors
-    M = np.zeros((3, 3))
-    M[0] = vec1
-    M[1] = vec2
-    M[2] = vec3
-
-    # reads names of elements and amounts
-    species = vasp_content[5].split()
-    amounts_str = vasp_content[6].split()
-    amounts = [int(i) for i in amounts_str]
-
-    # make Atom objects from file
-    atoms = []
-    for element in species:
-
-        # position of the first and last atom of one kind
-        # in the vasp file
-        firstAt = 8 + sum(amounts[:species.index(element)])
-        lastAt = 8 + sum(amounts[:species.index(element) + 1])
-
-        for line in vasp_content:
-            if vasp_content.index(line) in range(firstAt, lastAt):
-                xAtom, yAtom, zAtom = map(float, line.split())
-                atoms.append(Atom(element, xAtom, yAtom, zAtom))
-    return M, atoms
+    mol = Mol([Atom(i,j[0],j[1],j[2]) for i,j in zip(elems_flat, positions)])
+    mol.vectors = vectors
+    return mol
 
 
 def read_xyz(in_name):
@@ -165,9 +161,9 @@ def mol_from_file(in_name, bonding='', vectors=np.zeros((3, 3))):
         mol = Mol(traj_from_file(in_name)[-1])
         mol.vectors = vectors
     elif in_name.endswith('POSCAR') or in_name.endswith('CONTCAR') or in_name.endswith('.vasp'):
-        vecs, atoms = read_vasp(in_name)
-        mol = Mol(atoms)
-        Mol.vectors = vecs
+        mol = read_vasp(in_name)
+    else:
+        raise ValueError("Did not recognise file type.")
     mol.set_bonding_str(bonding)
 
     return mol
