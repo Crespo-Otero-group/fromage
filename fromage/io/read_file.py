@@ -43,11 +43,11 @@ def read_vasp(in_name):
         reading_pos = False
         for line in vasp_file:
             if counter == 2:
-                vectors[0] == np.array([float(i) for i in line.split()])
+                vectors[0] = np.array([float(i) for i in line.split()])
             if counter == 3:
-                vectors[1] == np.array([float(i) for i in line.split()])
+                vectors[1] = np.array([float(i) for i in line.split()])
             if counter == 4:
-                vectors[2] == np.array([float(i) for i in line.split()])
+                vectors[2] = np.array([float(i) for i in line.split()])
             if counter == 5:
                 species = line.split()
             if counter == 6:
