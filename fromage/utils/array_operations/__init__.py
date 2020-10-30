@@ -349,7 +349,7 @@ def dir_to_frac(coords, lat_vec):
 
     Parameters
     ----------
-     coords : N x 3 numpy array
+    coords : N x 3 numpy array
         Direct coordinate array
     lat_vec: 3 x 3 numpy array or None
         Lattice vectors
@@ -375,7 +375,7 @@ def frac_to_dir(coords, lat_vec):
 
     Parameters
     ----------
-     coords : N x 3 numpy array
+    coords : N x 3 numpy array
         Fractional coordinate array
     lat_vec: 3 x 3 numpy array or None
         Lattice vectors
