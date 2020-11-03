@@ -2,7 +2,7 @@ Input file description
 ######################
 
 **fromage** uses input files at two points of its execution. During the preparatory
-calculation (using ``fro_prep_calc.py``), the ``config`` file is required.
+calculation (using ``fro_prep_run.py``), the ``config`` file is required.
 During the actual geometry optimisation (``run_fromage.py``), the file ``fromage.in``
 is read if present.
 
