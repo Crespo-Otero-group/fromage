@@ -205,10 +205,7 @@ This utility does operations on xyz files paired up with unit cell vector files.
 ```
 Options include extracting the nonequivalent monomers from the cell, generating a tessalating cell but with all complete molecules (therefore spilling out of the bounding box of the unit cell vectors), confining a cell to the bounding box and creating supercells.
 
-## 5 Contributors 
-The core algorithms in 'fromage' were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimisation of different regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
-
-## 6 Some parting words
+## 5 Some parting words
 
 If you find yourself with a bunch of error files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
 
@@ -219,6 +216,10 @@ Hacking this program for your own personal needs is a perfectly good idea and yo
 If all you want to do is integrate your favourite quantum chemistry package into fromage, all you need to do is a) add new io routines in `read_file` and `edit_file` b) make a new `Calc` object modeled after one of the existing ones in the `calc` module c) Add the class and corresponding keyword to the `calc_types` at the top of the `calc` module
 
 The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with `fro_prep_run.py`.
+
+
+## 6 Contributors 
+The core algorithms in 'fromage' were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimisation of different regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
 
 --------------------------------------------------------------------------------
 
