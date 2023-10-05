@@ -205,7 +205,10 @@ This utility does operations on xyz files paired up with unit cell vector files.
 ```
 Options include extracting the nonequivalent monomers from the cell, generating a tessalating cell but with all complete molecules (therefore spilling out of the bounding box of the unit cell vectors), confining a cell to the bounding box and creating supercells.
 
-## 5 Some parting words
+## 5 Contributors 
+The core algorithms in 'fromage' were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimization of QM regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
+
+## 6 Some parting words
 
 If you find yourself with a bunch of error files during your optimisation, ask yourself where some calculations might have failed in the geometry optimisation. Maybe some SCF did not converge or your central molecule escaped the cluster to be with its one true love: infinitely attractive point charges. To combat this, try adding more molecules to your cluster.
 
