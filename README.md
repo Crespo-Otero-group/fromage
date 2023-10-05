@@ -8,7 +8,7 @@ https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](h
 
 **fromage** (FRamewOrk for Molecular AGgregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state. It contains utilities for geometry manipulation going from periodic to finite models, exciton analysis and ONIOM calculations. The current version is 1.0
 
-**fromage** is developed at Queen Mary University of London by the [Crespo-Otero group](https://crespootero.wordpress.com/). We acknowledge the EPRSC for funding this project [(EP/R029385/1)](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/R029385/1).
+**fromage** is developed at Queen Mary University of London and University College London by the [Crespo-Otero group](https://crespootero.wordpress.com/). We acknowledge the EPRSC for funding this project [(EP/R029385/1)](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/R029385/1) and Leverhulme Trust [(RPG-2019-122)](https://www.leverhulme.ac.uk/listings?field_grant_scheme_target_id=13).
 
 The documentation can be found [here](https://fromage.readthedocs.io/).
 
@@ -220,6 +220,6 @@ The Ewald program is often the source of all of your problems when tinkering wit
 --------------------------------------------------------------------------------
 
 More detailed instructions can be found in the [documentation](https://fromage.readthedocs.io/).
-For any questions about usage, citing or contributing, please email our group at r.crespo-otero@qmul.ac.uk
+For any questions about usage, citing or contributing, please email our group at r.crespo-otero@ucl.ac.uk
 
--Miguel Rivera
+-The Crespo-Otero group 
