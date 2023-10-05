@@ -219,7 +219,7 @@ The Ewald program is often the source of all of your problems when tinkering wit
 
 
 ## 6 Contributors 
-The core algorithms in 'fromage' were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimisation of different regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
+The core algorithms in fromage were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimisation of different regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
 
 --------------------------------------------------------------------------------
 
