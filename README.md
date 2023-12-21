@@ -1,5 +1,5 @@
-<![![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage) [![Docs](
-https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](https://fromage.readthedocs.io/en/latest/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Crespo-Otero-group/fromage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Crespo-Otero-group/fromage/context:python)>
+<!--[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage) [![Docs](
+https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](https://fromage.readthedocs.io/en/latest/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Crespo-Otero-group/fromage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Crespo-Otero-group/fromage/context:python)-->
 
 
 <p align="left">
