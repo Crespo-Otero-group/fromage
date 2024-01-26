@@ -187,7 +187,7 @@ def orthogonalise_asym(vectors):
     o_vecs = np.array([ovec_1,ovec_2])
     return o_vecs
 
-def array2atom(template, pos, q = None): 
+def array2atom(template, pos):
     """
     Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
     objects
@@ -199,8 +199,6 @@ def array2atom(template, pos, q = None):
         elements of the atoms
     pos : list of floats
         List of coordinates of the form x1, y1, z1, x2, y2, z2 etc.
-    q : array of floats
-        array with the charges of the flexible QM' region
     Returns
     -------
     out_atoms : list of Atom objects
@@ -209,12 +207,7 @@ def array2atom(template, pos, q = None):
     """
     sliced_pos = [pos[i:i + 3] for i in range(0, len(pos), 3)]
     out_atoms = []
-    count = 0 # FJH
     for atom in zip(template, sliced_pos):
-        if q is not None: # FJH
-            new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], q[count]) # FJH
-        else: # FJH
-            new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
+        new_atom = Atom(atom[0].elem, atom[1][0], atom[1][1], atom[1][2], 0)
         out_atoms.append(new_atom)
-        count += 1
     return out_atoms
