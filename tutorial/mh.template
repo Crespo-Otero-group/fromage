@@ -1,0 +1,12 @@
+%chk=gck.chk
+%mem=28GB
+%nproc=4
+#pbepbe 6-31g* charge force symmetry=none
+
+mh
+
+0 1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX
+

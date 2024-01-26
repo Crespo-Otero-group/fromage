@@ -1,0 +1,2196 @@
+@article{Kistler2013,
+    title = {{A Benchmark of Excitonic Couplings Derived From Atomic Transition Charges}},
+    year = {2013},
+    journal = {J. Phys. Chem. B},
+    author = {Kistler, Kurt A. and Spano, Francis C. and Matsika, Spiridoula},
+    number = {7},
+    month = {2},
+    pages = {2032--2044},
+    volume = {117},
+    url = {http://pubs.acs.org/doi/10.1021/jp310603z},
+    isbn = {1520-6106},
+    doi = {10.1021/jp310603z},
+    issn = {1520-6106},
+    pmid = {23391106}
+}
+
+@article{Li2013a,
+    title = {{A Conical Intersection Model to Explain Aggregation Induced Emission in Diphenyl Dibenzofulvene}},
+    year = {2013},
+    journal = {ChemComm},
+    author = {Li, Quansong and Blancafort, Lluís},
+    number = {53},
+    pages = {5966--5968},
+    volume = {49},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/23715286 http://xlink.rsc.org/?DOI=c3cc41730a},
+    isbn = {1359-7345 Unique ID: WOS:000319987600018},
+    doi = {10.1039/c3cc41730a},
+    issn = {1359-7345},
+    pmid = {23715286}
+}
+
+@article{Henkelman2006,
+    title = {{A Fast and Robust Algorithm for Bader Decomposition of Charge Density}},
+    year = {2006},
+    journal = {Comput. Mater. Sci.},
+    author = {Henkelman, Graeme and Arnaldsson, Andri and J{\'{o}}nsson, Hannes},
+    number = {3},
+    month = {6},
+    pages = {354--360},
+    volume = {36},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0927025605001849},
+    isbn = {0927-0256},
+    doi = {10.1016/j.commatsci.2005.04.010},
+    issn = {09270256},
+    pmid = {17255001},
+    arxivId = {cs/9605103},
+    keywords = {Atomic charges, Atoms in molecules, Bader analysis, Boron clusters, Electron density analysis, Linear scaling algorithm}
+}
+
+@article{Tang2009,
+    title = {{A Grid-Based Bader Analysis Algorithm Without Lattice Bias}},
+    year = {2009},
+    journal = {J. Phys. Condens. Matter},
+    author = {Tang, W and Sanville, E and Henkelman, G},
+    number = {8},
+    month = {2},
+    pages = {084204},
+    volume = {21},
+    url = {http://stacks.iop.org/0953-8984/21/i=8/a=084204?key=crossref.84a8e56b7ca1da94922dada58295eda5},
+    isbn = {0953-8984},
+    doi = {10.1088/0953-8984/21/8/084204},
+    issn = {0953-8984},
+    pmid = {21817356}
+}
+
+@article{Li2014a,
+    title = {{A Hybridized Local and Charge-Transfer Excited State for Highly Efficient Fluorescent OLEDs: Molecular Design, Spectral Character, and Full Exciton Utilization}},
+    year = {2014},
+    journal = {Adv. Opt. Mater.},
+    author = {Li, Weijun and Pan, Yuyu and Yao, Liang and Liu, Haichao and Zhang, Shitong and Wang, Chu and Shen, Fangzhong and Lu, Ping and Yang, Bing and Ma, Yuguang},
+    number = {9},
+    month = {9},
+    pages = {892--901},
+    volume = {2},
+    url = {http://doi.wiley.com/10.1002/adom.201400154},
+    isbn = {2195-1071},
+    doi = {10.1002/adom.201400154},
+    issn = {21951071},
+    keywords = {Electroluminescence, Exciton utilization efficiency, Hot excitons, Hybridized local and charge transfer states, Twisting donor-acceptor molecule}
+}
+
+@article{Dapprich1999,
+    title = {{A New ONIOM Implementation in Gaussian98. Part I. The Calculation of Energies, Gradients, Vibrational Frequencies and Electric Field Derivatives}},
+    year = {1999},
+    journal = {Theochem},
+    author = {Dapprich, Stefan and Kom{\'{a}}romi, István and Byun, K.Suzie and Morokuma, Keiji and Frisch, Michael J.},
+    month = {4},
+    pages = {1--21},
+    volume = {461-462},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0166128098004758},
+    isbn = {0166-1280},
+    doi = {10.1016/S0166-1280(98)00475-8},
+    issn = {01661280},
+    keywords = {Ab initio methods, Energy gradients, Molecular properties, ONIOM}
+}
+
+@article{Loco2016,
+    title = {{A QM/MM Approach Using the AMOEBA Polarizable Embedding: From Ground State Energies to Electronic Excitations}},
+    year = {2016},
+    journal = {J. Chem. Theory Comput.},
+    author = {Loco, Daniele and Polack, Étienne and Caprasecca, Stefano and Lagard{\`{e}}re, Louis and Lipparini, Filippo and Piquemal, Jean-Philip and Mennucci, Benedetta},
+    number = {8},
+    month = {8},
+    pages = {3654--3661},
+    volume = {12},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jctc.6b00385},
+    doi = {10.1021/acs.jctc.6b00385},
+    issn = {1549-9618},
+    pmid = {27340904}
+}
+
+@article{Cornell1995,
+    title = {{A Second Generation Force Field for the Simulation of Proteins, Nucleic Acids, and Organic Molecules}},
+    year = {1995},
+    journal = {J. Am. Chem. Soc.},
+    author = {Cornell, Wendy D. and Cieplak, Piotr and Bayly, Christopher I. and Gould, Ian R. and Merz, Kenneth M. and Ferguson, David M. and Spellmeyer, David C. and Fox, Thomas and Caldwell, James W. and Kollman, Peter A.},
+    number = {19},
+    month = {5},
+    pages = {5179--5197},
+    volume = {117},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ja00124a002},
+    isbn = {0120261464},
+    doi = {10.1021/ja00124a002},
+    issn = {0002-7863},
+    pmid = {14601413},
+    arxivId = {z0024}
+}
+
+@article{Cai2012a,
+    title = {{A Small Change in Molecular Structure, a Big Difference in the AIEE Mechanism}},
+    year = {2012},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Cai, Minmin and Gao, Zhiqiang and Zhou, Xinhui and Wang, Xupeng and Chen, Shufen and Zhao, Yuezhi and Qian, Yan and Shi, Naien and Mi, Baoxiu and Xie, Linghai and Huang, Wei},
+    number = {15},
+    pages = {5289},
+    volume = {14},
+    url = {http://xlink.rsc.org/?DOI=c2cp23040b},
+    isbn = {1463-9084},
+    doi = {10.1039/c2cp23040b},
+    issn = {1463-9076},
+    pmid = {22403766}
+}
+
+@article{Davidson1992,
+    title = {{A Test of the Hirshfeld Definition of Atomic Charges and Moments}},
+    year = {1992},
+    journal = {Theor. Chim. Acta.},
+    author = {Davidson, Ernest R. and Chakravorty, Subhas},
+    number = {5-6},
+    pages = {319--330},
+    volume = {83},
+    url = {http://link.springer.com/10.1007/BF01113058},
+    isbn = {0040-5744},
+    doi = {10.1007/BF01113058},
+    issn = {0040-5744},
+    pmid = {2143},
+    keywords = {"Local" moments, Charges, Hirshfeld population analysis, Molecular density}
+}
+
+@article{Bayly1993,
+    title = {{A Well-Behaved Electrostatic Potential Based Method Using Charge Restraints for Deriving Atomic Charges: The RESP Model}},
+    year = {1993},
+    journal = {J. Phys. Chem.},
+    author = {Bayly, Christopher I. and Cieplak, Piotr and Cornell, Wendy and Kollman, Peter a},
+    number = {40},
+    month = {10},
+    pages = {10269--10280},
+    volume = {97},
+    url = {http://pubs.acs.org/doi/abs/10.1021/j100142a004},
+    isbn = {0022-3654},
+    doi = {10.1021/j100142a004},
+    issn = {0022-3654},
+    pmid = {22},
+    arxivId = {0022-3654/93/2091- 10269{\$}04.00/0}
+}
+
+@article{Morrison2014a,
+    title = {{Ab Initio Implementation of the Frenkel–Davydov Exciton Model: A Naturally Parallelizable Approach to Computing Collective Excitations in Crystals and Aggregates}},
+    year = {2014},
+    journal = {J. Chem. Theory Comput.},
+    author = {Morrison, Adrian F. and You, Zhi-Qiang and Herbert, John M.},
+    number = {12},
+    month = {12},
+    pages = {5366--5376},
+    volume = {10},
+    url = {http://pubs.acs.org/doi/10.1021/ct500765m},
+    isbn = {1549-9618},
+    doi = {10.1021/ct500765m},
+    issn = {1549-9618},
+    pmid = {26583220}
+}
+
+@article{Govind1998,
+    title = {{Accurate Ab Initio Energetics of Extended Systems via Explicit Correlation Embedded in a Density Functional Environment}},
+    year = {1998},
+    journal = {Chem. Phys. Lett.},
+    author = {Govind, N. and Wang, Y.A. and da Silva, A.J.R. and Carter, E.A.},
+    number = {1-2},
+    month = {10},
+    pages = {129--134},
+    volume = {295},
+    url = {http://www.sciencedirect.com/science/article/pii/S0009261498009397%5Cnhttp://linkinghub.elsevier.com/retrieve/pii/S0009261498009397 http://linkinghub.elsevier.com/retrieve/pii/S0009261498009397},
+    isbn = {00092614},
+    doi = {10.1016/S0009-2614(98)00939-7},
+    issn = {00092614}
+}
+
+@article{Yu2011,
+    title = {{Accurate and Efficient Algorithm for Bader Charge Integration}},
+    year = {2011},
+    journal = {J. Chem. Phys.},
+    author = {Yu, Min and Trinkle, Dallas R.},
+    number = {6},
+    month = {2},
+    pages = {064111},
+    volume = {134},
+    url = {http://aip.scitation.org/doi/10.1063/1.3553716},
+    isbn = {0021-9606},
+    doi = {10.1063/1.3553716},
+    issn = {0021-9606},
+    pmid = {21322665},
+    arxivId = {1010.4916}
+}
+
+@article{Klintenberg2000,
+    title = {{Accurate Crystal Fields for Embedded Cluster Calculations}},
+    year = {2000},
+    journal = {Comput. Phys. Commun.},
+    author = {Klintenberg, M. and Derenzo, S.E. and Weber, M.J.},
+    number = {1-2},
+    month = {9},
+    pages = {120--128},
+    volume = {131},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0010465500000710},
+    isbn = {0898713455},
+    doi = {10.1016/S0010-4655(00)00071-0},
+    issn = {00104655},
+    keywords = {crystal field potential, embedded cluster calculation, ewald potential}
+}
+
+@article{Zhang2014,
+    title = {{Aggregation Effects on the Optical Emission of 1,1,2,3,4,5-Hexaphenylsilole (HPS): A QM/MM Study}},
+    year = {2014},
+    journal = {J. Phys. Chem. A},
+    author = {Zhang, Tian and Jiang, Yuqian and Niu, Yingli and Wang, Dong and Peng, Qian and Shuai, Zhigang},
+    number = {39},
+    month = {10},
+    pages = {9094--9104},
+    volume = {118},
+    url = {http://pubs.acs.org/doi/10.1021/jp5021017},
+    isbn = {1520-5215 (Electronic){\textbackslash}n1089-5639 (Linking)},
+    doi = {10.1021/jp5021017},
+    issn = {1089-5639},
+    pmid = {24921662}
+}
+
+@article{Wu2014,
+    title = {{Aggregation Induced Blue-Shifted Emission – The Molecular Picture From a QM/MM Study}},
+    year = {2014},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Wu, Qunyan and Zhang, Tian and Peng, Qian and Wang, Dong and Shuai, Zhigang},
+    number = {12},
+    pages = {5545--5552},
+    volume = {16},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/24509542 http://xlink.rsc.org/?DOI=C3CP54910K},
+    doi = {10.1039/C3CP54910K},
+    issn = {1463-9076},
+    pmid = {24509542}
+}
+
+@article{Yin2006,
+    title = {{Aggregation-Enhanced Luminescence and Vibronic Coupling of Silole Molecules From First Principles}},
+    year = {2006},
+    journal = {Phys. Rev. B},
+    author = {Yin, Shiwei and Peng, Qian and Shuai, Z. and Fang, Weihai and Wang, Yan-Hua and Luo, Yi},
+    number = {20},
+    month = {5},
+    pages = {205409},
+    volume = {73},
+    url = {https://link.aps.org/doi/10.1103/PhysRevB.73.205409},
+    isbn = {1098-0121},
+    doi = {10.1103/PhysRevB.73.205409},
+    issn = {1098-0121}
+}
+
+@article{Sun2015a,
+    title = {{Aggregation-Induced Emission Mechanism of Dimethoxy-Tetraphenylethylene in Water Solution: Molecular Dynamics and QM/MM Investigations}},
+    year = {2015},
+    journal = {J. Chem. Theory Comput.},
+    author = {Sun, Guangxu and Zhao, Yi and Liang, WanZhen},
+    number = {5},
+    month = {5},
+    pages = {2257--2267},
+    volume = {11},
+    url = {http://pubs.acs.org/doi/10.1021/ct5009312},
+    doi = {10.1021/ct5009312},
+    issn = {1549-9618},
+    pmid = {26574424}
+}
+
+@article{Viglianti2017b,
+    title = {{Aggregation-Induced Emission: Mechanistic Study of the Clusteroluminescence of Tetrathienylethene}},
+    year = {2017},
+    journal = {Chem. Sci.},
+    author = {Viglianti, Lucia and Leung, Nelson L. C. and Xie, Ni and Gu, Xinggui and Sung, Herman H. Y. and Miao, Qian and Williams, Ian D. and Licandro, Emanuela and Tang, Ben Zhong},
+    number = {4},
+    pages = {2629--2639},
+    volume = {8},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C6SC05192H},
+    doi = {10.1039/C6SC05192H},
+    issn = {2041-6520}
+}
+
+@article{Hong2009a,
+    title = {{Aggregation-Induced Emission: Phenomenon, Mechanism and Applications}},
+    year = {2009},
+    journal = {ChemComm},
+    author = {Hong, Yuning and Lam, Jacky W. Y. and Tang, Ben Zhong},
+    number = {29},
+    pages = {4332},
+    url = {http://xlink.rsc.org/?DOI=b904665h},
+    isbn = {1359-7345},
+    doi = {10.1039/b904665h},
+    issn = {1359-7345},
+    pmid = {19597589}
+}
+
+@article{Mei2014a,
+    title = {{Aggregation-Induced Emission: The Whole Is More Brilliant Than the Parts}},
+    year = {2014},
+    journal = {Adv. Mater.},
+    author = {Mei, Ju and Hong, Yuning and Lam, Jacky W. Y. and Qin, Anjun and Tang, Youhong and Tang, Ben Zhong},
+    number = {31},
+    month = {8},
+    pages = {5429--5479},
+    volume = {26},
+    url = {http://doi.wiley.com/10.1002/adma.201401356},
+    isbn = {1521-4095 (Electronic){\textbackslash}r0935-9648 (Linking)},
+    doi = {10.1002/adma.201401356},
+    issn = {09359648},
+    pmid = {24975272},
+    keywords = {aggregation-induced emission, biomedical probes, chemical sensors, optoelectronic materials, restriction of intramolecular motions}
+}
+
+@article{Mei2015b,
+    title = {{Aggregation-Induced Emission: Together We Shine, United We Soar!}},
+    year = {2015},
+    journal = {Chem. Rev.},
+    author = {Mei, Ju and Leung, Nelson L C and Kwok, Ryan T K and Lam, Jacky W Y and Tang, Ben Zhong},
+    number = {21},
+    month = {11},
+    pages = {11718--11940},
+    volume = {115},
+    url = {http://pubs.acs.org/doi/10.1021/acs.chemrev.5b00263},
+    isbn = {1520-6890 (Electronic){\textbackslash}r0009-2665 (Linking)},
+    doi = {10.1021/acs.chemrev.5b00263},
+    issn = {0009-2665},
+    pmid = {26492387}
+}
+
+@article{Nam2005a,
+    title = {{An Efficient Linear-Scaling Ewald Method for Long-Range Electrostatic Interactions in Combined QM/MM Calculations}},
+    year = {2005},
+    journal = {J. Chem. Theory Comput.},
+    author = {Nam, Kwangho and Gao, Jiali and York, Darrin M.},
+    number = {1},
+    month = {1},
+    pages = {2--13},
+    volume = {1},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct049941i},
+    isbn = {1549-9618},
+    doi = {10.1021/ct049941i},
+    issn = {1549-9618}
+}
+
+@article{Kobayashi2015a,
+    title = {{Application of Particle-Mesh Ewald Summation to ONIOM Theory}},
+    year = {2015},
+    journal = {Chem. Phys.},
+    author = {Kobayashi, Osamu and Nanbu, Shinkoh},
+    month = {11},
+    pages = {47--57},
+    volume = {461},
+    publisher = {Elsevier B.V.},
+    url = {http://dx.doi.org/10.1016/j.chemphys.2015.08.021 http://linkinghub.elsevier.com/retrieve/pii/S0301010415002621},
+    doi = {10.1016/j.chemphys.2015.08.021},
+    issn = {03010104},
+    keywords = {Nonadiabatic transition, ONIOM, Periodic boundary condition, Protonated Schiff base}
+}
+
+@article{Tuna2015a,
+    title = {{Assessment of Approximate Coupled-Cluster and Algebraic-Diagrammatic-Construction Methods for Ground- And Excited-State Reaction Paths and the Conical-Intersection Seam of a Retinal-Chromophore Model}},
+    year = {2015},
+    journal = {J. Chem. Theory Comput.},
+    author = {Tuna, Deniz and Lefrancois, Daniel and Wola{\'{n}}ski, Łukasz and Gozem, Samer and Schapiro, Igor and Andruni{\'{o}}w, Tadeusz and Dreuw, Andreas and Olivucci, Massimo},
+    number = {12},
+    month = {12},
+    pages = {5758--5781},
+    volume = {11},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jctc.5b00022},
+    isbn = {1549-9618},
+    doi = {10.1021/acs.jctc.5b00022},
+    issn = {1549-9618},
+    pmid = {26642989}
+}
+
+@article{Lee2015,
+    title = {{Boosting Photon Harvesting in Organic Solar Cells With Highly Oriented Molecular Crystals via Graphene–Organic Heterointerface}},
+    year = {2015},
+    journal = {ACS Nano},
+    author = {Jo, Sae Byeok and Kim, Hyun Ho and Lee, Hansol and Kang, Boseok and Lee, Seongkyu and Sim, Myungsun and Kim, Min and Lee, Wi Hyoung and Cho, Kilwon},
+    number = {8},
+    month = {8},
+    pages = {8206--8219},
+    volume = {9},
+    url = {http://pubs.acs.org/doi/10.1021/acsnano.5b03929 http://www.ncbi.nlm.nih.gov/pubmed/25707617},
+    isbn = {1936-0851},
+    doi = {10.1021/acsnano.5b03929},
+    issn = {1936-0851},
+    pmid = {25707617},
+    keywords = {epitaxial growth, graphene, heterointerface, molecular orientation, organic solar cells, planar heterojunction}
+}
+
+@article{Weber2010,
+    title = {{Calculation of NMR Parameters in Ionic Solids by an Improved Self-Consistent Embedded Cluster Method}},
+    year = {2010},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Weber, Johannes and Schmedt auf der G{\"{u}}nne, Jörn},
+    number = {3},
+    pages = {583--603},
+    volume = {12},
+    url = {http://xlink.rsc.org/?DOI=B909870D},
+    isbn = {1463-9076},
+    doi = {10.1039/B909870D},
+    issn = {1463-9076},
+    pmid = {20066345}
+}
+
+@article{Shirota2007,
+    title = {{Charge Carrier Transporting Molecular Materials and Their Applications in Devices.}},
+    year = {2007},
+    journal = {Chem. Rev.},
+    author = {Shirota, Yasuhiko and Kageyama, Hiroshi},
+    number = {4},
+    month = {4},
+    pages = {953--1010},
+    volume = {107},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/17428022},
+    isbn = {0009-2665},
+    doi = {10.1021/cr050143+},
+    issn = {0009-2665},
+    pmid = {17428022}
+}
+
+@article{Metz2014,
+    title = {{ChemShell-a Modular Software Package for QM/MM Simulations}},
+    year = {2014},
+    journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+    author = {Metz, Sebastian and K{\"{a}}stner, Johannes and Sokol, Alexey A. and Keal, Thomas W. and Sherwood, Paul},
+    number = {2},
+    month = {3},
+    pages = {101--110},
+    volume = {4},
+    url = {http://doi.wiley.com/10.1002/wcms.1163},
+    isbn = {1759-0876},
+    doi = {10.1002/wcms.1163},
+    issn = {17590876}
+}
+
+@incollection{Tosi1964,
+    title = {{Cohesion of Ionic Solids in the Born Model}},
+    year = {1964},
+    booktitle = {Solid State Physics - Advances in Research and Applications},
+    author = {Tosi, Mario P.},
+    number = {C},
+    pages = {1--120},
+    volume = {16},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0081194708605159},
+    isbn = {0081-1947},
+    doi = {10.1016/S0081-1947(08)60515-9},
+    issn = {00811947}
+}
+
+@article{Presti2014,
+    title = {{Computational Protocol for Modeling Thermochromic Molecular Crystals: Salicylidene Aniline as a Case Study}},
+    year = {2014},
+    journal = {J. Chem. Theory Comput.},
+    author = {Presti, Davide and Labat, Fréderic and Pedone, Alfonso and Frisch, Michael J. and Hratchian, Hrant P. and Ciofini, Ilaria and Menziani, Maria Cristina and Adamo, Carlo},
+    number = {12},
+    month = {12},
+    pages = {5577--5585},
+    volume = {10},
+    url = {http://pubs.acs.org/doi/10.1021/ct500868s},
+    doi = {10.1021/ct500868s},
+    issn = {1549-9618},
+    pmid = {26583240}
+}
+
+@article{Presti2014b,
+    title = {{Computational Protocol for Modeling Thermochromic Molecular Crystals: Salicylidene Aniline as a Case Study}},
+    year = {2014},
+    journal = {J. Chem. Theory Comput.},
+    author = {Presti, Davide and Labat, Fréderic and Pedone, Alfonso and Frisch, Michael J. and Hratchian, Hrant P. and Ciofini, Ilaria and Menziani, Maria Cristina and Adamo, Carlo},
+    number = {12},
+    month = {12},
+    pages = {5577--5585},
+    volume = {10},
+    url = {http://pubs.acs.org/doi/10.1021/ct500868s},
+    doi = {10.1021/ct500868s},
+    issn = {1549-9618},
+    pmid = {26583240}
+}
+
+@article{Levine2006,
+    title = {{Conical Intersections and Double Excitations in Time-Dependent Density Functional Theory}},
+    year = {2006},
+    journal = {Mol. Phys.},
+    author = {Levine, Benjamin G and Ko, Chaehyuk and Quenneville, Jason and Mart{\'{I}}nez, Todd J.},
+    number = {5-7},
+    month = {3},
+    pages = {1039--1051},
+    volume = {104},
+    url = {http://www.tandfonline.com/doi/abs/10.1080/00268970500417762},
+    isbn = {0026897050041},
+    doi = {10.1080/00268970500417762},
+    issn = {0026-8976},
+    keywords = {initio molecular-dynamics cis-trans photoisomeriza}
+}
+
+@article{Cui2011a,
+    title = {{Conical Intersections in Solution: Formulation, Algorithm, and Implementation With Combined Quantum Mechanics/Molecular Mechanics Method}},
+    year = {2011},
+    journal = {J. Chem. Phys.},
+    author = {Cui, Ganglong and Yang, Weitao},
+    number = {20},
+    month = {5},
+    pages = {204115},
+    volume = {134},
+    url = {http://aip.scitation.org/doi/10.1063/1.3593390},
+    doi = {10.1063/1.3593390},
+    issn = {0021-9606},
+    pmid = {21639432}
+}
+
+@article{Barbatti2012,
+    title = {{Critical Appraisal of Excited State Nonadiabatic Dynamics Simulations of 9H-Adenine}},
+    year = {2012},
+    journal = {J. Chem. Phys.},
+    author = {Barbatti, Mario and Lan, Zhenggang and Crespo-Otero, Rachel and Szymczak, Jaroslaw J. and Lischka, Hans and Thiel, Walter},
+    number = {22},
+    month = {12},
+    pages = {22A503},
+    volume = {137},
+    url = {http://aip.scitation.org/doi/10.1063/1.4731649},
+    isbn = {0021-9606},
+    doi = {10.1063/1.4731649},
+    issn = {0021-9606},
+    pmid = {23249040}
+}
+
+@article{Xie2007,
+    title = {{Design of a Next Generation Force Field: The X-Pol Potential}},
+    year = {2007},
+    journal = {J. Chem. Theory Comput.},
+    author = {Xie, Wangshen and Gao, Jiali},
+    number = {6},
+    month = {11},
+    pages = {1890--1900},
+    volume = {3},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct700167b},
+    isbn = {S1549-9618(70)00167-4},
+    doi = {10.1021/ct700167b},
+    issn = {1549-9618},
+    pmid = {18985172}
+}
+
+@article{Derenzo2000,
+    title = {{Determining Point Charge Arrays That Produce Accurate Ionic Crystal Fields for Atomic Cluster Calculations}},
+    year = {2000},
+    journal = {J. Chem. Phys.},
+    author = {Derenzo, Stephen E and Klintenberg, Mattias K and Weber, Marvin J},
+    number = {5},
+    month = {2},
+    pages = {2074--2081},
+    volume = {112},
+    url = {http://10.0.4.39/1.480776%5Cnpapers3://publication/uuid/8C7829E9-67D7-47CA-BE88-0038C9769774 http://aip.scitation.org/doi/10.1063/1.480776},
+    doi = {10.1063/1.480776},
+    issn = {0021-9606}
+}
+
+@article{Arag2015,
+    title = {{Dynamics of the Excitonic Coupling in Organic Crystals}},
+    year = {2015},
+    journal = {Phys. Rev. Lett.},
+    author = {Arag{\'{o}}, Juan and Troisi, Alessandro},
+    number = {2},
+    month = {1},
+    pages = {026402},
+    volume = {114},
+    url = {https://link.aps.org/doi/10.1103/PhysRevLett.114.026402},
+    doi = {10.1103/PhysRevLett.114.026402},
+    issn = {0031-9007}
+}
+
+@article{Barbatti2016,
+    title = {{Effects of Different Initial Condition Samplings on Photodynamics and Spectrum of Pyrrole}},
+    year = {2016},
+    journal = {Int. J. Quantum Chem.},
+    author = {Barbatti, Mario and Sen, Kakali},
+    number = {10},
+    month = {5},
+    pages = {762--771},
+    volume = {116},
+    url = {http://doi.wiley.com/10.1002/qua.25049},
+    isbn = {00207608},
+    doi = {10.1002/qua.25049},
+    issn = {00207608},
+    keywords = {dynamics simulations, initial conditions, photochemistry, pyrrole, spectrum simulations}
+}
+
+@article{Du2012a,
+    title = {{Efficient Non-Doped Near Infrared Organic Light-Emitting Devices Based on Fluorophores With Aggregation-Induced Emission Enhancement}},
+    year = {2012},
+    journal = {Chem. Mater.},
+    author = {Du, Xiaobo and Qi, Ji and Zhang, Zhiqiang and Ma, Dongge and Wang, Zhi Y.},
+    number = {11},
+    month = {6},
+    pages = {2178--2185},
+    volume = {24},
+    url = {http://pubs.acs.org/doi/10.1021/cm3008733},
+    isbn = {0897-4756{\textbackslash}r1520-5002},
+    doi = {10.1021/cm3008733},
+    issn = {0897-4756},
+    keywords = {AIEE, OLEDs, donor-acceptor, near infrared}
+}
+
+@article{Skelton2015,
+    title = {{Electronic Excitations in Molecular Solids: Bridging Theory and Experiment}},
+    year = {2015},
+    journal = {Faraday Discuss.},
+    author = {Skelton, Jonathan M. and Lora da Silva, E. and Crespo-Otero, Rachel and Hatcher, Lauren E. and Raithby, Paul R. and Parker, Stephen C. and Walsh, Aron},
+    pages = {181--202},
+    volume = {177},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C4FD00168K},
+    doi = {10.1039/C4FD00168K},
+    issn = {1359-6640}
+}
+
+@article{Govind1999,
+    title = {{Electronic-Structure Calculations by First-Principles Density-Based Embedding of Explicitly Correlated Systems}},
+    year = {1999},
+    journal = {J. Chem. Phys.},
+    author = {Govind, Niranjan and Wang, Yan Alexander and Carter, Emily A.},
+    number = {16},
+    month = {4},
+    pages = {7677--7688},
+    volume = {110},
+    url = {http://scitation.aip.org/content/aip/journal/jcp/110/16/10.1063/1.478679 http://aip.scitation.org/doi/10.1063/1.478679},
+    isbn = {0021-9606},
+    doi = {10.1063/1.478679},
+    issn = {0021-9606}
+}
+
+@article{Wilbraham2016a,
+    title = {{Electrostatic Embedding to Model the Impact of Environment on Photophysical Properties of Molecular Crystals: A Self-Consistent Charge Adjustment Procedure}},
+    year = {2016},
+    journal = {J. Chem. Theory Comput.},
+    author = {Wilbraham, Liam and Adamo, Carlo and Labat, Frédéric and Ciofini, Ilaria},
+    number = {7},
+    month = {7},
+    pages = {3316--3324},
+    volume = {12},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jctc.6b00263},
+    doi = {10.1021/acs.jctc.6b00263},
+    issn = {1549-9618}
+}
+
+@article{Campana2009,
+    title = {{Electrostatic Potential Derived Atomic Charges for Periodic Systems Using a Modified Error Functional}},
+    year = {2009},
+    journal = {J. Chem. Theory Comput.},
+    author = {Campañá, Carlos and Mussard, Bastien and Woo, Tom K.},
+    number = {10},
+    month = {10},
+    pages = {2866--2878},
+    volume = {5},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct9003405},
+    isbn = {1549-9618},
+    doi = {10.1021/ct9003405},
+    issn = {1549-9618}
+}
+
+@article{Libisch2014,
+    title = {{Embedded Correlated Wavefunction Schemes: Theory and Applications}},
+    year = {2014},
+    journal = {Acc. Chem. Res.},
+    author = {Libisch, Florian and Huang, Chen and Carter, Emily A.},
+    number = {9},
+    month = {9},
+    pages = {2768--2775},
+    volume = {47},
+    url = {http://pubs.acs.org/doi/10.1021/ar500086h},
+    isbn = {0001-4842},
+    doi = {10.1021/ar500086h},
+    issn = {0001-4842},
+    pmid = {24873211}
+}
+
+@article{Kepenekian2009,
+    title = {{Energetics of [Fe(NCH)6]2+ via CASPT2 Calculations: A Spin-Crossover Perspective}},
+    year = {2009},
+    journal = {J. Comput. Chem.},
+    author = {Kepenekian, Mikaël and Robert, Vincent and Le Guennic, Boris and De Graaf, Coen},
+    number = {14},
+    month = {11},
+    pages = {2327--2333},
+    volume = {30},
+    publisher = {Wiley Subscription Services, Inc., A Wiley Company},
+    url = {http://doi.wiley.com/10.1002/jcc.21236},
+    doi = {10.1002/jcc.21236},
+    issn = {01928651},
+    keywords = {CASPT2, CASSCF, ab initio, spectroscopy, spin‐crossover}
+}
+
+@article{Toukmaji1996,
+    title = {{Ewald Summation Techniques in Perspective: A Survey}},
+    year = {1996},
+    journal = {Comput. Phys. Commun.},
+    author = {Toukmaji, Abdulnour Y. and Board, John a.},
+    number = {2-3},
+    month = {6},
+    pages = {73--92},
+    volume = {95},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/0010465596000161},
+    isbn = {0010-4655},
+    doi = {10.1016/0010-4655(96)00016-1},
+    issn = {00104655}
+}
+
+@article{Wolf1999,
+    title = {{Exact Method for the Simulation of Coulombic Systems by Spherically Truncated, Pairwise R−1 Summation}},
+    year = {1999},
+    journal = {J. Chem. Phys.},
+    author = {Wolf, D and Keblinski, P and Phillpot, S R and Eggebrecht, J},
+    number = {17},
+    month = {5},
+    pages = {8254--8282},
+    volume = {110},
+    url = {papers://e21c739b-a592-49dd-9869-dfc7822cc78f/Paper/p149 http://aip.scitation.org/doi/10.1063/1.478738},
+    isbn = {0021-9606},
+    doi = {10.1063/1.478738},
+    issn = {0021-9606},
+    pmid = {21186852},
+    keywords = {Algorithm, Boundary-Conditions, Computer-Simulation, Lattice Sums, Mgo, Reconstruction, Surface}
+}
+
+@article{Dommett2017a,
+    title = {{Excited State Proton Transfer in 2'-Hydroxychalcone Derivatives}},
+    year = {2017},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Dommett, Michael and Crespo-Otero, Rachel},
+    number = {3},
+    pages = {2409--2416},
+    volume = {19},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C6CP07541J},
+    doi = {10.1039/C6CP07541J},
+    issn = {1463-9076}
+}
+
+@article{Peng2007a,
+    title = {{Excited State Radiationless Decay Process With Duschinsky Rotation Effect: Formalism and Implementation}},
+    year = {2007},
+    journal = {J. Chem. Phys.},
+    author = {Peng, Qian and Yi, Yuanping and Shuai, Zhigang and Shao, Jiushu},
+    number = {11},
+    month = {3},
+    pages = {114302},
+    volume = {126},
+    url = {http://aip.scitation.org/doi/10.1063/1.2710274},
+    isbn = {0021-9606},
+    doi = {10.1063/1.2710274},
+    issn = {0021-9606},
+    pmid = {17381201}
+}
+
+@article{Wallace-Williams1994,
+    title = {{Excited State Spectra and Dynamics of Phenyl-Substituted Butadienes}},
+    year = {1994},
+    journal = {J. Phys. Chem.},
+    author = {Wallace-Williams, Stacie E. and Schwartz, Benjamin J. and Moeller, Soeren and Goldbeck, Robert A. and Yee, W. Atom and El-Bayoumi, M. Ashraf and Kliger, David S.},
+    number = {1},
+    month = {1},
+    pages = {60--67},
+    volume = {98},
+    url = {http://pubs.acs.org/doi/abs/10.1021/j100052a011},
+    doi = {10.1021/j100052a011},
+    issn = {0022-3654}
+}
+
+@article{Shuai2014,
+    title = {{Excited States Structure and Processes: Understanding Organic Light-Emitting Diodes at the Molecular Level}},
+    year = {2014},
+    journal = {ReportsPhys. Rep.},
+    author = {Shuai, Zhigang and Peng, Qian},
+    number = {4},
+    month = {4},
+    pages = {123--156},
+    volume = {537},
+    publisher = {Elsevier B.V.},
+    url = {http://dx.doi.org/10.1016/j.physrep.2013.12.002 http://linkinghub.elsevier.com/retrieve/pii/S0370157313004948},
+    isbn = {0370-1573},
+    doi = {10.1016/j.physrep.2013.12.002},
+    issn = {03701573}
+}
+
+@article{Li2017,
+    title = {{Excitonic Coupling Effect on the Nonradiative Decay Rate in Molecular Aggregates: Formalism and Application}},
+    year = {2017},
+    journal = {Chem. Phys. Lett.},
+    author = {Li, Wenqiang and Zhu, Lili and Shi, Qiang and Ren, Jiajun and Peng, Qian and Shuai, Zhigang},
+    month = {9},
+    pages = {507--514},
+    volume = {683},
+    publisher = {Elsevier B.V.},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0009261417303032},
+    doi = {10.1016/j.cplett.2017.03.077},
+    issn = {00092614},
+    keywords = {nonradiative decay rate, organic molecular aggregates}
+}
+
+@article{Bacchi2014,
+    title = {{Exploration of the Polymorph Landscape for 1,1,4,4-Tetraphenyl-1,3-Butadiene}},
+    year = {2014},
+    journal = {CrystEngComm},
+    author = {Bacchi, A and Brillante, A and Crocco, D and Chierotti, M R and Della Valle, R G and Girlando, A and Masino, M and Pelagatti, P and Venuti, E},
+    number = {35},
+    pages = {8205--8213},
+    volume = {16},
+    publisher = {Royal Society of Chemistry},
+    url = {http://dx.doi.org/10.1039/C4CE01046A http://xlink.rsc.org/?DOI=C4CE01046A},
+    doi = {10.1039/C4CE01046A},
+    issn = {1466-8033}
+}
+
+@article{Fedorov2012a,
+    title = {{Exploring Chemistry With the Fragment Molecular Orbital Method}},
+    year = {2012},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Fedorov, Dmitri G. and Nagata, Takeshi and Kitaura, Kazuo},
+    number = {21},
+    pages = {7562},
+    volume = {14},
+    url = {http://xlink.rsc.org/?DOI=c2cp23784a},
+    isbn = {1463-9076},
+    doi = {10.1039/c2cp23784a},
+    issn = {1463-9076},
+    pmid = {22410762}
+}
+
+@article{Wang2016,
+    title = {{Exploring the Mechanism of Fluorescence Quenching and Aggregation-Induced Emission of a Phenylethylene Derivative by QM (CASSCF and TDDFT) and ONIOM (QM:MM) Calculations}},
+    year = {2016},
+    journal = {J. Phys. Chem. C},
+    author = {Wang, Bin and Wang, Xiaojuan and Wang, Wenliang and Liu, Fengyi},
+    number = {38},
+    month = {9},
+    pages = {21850--21857},
+    volume = {120},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jpcc.6b07963},
+    doi = {10.1021/acs.jpcc.6b07963},
+    issn = {1932-7447}
+}
+
+@article{Wesolowski1993,
+    title = {{Frozen Density Functional Approach for Ab Initio Calculations of Solvated Molecules}},
+    year = {1993},
+    journal = {J. Phys. Chem.},
+    author = {Wesolowski, Tomasz Adam and Warshel, Arieh},
+    number = {30},
+    month = {7},
+    pages = {8050--8053},
+    volume = {97},
+    url = {http://pubs.acs.org/doi/abs/10.1021/j100132a040},
+    isbn = {10.1021/j100132a040},
+    doi = {10.1021/j100132a040},
+    issn = {0022-3654}
+}
+
+@article{Wesolowski2015,
+    title = {{Frozen-Density Embedding Strategy for Multilevel Simulations of Electronic Structure}},
+    year = {2015},
+    journal = {Chem. Rev.},
+    author = {Wesolowski, Tomasz A. and Shedge, Sapana and Zhou, Xiuwen},
+    number = {12},
+    month = {6},
+    pages = {5891--5928},
+    volume = {115},
+    url = {http://pubs.acs.org/doi/10.1021/cr500502v},
+    isbn = {0009-2665},
+    doi = {10.1021/cr500502v},
+    issn = {0009-2665}
+}
+
+@article{Sushko2010,
+    title = {{General Purpose Electrostatic Embedding Potential}},
+    year = {2010},
+    journal = {J. Chem. Theory Comput.},
+    author = {Sushko, Peter V. and Abarenkov, Igor V.},
+    number = {4},
+    month = {4},
+    pages = {1323--1333},
+    volume = {6},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct900480p},
+    doi = {10.1021/ct900480p},
+    issn = {1549-9618}
+}
+
+@article{Prlj2016a,
+    title = {{How Does Tetraphenylethylene Relax From Its Excited States?}},
+    year = {2016},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Prlj, Antonio and Do{\v{s}}li{\'{c}}, Nađa and Corminboeuf, Clémence},
+    number = {17},
+    pages = {11606--11609},
+    volume = {18},
+    url = {http://xlink.rsc.org/?DOI=C5CP04546K},
+    doi = {10.1039/C5CP04546K},
+    issn = {1463-9076},
+    pmid = {26395765}
+}
+
+@article{Dommett2017c,
+    title = {{How Inter- And Intramolecular Processes Dictate Aggregation-Induced Emission in Crystals Undergoing Excited-State Proton Transfer}},
+    year = {2017},
+    journal = {J. Phys. Chem. Lett.},
+    author = {Dommett, Michael and Rivera, Miguel and Crespo-Otero, Rachel},
+    number = {24},
+    month = {12},
+    pages = {6148--6153},
+    volume = {8},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jpclett.7b02893},
+    doi = {10.1021/acs.jpclett.7b02893},
+    issn = {1948-7185}
+}
+
+@article{Sokol2004,
+    title = {{Hybrid QM/MM Embedding Approach for the Treatment of Localized Surface States in Ionic Materials}},
+    year = {2004},
+    journal = {Int. J. Quantum Chem.},
+    author = {Sokol, Alexey A. and Bromley, Stefan T. and French, Samuel A. and Catlow, C. Richard A and Sherwood, Paul},
+    number = {5},
+    pages = {695--712},
+    volume = {99},
+    url = {http://doi.wiley.com/10.1002/qua.20032},
+    isbn = {0020-7608},
+    doi = {10.1002/qua.20032},
+    issn = {0020-7608},
+    keywords = {ChemShell, Embedded cluster, Oxygen vacancy, Polarization, Surface reconstruction, Zinc oxide}
+}
+
+@article{Kochman2013a,
+    title = {{Hybrid QM/QM Simulations of Excited-State Intramolecular Proton Transfer in the Molecular Crystal 7-(2-Pyridyl)-Indole}},
+    year = {2013},
+    journal = {J. Chem. Theory Comput.},
+    author = {Kochman, Michal̷ A. and Morrison, Carole A.},
+    number = {2},
+    month = {2},
+    pages = {1182--1192},
+    volume = {9},
+    url = {http://pubs.acs.org/doi/10.1021/ct3008149},
+    isbn = {1549-9618},
+    doi = {10.1021/ct3008149},
+    issn = {1549-9618}
+}
+
+@article{Kochman2013,
+    title = {{Hybrid QM/QM Simulations of Photochemical Reactions in the Molecular Crystal N-Salicylidene-2-Chloroaniline}},
+    year = {2013},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Kochman, Michał A. and Bil, Andrzej and Morrison, Carole A.},
+    number = {26},
+    pages = {10803--10806},
+    volume = {15},
+    url = {http://xlink.rsc.org/?DOI=c3cp51263k},
+    isbn = {1463-9076},
+    doi = {10.1039/c3cp51263k},
+    issn = {1463-9076},
+    pmid = {23694956}
+}
+
+@article{McKenna2007,
+    title = {{Inside Powders: A Theoretical Model of Interfaces Between MgO Nanocrystallites}},
+    year = {2007},
+    journal = {J. Am. Chem. Soc.},
+    author = {McKenna, Keith P. and Sushko, Peter V. and Shluger, Alexander L.},
+    number = {27},
+    month = {7},
+    pages = {8600--8608},
+    volume = {129},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ja071602m},
+    doi = {10.1021/ja071602m},
+    issn = {0002-7863},
+    pmid = {17569535}
+}
+
+@book{Kittel1986,
+    title = {{Introduction to Solid State Physics}},
+    year = {2005},
+    author = {Kittel, Charles},
+    volume = {8th ed},
+    publisher = {John Wiley {\&} Sons, Inc.},
+    address = {New York},
+    isbn = {9788126510450}
+}
+
+@article{Levine2007,
+    title = {{Isomerization Through Conical Intersections}},
+    year = {2007},
+    journal = {Annu. Rev. Phys. Chem.},
+    author = {Levine, Benjamin G. and Mart{\'{i}}nez, Todd J.},
+    number = {1},
+    month = {5},
+    pages = {613--634},
+    volume = {58},
+    url = {http://www.annualreviews.org/doi/10.1146/annurev.physchem.57.032905.104612},
+    isbn = {978-0-8243-1058-5},
+    doi = {10.1146/annurev.physchem.57.032905.104612},
+    issn = {0066-426X},
+    pmid = {17291184},
+    keywords = {ab, femtosecond, first-principles molecular dynamics, initio molecular dynamics, nonadiabatic dynamics, photochemistry, photoinduced isomerization}
+}
+
+@article{Farha2015,
+    title = {{Metal–organic Framework Materials for Light-Harvesting and Energy Transfer}},
+    year = {2015},
+    journal = {ChemComm},
+    author = {So, Monica C. and Wiederrecht, Gary P. and Mondloch, Joseph E. and Hupp, Joseph T. and Farha, Omar K},
+    number = {17},
+    pages = {3501--3510},
+    volume = {51},
+    publisher = {Royal Society of Chemistry},
+    url = {http://dx.doi.org/10.1039/C4CC09596K http://xlink.rsc.org/?DOI=C4CC09596K},
+    isbn = {10.1039/C4CC09596K},
+    doi = {10.1039/C4CC09596K},
+    issn = {1359-7345},
+    pmid = {25578391}
+}
+
+@article{Presti2016,
+    title = {{Modeling Emission Features of Salicylidene Aniline Molecular Crystals: A QM/QM’ Approach}},
+    year = {2016},
+    journal = {J. Comput. Chem.},
+    author = {Presti, Davide and Labat, Frédéric and Pedone, Alfonso and Frisch, Michael J. and Hratchian, Hrant P. and Ciofini, Ilaria and Cristina Menziani, Maria and Adamo, Carlo},
+    number = {9},
+    month = {4},
+    pages = {861--870},
+    volume = {37},
+    url = {http://www.nature.com/articles/ncomms7215 http://doi.wiley.com/10.1002/jcc.24282},
+    doi = {10.1002/jcc.24282},
+    issn = {01928651},
+    keywords = {DFT, ONIOM QM/QM', TD-DFT, molecular crystals, photophysics}
+}
+
+@article{Presti2016b,
+    title = {{Modeling Emission Features of Salicylidene Aniline Molecular Crystals: A QM/QM’ Approach}},
+    year = {2016},
+    journal = {J. Comput. Chem.},
+    author = {Presti, Davide and Labat, Frédéric and Pedone, Alfonso and Frisch, Michael J. and Hratchian, Hrant P. and Ciofini, Ilaria and Cristina Menziani, Maria and Adamo, Carlo},
+    number = {9},
+    month = {4},
+    pages = {861--870},
+    volume = {37},
+    url = {http://doi.wiley.com/10.1002/jcc.24282},
+    doi = {10.1002/jcc.24282},
+    issn = {01928651},
+    keywords = {DFT, ONIOM QM/QM', TD-DFT, molecular crystals, photophysics}
+}
+
+@article{Beran2016a,
+    title = {{Modeling Polymorphic Molecular Crystals With Electronic Structure Theory}},
+    year = {2016},
+    journal = {Chem. Rev.},
+    author = {Beran, Gregory J. O.},
+    number = {9},
+    month = {5},
+    pages = {5567--5613},
+    volume = {116},
+    url = {http://pubs.acs.org/doi/10.1021/acs.chemrev.5b00648},
+    isbn = {0009-2665},
+    doi = {10.1021/acs.chemrev.5b00648},
+    issn = {0009-2665},
+    pmid = {27008426}
+}
+
+@article{Torras2008,
+    title = {{Modelling Organic Molecular Crystals by Hybrid Quantum Mechanical/Molecular Mechanical Embedding}},
+    year = {2008},
+    journal = {Chem. Phys. Lett.},
+    author = {Torras, Juan and Bromley, Stefan and Bertran, Oscar and Illas, Francesc},
+    number = {1-3},
+    month = {5},
+    pages = {154--158},
+    volume = {457},
+    url = {http://linkinghub.elsevier.com/retrieve/pii/S0009261408004612},
+    isbn = {0009-2614},
+    doi = {10.1016/j.cplett.2008.03.082},
+    issn = {00092614}
+}
+
+@article{Jug2004,
+    title = {{Models for the Treatment of Crystalline Solids and Surfaces}},
+    year = {2004},
+    journal = {J. Comput. Chem.},
+    author = {Jug, Karl and Bredow, Thomas},
+    number = {13},
+    month = {10},
+    pages = {1551--1567},
+    volume = {25},
+    url = {http://doi.wiley.com/10.1002/jcc.20080},
+    isbn = {0192-8651},
+    doi = {10.1002/jcc.20080},
+    issn = {0192-8651},
+    pmid = {15264250},
+    keywords = {Clusters, Crystalline solids, Nonperiodic models, Periodic models, Surfaces, Unit cells}
+}
+
+@article{Aquilante2016a,
+    title = {{Molcas 8: New Capabilities for Multiconfigurational Quantum Chemical Calculations Across the Periodic Table}},
+    year = {2016},
+    journal = {J. Comput. Chem.},
+    author = {Aquilante, Francesco and Autschbach, Jochen and Carlson, Rebecca K. and Chibotaru, Liviu F. and Delcey, Mickaël G. and De Vico, Luca and Fdez. Galv{\'{a}}n, Ignacio and Ferr{\'{e}}, Nicolas and Frutos, Luis Manuel and Gagliardi, Laura and Garavelli, Marco and Giussani, Angelo and Hoyer, Chad E. and Li Manni, Giovanni and Lischka, Hans and Ma, Dongxia and Malmqvist, Per \AA{}ke and M{\"{u}}ller, Thomas and Nenov, Artur and Olivucci, Massimo and Pedersen, Thomas Bondo and Peng, Daoling and Plasser, Felix and Pritchard, Ben and Reiher, Markus and Rivalta, Ivan and Schapiro, Igor and Segarra-Mart{\'{i}}, Javier and Stenrup, Michael and Truhlar, Donald G. and Ungur, Liviu and Valentini, Alessio and Vancoillie, Steven and Veryazov, Valera and Vysotskiy, Victor P. and Weingart, Oliver and Zapata, Felipe and Lindh, Roland},
+    number = {5},
+    month = {2},
+    pages = {506--541},
+    volume = {37},
+    url = {http://doi.wiley.com/10.1002/jcc.24221},
+    isbn = {0192-8651},
+    doi = {10.1002/jcc.24221},
+    issn = {01928651},
+    pmid = {26561362},
+    keywords = {electron correlation, gradients, molecular dynamics, parallelization, relativistic}
+}
+
+@article{Hestand2017a,
+    title = {{Molecular Aggregate Photophysics Beyond the Kasha Model: Novel Design Principles for Organic Materials}},
+    year = {2017},
+    journal = {Acc. Chem. Res.},
+    author = {Hestand, Nicholas J. and Spano, Frank C.},
+    number = {2},
+    pages = {341--350},
+    volume = {50},
+    doi = {10.1021/acs.accounts.6b00576},
+    issn = {15204898}
+}
+
+@article{Bogatko2016,
+    title = {{Molecular Design of a Room-Temperature Maser}},
+    year = {2016},
+    journal = {J. Phys. Chem. C},
+    author = {Bogatko, Stuart and Haynes, Peter D. and Sathian, Juna and Wade, Jessica and Kim, Ji-Seon and Tan, Ke-Jie and Breeze, Jonathan and Salvadori, Enrico and Horsfield, Andrew and Oxborrow, Mark},
+    number = {15},
+    month = {4},
+    pages = {8251--8260},
+    volume = {120},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jpcc.6b00150},
+    doi = {10.1021/acs.jpcc.6b00150},
+    issn = {1932-7447}
+}
+
+@article{Sauer1989a,
+    title = {{Molecular Models in Ab Initio Studies of Solids and Surfaces: From Ionic Crystals and Semiconductors to Catalysts}},
+    year = {1989},
+    journal = {Chem. Rev.},
+    author = {Sauer, Joachim},
+    number = {1},
+    month = {1},
+    pages = {199--255},
+    volume = {89},
+    url = {http://pubs.acs.org/doi/abs/10.1021/cr00091a006},
+    isbn = {0009-2665},
+    doi = {10.1021/cr00091a006},
+    issn = {0009-2665}
+}
+
+@article{Sushko2013a,
+    title = {{Multiband Optical Absorption Controlled by Lattice Strain in Thin-Film LaCrO3}},
+    year = {2013},
+    journal = {Phys. Rev. Lett.},
+    author = {Sushko, Peter V. and Qiao, Liang and Bowden, Mark and Varga, Tamas and Exarhos, Gregory J. and Urban, Frank K. and Barton, David and Chambers, Scott A.},
+    number = {7},
+    month = {2},
+    pages = {077401},
+    volume = {110},
+    url = {https://link.aps.org/doi/10.1103/PhysRevLett.110.077401},
+    doi = {10.1103/PhysRevLett.110.077401},
+    issn = {0031-9007}
+}
+
+@article{Zahid2017,
+    title = {{New Insight Into the Origin of the Red/Near-Infrared Intense Fluorescence of a Crystalline 2-Hydroxychalcone Derivative: A Comprehensive Picture From the Excited-State Femtosecond Dynamics}},
+    year = {2017},
+    journal = {J. Phys. Chem. Lett.},
+    author = {Zahid, N. Idayu and Mahmood, Mohamad Syafie and Subramanian, Balamurugan and Mohd Said, Suhana and Abou-Zied, Osama K.},
+    number = {22},
+    month = {11},
+    pages = {5603--5608},
+    volume = {8},
+    url = {http://pubs.acs.org/doi/abs/10.1021/acs.jpclett.7b02601 http://pubs.acs.org/doi/10.1021/acs.jpclett.7b02601},
+    doi = {10.1021/acs.jpclett.7b02601},
+    issn = {1948-7185}
+}
+
+@article{Barbatti2014,
+    title = {{Newton-X: A Surface-Hopping Program for Nonadiabatic Molecular Dynamics}},
+    year = {2014},
+    journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+    author = {Barbatti, Mario and Ruckenbauer, Matthias and Plasser, Felix and Pittner, Jiri and Granucci, Giovanni and Persico, Maurizio and Lischka, Hans},
+    number = {1},
+    month = {1},
+    pages = {26--33},
+    volume = {4},
+    url = {http://doi.wiley.com/10.1002/wcms.1158},
+    isbn = {1759-0876},
+    doi = {10.1002/wcms.1158},
+    issn = {17590876}
+}
+
+@article{Lowdin1950,
+    title = {{On the Non‐Orthogonality Problem Connected With the Use of Atomic Wave Functions in the Theory of Molecules and Crystals}},
+    year = {1950},
+    journal = {J. Chem. Phys.},
+    author = {L{\"{o}}wdin, PerOlov},
+    number = {3},
+    month = {3},
+    pages = {365--375},
+    volume = {18},
+    url = {http://aip.scitation.org/doi/10.1063/1.1747632},
+    isbn = {0021-9606},
+    doi = {10.1063/1.1747632},
+    issn = {0021-9606}
+}
+
+@article{Wang2013a,
+    title = {{Optical Absorption and Band Gap Reduction in (Fe1–xCrx)2O3 Solid Solutions: A First-Principles Study}},
+    year = {2013},
+    journal = {J. Phys. Chem. C},
+    author = {Wang, Yong and Lopata, Kenneth and Chambers, Scott A. and Govind, Niranjan and Sushko, Peter V.},
+    number = {48},
+    month = {12},
+    pages = {25504--25512},
+    volume = {117},
+    url = {http://pubs.acs.org/doi/10.1021/jp407496w},
+    doi = {10.1021/jp407496w},
+    issn = {1932-7447}
+}
+
+@article{Presti2016a,
+    title = {{Optical Properties of the Dibenzothiazolylphenol Molecular Crystals Through ONIOM Calculations: The Effect of the Electrostatic Embedding Scheme}},
+    year = {2016},
+    journal = {Theor. Chem. Acc.},
+    author = {Presti, Davide and Pedone, Alfonso and Ciofini, Ilaria and Labat, Frédéric and Menziani, Maria Cristina and Adamo, Carlo},
+    number = {4},
+    month = {4},
+    pages = {86},
+    volume = {135},
+    publisher = {Springer Berlin Heidelberg},
+    url = {http://link.springer.com/10.1007/s00214-016-1808-x},
+    doi = {10.1007/s00214-016-1808-x},
+    issn = {1432-881X},
+    keywords = {ESIPT fluorophores, Electrostatic embedding, Molecular crystals, ONIOM, TD-DFT}
+}
+
+@article{Presti2016ab,
+    title = {{Optical Properties of the Dibenzothiazolylphenol Molecular Crystals Through ONIOM Calculations: The Effect of the Electrostatic Embedding Scheme}},
+    year = {2016},
+    journal = {Theor. Chem. Acc.},
+    author = {Presti, Davide and Pedone, Alfonso and Ciofini, Ilaria and Labat, Frédéric and Menziani, Maria Cristina and Adamo, Carlo},
+    number = {4},
+    month = {4},
+    pages = {86},
+    volume = {135},
+    publisher = {Springer Berlin Heidelberg},
+    url = {http://link.springer.com/10.1007/s00214-016-1808-x},
+    doi = {10.1007/s00214-016-1808-x},
+    issn = {1432-881X},
+    keywords = {ESIPT fluorophores, Electrostatic embedding, Molecular crystals, ONIOM, TD-DFT}
+}
+
+@article{Levine2008,
+    title = {{Optimizing Conical Intersections Without Derivative Coupling Vectors: Application to Multistate Multireference Second-Order Perturbation Theory (MS-CASPT2)}},
+    year = {2008},
+    journal = {J. Phys. Chem. B},
+    author = {Levine, Benjamin G. and Coe, Joshua D. and Mart{\'{i}}nez, Todd J.},
+    number = {2},
+    month = {1},
+    pages = {405--413},
+    volume = {112},
+    url = {http://pubs.acs.org/doi/abs/10.1021/jp0761618},
+    isbn = {1520-6106 (Print){\textbackslash}r1520-5207 (Linking)},
+    doi = {10.1021/jp0761618},
+    issn = {1520-6106},
+    pmid = {18081339}
+}
+
+@article{Zhang2015,
+    title = {{Organic Crystals With Near-Infrared Amplified Spontaneous Emissions Based on 2'-Hydroxychalcone Derivatives: Subtle Structure Modification but Great Property Change}},
+    year = {2015},
+    journal = {Angew. Chem. Int. Ed.},
+    author = {Cheng, Xiao and Wang, Kai and Huang, Shuo and Zhang, Houyu and Zhang, Hongyu and Wang, Yue},
+    number = {29},
+    month = {7},
+    pages = {8369--8373},
+    volume = {54},
+    url = {http://doi.wiley.com/10.1002/anie.201503914},
+    isbn = {1433-7851},
+    doi = {10.1002/anie.201503914},
+    issn = {14337851},
+    pmid = {26036645},
+    keywords = {??-conjugation, amplified spontaneous emission, near-infrared spectroscopy, organic crystals, proton transfer}
+}
+
+@article{Gierschner2016,
+    title = {{Organic Single Crystal Lasers: A Materials View}},
+    year = {2016},
+    journal = {Adv. Opt. Mater.},
+    author = {Gierschner, Johannes and Varghese, Shinto and Park, Soo Young},
+    number = {3},
+    month = {3},
+    pages = {348--364},
+    volume = {4},
+    url = {http://doi.wiley.com/10.1002/adom.201500531},
+    doi = {10.1002/adom.201500531},
+    issn = {21951071},
+    keywords = {ASE, Conjugated materials, Lasing, Optoelectronics, Organic single crystals}
+}
+
+@article{McCann2013,
+    title = {{Pairwise Alternatives to Ewald Summation for Calculating Long-Range Electrostatics in Ionic Liquids}},
+    year = {2013},
+    journal = {J. Chem. Theory Comput.},
+    author = {McCann, Billy W. and Acevedo, Orlando},
+    number = {2},
+    month = {2},
+    pages = {944--950},
+    volume = {9},
+    url = {http://pubs.acs.org/doi/10.1021/ct300961e},
+    isbn = {1549-9618},
+    doi = {10.1021/ct300961e},
+    issn = {1549-9618}
+}
+
+@article{Crespo-Otero2014,
+    title = {{Photo-Stability of Peptide-Bond Aggregates: N-Methylformamide Dimers}},
+    year = {2014},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Crespo-Otero, Rachel and Mardykov, Artur and Sanchez-Garcia, Elsa and Sander, Wolfram and Barbatti, Mario},
+    number = {35},
+    pages = {18877--18887},
+    volume = {16},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C4CP02518K},
+    isbn = {1463-9076},
+    doi = {10.1039/C4CP02518K},
+    issn = {1463-9076},
+    pmid = {25081138}
+}
+
+@incollection{Spano2016,
+    title = {{Photophysical Properties of Molecular Aggregates “101”}},
+    year = {2016},
+    booktitle = {The WSPC Reference on Organic Electronics: Organic Semiconductors},
+    author = {Spano, Frank C and Beljonne, David},
+    editor = {Bredas, Jean-Luc and Marder, Seth R},
+    chapter = {4},
+    month = {8},
+    pages = {93--130},
+    publisher = {World Scientific},
+    url = {http://www.worldscientific.com/doi/abs/10.1142/9789813148598_0004},
+    address = {Hackensack},
+    doi = {10.1142/9789813148598{\_}0004}
+}
+
+@article{Warshel2007,
+    title = {{Polarizable Force Fields: History, Test Cases, and Prospects}},
+    year = {2007},
+    journal = {J. Chem. Theory Comput.},
+    author = {Warshel, Arieh and Kato, Mitsunori and Pisliakov, Andrei V.},
+    number = {6},
+    month = {11},
+    pages = {2034--2045},
+    volume = {3},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct700127w},
+    isbn = {1549-9618},
+    doi = {10.1021/ct700127w},
+    issn = {1549-9618},
+    pmid = {26636199}
+}
+
+@article{Li2015a,
+    title = {{Polarizable QM/MM Multiconfiguration Self-Consistent Field Approach With State-Specific Corrections: Environment Effects on Cytosine Absorption Spectrum}},
+    year = {2015},
+    journal = {J. Chem. Theory Comput.},
+    author = {Li, Quansong and Mennucci, Benedetta and Robb, Michael A. and Blancafort, Lluís and Curutchet, Carles},
+    number = {4},
+    month = {4},
+    pages = {1674--1682},
+    volume = {11},
+    url = {http://pubs.acs.org/doi/10.1021/ct5010388},
+    isbn = {1549-9618},
+    doi = {10.1021/ct5010388},
+    issn = {1549-9618},
+    pmid = {26574377}
+}
+
+@article{Cieplak2009,
+    title = {{Polarization Effects in Molecular Mechanical Force Fields}},
+    year = {2009},
+    journal = {J. Phys. Condens. Matter},
+    author = {Cieplak, Piotr and Dupradeau, François-Yves and Duan, Yong and Wang, Junmei},
+    number = {33},
+    month = {8},
+    pages = {333102},
+    volume = {21},
+    url = {http://stacks.iop.org/0953-8984/21/i=33/a=333102?key=crossref.97a2322dd52394576f41d6ce76883629},
+    isbn = {0953-8984},
+    doi = {10.1088/0953-8984/21/33/333102},
+    issn = {0953-8984},
+    pmid = {21828594}
+}
+
+@article{Tavazzi2010,
+    title = {{Polarized Absorption, Spontaneous and Stimulated Blue Light Emission of J-Type Tetraphenylbutadiene Monocrystals}},
+    year = {2010},
+    journal = {ChemPhysChem},
+    author = {Tavazzi, Silvia and Silvestri, Leonardo and Miozzo, Luciano and Papagni, Antonio and Spearman, Peter and Ianelli, Sandra and Girlando, Alberto and Camposeo, Andrea and Polo, Marco and Pisignano, Dario},
+    number = {2},
+    month = {2},
+    pages = {429--434},
+    volume = {11},
+    url = {http://doi.wiley.com/10.1002/cphc.200900267},
+    isbn = {1439-7641 (Electronic){\textbackslash}r1439-4235 (Linking)},
+    doi = {10.1002/cphc.200900267},
+    issn = {14394235},
+    pmid = {20029880},
+    keywords = {Absorption, Crystal growth, Luminescence, Photophysics}
+}
+
+@article{Cheng2017a,
+    title = {{Potential Functional Embedding Theory at the Correlated Wave Function Level. 1. Mixed Basis Set Embedding}},
+    year = {2017},
+    journal = {J. Chem. Theory Comput.},
+    author = {Cheng, Jin and Libisch, Florian and Yu, Kuang and Chen, Mohan and Dieterich, Johannes M. and Carter, Emily A.},
+    number = {3},
+    month = {3},
+    pages = {1067--1080},
+    volume = {13},
+    url = {http://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b01011 http://pubs.acs.org/doi/10.1021/acs.jctc.6b01011 http://pubs.acs.org/doi/10.1021/acs.jctc.6b01010},
+    doi = {10.1021/acs.jctc.6b01010},
+    issn = {1549-9618}
+}
+
+@article{Cheng2017,
+    title = {{Potential Functional Embedding Theory at the Correlated Wave Function Level. 2. Error Sources and Performance Tests}},
+    year = {2017},
+    journal = {J. Chem. Theory Comput.},
+    author = {Cheng, Jin and Yu, Kuang and Libisch, Florian and Dieterich, Johannes M. and Carter, Emily A.},
+    number = {3},
+    month = {3},
+    pages = {1081--1093},
+    volume = {13},
+    url = {http://pubs.acs.org/doi/abs/10.1021/acs.jctc.6b01011 http://pubs.acs.org/doi/10.1021/acs.jctc.6b01011},
+    doi = {10.1021/acs.jctc.6b01011},
+    issn = {1549-9618}
+}
+
+@article{Guennic2007,
+    title = {{Prussian Blue Analogue CsFe[Cr(CN)6] as a Matrix for the Fe(II) Spin-Crossover}},
+    year = {2007},
+    journal = {Inorg. Chem.},
+    author = {Le Guennic, Boris and Borshch, Serguei and Robert, Vincent},
+    number = {26},
+    month = {12},
+    pages = {11106--11111},
+    volume = {46},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ic701352c},
+    doi = {10.1021/ic701352c},
+    issn = {0020-1669}
+}
+
+@article{Boulanger2018,
+    title = {{QM/MM Methods for Free Energies and Photochemistry}},
+    year = {2018},
+    journal = {Curr. Opin. Struct. Biol.},
+    author = {Boulanger, Eliot and Harvey, Jeremy N.},
+    month = {4},
+    pages = {72--76},
+    volume = {49},
+    publisher = {Elsevier Ltd},
+    url = {https://doi.org/10.1016/j.sbi.2018.01.003 http://linkinghub.elsevier.com/retrieve/pii/S0959440X17300854},
+    doi = {10.1016/j.sbi.2018.01.003},
+    issn = {0959440X}
+}
+
+@article{Lin2007a,
+    title = {{QM/MM: What Have We Learned, Where Are We, and Where Do We Go From Here?}},
+    year = {2007},
+    journal = {Theor. Chem. Acc.},
+    author = {Lin, Hai and Truhlar, Donald G.},
+    number = {2},
+    month = {1},
+    pages = {185--199},
+    volume = {117},
+    url = {http://link.springer.com/10.1007/s00214-006-0143-z},
+    isbn = {0021400601},
+    doi = {10.1007/s00214-006-0143-z},
+    issn = {1432-881X},
+    pmid = {8431259},
+    keywords = {Boundary treatment, Combined QM/MM, Electrostatic interactions, Embedding scheme, Link atom, Multi-configuration molecular mechanics, Potential energy surfaces}
+}
+
+@article{Li2011,
+    title = {{Quantum Chemistry Study on Internal Conversion of Diphenyldibenzofulvene in Solid Phase}},
+    year = {2011},
+    journal = {J. Phys. Chem. A},
+    author = {Li, Ming-Chung and Hayashi, Michitoshi and Lin, Sheng-hsien},
+    number = {50},
+    month = {12},
+    pages = {14531--14538},
+    volume = {115},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/22047212 http://pubs.acs.org/doi/abs/10.1021/jp208199t},
+    isbn = {1089-5639},
+    doi = {10.1021/jp208199t},
+    issn = {1089-5639},
+    pmid = {22047212}
+}
+
+@article{Giannozzi2009,
+    title = {{QUANTUM ESPRESSO: A Modular and Open-Source Software Project for Quantum Simulations of Materials}},
+    year = {2009},
+    journal = {J. Phys. Condens. Matter},
+    author = {Giannozzi, Paolo and Baroni, Stefano and Bonini, Nicola and Calandra, Matteo and Car, Roberto and Cavazzoni, Carlo and Ceresoli, Davide and Chiarotti, Guido L. and Cococcioni, Matteo and Dabo, Ismaila and Dal Corso, Andrea and de Gironcoli, Stefano and Fabris, Stefano and Fratesi, Guido and Gebauer, Ralph and Gerstmann, Uwe and Gougoussis, Christos and Kokalj, Anton and Lazzeri, Michele and Martin-Samos, Layla and Marzari, Nicola and Mauri, Francesco and Mazzarello, Riccardo and Paolini, Stefano and Pasquarello, Alfredo and Paulatto, Lorenzo and Sbraccia, Carlo and Scandolo, Sandro and Sclauzero, Gabriele and Seitsonen, Ari P. and Smogunov, Alexander and Umari, Paolo and Wentzcovitch, Renata M.},
+    number = {39},
+    month = {9},
+    pages = {395502},
+    volume = {21},
+    url = {http://stacks.iop.org/0953-8984/21/i=39/a=395502?key=crossref.c21336c286fa6d3db893262ae3f6e151},
+    isbn = {0953-8984},
+    doi = {10.1088/0953-8984/21/39/395502},
+    issn = {0953-8984},
+    pmid = {21832390},
+    arxivId = {0906.2569}
+}
+
+@book{Kantorovich2004,
+    title = {{Quantum Theory of the Solid State: An Introduction}},
+    year = {2004},
+    author = {Kantorovich, Lev},
+    publisher = {Springer Netherlands},
+    url = {http://link.springer.com/10.1007/978-1-4020-2154-1},
+    address = {Dordrecht},
+    isbn = {978-1-4020-2153-4},
+    doi = {10.1007/978-1-4020-2154-1}
+}
+
+@article{SeveroPereiraGomes2012a,
+    title = {{Quantum-Chemical Embedding Methods for Treating Local Electronic Excitations in Complex Chemical Systems}},
+    year = {2012},
+    journal = {Annu. Rep. Prog. Chem.},
+    author = {Severo Pereira Gomes, André and Jacob, Christoph R},
+    number = {1},
+    pages = {222--277},
+    volume = {108},
+    url = {http://dx.doi.org/10.1039/C2PC90007F%5Cnhttp://xlink.rsc.org/?DOI=c2pc90007f http://xlink.rsc.org/?DOI=c2pc90007f},
+    isbn = {0260-1826},
+    doi = {10.1039/c2pc90007f},
+    issn = {0260-1826}
+}
+
+@article{RaoM2013a,
+    title = {{Quinoxaline Based D–A–D Molecules: High Contrast Reversible Solid-State Mechano- And Thermo-Responsive Fluorescent Materials}},
+    year = {2013},
+    journal = {J. Mat. Chem. C},
+    author = {Rao M, Rajeswara and Liao, Chia-Wei and Su, Wei-Lin and Sun, Shih-Sheng},
+    number = {35},
+    pages = {5491},
+    volume = {1},
+    url = {http://xlink.rsc.org/?DOI=c3tc31179a},
+    isbn = {2050-7526},
+    doi = {10.1039/c3tc31179a},
+    issn = {2050-7526}
+}
+
+@article{Crespo-otero2017,
+    title = {{Recent Advances and Perspectives on Nonadiabatic Mixed Quantum–Classical Dynamics}},
+    year = {2018},
+    journal = {Chem. Rev.},
+    author = {Crespo-Otero, Rachel and Barbatti, Mario},
+    number = {15},
+    month = {8},
+    pages = {7026--7068},
+    volume = {118},
+    publisher = {American Chemical Society},
+    url = {http://pubs.acs.org/doi/10.1021/acs.chemrev.7b00577},
+    doi = {10.1021/acs.chemrev.7b00577},
+    issn = {0009-2665}
+}
+
+@article{Peng2016,
+    title = {{Restricted Access to a Conical Intersection to Explain Aggregation Induced Emission in Dimethyl Tetraphenylsilole}},
+    year = {2016},
+    journal = {J. Mat. Chem. C},
+    author = {Peng, Xing-Liang and Ruiz-Barragan, Sergi and Li, Ze-Sheng and Li, Quan-Song and Blancafort, Lluís},
+    number = {14},
+    pages = {2802--2810},
+    volume = {4},
+    url = {http://dx.doi.org/10.1039/C5TC03322E http://xlink.rsc.org/?DOI=C5TC03322E},
+    doi = {10.1039/C5TC03322E},
+    issn = {2050-7526}
+}
+
+@article{Peng2016b,
+    title = {{Restricted Access to a Conical Intersection to Explain Aggregation Induced Emission in Dimethyl Tetraphenylsilole}},
+    year = {2016},
+    journal = {J. Mat. Chem. C},
+    author = {Peng, Xing Liang and Ruiz-Barragan, Sergi and Li, Ze Sheng and Li, Quan Song and Blancafort, Lluís},
+    number = {14},
+    pages = {2802--2810},
+    volume = {4},
+    doi = {10.1039/c5tc03322e},
+    issn = {20507526}
+}
+
+@article{Wilbraham2018,
+    title = {{Revealing the Origins of Mechanically Induced Fluorescence Changes in Organic Molecular Crystals}},
+    year = {2018},
+    journal = {Adv. Mater.},
+    author = {Wilbraham, Liam and Louis, Marine and Alberga, Domenico and Brosseau, Arnaud and Guillot, Régis and Ito, Fuyuki and Labat, Frédéric and M{\'{e}}tivier, Rémi and Allain, Clémence and Ciofini, Ilaria},
+    number = {28},
+    month = {7},
+    pages = {1800817},
+    volume = {30},
+    url = {http://doi.wiley.com/10.1002/adma.201800817},
+    doi = {10.1002/adma.201800817},
+    issn = {09359648}
+}
+
+@article{Oxborrow2012,
+    title = {{Room-Temperature Solid-State Maser}},
+    year = {2012},
+    journal = {Nature},
+    author = {Oxborrow, Mark and Breeze, Jonathan D and Alford, Neil M},
+    number = {7411},
+    month = {8},
+    pages = {353--356},
+    volume = {488},
+    publisher = {Nature Publishing Group},
+    url = {http://dx.doi.org/10.1038/nature11339 http://www.nature.com/articles/nature11339},
+    isbn = {0028-0836},
+    doi = {10.1038/nature11339},
+    issn = {0028-0836},
+    pmid = {22895341}
+}
+
+@article{Gozem2014a,
+    title = {{Shape of Multireference, Equation-Of-Motion Coupled-Cluster, and Density Functional Theory Potential Energy Surfaces at a Conical Intersection}},
+    year = {2014},
+    journal = {J. Chem. Theory Comput.},
+    author = {Gozem, Samer and Melaccio, Federico and Valentini, Alessio and Filatov, Michael and Huix-Rotllant, Miquel and Ferr{\'{e}}, Nicolas and Frutos, Luis Manuel and Angeli, Celestino and Krylov, Anna I. and Granovsky, Alexander A. and Lindh, Roland and Olivucci, Massimo},
+    number = {8},
+    month = {8},
+    pages = {3074--3084},
+    volume = {10},
+    url = {http://pubs.acs.org/doi/10.1021/ct500154k},
+    isbn = {1549-9626 (Electronic){\textbackslash}r1549-9618 (Linking)},
+    doi = {10.1021/ct500154k},
+    issn = {1549-9618},
+    pmid = {26588278}
+}
+
+@article{Tang2016a,
+    title = {{Single-Benzene Solid Emitters With Lasing Properties Based on Aggregation-Induced Emissions}},
+    year = {2016},
+    journal = {ChemComm},
+    author = {Tang, Baolei and Liu, Huapeng and Li, Feng and Wang, Yue and Zhang, Hongyu},
+    number = {39},
+    pages = {6577--6580},
+    volume = {52},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C6CC02616H},
+    doi = {10.1039/C6CC02616H},
+    issn = {1359-7345}
+}
+
+@article{Zhang2015a,
+    title = {{Spectroscopic Signature of the Aggregation-Induced Emission Phenomena Caused by Restricted Nonradiative Decay: A Theoretical Proposal}},
+    year = {2015},
+    journal = {J. Phys. Chem. C},
+    author = {Zhang, Tian and Ma, Huili and Niu, Yingli and Li, Wenqiang and Wang, Dong and Peng, Qian and Shuai, Zhigang and Liang, WanZhen},
+    number = {9},
+    month = {3},
+    pages = {5040--5047},
+    volume = {119},
+    url = {http://pubs.acs.org/doi/10.1021/acs.jpcc.5b01323},
+    isbn = {1932-7447},
+    doi = {10.1021/acs.jpcc.5b01323},
+    issn = {1932-7447}
+}
+
+@article{Crespo-Otero2012,
+    title = {{Spectrum Simulation and Decomposition With Nuclear Ensemble: Formal Derivation and Application to Benzene, Furan and 2-Phenylfuran}},
+    year = {2012},
+    journal = {Theor. Chem. Acc.},
+    author = {Crespo-Otero, Rachel and Barbatti, Mario},
+    number = {6},
+    month = {6},
+    pages = {1237},
+    volume = {131},
+    url = {http://link.springer.com/10.1007/s00214-012-1237-4},
+    isbn = {1432-881X},
+    doi = {10.1007/s00214-012-1237-4},
+    issn = {1432-881X},
+    keywords = {2-Phenylfuran, Absorption, Electronic spectrum, Excimer, Fluorescence, Spectrum simulation}
+}
+
+@article{Jacob2014,
+    title = {{Subsystem Density-Functional Theory}},
+    year = {2014},
+    journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+    author = {Jacob, Christoph R. and Neugebauer, Johannes},
+    number = {4},
+    month = {7},
+    pages = {325--362},
+    volume = {4},
+    url = {http://doi.wiley.com/10.1002/wcms.1175},
+    isbn = {1759-0884},
+    doi = {10.1002/wcms.1175},
+    issn = {17590876}
+}
+
+@article{Plasser2014,
+    title = {{Surface Hopping Dynamics With Correlated Single-Reference Methods: 9h-Adenine as a Case Study}},
+    year = {2014},
+    journal = {J. Chem. Theory Comput.},
+    author = {Plasser, Felix and Crespo-Otero, Rachel and Pederzoli, Marek and Pittner, Jiri and Lischka, Hans and Barbatti, Mario},
+    number = {4},
+    month = {4},
+    pages = {1395--1405},
+    volume = {10},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ct4011079 http://pubs.acs.org/doi/10.1021/ct4011079},
+    doi = {10.1021/ct4011079},
+    issn = {1549-9618}
+}
+
+@article{Barbatti2015,
+    title = {{Surface Hopping Dynamics With DFT Excited States}},
+    year = {2016},
+    journal = {Top. Curr. Chem.},
+    author = {Barbatti, Mario and Crespo-Otero, Rachel},
+    pages = {415--444},
+    volume = {368},
+    url = {http://link.springer.com/10.1007/128_2014_605},
+    isbn = {9783319220819},
+    doi = {10.1007/128{\_}2014{\_}605},
+    issn = {1726670X},
+    pmid = {25707617},
+    arxivId = {http://cactus.nci.nih.gov/download/nci/},
+    keywords = {Density functional theory, Excited states, Nonadiabatic dynamics, Photochemistry, Surface hopping}
+}
+
+@article{Stueber2001,
+    title = {{The Calculation of 13C Chemical Shielding Tensors in Ionic Compounds Utilizing Point Charge Arrays Obtained From Ewald Lattice Sums}},
+    year = {2001},
+    journal = {J. Chem. Phys.},
+    author = {Stueber, Dirk and Guenneau, Flavien N. and Grant, David M.},
+    number = {21},
+    month = {6},
+    pages = {9236--9243},
+    volume = {114},
+    url = {http://aip.scitation.org/doi/10.1063/1.1356016},
+    doi = {10.1063/1.1356016},
+    issn = {0021-9606}
+}
+
+@article{Kasha1965,
+    title = {{The Exciton Model in Molecular Spectroscopy}},
+    year = {1965},
+    journal = {Pure Appl. Chem.},
+    author = {Kasha, M. and Rawls, H. R. and Ashraf El-Bayoumi, M.},
+    number = {3-4},
+    month = {1},
+    pages = {371--392},
+    volume = {11},
+    url = {http://www.degruyter.com/view/j/pac.1965.11.issue-3-4/pac196511030371/pac196511030371.xml https://www.degruyter.com/view/j/pac.1965.11.issue-3-4/pac196511030371/pac196511030371.xml},
+    isbn = {0033-4545{\textbackslash}r1365-3075},
+    doi = {10.1351/pac196511030371},
+    issn = {1365-3075}
+}
+
+@article{Fedorov2017,
+    title = {{The Fragment Molecular Orbital Method: Theoretical Development, Implementation in GAMESS, and Applications}},
+    year = {2017},
+    journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+    author = {Fedorov, Dmitri G.},
+    number = {6},
+    month = {11},
+    pages = {e1322},
+    volume = {7},
+    url = {http://doi.wiley.com/10.1002/wcms.1322},
+    doi = {10.1002/wcms.1322},
+    issn = {17590876}
+}
+
+@article{Fedorov2017a,
+    title = {{The Fragment Molecular Orbital Method: Theoretical Development, Implementation in GAMESS, and Applications}},
+    year = {2017},
+    journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+    author = {Fedorov, Dmitri G.},
+    number = {6},
+    month = {11},
+    pages = {e1322},
+    volume = {7},
+    url = {http://doi.wiley.com/10.1002/wcms.1322},
+    doi = {10.1002/wcms.1322},
+    issn = {17590876}
+}
+
+@article{Humbel1996,
+    title = {{The IMOMO Method: Integration of Different Levels of Molecular Orbital Approximations for Geometry Optimization of Large Systems: Test for N ‐butane Conformation and S N 2 Reaction: RCl+Cl −}},
+    year = {1996},
+    journal = {J. Chem. Phys.},
+    author = {Humbel, Stéphane and Sieber, Stefan and Morokuma, Keiji},
+    number = {5},
+    month = {8},
+    pages = {1959--1967},
+    volume = {105},
+    url = {http://scitation.aip.org/content/aip/journal/jcp/105/5/10.1063/1.472065 http://aip.scitation.org/doi/10.1063/1.472065},
+    isbn = {0021-9606},
+    doi = {10.1063/1.472065},
+    issn = {0021-9606}
+}
+
+@article{Chung2015,
+    title = {{The ONIOM Method and Its Applications}},
+    year = {2015},
+    journal = {Chem. Rev.},
+    author = {Chung, Lung Wa and Sameera, W. M C and Ramozzi, Romain and Page, Alister J. and Hatanaka, Miho and Petrova, Galina P. and Harris, Travis V. and Li, Xin and Ke, Zhuofeng and Liu, Fengyi and Li, Hai-Bei and Ding, Lina and Morokuma, Keiji},
+    number = {12},
+    month = {6},
+    pages = {5678--5796},
+    volume = {115},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/25853797 http://pubs.acs.org/doi/10.1021/cr5004419},
+    isbn = {1520-6890 (Electronic){\textbackslash}r0009-2665 (Linking)},
+    doi = {10.1021/cr5004419},
+    issn = {0009-2665},
+    pmid = {25853797}
+}
+
+@article{Nabo2017,
+    title = {{The Quality of the Embedding Potential Is Decisive for Minimal Quantum Region Size in Embedding Calculations: The Case of the Green Fluorescent Protein}},
+    year = {2017},
+    journal = {J. Chem. Theory Comput.},
+    author = {N{\aa}bo, Lina J. and Olsen, Jógvan Magnus Haugaard and Mart{\'{i}}nez, Todd J. and Kongsted, Jacob},
+    number = {12},
+    month = {12},
+    pages = {6230--6236},
+    volume = {13},
+    url = {http://pubs.acs.org/doi/abs/10.1021/acs.jctc.7b00528 http://pubs.acs.org/doi/10.1021/acs.jctc.7b00528},
+    doi = {10.1021/acs.jctc.7b00528},
+    issn = {1549-9618}
+}
+
+@article{Sousa2013a,
+    title = {{Theoretical Approaches to Excited-State-Related Phenomena in Oxide Surfaces}},
+    year = {2013},
+    journal = {Chem. Rev.},
+    author = {Sousa, Carmen and Tosoni, Sergio and Illas, Francesc},
+    number = {6},
+    month = {6},
+    pages = {4456--4495},
+    volume = {113},
+    url = {http://pubs.acs.org/doi/10.1021/cr300228z},
+    isbn = {1520-6890 (Electronic){\textbackslash}r0009-2665 (Linking)},
+    doi = {10.1021/cr300228z},
+    issn = {0009-2665},
+    pmid = {23194313}
+}
+
+@article{Gao2012,
+    title = {{Theoretical Insight Into the Aggregation Induced Emission Phenomena of Diphenyldibenzofulvene: A Nonadiabatic Molecular Dynamics Study}},
+    year = {2012},
+    journal = {Phys. Chem. Chem. Phys.},
+    author = {Gao, Xing and Peng, Qian and Niu, Yingli and Wang, Dong and Shuai, Zhigang},
+    number = {41},
+    pages = {14207},
+    volume = {14},
+    url = {http://www.ncbi.nlm.nih.gov/pubmed/22491526%5Cnhttp://pubs.rsc.org/en/content/articlepdf/2012/cp/c2cp40347a http://xlink.rsc.org/?DOI=c2cp40347a},
+    isbn = {1463-9084 (Electronic){\textbackslash}n1463-9076 (Linking)},
+    doi = {10.1039/c2cp40347a},
+    issn = {1463-9076},
+    pmid = {22491526},
+    keywords = {*Molecular Dynamics Simulation, Benzene Derivatives/*chemistry, Cyclopentanes/*chemistry, Electrons, Photochemical Processes, Quantum Theory}
+}
+
+@article{Wu2012,
+    title = {{Theoretical Insights Into the Aggregation-Induced Emission by Hydrogen Bonding: A QM/MM Study}},
+    year = {2012},
+    journal = {J. Phys. Chem. A},
+    author = {Wu, Qunyan and Peng, Qian and Niu, Yingli and Gao, Xing and Shuai, Zhigang},
+    number = {15},
+    month = {4},
+    pages = {3881--3888},
+    volume = {116},
+    url = {http://pubs.acs.org/doi/10.1021/jp3002367},
+    isbn = {1520-5215 (Electronic){\textbackslash}n1089-5639 (Linking)},
+    doi = {10.1021/jp3002367},
+    issn = {1089-5639},
+    pmid = {22455476}
+}
+
+@article{Peng2007,
+    title = {{Toward Quantitative Prediction of Molecular Fluorescence Quantum Efficiency: Role of Duschinsky Rotation}},
+    year = {2007},
+    journal = {J. Am. Chem. Soc.},
+    author = {Peng, Qian and Yi, Yuanping and Shuai, Zhigang and Shao, Jiushu},
+    number = {30},
+    month = {8},
+    pages = {9333--9339},
+    volume = {129},
+    url = {http://pubs.acs.org/doi/abs/10.1021/ja067946e},
+    isbn = {0002-7863},
+    doi = {10.1021/ja067946e},
+    issn = {0002-7863},
+    pmid = {17622142}
+}
+
+@article{Presti2017,
+    title = {{Understanding Aggregation-Induced Emission in Molecular Crystals: Insights From Theory}},
+    year = {2017},
+    journal = {J. Phys. Chem. C},
+    author = {Presti, Davide and Wilbraham, Liam and Targa, Cecilia and Labat, Frédéric and Pedone, Alfonso and Menziani, Maria Cristina and Ciofini, Ilaria and Adamo, Carlo},
+    number = {10},
+    month = {3},
+    pages = {5747--5752},
+    volume = {121},
+    url = {http://pubs.acs.org/doi/abs/10.1021/acs.jpcc.7b00488 http://pubs.acs.org/doi/10.1021/acs.jpcc.7b00488},
+    doi = {10.1021/acs.jpcc.7b00488},
+    issn = {1932-7447}
+}
+
+@article{Abarenkov2007,
+    title = {{Unit Cell for a Lattice Electrostatic Potential}},
+    year = {2007},
+    journal = {Phys. Rev. B},
+    author = {Abarenkov, I. V.},
+    number = {16},
+    month = {10},
+    pages = {165127},
+    volume = {76},
+    url = {https://link.aps.org/doi/10.1103/PhysRevB.76.165127},
+    doi = {10.1103/PhysRevB.76.165127},
+    issn = {1098-0121}
+}
+
+@article{Zheng2016,
+    title = {{Unraveling the Aggregation Effect on Amorphous Phase AIE Luminogens: A Computational Study}},
+    year = {2016},
+    journal = {Nanoscale},
+    author = {Zheng, Xiaoyan and Peng, Qian and Zhu, Lizhe and Xie, Yujun and Huang, Xuhui and Shuai, Zhigang},
+    number = {33},
+    pages = {15173--15180},
+    volume = {8},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C6NR03599J http://www.ncbi.nlm.nih.gov/pubmed/25707617 http://link.springer.com/10.1007/128_2014_605},
+    doi = {10.1039/C6NR03599J},
+    issn = {2040-3364},
+    pmid = {25707617}
+}
+
+@article{Zhang2016,
+    title = {{Using the Isotope Effect to Probe an Aggregation Induced Emission Mechanism: Theoretical Prediction and Experimental Validation}},
+    year = {2016},
+    journal = {Chem. Sci.},
+    author = {Zhang, Tian and Peng, Qian and Quan, Changyun and Nie, Han and Niu, Yingli and Xie, Yujun and Zhao, Zujin and Tang, Ben Zhong and Shuai, Zhigang},
+    number = {8},
+    pages = {5573--5580},
+    volume = {7},
+    publisher = {Royal Society of Chemistry},
+    url = {http://xlink.rsc.org/?DOI=C6SC00839A},
+    doi = {10.1039/C6SC00839A},
+    issn = {2041-6520}
+}
+
+@article{Chung2015a,
+    title = {{The ONIOM Method and Its Applications}},
+    year = {2015},
+    journal = {Chem. Rev.},
+    author = {Chung, Lung Wa and Sameera, W. M C and Ramozzi, Romain and Page, Alister J. and Hatanaka, Miho and Petrova, Galina P. and Harris, Travis V. and Li, Xin and Ke, Zhuofeng and Liu, Fengyi and Li, Hai Bei and Ding, Lina and Morokuma, Keiji},
+    number = {12},
+    pages = {5678--5796},
+    volume = {115},
+    isbn = {1520-6890 (Electronic){\textbackslash}r0009-2665 (Linking)},
+    doi = {10.1021/cr5004419},
+    issn = {15206890},
+    pmid = {25853797}
+}
+
+@article{Crespo-Otero2012a,
+    title = {{Spectrum Simulation and Decomposition With Nuclear Ensemble: Formal Derivation and Application to Benzene, Furan and 2-Phenylfuran}},
+    year = {2012},
+    journal = {Theor. Chem. Acc.},
+    author = {Crespo-Otero, Rachel and Barbatti, Mario},
+    number = {6},
+    pages = {1--14},
+    volume = {131},
+    isbn = {1432-881X},
+    doi = {10.1007/s00214-012-1237-4},
+    issn = {1432881X},
+    keywords = {2-Phenylfuran, Absorption, Electronic spectrum, Excimer, Fluorescence, Spectrum simulation}
+}
+
+@article{Wilbraham2015,
+    title = {{Describing Excited State Intramolecular Proton Transfer in Dual Emissive Systems: A Density Functional Theory Based Analysis}},
+    year = {2015},
+    journal = {J. Phys. Chem. B},
+    author = {Wilbraham, Liam and Savarese, Marika and Rega, Nadia and Adamo, Carlo and Ciofini, Ilaria},
+    number = {6},
+    pages = {2459--2466},
+    volume = {119},
+    doi = {10.1021/jp507425x},
+    issn = {15205207}
+}
+
+@article{Presti2017a,
+    title = {{Understanding Aggregation-Induced Emission in Molecular Crystals: Insights From Theory}},
+    year = {2017},
+    journal = {J. Phys. Chem. B},
+    author = {Presti, Davide and Wilbraham, Liam and Targa, Cecilia and Labat, Frédéric and Pedone, Alfonso and Menziani, Maria Cristina and Ciofini, Ilaria and Adamo, Carlo},
+    number = {10},
+    pages = {5747--5752},
+    volume = {121},
+    doi = {10.1021/acs.jpcc.7b00488},
+    issn = {19327455}
+}
+
+
+
+
+@article {Sanville2007,
+author = {Sanville, Edward and Kenny, Steven D. and Smith, Roger and Henkelman, Graeme},
+title = {Improved Grid-Based Algorithm for Bader Charge Allocation},
+journal = {J. Comput. Chem.},
+volume = {28},
+number = {5},
+publisher = {Wiley Subscription Services, Inc., A Wiley Company},
+issn = {1096-987X},
+url = {http://dx.doi.org/10.1002/jcc.20575},
+doi = {10.1002/jcc.20575},
+pages = {899--908},
+keywords = {Bader charge, Bader volumes, atomic energy, numerical integration},
+year = {2007},
+}
+
+@book{kantorovich2004quantum,
+  title={Quantum Theory of the Solid State: An Introduction},
+  author={Kantorovich, L.},
+  isbn={9781402018213},
+  lccn={2003070697},
+  series={Fundamental Theories of Physics},
+  url={https://books.google.co.uk/books?id=7xmTnrCRHwQC},
+  year={2004},
+  publisher={Springer Netherlands}
+}
+
+ @article{Tuna2015,
+ title = {{Assessment of Approximate Coupled-Cluster and Algebraic-Diagrammatic-Construction Methods for Ground- and Excited-State Reaction Paths and the Conical-Intersection Seam of a Retinal-Chromophore Model}},
+ year = {2015}, journal = {J. Chem. Theory Comput.},
+ author = {Tuna, Deniz and Lefrancois, Daniel and Wola\'nski,{\L}ukasz and Gozem, Samer and Schapiro, Igor and Andruni{\'{o}}w, Tadeusz and Dreuw, Andreas and Olivucci, Massimo},
+ number = {12},
+ pages = {5758--5781},
+ volume = {11},
+ isbn = {1549-9618},
+ doi = {10.1021/acs.jctc.5b00022},
+ issn = {15499626},
+ pmid = {26642989} }
+ 
+ 
+ @Misc{scipy,
+  author =    {Eric Jones, Travis Oliphant, Pearu Peterson},
+  title =     {{SciPy}: Open source scientific tools for {Python}},
+  year =      {2001--},
+  url = "http://www.scipy.org/",
+}
+
+    
+    
+@article {cp2k,
+author = {Hutter, Jürg and Iannuzzi, Marcella and Schiffmann, Florian and VandeVondele, Joost},
+title = {CP2K: Atomistic Simulations of Condensed Matter Systems},
+journal = {Wiley Interdiscip. Rev. Comput. Mol. Sci.},
+volume = {4},
+number = {1},
+issn = {1759-0884},
+url = {http://dx.doi.org/10.1002/wcms.1159},
+doi = {10.1002/wcms.1159},
+pages = {15--25},
+year = {2014},
+}
+
+
+
+@misc{g09,
+author={M. J. Frisch and G. W. Trucks and H. B. Schlegel and G. E. Scuseria and M. A. Robb and J. R. Cheeseman and G. Scalmani and V. Barone and B. Mennucci and G. A. Petersson and H. Nakatsuji and M. Caricato and X. Li and H. P. Hratchian and A. F. Izmaylov and J. Bloino and G. Zheng and J. L. Sonnenberg and M. Hada and M. Ehara and K. Toyota and R. Fukuda and J. Hasegawa and M. Ishida and T. Nakajima and Y. Honda and O. Kitao and H. Nakai and T. Vreven and Montgomery, {Jr.}, J. A. and J. E. Peralta and F. Ogliaro and M. Bearpark and J. J. Heyd and E. Brothers and K. N. Kudin and V. N. Staroverov and R. Kobayashi and J. Normand and K. Raghavachari and A. Rendell and J. C. Burant and S. S. Iyengar and J. Tomasi and M. Cossi and N. Rega and J. M. Millam and M. Klene and J. E. Knox and J. B. Cross and V. Bakken and C. Adamo and J. Jaramillo and R. Gomperts and R. E. Stratmann and O. Yazyev and A. J. Austin and R. Cammi and C. Pomelli and J. W. Ochterski and R. L. Martin and K. Morokuma and V. G. Zakrzewski and G. A. Voth and P. Salvador and J. J. Dannenberg and S. Dapprich and A. D. Daniels and O. Farkas and J. B. Foresman and J. V. Ortiz and J. Cioslowski and D. J. Fox},
+title="Gaussian09 Revision E.01",
+note="Gaussian Inc. Wallingford CT 2009"
+}
+
+@misc{TURBOMOLE,
+title = {{TURBOMOLE V6.2 2010}, a development of {University of Karlsruhe} and
+{Forschungszentrum Karlsruhe GmbH}, 1989-2007,
+{TURBOMOLE GmbH}, since 2007; available from {http://www.turbomole.com}.}} 
+
+@misc{fromage,
+  author =    "Miguel Rivera and Michael Dommett and Rachel Crespo-Otero",
+  title =     {fromage: A Framework for Molecular Aggregate Excitation},
+  year =      {2018},
+  url = "https://github.etc",
+}
+
+@misc{newtonx,
+  author =    "Barbatti, M. and Granucci, G. and Ruckenbauer, M. and Plasser, F. and Crespo-Otero, R. and Pittner, J. and Persico, M. and Lischka",
+  title =     {NEWTON-X: A Package for Newtonian Dynamics Close to the Crossing Seam. Version 2},
+  year =      {2016},
+  url = "www.newtonx.org",
+}
+
+
+@article{Aquilante2016,
+    title = {{Molcas 8: New Capabilities for Multiconfigurational Quantum Chemical Calculations Across the Periodic Table}},
+    year = {2016},
+    journal = {J. Comput. Chem.},
+    author = {Aquilante, Francesco and Autschbach, Jochen and Carlson, Rebecca K. and Chibotaru, Liviu F. and Delcey, Mickaël G. and De Vico, Luca and Fdez Galv{\'{a}}n, Ignacio and Ferr{\'{e}}, Nicolas and Frutos, Luis Manuel and Gagliardi, Laura and Garavelli, Marco and Giussani, Angelo and Hoyer, Chad E. and Li Manni, Giovanni and Lischka, Hans and Ma, Dongxia and Malmqvist, Per {\AA}ke and M{\"{u}}ller, Thomas and Nenov, Artur and Olivucci, Massimo and Pedersen, Thomas Bondo and Peng, Daoling and Plasser, Felix and Pritchard, Ben and Reiher, Markus and Rivalta, Ivan and Schapiro, Igor and Segarra-Mart{\'{i}}, Javier and Stenrup, Michael and Truhlar, Donald G. and Ungur, Liviu and Valentini, Alessio and Vancoillie, Steven and Veryazov, Valera and Vysotskiy, Victor P. and Weingart, Oliver and Zapata, Felipe and Lindh, Roland},
+    number = {5},
+    pages = {506--541},
+    volume = {37},
+    isbn = {0192-8651},
+    doi = {10.1002/jcc.24221},
+    issn = {1096987X},
+    pmid = {26561362},
+    keywords = {electron correlation, gradients, molecular dynamics, parallelization, relativistic}
+}
+
+@article{Aradi2007,
+abstract = {A new Fortran 95 implementation of the DFTB (density functional-based tight binding) method has been developed, where the sparsity of the DFTB system of equations has been exploited. Conventional dense algebra is used only to evaluate the eigenproblems of the system and long-range Coulombic terms, but drop-in O(N) or O(N2) modules are planned to replace the small code sections that these entail. The developed sparse storage structure is discussed in detail, and a short overview of other features of the new code is given.},
+author = {Aradi, B. and Hourahine, B. and Frauenheim, Th.},
+doi = {10.1021/jp070186p},
+isbn = {1089-5639},
+issn = {10895639},
+journal = {J. Phys. Chem. B A},
+number = {26},
+pages = {5678--5684},
+pmid = {17567110},
+title = {{DFTB+, a Sparse Matrix-Based Implementation of the DFTB Method}},
+volume = {111},
+year = {2007}
+}
+
+@article{Maseras1995,
+abstract = {A new computational scheme integrating ab initio and molecular mechanics descriptions in different parts of the same molecule is presented. In contrast with previous approaches, this method is especially designed to allow the introduction of molecular mechanics corrections in full geometry optimizations concerning problems usually studied through ab initio calculations on model systems. The scheme proposed in this article intends to solve some of the systematic error associated with modeling through the use of molecular mechanics corrections. This method, which does not require any new parameter, evaluates explicitly the energy derivatives with respect to geometrical parameters and therefore has a straightforward application to geometry optimization. Examples of its performance on two simple cases are provided: the equilibrium geometry of cyclopropene and the energy barriers on SN2 reactions of alkyl chloride systems. Results are in satisfactory agreement with those of full ab initio calculations in both cases. {\textcopyright} 1995 by John Wiley {\&} Sons, Inc.},
+author = {Maseras, Feliu and Morokuma, Keiji},
+doi = {10.1002/jcc.540160911},
+isbn = {1096-987X},
+issn = {0192-8651},
+journal = {J. Comput. Chem.},
+number = {9},
+pages = {1170--1179},
+title = {{IMOMM: A New Integratedab Initio + Molecular Mechanics Geometry Optimization Scheme of Equilibrium Structures and Transition States}},
+url = {http://dx.doi.org/10.1002/jcc.540160911{\%}5Cnhttp://doi.wiley.com/10.1002/jcc.540160911},
+volume = {16},
+year = {1995}
+}
+
+@Article{Skelton2015,
+author ="Skelton, Jonathan M. and Lora da Silva, E. and Crespo-Otero, Rachel and Hatcher, Lauren E. and Raithby, Paul R. and Parker, Stephen C. and Walsh, Aron",
+title  ="Electronic Excitations in Molecular Solids: Bridging Theory and Experiment",
+journal  ="Faraday Discuss.",
+year  ="2015",
+volume  ="177",
+issue  ="0",
+pages  ="181-202",
+publisher  ="The Royal Society of Chemistry",
+doi  ="10.1039/C4FD00168K",
+url  ="http://dx.doi.org/10.1039/C4FD00168K",
+abstract  ="As the spatial and temporal resolution accessible to experiment and theory converge{,} computational chemistry is an increasingly powerful tool for modelling and interpreting spectroscopic data. However{,} the study of molecular processes{,} in particular those related to electronic excitations (e.g. photochemistry){,} frequently pushes quantum-chemical techniques to their limit. The disparity in the level of theory accessible to periodic and molecular calculations presents a significant challenge when modelling molecular crystals{,} since accurate calculations require a high level of theory to describe the molecular species{,} but must also take into account the influence of the crystalline environment on their properties. In this article{,} we briefly review the different classes of quantum-chemical techniques{,} and present an overview of methods that account for environmental influences with varying levels of approximation. Using a combination of solid-state and molecular calculations{,} we quantitatively evaluate the performance of implicit-solvent models for the [Ni(Et4dien)(η2-O{,}ON)(η1-NO2)] linkage-isomer system as a test case. We focus particularly on the accurate reproduction of the energetics of the isomerisation{,} and on predicting spectroscopic properties to compare with experimental results. This work illustrates how the synergy between periodic and molecular calculations can be exploited for the study of molecular crystals{,} and forms a basis for the investigation of more challenging phenomena{,} such as excited-state dynamics{,} and for further methodological developments."}

@@ -1,0 +1,12 @@
+%chk=gck.chk
+%mem=5GB
+%nproc=1
+#hf/STO-3G symmetry=none charge force
+
+ml
+
+0 1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX
+
