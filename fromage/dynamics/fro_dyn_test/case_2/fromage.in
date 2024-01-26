@@ -1,0 +1,18 @@
+high_level      molcas
+low_level       xtb
+dynamics        yes
+check           output.chk
+init_state      2
+spin            0
+states          3
+singlestate     1
+coupling        1 2
+nactype         ktdc
+time            5
+step            0.5
+hop_method      FSSH
+vel_file        velocity
+adj_mom         1
+chk_stp		5
+e_cons		0.0085
+verbose		1

@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+from setuptools import setup, Extension
+#import numpy as np
+
+fdist_module = Extension('fromage.fdist._fdist', sources=['fromage/fdist/fdist.i','fromage/fdist/fdist.cpp'],swig_opts=['-c++'])
+
+setup(name='fromage',
+      version='2.0',
+      description='FRamewOrk for Molecular AGgregate Excitations',
+      authors='Federico J Hernandez, Amir Sidat, Miguel Rivera, Michael Dommett, Rachel Crespo-Otero',
+      author_email='f.hernandez@qmul.ac.uk - r.crespo-otero@qmul.ac.uk',
+      license='MIT',
+      ext_modules=[fdist_module],
+      packages=['fromage',
+                'fromage.fdist',
+                'fromage.io',
+                'fromage.scripts',
+                'fromage.utils',
+                'fromage.utils.exci_coupling',
+                'fromage.utils.array_operations',
+                'fromage.utils.mol',
+                'fromage.utils.newtonx',
+                'fromage.dynamics',
+                'fromage.gas_phase'],
+      scripts=['fromage/scripts/fro_assign_charges.py',
+               'fromage/scripts/fro_run.py',
+               'fromage/scripts/fro_run_flex.py',
+               'fromage/scripts/fro_dimer_tools.py',
+               'fromage/scripts/fro_pick_mol.py',
+               'fromage/scripts/fro_pop_stat.py',
+               'fromage/scripts/fro_prep_run.py',
+               'fromage/scripts/fro_coupling.py',
+               'fromage/scripts/fro_exciton_classification.py',
+               'fromage/scripts/fro_volumetrics.py',
+               'fromage/scripts/fro_uc_tools.py',
+               'fromage/utils/dens_analysis.py',
+               'fromage/dynamics/surfacehopping.py',
+               'fromage/dynamics/periodic_table.py',
+               'fromage/dynamics/read_frequencies.py',
+               'fromage/dynamics/dynamixsampling.py',
+               'fromage/dynamics/setup_dyn.py',
+               'fromage/dynamics/tools.py',
+               'fromage/dynamics/verlet.py',
+               'fromage/gas_phase/ci_search.py',
+               'fromage/gas_phase/fro_gp_run.py'],
+      install_requires=[
+          'numpy',
+          'scipy', 
+          'pytest', 'cython'],
+      )

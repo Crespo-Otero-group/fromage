@@ -1,0 +1,159 @@
+STARTING TIME: 2022-02-23 16:11:28.658719
+------------------------------
+Iteration: 1
+Real low energy:                -10859.56453086 eV -399.08143392 au
+Model low energy:                 -515.43021082 eV  -18.94170130 au
+Model high energy:               -7315.66079105 eV -268.84543945 au
+ONIOM Total energy:             -17659.79511109 eV -648.98517206 au
+ONIOM SCF energy:               -17668.17108097 eV -649.29298312 au
+Gap:                                 8.37596988 eV    0.30781106 au
+No surface hopping is performed
+------------------------------
+Iteration: 2
+Real low energy:                -10859.77229208 eV -399.08906900 au
+Model low energy:                 -515.63462324 eV  -18.94921332 au
+Model high energy:               -7316.22884508 eV -268.86631504 au
+ONIOM Total energy:             -17660.36651392 eV -649.00617072 au
+ONIOM SCF energy:               -17668.58209191 eV -649.30808749 au
+Gap:                                 8.21557800 eV    0.30191677 au
+No surface hopping is performed
+------------------------------
+Iteration: 3
+Real low energy:                -10859.82543039 eV -399.09102179 au
+Model low energy:                 -515.68367176 eV  -18.95101582 au
+Model high energy:               -7316.78473915 eV -268.88674376 au
+ONIOM Total energy:             -17660.92649779 eV -649.02674974 au
+ONIOM SCF energy:               -17668.84414415 eV -649.31771773 au
+Gap:                                 7.91764636 eV    0.29096799 au
+No surface hopping is performed
+------------------------------
+Iteration: 4
+Real low energy:                -10859.65954192 eV -399.08492551 au
+Model low energy:                 -515.51319942 eV  -18.94475108 au
+Model high energy:               -7317.18439516 eV -268.90143084 au
+ONIOM Total energy:             -17661.33073766 eV -649.04160527 au
+ONIOM SCF energy:               -17668.81299509 eV -649.31657302 au
+Gap:                                 7.48225743 eV    0.27496775 au
+Surface hopping information
+    Random number:             0.92648047
+    Accumulated probability:   0.00008223
+    state mult  level   probability 
+    1     1     1       0.00000002
+    2     1     2       0.00000000
+    3     1     3       0.00008221
+
+    ------------------------------
+Iteration: 5
+Real low energy:                -10859.28024636 eV -399.07098666 au
+Model low energy:                 -515.12904182 eV  -18.93063355 au
+Model high energy:               -7317.42189789 eV -268.91015890 au
+ONIOM Total energy:             -17661.57310243 eV -649.05051201 au
+ONIOM SCF energy:               -17668.53305174 eV -649.30628530 au
+Gap:                                 6.95994930 eV    0.25577329 au
+Surface hopping information
+    Random number:             0.80110333
+    Accumulated probability:   0.00002310
+    state mult  level   probability 
+    1     1     1       0.00000004
+    2     1     2       0.00000000
+    3     1     3       0.00002305
+
+    ------------------------------
+Iteration: 6
+Real low energy:                -10858.76253137 eV -399.05196099 au
+Model low energy:                 -514.60635574 eV  -18.91142520 au
+Model high energy:               -7317.58133057 eV -268.91601794 au
+ONIOM Total energy:             -17661.73750619 eV -649.05655373 au
+ONIOM SCF energy:               -17668.12615352 eV -649.29133207 au
+Gap:                                 6.38864732 eV    0.23477834 au
+Surface hopping information
+    Random number:             0.80252187
+    Accumulated probability:   0.00000008
+    state mult  level   probability 
+    1     1     1       0.00000008
+    2     1     2       0.00000000
+    3     1     3       0.00000000
+
+    ------------------------------
+Iteration: 7
+Real low energy:                -10858.21817110 eV -399.03195613 au
+Model low energy:                 -514.05701872 eV  -18.89123745 au
+Model high energy:               -7317.80826957 eV -268.92435779 au
+ONIOM Total energy:             -17661.96942194 eV -649.06507647 au
+ONIOM SCF energy:               -17667.77025649 eV -649.27825310 au
+Gap:                                 5.80083455 eV    0.21317663 au
+Surface hopping information
+    Random number:             0.93925759
+    Accumulated probability:   0.00000015
+    state mult  level   probability 
+    1     1     1       0.00000015
+    2     1     2       0.00000000
+    3     1     3       0.00000000
+
+    ------------------------------
+Iteration: 8
+Real low energy:                -10857.70850268 eV -399.01322617 au
+Model low energy:                 -513.54256547 eV  -18.87233165 au
+Model high energy:               -7318.17267729 eV -268.93774952 au
+ONIOM Total energy:             -17662.33861450 eV -649.07864404 au
+ONIOM SCF energy:               -17667.55859260 eV -649.27047460 au
+Gap:                                 5.21997810 eV    0.19183056 au
+Surface hopping information
+    Random number:             0.23644941
+    Accumulated probability:   0.00000027
+    state mult  level   probability 
+    1     1     1       0.00000027
+    2     1     2       0.00000000
+    3     1     3       0.00000000
+
+    ------------------------------
+Iteration: 9
+Real low energy:                -10857.20022387 eV -398.99454728 au
+Model low energy:                 -513.03032425 eV  -18.85350714 au
+Model high energy:               -7318.59884917 eV -268.95341104 au
+ONIOM Total energy:             -17662.76874880 eV -649.09445118 au
+ONIOM SCF energy:               -17667.43015876 eV -649.26575475 au
+Gap:                                 4.66140996 eV    0.17130357 au
+Surface hopping information
+    Random number:             0.79056583
+    Accumulated probability:   0.00000055
+    state mult  level   probability 
+    1     1     1       0.00000050
+    2     1     2       0.00000000
+    3     1     3       0.00000005
+
+    ------------------------------
+Iteration: 10
+Real low energy:                -10856.63027272 eV -398.97360197 au
+Model low energy:                 -512.45825804 eV  -18.83248411 au
+Model high energy:               -7318.94873771 eV -268.96626920 au
+ONIOM Total energy:             -17663.12075239 eV -649.10738707 au
+ONIOM SCF energy:               -17667.25546911 eV -649.25933503 au
+Gap:                                 4.13471672 eV    0.15194796 au
+Surface hopping information
+    Random number:             0.08614052
+    Accumulated probability:   0.00000095
+    state mult  level   probability 
+    1     1     1       0.00000094
+    2     1     2       0.00000000
+    3     1     3       0.00000001
+
+    ------------------------------
+Iteration: 11
+Real low energy:                -10855.98224186 eV -398.94978729 au
+Model low energy:                 -511.81061619 eV  -18.80868372 au
+Model high energy:               -7319.13925724 eV -268.97327066 au
+ONIOM Total energy:             -17663.31088290 eV -649.11437423 au
+ONIOM SCF energy:               -17666.95941136 eV -649.24845511 au
+Gap:                                 3.64852846 eV    0.13408088 au
+Surface hopping information
+    Random number:             0.36579701
+    Accumulated probability:   0.00000157
+    state mult  level   probability 
+    1     1     1       0.00000155
+    2     1     2       0.00000000
+    3     1     3       0.00000003
+
+    DONE
+ELAPSED TIME: 0:06:03.807069
+ENDING TIME: 2022-02-23 16:17:32.465788
