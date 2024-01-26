@@ -68,8 +68,6 @@ class RunSeq(object):
             shell_high = rf.mol_from_file(self.inputs["target_shell"])
             self.write_out("Outer region read in with " + str(len(shell_high)) + " atoms.\n")
             high_level_pop_mol = rf.mol_from_gauss(self.inputs["high_pop_file"], pop=self.inputs["high_pop_method"])
-            shell_high.set_bonding(bonding="dis", thresh=self.inputs["bond_thresh"])
-            high_level_pop_mol.set_bonding(bonding="dis", thresh=self.inputs["bond_thresh"])
             shell_high.populate(high_level_pop_mol)
         else:
             shell_high = self.cell.make_cluster(self.inputs["clust_rad"], central_mol = self.region_1, mode = self.inputs["clust_mode"])
@@ -81,8 +79,6 @@ class RunSeq(object):
             self.write_out("Outer region generated with " + str(len(shell_high)) + " atoms.\n")
         low_level_pop_mol = rf.mol_from_gauss(self.inputs["low_pop_file"], pop=self.inputs["low_pop_method"])
         shell_low = shell_high.copy()
-        low_level_pop_mol.set_bonding(bonding="dis", thresh=self.inputs["bond_thresh"])
-        shell_low.set_bonding(bonding="dis", thresh=self.inputs["bond_thresh"])
         shell_low.populate(low_level_pop_mol)
         return shell_low, shell_high
 

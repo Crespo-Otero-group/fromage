@@ -76,40 +76,6 @@ if __name__ == '__main__':
         output_file.close()
         return
 
-    def getPrograms():
-        """
-        Read requested programs for high_level and low_level calculations
-            from fromage.in file to determine which template files to write
-
-        Returns
-        -------
-        high_level_write : Function object from io.edit_file.py (ef) that
-            writes the correct template file for the high level method
-        low_level_write : Function object from io.edit_file.py (ef) that
-            writes the correct template file for the low level method
-
-        """
-        def_inputs = {
-            "high_level" : "gaussian",
-            "low_level"  : "gaussian" }
-
-        inputs = def_inputs.copy()
-
-        if os.path.isfile("fromage.in"):
-            new_inputs = rf.read_config("fromage.in")
-            inputs.update(new_inputs)
-
-        writer_list = []
-        for prog in [inputs["high_level"], inputs["low_level"]]:
-            if prog == "xtb":
-                writer_list.append(ef.write_xtb_temp)
-            elif prog == "fomo-ci" or prog == "mopac":
-                writer_list.append(ef.write_tinker_temp)
-            else:
-                writer_list.append(ef.write_g_temp)
-        return writer_list[0], writer_list[1]
-
-
     here = os.getcwd()
     output_file = open(here+"/prep.out", "w")
 
@@ -163,37 +129,17 @@ if __name__ == '__main__':
     if not os.path.exists(mg_path):
         os.makedirs(mg_path)
 
-    high_level_write, low_level_write = getPrograms()
+    os.chdir(rl_path)
+    ef.write_g_temp("rl.temp", region_2, [], os.path.join(here, "rl.template"))
+    os.chdir(ml_path)
+    ef.write_g_temp("ml.temp", [], region_2, os.path.join(here, "ml.template"))
 
-    #  
-#    os.chdir(rl_path)
-#    low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
-#    os.chdir(ml_path)
-    if low_level_write == ef.write_tinker_temp:
-        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed,")
-        print("fromage will produce files without including the atom types for the QM region" + "\n")
-        os.chdir(ml_path)
-        low_level_write("mopac_tnk.temp", "ml_tnk.key", region_1, region_2, region_2)
-        os.chdir(rl_path)
-        low_level_write("rl.temp", os.path.join(here, "rl.template"), region_1, region_2)
-    else:
-        os.chdir(ml_path)
-        low_level_write("ml.temp", [], region_2, os.path.join(here, "ml.template"))
-        os.chdir(rl_path)
-        low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
-    if high_level_write == ef.write_tinker_temp:
-        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed," + "\n")
-        print("fromage will produce files without including the atom types for the QM region" + "\n")
-        os.chdir(mh_path)
-        high_level_write("mopac_tnk.temp", "mh_tnk.key", region_1, region_2, high_points)
-        os.chdir(mg_path)
-        high_level_write("mopac_tnk.temp", "mg_tnk.key", region_1, region_2, high_points)
-    else:
-        os.chdir(mh_path)
-        high_level_write("mh.temp", [], high_points, os.path.join(here, "mh.template"))
-        os.chdir(mg_path)    
-        high_level_write("mg.temp", [], high_points, os.path.join(here, "mg.template"))
-
+    os.chdir(mh_path)
+    ef.write_g_temp("mh.temp", [], high_points,
+                    os.path.join(here, "mh.template"))
+    os.chdir(mg_path)
+    ef.write_g_temp("mg.temp", [], high_points,
+                    os.path.join(here, "mg.template"))
     os.chdir(here)
     end_time = datetime.now()
 
