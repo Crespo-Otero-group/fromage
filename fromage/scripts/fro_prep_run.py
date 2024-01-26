@@ -76,7 +76,6 @@ if __name__ == '__main__':
         output_file.close()
         return
 
-
     def getPrograms():
         """
         Read requested programs for high_level and low_level calculations
@@ -120,18 +119,6 @@ if __name__ == '__main__':
 
     # read config inputs
     inputs = pcf.parse_inputs("config")
-    
-    # read fromage.in inputs #FJH
-#    def_prog_inputs = {
-#        "high_level" : "gaussian",
-#        "low_level"  : "gaussian" }
-
-#    prog_inputs = def_prog_inputs.copy()
-
-#    if os.path.isfile("fromage.in"):
-#        new_prog_inputs = rf.read_config("fromage.in")
-#        prog_inputs.update(new_prog_inputs)    
-    ##################################################
 
     # read the input cell
     cell = rf.mol_from_file(inputs["cell_file"])

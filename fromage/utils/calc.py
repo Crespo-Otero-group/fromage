@@ -305,7 +305,15 @@ class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09/16
     """
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+    def run(self, 
+            atoms, 
+            point_flex = None, 
+            nprocs = None, 
+            state=None, 
+            states=None, 
+            singlestate=0, 
+            nac_coupling=[], 
+            soc_coupling=[]):
         """
         Write a Gaussian input file and return a subprocess.Popen
 
@@ -357,7 +365,6 @@ class Gauss_calc(Calc):
         proc : subprocess.Popen object
             the object should have a .wait() method
        """
-
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
 
@@ -374,7 +381,6 @@ class Gauss_calc(Calc):
         os.chdir(self.here)
 
         return proc
-
 
     def read_out(self, 
                  positions, 
@@ -868,7 +874,6 @@ class Turbo_calc(Calc):
                  mult = [],
                  singlestate = 0,
                  soc_coupling = []):
-
         """
         Analyse a Turbomole ricc2.out file while printing geometry updates
 
@@ -977,7 +982,6 @@ class Turbo_SCF_calc(Calc):
     Calculation of SCF like DFT or HF with Turbomole 7.0
 
     """
-
     def run(self, atoms, nprocs=None):
         """
         Write a Turbomole coord file and return a subprocess.Popen
@@ -1263,7 +1267,6 @@ class Molcas_calc(Calc):
             The ground state energy in Hartree
 
         """
-
         os.chdir(self.molcas_path)
 
         #initialize nac and soc, which will be used when dyn_bool == True

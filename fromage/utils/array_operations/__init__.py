@@ -187,7 +187,7 @@ def orthogonalise_asym(vectors):
     o_vecs = np.array([ovec_1,ovec_2])
     return o_vecs
 
-def array2atom(template, pos, q = None): # FJH added q = None
+def array2atom(template, pos, q = None): 
     """
     Turn an array of the form x1, y1, z1, x2, y2, z2 etc. into a list of Atom
     objects

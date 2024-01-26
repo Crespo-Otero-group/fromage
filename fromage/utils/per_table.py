@@ -24,15 +24,16 @@ periodic_list = [("", "", 0, 0, 0.0, 0.0,0.0),
                  ("au", "Au", 79, 1, 1.36, 1.66, 196.967),
                  ("si", "Si", 14, 4, 1.11, 2.19, 28.0855),
                  ("ge", "Ge", 32, 4, 1.20, 2.29, 72.6400),
-                 ("cw", "Cw", 9999, 9999, 9999, 9999, 9999),    #  FJH 29/03/22
-                 ("hw", "Hw", 9999, 9999, 9999, 9999, 9999),    # These lines are included to be used in the 
-                 ("ow", "Ow", 9999, 9999, 9999, 9999, 9999),     # reparametrisations of FOMO-CI method
-                 ("nw", "Nw", 9999, 9999, 9999, 9999, 9999),]    # If another special case is required
-                                                            # included in the same format. For instance,
-                                                            # if a special case of sulfour atom is needed,
-                                                            # include it as sw, Sw, etc.
-                                                            # Note that I have left meaningless numbers for 
-                                                            # all the other info
+                 ("cw", "Cw", 9999, 9999, 9999, 9999, 9999),   #  FJH 29/03/22
+                 ("hw", "Hw", 9999, 9999, 9999, 9999, 9999),   # These lines are included to be used in the 
+                 ("ow", "Ow", 9999, 9999, 9999, 9999, 9999),   # reparametrisations of FOMO-CI method
+                 ("nw", "Nw", 9999, 9999, 9999, 9999, 9999),]  # If another special case is required
+                                                               # include it in the same format. For instance,
+                                                               # if a special case of sulfour atom is needed,
+                                                               # include it as sw, Sw, etc.
+                                                               # Note that I have left meaningless numbers
+                                                               # for all the other info
+                 ("au", "Au", 79, 1, 1.36, 1.66, 196.967)]
 
 periodic = {}
 

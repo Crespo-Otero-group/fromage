@@ -1,13 +1,13 @@
-[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage) [![Docs](
-https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](https://fromage.readthedocs.io/en/latest/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Crespo-Otero-group/fromage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Crespo-Otero-group/fromage/context:python)
+<!--[![Build Status](https://travis-ci.org/Crespo-Otero-group/fromage.svg?branch=master)](https://travis-ci.org/Crespo-Otero-group/fromage) [![Docs](
+https://readthedocs.org/projects/fromage/badge/?version=latest&style=plastic)](https://fromage.readthedocs.io/en/latest/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Crespo-Otero-group/fromage.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Crespo-Otero-group/fromage/context:python)-->
 
 <p align="left">
   <img height="150" src="doc/logo.png">
 </p>
 
-**fromage** (FRamewOrk for Molecular AGgregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state. It contains utilities for geometry manipulation going from periodic to finite models, exciton analysis and ONIOM calculations. Here we present our new version 2.0
+**fromage** (FRamewOrk for Molecular AGgregate Excitations) is a Python framework designed to facilitate the study of molecular aggregates in the excited state. It contains utilities for geometry manipulation going from periodic to finite models, exciton analysis and ONIOM calculations. The current version is 1.0
 
-**fromage** is developed at Queen Mary University of London by the [Crespo-Otero group](https://crespootero.wordpress.com/). We acknowledge the Leverhulme Trust (RPG-2019-122).
+**fromage** is developed by the [Crespo-Otero group](https://crespootero.wordpress.com/). We acknowledge the EPRSC for funding this project [(EP/R029385/1)](https://gow.epsrc.ukri.org/NGBOViewGrant.aspx?GrantRef=EP/R029385/1) and Leverhulme Trust [(RPG-2019-122)](https://www.leverhulme.ac.uk/listings?field_grant_scheme_target_id=13).
 
 The documentation can be found [here](https://fromage.readthedocs.io/).
 
@@ -58,7 +58,7 @@ Rivera, M., Dommett, M., Crespo-Otero, R. ONIOM(QM:QM') Electrostatic Embedding 
   ```
   If you are using different binaries for Gaussian or Ewald, change accordingly.
   
-  Voila!
+  Voilà!
   
 ### 1.2 Common pitfall
 
@@ -285,7 +285,6 @@ Once you have finished running `fro_prep_run.py`, you will end up with a few fil
 
 To run fromage, all you need is:
 
-
 - A `fromage.in` file
 - `mol.init.xyz`
 - `shell.xyz`
@@ -299,7 +298,6 @@ For Turbomole RI-CC2, run a define and then write in all of the point charges fr
 **IMPORTANT**: Turbomole uses Bohr units in its control file and as such the x, y and z columns should be scaled accordingly
 
 For Molcas RASCF, prepare an input file in the directory called `molcas.input` with geom.xyz as the coordinate. To add point charges, use in `&GATEWAY`:
-
 
 ```
   xfield
@@ -318,6 +316,16 @@ You should be all set now. Run `fro_run.py` to begin the calculation.
 
    - You only need `fromage.in`, `mol.init.xyz` `mh` and `mg` directories containing `.temp` files. 
    - Run `ci_search.py` to begin the calculation 
+
+### 3.2 Outputs
+
+The program only has three main outputs:
+
+- `fromage.out` which gives updates on all of the individual energies being calculated, the total gradient norm and the energy gap
+- `geom_mol.xyz` which keeps a record of the optimising geometry
+- `geom_cluster.xyz` which combines `geom_mol.xyz` and `shell.xyz` for a better view of intermolecular interactions
+
+If the minimisation ran smoothly, the last line of `fromage.out` should be the ending time.
 
 ## 4 Additional utilities
 
@@ -397,9 +405,12 @@ If all you want to do is integrate your favourite quantum chemistry package into
 
 The Ewald program is often the source of all of your problems when tinkering with the embedding methods, even as a regular user pushing the program to its limits. It uses a deprecated lapack function and needs to be modified very specifically to be used with `fro_prep_run.py`.
 
+## 6 Contributors 
+The core algorithms in fromage were developed by Miguel Rivera when he was a PhD student in the Crespo-Otero group. Michael Dommett (exciton analysis) and Amir Sidat (geometry analysis) have contributed to initial versions of fromage. Currently, Federico Hernandez, Amir Sidat, and Michael Ingham are actively contributing to the code. Some new features not yet included in this version include nonadiabatic dynamic simulations, optimisation of different regions, treatment of fully connected molecular crystals (such as MOFs and COFs), and different methods to address overpolarisation. If you are interested in these new features or would like to contribute to fromage, please contact Rachel Crespo-Otero at r.crespo-otero@ucl.ac.uk.   
+
 --------------------------------------------------------------------------------
 
 More detailed instructions can be found in the [documentation](https://fromage.readthedocs.io/).
-For any questions about usage, citing or contributing, please email our group at f.hernandez@qmul.ac.uk or r.crespo-otero@qmul.ac.uk
+For any questions about usage, citing or contributing, please email our group at r.crespo-otero@ucl.ac.uk
 
-- Miguel Rivera and Federico Hernandez
+-The Crespo-Otero group 

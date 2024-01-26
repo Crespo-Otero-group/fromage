@@ -22,11 +22,11 @@ from scipy.optimize import minimize
 from fromage.io import read_file as rf
 from fromage.utils import array_operations as ao
 from fromage.utils import calc
+<<<<<<< HEAD
 from fromage.utils import fro_dyn as fd
 from fromage.utils.newtonx import fro_nx as nx
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
-
 
 def sequence(in_pos):
     """
@@ -35,6 +35,7 @@ def sequence(in_pos):
     This is why it can only receive one array of floats as input and return two
     arrays of floats. As a result some variables in this function are defined
     elsewhere in the module which is a necessary evil.
+
     Parameters
     ----------
     in_pos : list of floats
@@ -45,6 +46,7 @@ def sequence(in_pos):
         Combined energy or penalty function value in Hartree
     gr_out : list of floats
         Gradients of en_out in Hartree/Angstrom
+
     References
     ----------
     Levine, B. G., Coe, J. D. & Martinez, T. J. Optimizing conical intersections
@@ -52,7 +54,7 @@ def sequence(in_pos):
     multireference second-order perturbation theory (MS-CASPT2).
     J. Phys. Chem. B 112, 405-413 (2008).
 
-    Updated by Federico Hernandez 27-10-2022
+    Updated by Federico J. Hernandez 27-10-2022
     """
     # initialise calculation objects
     rl = calc.setup_calc("rl", low_level)
@@ -130,7 +132,7 @@ def sequence(in_pos):
     else:
         en_out = en_combo
         gr_out = gr_combo
- 
+
     # print some updates in the output
     out_file.write("------------------------------\n")
     global iteration
@@ -251,7 +253,6 @@ if __name__ == '__main__':
         new_inputs = rf.read_config("fromage.in")
         inputs.update(new_inputs)
 
-########### FJH #################################
     out_file = inputs["out_file"]
 #
     # output
@@ -274,7 +275,6 @@ if __name__ == '__main__':
         out_file.write("natoms_flex is reset to OFF to continue with a calculation considreing a frozen environment"+ "\n")
         natoms_flex = None
         out_file.write(" "+ "\n")
-#################################################
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     bool_ci = bool_cast(inputs["bool_ci"])
@@ -322,7 +322,6 @@ if __name__ == '__main__':
     # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]
 
-    
     # read shell atoms
     shell_atoms = rf.read_xyz(shell_file)[0]
 
@@ -347,8 +346,5 @@ if __name__ == '__main__':
         res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
 
-#    out_file.write("DONE\n")
-#    end_time = datetime.now()
-#    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
-#    out_file.write("ENDING TIME: " + str(end_time) + "\n")
-#    out_file.close()
+    write_tail(start_time,out_file)
+

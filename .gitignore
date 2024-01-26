@@ -1,0 +1,13 @@
+fromage/fdist/_fdist*
+fromage/fdist/fdist_wrap.cxx
+fromage/fdist/fdist.py
+fromage/fdist/build
+**/*.swp
+**/*.pyc
+fromage/test/.pytest_cache/**
+.pytest_cache/**
+build/*
+doc/build/*
+.cache
+fromage.egg-info/*
+fromage/tests/.pytest_cache/*

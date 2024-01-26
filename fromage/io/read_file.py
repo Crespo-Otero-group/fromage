@@ -1364,7 +1364,6 @@ def read_dftb_out(in_name):
             if not line.strip():
                 read_grad = False
             if read_grad:
-#                atom_grads = [float(i) for i in line.split()]
                 atom_grads = [float(i) for i in line.split()[1:]] # FJH
                 grad.extend(atom_grads)
             if "Total Forces" in line:
@@ -2369,8 +2368,6 @@ def read_hessian_orca(in_name):
 
 
 """
- To implement: Q-Chem - NWChem - dftbplus
+ To implement: Q-Chem - NWChem - 
 """
-
-
 
