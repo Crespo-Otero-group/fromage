@@ -127,7 +127,7 @@ def centered_supercell(self, trans, from_origin=False):
     """
     import fromage.utils.mol as mol_init
 
-    trans_series = [0, 0, 0]
+    trans_series = np.array([0, 0, 0], dtype=np.ndarray) 
     for i, tra in enumerate(trans):
         if from_origin:
             trans_series[i] = list(range(-tra, tra))

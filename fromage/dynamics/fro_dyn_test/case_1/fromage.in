@@ -1,0 +1,14 @@
+high_level      molcas
+low_level       xtb
+dynamics        yes
+check           output.chk
+init_state      2
+states          2
+time            5
+step            0.5
+hop_method      FSSH
+vel_file        velocity
+adj_mom         1
+chk_stp		5
+e_cons		0.0085
+verbose		1
