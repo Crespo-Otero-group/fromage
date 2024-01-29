@@ -1364,6 +1364,7 @@ def read_dftb_out(in_name):
             if not line.strip():
                 read_grad = False
             if read_grad:
+#                atom_grads = [float(i) for i in line.split()]
                 atom_grads = [float(i) for i in line.split()[1:]] # FJH
                 grad.extend(atom_grads)
             if "Total Forces" in line:
@@ -2227,7 +2228,7 @@ def read_orca_out(in_name):
 #
     return state_energy, grad, gr_energy
 ###################################################################
-####################  Read Hessians  #############################
+#####################  Read Hessians  #############################
 """
  The only input is the name of the file where the Hessian is stored
 
@@ -2257,7 +2258,7 @@ def read_hessian_dftb(in_name):
 
     """
     with open(in_name) as data:
-    lines = data.readlines()
+        lines = data.readlines()
     hess = []
     for line in lines:
         for num in map(float, line.split()):
@@ -2368,6 +2369,79 @@ def read_hessian_orca(in_name):
 
 
 """
- To implement: Q-Chem - NWChem - 
+ To implement: Q-Chem - NWChem - dftbplus
 """
+###################################################################
+################  Read dipole derivatives  ########################
+def read_dfrb_mu(in_name):
+    """
+    Read the dipole derivatives computed with dftb+
+    """
+    with open(in_name, 'r') as data:
+        lines = data.readlines()
+    d_mu = []
+    dim = len(lines)
+    for line in lines:
+        for num in map(float, line.split()):
+            d_mu.append(num)
+    d_mu = np.array(hess).reshape(dim,3)
 
+    return d_mu
+
+def read_gauss_mu(in_name):
+    """
+    Read the dipole derivatives computed with G16/G09
+    """
+    start_reading = False
+    nums = []
+    dim = 0
+
+    for line in in_name.splitlines():
+        if 'Dipole Derivatives' in line:
+            start_reading = True
+            dim = int(line.split()[-1])
+            continue
+        if 'Polarizability' in line:
+            break
+        if start_reading:
+            nums.extend([float(num) for num in line.split()])
+
+    return np.array(numbers).reshape((int(dim / 3), 3))
+
+def read_turbo_mu(in_name):
+    """
+    Read the dipole derivatives computed with Turbomole
+    """
+
+    with open(in_name) as data:
+        lines = data.readlines()
+
+    d_mu = []
+    for line in lines[1:-1]:
+        for num in map(float, line.split()[2:]):
+            d_mu.append(num)
+    dim = int(len(lines) - 2)
+
+    return np.array(d_mu).reshape(dim,3)
+
+def read_orca_mu(in_name):
+    """
+    Read the dipole derivatives computed with Turbomole
+    """
+
+    lines = in_name.splitlines()
+    numbers = []
+    dim = 0
+    read_data = False
+
+    for i, line in enumerate(lines):
+        if '$dipole_derivatives' in line:
+            dim = int(lines[i + 1].strip())
+            read_data = True
+            continue
+        if read_data:
+            nums.extend([float(num) for num in line.split()])
+            if len(nums) // 3 == dim:
+                break
+
+    return np.array(numbers).reshape((dim, 3))

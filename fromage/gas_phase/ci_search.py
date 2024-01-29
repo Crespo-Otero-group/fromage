@@ -98,29 +98,81 @@ def sequence(in_pos):
     gr_out = 0.5 * (gr_combo + gr_combo_g) + sigma * ((e_diff**2 + 2 *
                                                        alpha * e_diff) / (e_diff + alpha)**2) * (gr_combo - gr_combo_g)
 
-    # print some updates in the output
-    out_file.write("------------------------------\n")
     global iteration
     iteration += 1
+
+    _write_calc_info(out_file = out_file,
+                     mh_en_gr = mh_en_gr,
+                     ml_en_gr = ml_en_gr,
+                     en_combo = en_combo,
+                     gr_combo = gr_combo,
+                     scf_combo = scf_combo,
+                     evconv = evconv,
+                     iteration = iteration,
+                     en_out = en_out,
+                     gr_out = gr_out,
+                     e_diff = e_diff)
+
+    return (en_out, gr_out)
+
+def _write_head(out_file):
+    """
+    """
+    # print start time
+    start_time = datetime.now()
+    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+    out_file.write("" "\n")
+    out_file.write("************************************************" "\n")
+    out_file.write(" Find the bug between the code and the output " "\n")
+    out_file.write("\n")
+    out_file.write("If you see something that it doesn't look right" "\n")
+    out_file.write("          See it, Say it, Sort it...           " "\n")
+    out_file.write("\n")
+    out_file.write("************************************************" "\n")
+    return start_time
+
+def _write_calc_info(out_file,
+                     mh_en_gr,
+                     ml_en_gr,
+                     en_combo,
+                     gr_combo,
+                     scf_combo,
+                     evconv,
+                     iteration,
+                     en_out,
+                     gr_out,
+                     e_diff):
+    """
+    print some updates in the output
+    """
+    out_file.write("------------------------------\n")
     out_file.write("Iteration: " + str(iteration) + "\n")
-    out_file.write(
-        "ONIOM Total energy: {:>27.8f} eV\n".format(en_combo * evconv))
-    out_file.write(
-        "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
+    out_file.write("Model high energy: {:>28.8f} eV\n".format(
+        mh_en_gr[0] * evconv))
     out_file.write(
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
-    if bool_ci:
-        out_file.write(
-            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
-        out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
-            np.linalg.norm(gr_out * evconv)))
-
-#    out_file.write("Gap: {:>42.8f} eV\n".format(
-#        (en_combo - scf_combo) * evconv))
+    out_file.write(
+        "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
+    out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
+        np.linalg.norm(gr_out * evconv)))
     out_file.write("Gap: {:>42.8f} eV\n".format(
-        (en_combo - en_combo_g) * evconv))
+        e_diff*evconv))
     out_file.flush()
-    return (en_out, gr_out)
+
+    return
+
+def _write_tail(start_time,out_file):
+    """
+    Writes the time info when the optimization process
+    or dynamics is finished
+    """
+    out_file.write("DONE\n")
+    end_time = datetime.now()
+    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
+    out_file.write("ENDING TIME: " + str(end_time) + "\n")
+    out_file.close()
+
+    return None
 
 if __name__ == '__main__':
     evconv = 27.2114  # Something in Hartree * evconv = Something in eV
@@ -157,9 +209,8 @@ if __name__ == '__main__':
     sigma = float(inputs["sigma"])
     # output
     out_file = open(out_file, "w", 1)
-    # print start time
-    start_time = datetime.now()
-    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+    # write head in the output file
+    start_time = _write_head(out_file)
 
     iteration = 0
 
@@ -184,8 +235,5 @@ if __name__ == '__main__':
     res = minimize(sequence, atoms_array, jac=True,
                    options={'disp': True, 'gtol': gtol})
 
-    out_file.write("DONE\n")
-    end_time = datetime.now()
-    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
-    out_file.write("ENDING TIME: " + str(end_time) + "\n")
-    out_file.close()
+    _write_tail(start_time,out_file)
+

@@ -70,14 +70,9 @@ def sequence(in_pos):
     if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
         rl_proc = rl.run(ao.array2atom(all_atoms, all_pos),nprocs,at_reparam)
         rl_proc.wait()
-#        ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos[:dim_qm]),nprocs,at_reparam)
-#        ml_proc.wait()
     else:
         rl_proc = rl.run(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
         rl_proc.wait()
-#        ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos[:dim_qm]),
-#                         ao.array2atom(mol_atoms, in_pos[dim_qm:], charges_array), nprocs)
-#        ml_proc.wait()
 
     # Get the charges and use them for the model region
 
@@ -101,23 +96,14 @@ def sequence(in_pos):
             mg_proc.wait()
 #    mh_proc.wait()
     if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
-#        rl_proc = rl.run(ao.array2atom(mol_atoms, in_pos),nprocs,at_reparam)
-#        rl_proc.wait()
         ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos[:dim_qm]),
                          ao.array2atom(all_atoms[QM_natoms:], all_pos[dim_qm:], rl_charges_array[QM_natoms:]),
                          nprocs,at_reparam)
         ml_proc.wait()
     else:
-#        rl_proc = rl.run(ao.array2atom(all_flex_atoms, in_pos),nprocs)
-#        rl_proc.wait()
         ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos[:dim_qm]),
                          ao.array2atom(all_atoms[QM_natoms:], all_pos[dim_qm:], rl_charges_array[QM_natoms:]), nprocs)
         ml_proc.wait()
-#    if bool_ci and high_level != "gaussian_cas":
-#        mg_proc.wait()
-#    mh_proc.wait()
-#    if bool_ci and high_level != "gaussian_cas":
-#        mg_proc.wait()
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, 
@@ -138,10 +124,13 @@ def sequence(in_pos):
             mg_en_gr = mg.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex)
 
     # combine results
-
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
-    gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
     scf_combo = rl_en_gr[2] - ml_en_gr[2] + mh_en_gr[2]
+
+    if single_point:
+        gr_combo = 0
+    else:
+        gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
 
     # if linker atoms are included, gr_combo has to be defined as:
       # where J is the Jacobian that can be easily defined according to
@@ -165,11 +154,116 @@ def sequence(in_pos):
     else:
         en_out = en_combo
         gr_out = gr_combo
+        e_diff = 0
 
-    # print some updates in the output
-    out_file.write("------------------------------\n")
     global iteration
     iteration += 1
+    _write_calc_info(out_file = out_file,
+                     mh_en_gr = mh_en_gr,
+                     ml_en_gr = ml_en_gr,
+                     rl_en_gr = rl_en_gr,
+                     en_combo = en_combo,
+                     gr_combo = gr_combo,
+                     scf_combo = scf_combo,
+                     evconv = evconv,
+                     iteration = iteration,
+                     en_out = en_out,
+                     gr_out = gr_out,
+                     e_diff = e_diff,
+                     bool_ci = bool_ci)
+
+    return (en_out, gr_out)
+
+#start_trajectory(dyn_array,inputs,mol_atoms,flex_atoms,fixed_atoms)
+
+def start_trajectory(geometry,dyn_sett,mol_atoms,shell_atoms):
+    # Read initial velocities from file
+    in_vel = rf.read_velocities(dyn_sett["vel_file"])
+    # Read the gradient of the step previous the dynamics crashed
+    if dyn_restart:
+        curr_step, Eini, prev_grad = rf.read_dyn_restart("dyn_restart")
+
+    # Create Trajectory object with dynamics info and initial conditions
+    atomic_symbols = [ x[0] for x in geometry ]
+    in_pos = [ [x[1], x[2], x[3]] for x in geometry ]
+    if dyn_restart:
+        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett, curr_step, Eini, prev_grad)
+    else:
+        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett)
+    traj = fd.Trajectory(in_params, mol_atoms, shell_atoms)
+
+    traj.run_dynamics()
+
+    return None
+
+###########################################################################
+################################### FJH ###################################
+def set_newtonx(atoms_array,inputs):
+    """
+    This subroutine prepare all the environments and files to use fromage
+    as a third-party program of Newton-X for the calculation of spectra
+    and dynamics
+    """
+    natoms, nstates, state = nx.read_nx_control()
+    nx.newtonx_sequence(atoms_array,inputs,natoms,nstates,state)
+
+    return None
+############################################################################
+
+def start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array):
+    """
+    """
+    out_file.write("A calculation of ONIOM normal modes has been requested\n")
+    if os.path.exists("geom_mol.xyz"):
+        geom_mol = True
+        out_file.write("geom_mol.xyz file has been found\n")
+        out_file.write("The cluster geometry will be set up from the last geometry in geom_mol.xyz \n")
+    else:
+        out_file.write("The cluster geometry will be set up from the geometries in mol.init.xyz and shell_flex.xyz \n")
+    at_symbols, at_pos = va.get_xyz_cluster(QM_natoms, natoms_flex, flex_atoms, geom_mol)
+
+    in_params = va.initNmodesParams(at_symbols,at_pos,inputs)
+
+    Nmodes = va.NormalModes(in_params,natoms_flex,mol_atoms,flex_atoms,fixed_atoms,fixed_atoms_array)
+
+    # Compute the ONIOM normal modes
+    Nmodes.compute_nmodes()
+
+    return None
+
+def _write_head(out_file):
+    """
+    """
+    # print start time
+    start_time = datetime.now()
+    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+    out_file.write("" "\n")
+    out_file.write("************************************************" "\n")
+    out_file.write(" Find the bug between the code and the output " "\n")
+    out_file.write("\n")
+    out_file.write("If you see something that it doesn't look right" "\n")
+    out_file.write("          See it, Say it, Sort it...           " "\n")
+    out_file.write("\n")
+    out_file.write("************************************************" "\n")
+    return start_time
+
+def _write_calc_info(out_file,
+                     mh_en_gr,
+                     ml_en_gr,
+                     rl_en_gr,
+                     en_combo,
+                     gr_combo,
+                     scf_combo,
+                     evconv,
+                     iteration,
+                     en_out,
+                     gr_out,
+                     e_diff,
+                     bool_ci = None):
+    """
+    print some updates in the output
+    """
+    out_file.write("------------------------------\n")
     out_file.write("Iteration: " + str(iteration) + "\n")
     out_file.write("Real low energy: {:>30.8f} eV\n".format(
         rl_en_gr[0] * evconv))
@@ -194,51 +288,22 @@ def sequence(in_pos):
         out_file.write("Gap: {:>42.8f} eV\n".format(
             (en_combo - scf_combo) * evconv))
         out_file.flush()
-    return (en_out, gr_out)
 
+    return
 
-#start_trajectory(dyn_array,inputs,mol_atoms,flex_atoms,fixed_atoms)
-
-def start_trajectory(geometry,dyn_sett,mol_atoms,shell_atoms):
-    # Read initial velocities from file
-    in_vel = rf.read_velocities(dyn_sett["vel_file"])
-    # Read the gradient of the step previous the dynamics crashed
-    if dyn_restart:
-        curr_step, Eini, prev_grad = rf.read_dyn_restart("dyn_restart")
-
-    # Create Trajectory object with dynamics info and initial conditions
-    atomic_symbols = [ x[0] for x in geometry ]
-    in_pos = [ [x[1], x[2], x[3]] for x in geometry ]
-    if dyn_restart:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett, curr_step, Eini, prev_grad)
-    else:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett)
-    traj = fd.Trajectory(in_params, mol_atoms, shell_atoms)
-
-    traj.run_dynamics()
+def _write_tail(start_time,out_file):
+    """
+    Writes the time info when the optimization process
+    or dynamics is finished
+    """
+    out_file.write("DONE\n")
+    end_time = datetime.now()
+    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
+    out_file.write("ENDING TIME: " + str(end_time) + "\n")
+    out_file.close()
 
     return None
 
-def start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array):
-    """
-    """
-    out_file.write("A calculation of ONIOM normal modes has been requested\n")
-    if os.path.exists("geom_mol.xyz"):
-        geom_mol = True
-        out_file.write("geom_mol.xyz file has been found\n")
-        out_file.write("The cluster geometry will be set up from the last geometry in geom_mol.xyz \n")
-    else:
-        out_file.write("The cluster geometry will be set up from the geometries in mol.init.xyz and shell_flex.xyz \n")
-    at_symbols, at_pos = va.get_xyz_cluster(QM_natoms, natoms_flex, flex_atoms, geom_mol)
-
-    in_params = va.initNmodesParams(at_symbols,at_pos,inputs)
-
-    Nmodes = va.NormalModes(in_params,natoms_flex,mol_atoms,flex_atoms,fixed_atoms,fixed_atoms_array)
-
-    # Compute the ONIOM normal modes
-    Nmodes.compute_nmodes()
-
-    return None
 
 if __name__ == '__main__':
 
@@ -276,9 +341,8 @@ if __name__ == '__main__':
 #
     # output
     out_file = open(out_file, "w", 1)
-    # print start time
-    start_time = datetime.now()
-    out_file.write("STARTING TIME: " + str(start_time) + "\n")
+    # write head in the output file
+    start_time = _write_head(out_file)
 #
     natoms_flex = int(inputs["natoms_flex"])
     relax = bool_cast(inputs["relax"])
@@ -390,8 +454,5 @@ if __name__ == '__main__':
     if normal_modes:
         res = start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array)
 
-    out_file.write("DONE\n")
-    end_time = datetime.now()
-    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
-    out_file.write("ENDING TIME: " + str(end_time) + "\n")
-    out_file.close()
+    _write_tail(start_time,out_file)
+

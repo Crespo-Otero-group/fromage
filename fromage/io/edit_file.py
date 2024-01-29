@@ -219,6 +219,7 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
     for line in temp_content:
         if "XXX__NAME__XXX" in line:
             out_file.write(line.replace("XXX__NAME__XXX", proj_name))
+#        if line.startswith("#") and freq is not None:
         if line.startswith("#"):
             if freq is not None:
                 if "force" in line.strip():
@@ -267,6 +268,11 @@ def write_dftb(file_name, atoms, points, temp_name, proj_name='dftb',freq=None):
                 atomStr = " {:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 out_file.write(atomStr)
+#        if "XXX__CHARGES__XXX" in line:
+#            for point in points:
+#                point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+#                    point.x, point.y, point.z, point.q) + "\n"
+#                out_file.write(point_str)            
         else:
             out_file.write(line)
     out_file.close()
@@ -338,6 +344,7 @@ def write_xtb(file_name, atoms, points, temp_name, proj_name='xtb'):
         else:
             out_file.write(line)
     out_file.close()
+############## Added by FJH ######################
     if len(points) > 0:
         out_file = open("xtb_charge.pc","w")
         out_file.write("%s \n" % len(points))
@@ -583,6 +590,7 @@ def write_dynamics(file_name, temp_name, state : int, nstates : int):
     out_file.close()
     return
 
+
 def write_g_temp(file_name, fixed_atoms, points, temp_name, proj_name='gaussian'):
     """
     Write a Gaussian input template file.
@@ -633,6 +641,7 @@ def write_g_temp(file_name, fixed_atoms, points, temp_name, proj_name='gaussian'
     out_file.close()
     return
 
+
 def write_xtb_temp(file_name, fixed_atoms, points, temp_name, proj_name='xtb'):
     """
     """
@@ -661,6 +670,7 @@ def write_xtb_temp(file_name, fixed_atoms, points, temp_name, proj_name='xtb'):
     charge_file.close()
 
     return
+
 
 def edit_vasp_pos(in_name, atoms):
     """
@@ -880,6 +890,22 @@ def write_orca(file_name, atoms, temp_name):
         else:
             out_file.write(line)
     out_file.close()
+    return
+
+def write_orca_charges(file_name, points):
+    """
+    """
+    out_file = open(file_name, "w")
+
+    ncharges = str(len(points))
+    out_file.write(ncharges)
+
+    for point in points:
+        point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+            point.x, point.y, point.z, point.q) + "\n"
+        out_file.write(point_str)
+    out_file.close()
+
     return
 
 def write_mopac(file_name, atoms, temp_name):
@@ -1166,3 +1192,4 @@ def write_lat_vec(in_name, vectors):
         out_file.write("{:15.11f}{:15.11f}{:15.11f}\n".format(
             vectors[line][0], vectors[line][1], vectors[line][2]))
     out_file.close()
+

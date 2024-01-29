@@ -22,11 +22,11 @@ from scipy.optimize import minimize
 from fromage.io import read_file as rf
 from fromage.utils import array_operations as ao
 from fromage.utils import calc
-<<<<<<< HEAD
 from fromage.utils import fro_dyn as fd
 from fromage.utils.newtonx import fro_nx as nx
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
+
 
 def sequence(in_pos):
     """
@@ -35,7 +35,6 @@ def sequence(in_pos):
     This is why it can only receive one array of floats as input and return two
     arrays of floats. As a result some variables in this function are defined
     elsewhere in the module which is a necessary evil.
-
     Parameters
     ----------
     in_pos : list of floats
@@ -46,7 +45,6 @@ def sequence(in_pos):
         Combined energy or penalty function value in Hartree
     gr_out : list of floats
         Gradients of en_out in Hartree/Angstrom
-
     References
     ----------
     Levine, B. G., Coe, J. D. & Martinez, T. J. Optimizing conical intersections
@@ -54,7 +52,7 @@ def sequence(in_pos):
     multireference second-order perturbation theory (MS-CASPT2).
     J. Phys. Chem. B 112, 405-413 (2008).
 
-    Updated by Federico J. Hernandez 27-10-2022
+    Updated by Federico Hernandez 27-10-2022
     """
     # initialise calculation objects
     rl = calc.setup_calc("rl", low_level)
@@ -113,8 +111,12 @@ def sequence(in_pos):
 
     # combine results
     en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
-    gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
     scf_combo = rl_en_gr[2] - ml_en_gr[2] + mh_en_gr[2]
+    
+    if single_point:
+        gr_combo = 0
+    else:
+        gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
 
     if bool_ci:
         # corresponding ground state energy and gradients
@@ -132,35 +134,24 @@ def sequence(in_pos):
     else:
         en_out = en_combo
         gr_out = gr_combo
+        e_diff = 0
 
-    # print some updates in the output
-    out_file.write("------------------------------\n")
     global iteration
     iteration += 1
-    out_file.write("Iteration: " + str(iteration) + "\n")
-    out_file.write("Real low energy: {:>30.8f} eV\n".format(
-        rl_en_gr[0] * evconv))
-    out_file.write("Model low energy: {:>29.8f} eV\n".format(
-        ml_en_gr[0] * evconv))
-    out_file.write("Model high energy: {:>28.8f} eV\n".format(
-        mh_en_gr[0] * evconv))
-    out_file.write(
-        "ONIOM Total energy: {:>27.8f} eV\n".format(en_combo * evconv))
-    out_file.write(
-        "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
-    out_file.write(
-        "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
-    if bool_ci:
-        out_file.write(
-            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
-        out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
-            np.linalg.norm(gr_out * evconv)))
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            e_diff*evconv))
-    else:
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            (en_combo - scf_combo) * evconv))
-        out_file.flush()
+    _write_calc_info(out_file = out_file,
+                     mh_en_gr = mh_en_gr,
+                     ml_en_gr = ml_en_gr,
+                     rl_en_gr = rl_en_gr,
+                     en_combo = en_combo,
+                     gr_combo = gr_combo,
+                     scf_combo = scf_combo,
+                     evconv = evconv,
+                     iteration = iteration,
+                     en_out = en_out,
+                     gr_out = gr_out,
+                     e_diff = e_diff,
+                     bool_ci = bool_ci)
+
     return (en_out, gr_out)
 
 def start_trajectory(geometry, dyn_sett, mol_atoms, shell_atoms):
@@ -194,7 +185,7 @@ def set_newtonx(atoms_array,inputs):
 
     return None
 
-def write_head(out_file):
+def _write_head(out_file):
     """
     """
     # print start time
@@ -210,8 +201,54 @@ def write_head(out_file):
     out_file.write("************************************************" "\n")
     return start_time
 
-def write_tail(start_time,out_file):
+def _write_calc_info(out_file,
+                     mh_en_gr,
+                     ml_en_gr,
+                     rl_en_gr,
+                     en_combo,
+                     gr_combo,
+                     scf_combo,
+                     evconv,
+                     iteration,
+                     en_out,
+                     gr_out,
+                     e_diff,
+                     bool_ci = None):
     """
+    print some updates in the output
+    """ 
+    out_file.write("------------------------------\n")
+    out_file.write("Iteration: " + str(iteration) + "\n")
+    out_file.write("Real low energy: {:>30.8f} eV\n".format(
+        rl_en_gr[0] * evconv))
+    out_file.write("Model low energy: {:>29.8f} eV\n".format(
+        ml_en_gr[0] * evconv))
+    out_file.write("Model high energy: {:>28.8f} eV\n".format(
+        mh_en_gr[0] * evconv))
+    out_file.write(
+        "ONIOM Total energy: {:>27.8f} eV\n".format(en_combo * evconv))
+    out_file.write(
+        "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
+    out_file.write(
+        "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
+    if bool_ci:
+        out_file.write(
+            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
+        out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
+            np.linalg.norm(gr_out * evconv)))
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            e_diff*evconv))
+    else:
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - scf_combo) * evconv))
+        out_file.flush()
+
+    return
+
+def _write_tail(start_time,out_file):
+    """
+    Writes the time info when the optimization process
+    or dynamics is finished
     """
     out_file.write("DONE\n")
     end_time = datetime.now()
@@ -258,7 +295,7 @@ if __name__ == '__main__':
     # output
     out_file = open(out_file, "w", 1)
     # write head in the output file
-    start_time = write_head(out_file)
+    start_time = _write_head(out_file)
 #
     natoms_flex = bool_cast(inputs["natoms_flex"])
     relax_qmprime = bool_cast(inputs["relax_qmprime"])
@@ -275,6 +312,7 @@ if __name__ == '__main__':
         out_file.write("natoms_flex is reset to OFF to continue with a calculation considreing a frozen environment"+ "\n")
         natoms_flex = None
         out_file.write(" "+ "\n")
+
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     bool_ci = bool_cast(inputs["bool_ci"])
@@ -301,10 +339,7 @@ if __name__ == '__main__':
         at_reparam = None
 
 #    # output
-#    out_file = open(out_file, "w", 1)
 #    # print start time
-#    start_time = datetime.now()
-#    out_file.write("STARTING TIME: " + str(start_time) + "\n")
     if nprocs=="1":
         out_file.write("If Q-Chem, Molcas, NWChem or MOPAC are to be used, have in mind that" "\n")
         out_file.write("the default number of cores are asked for the calculation,")
@@ -322,6 +357,7 @@ if __name__ == '__main__':
     # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]
 
+    
     # read shell atoms
     shell_atoms = rf.read_xyz(shell_file)[0]
 
@@ -346,5 +382,5 @@ if __name__ == '__main__':
         res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
 
-    write_tail(start_time,out_file)
+    _write_tail(start_time,out_file)
 
