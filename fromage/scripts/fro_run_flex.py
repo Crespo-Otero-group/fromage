@@ -27,6 +27,104 @@ from fromage.utils import vib_analysis as va
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
 
+import sys
+
+def preopt_minimize(atoms_array, dim_qm, gtol, dtol=1e-5):
+    """
+    Automated acheme for aiding convergence, using the following steps:
+        1.) preliminary optimsiation on flex_atoms (shell and QM are fixed)
+        2.) preliminary fromage optimsiation of QM atoms (flexible and shell are fixed)
+        3.) Run flexible fromage
+
+    Currently a single point calculation, but will be cycled, in particular to aid convergence in excited state optimsiations.
+    The purpose of this algorithm is to povide a more numerically stable optimsiation pathway for SciPy.    
+    """
+    
+    global run_v1 # used to toggle standard and flexible ONIOM algorithms
+
+    # Create new preliminary optimization folders
+    for directory in ['rl', 'ml', 'mh']:
+        # Make new folder
+        os.makedirs(f"{directory}_v1", exist_ok=True)
+
+        # Create new template file
+        subprocess.run(f"cp {directory}/{directory}.temp {directory}_v1/{directory}_v1.temp", shell=True)
+
+        #also make one for external low-level optimisation of flexible region
+        if directory == "rl":
+            os.makedirs(f"flex_opt", exist_ok=True)
+            subprocess.run(f"cp rl/rl.temp flex_opt/flex_opt.temp", shell=True)
+    i = 1
+    while i == 0:
+        all_pos = None
+        
+        run_v1 = True
+        # run version 1 optimisation
+        out_file.write("Macrioteration: {}\n".format(i))
+        out_file.write("Starting ONIOM optimisation with fixed flexible region\n")
+
+        qm_prelim_res = minimize(sequence, atoms_array[:dim_qm], jac=True, method=inputs["algo"],
+           options={'disp': True, 'gtol': gtol})
+        
+        out_file.write("Optimisation complete\n")
+
+        atoms_array[:dim_qm] = qm_prelim_res.x #update model
+
+        
+        #prelim xtb relxation
+        out_file.write("Starting low-level optimisation\n")
+        opt_atoms = sequence_low_opt(atoms_array)
+        out_file.write("Optimised flexible region, read xtbopt.xyz\n")
+        
+        # update in_pos
+        atoms_array = []
+        for atom in opt_atoms[:int(dim_qm/3)]:
+            atoms_array.append(atom.x)
+            atoms_array.append(atom.y)
+            atoms_array.append(atom.z)
+        atoms_array = np.array(atoms_array)
+        
+        
+
+        # #run flexible fromage opt
+        run_v1 =False 
+        iteration = 0 # restart microiteration counter
+        out_file.write("Starting flexible ONIOM optimisation\n")
+        flex_res  = minimize(sequence, atoms_array, jac=True, method=inputs["algo"],
+                        options={'disp': True, 'gtol': gtol})
+        out_file.write("Optimisation complete")
+
+        i +=1
+    return
+
+
+def sequence_low_opt(in_pos):
+    """optimised flexible region at low-level using native implementation"""
+    # get all atoms for real region
+    all_pos = np.concatenate((in_pos, fixed_atoms_array), axis = 0)
+
+    # Set up rl calc
+    rl = calc.setup_calc("rl_flex", low_level)
+    
+    # run optimsiation externally and read resutls
+    opt_flex= rl.relax_flex(ao.array2atom(all_atoms, all_pos), dim_qm, dim_flex)
+    
+    rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
+
+    out_file.write("------------------------------\n")
+    out_file.write("Iteration: " + str(iteration) + "\n")
+    out_file.write("Real low energy: {:>30.8f} eV\n".format(
+        rl_en_gr[0] * evconv))
+    out_file.write(
+        "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(rl_en_gr[1] * evconv)))
+    out_file.write(
+        "Grad RMS: {:>37.8f} eV/A\n".format( np.sqrt(np.mean(np.square(rl_en_gr[1])))))
+    out_file.write(
+        "Max gradient: {:>33.8f} eV/A\n".format(np.max(np.abs(rl_en_gr[1]))))
+    out_file.write("------------------------------\n")
+
+    opt_flex.write_xyz("flex_opt.xyz")
+    return opt_flex
 
 def sequence(in_pos):
     """
@@ -241,8 +339,8 @@ def _write_head(out_file):
     out_file.write("************************************************" "\n")
     out_file.write(" Find the bug between the code and the output " "\n")
     out_file.write("\n")
-    out_file.write("If you see something that it doesn't look right" "\n")
-    out_file.write("          See it, Say it, Sort it...           " "\n")
+    out_file.write("If you see something that doesn't look right" "\n")
+    out_file.write("          See it, Say it, Sorted...           " "\n")
     out_file.write("\n")
     out_file.write("************************************************" "\n")
     return start_time
@@ -277,6 +375,11 @@ def _write_calc_info(out_file,
         "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
     out_file.write(
         "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
+    out_file.write(
+        "Grad RMS: {:>37.8f} eV/A\n".format( np.sqrt(np.mean(np.square(gr_combo)))))
+    out_file.write(
+        "Max gradient: {:>33.8f} eV/A\n".format(np.max(np.abs(gr_combo))))
+
     if bool_ci:
         out_file.write(
             "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
@@ -321,14 +424,23 @@ if __name__ == '__main__':
         "low_level": "gaussian",
         "nprocs": "1",
         "sigma": "3.5",
-        "gtol": "1e-5",
         "single_point": "0",
         "dynamics": "0",
         "dyn_restart": "0",
-        "relax": "0",
         "at_reparam": "0",
-        "natoms_flex": "0",
-        "normal_modes" : "0"} 
+        "normal_modes" : "0",
+
+        #MI edits
+        "relax": "1",
+        "gtol": "1e-4", #softened convergence threshold
+        "natoms_flex": "auto",
+        "microiterations": "1", 
+        "nmicro": "5",
+        "prelim_opt": "1", 
+        "flexi_scheme": "2", # Scheme 1: version1 charge assignment; scheme 2 (recommended): read real-low charges on-the-fly
+        "algo": "BFGS", # experimental: use those documented in SciPy that don't require Hessian
+        "mwfn_charges": "0", # experimental post-processing for xTB; Mulliken, Lowdin, dipole-corrected Hirshfeld, RESP
+        } 
 
     inputs = def_inputs.copy()
 
@@ -344,25 +456,6 @@ if __name__ == '__main__':
     # write head in the output file
     start_time = _write_head(out_file)
 #
-    natoms_flex = int(inputs["natoms_flex"])
-    relax = bool_cast(inputs["relax"])
-    normal_modes = bool_cast(inputs["normal_modes"])
-    if natoms_flex > 0 and not relax and not normal_modes:
-        out_file.write(" "+ "\n")
-        out_file.write("You are trying to run fromage with the relaxation of the QMprime region option OFF"+ "\n")
-        out_file.write("Include *relax* keyword in fromage.in"+ "\n")
-        out_file.write("fromage is dying now :-( "+ "\n")
-        import sys
-        sys.exit()
-    elif (relax and natoms_flex == 0) or (normal_modes and natoms_flex == 0) :
-        out_file.write(" "+ "\n")
-        out_file.write("You are trying to run either fromage with the relaxation of the QMprime region option ON"+ "\n")
-        out_file.write("You are trying to run either fromage with ONIOM normal modes"+ "\n")
-        out_file.write("However, the number of flexible atoms set in fromage.in is %s" % (natoms_flex) + "\n")
-        out_file.write(" Include the keyword *natoms_flex* along with the number of flexible atoms in fromage.in and re run"+ "\n")
-        out_file.write("fromage is dying now :-( "+ "\n")
-        import sys
-        sys.exit()
 
     mol_file = inputs["mol_file"]
     shell_file_flex = inputs["shell_file_flex"]
@@ -376,8 +469,23 @@ if __name__ == '__main__':
     dynamics = bool_cast(inputs["dynamics"])
     dyn_restart = bool_cast(inputs["dyn_restart"])
     
-    # sigma is called lambda in some papers but that is a bad variable name
-    # in Python
+    # new MI variables
+    microiterations = bool_cast(inputs["microiterations"])
+    nmicro = int(inputs["nmicro"])
+    flexi_scheme = int(inputs["flexi_scheme"])
+    bool_opt = bool_cast(inputs["prelim_opt"])
+
+    # read initial coordinates
+    mol_atoms = rf.read_xyz(mol_file)[0]           # model atoms
+    flex_atoms = rf.read_xyz(shell_file_flex)[0]   # flexible shell atoms
+    fixed_atoms = rf.read_xyz(shell_file_fixed)[0] # fixed shell atoms
+
+    # get useful regions
+    all_flex_atoms = mol_atoms + flex_atoms          # all flexible atoms
+    all_atoms = mol_atoms + flex_atoms + fixed_atoms # all atoms 
+    shell_atoms = flex_atoms + fixed_atoms           # all shell atoms
+
+    # sigma is called lambda in some papers
     sigma = float(inputs["sigma"])
     # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
     # If so, the atom number is collected and a "w" symbol is added next to 
@@ -395,7 +503,35 @@ if __name__ == '__main__':
         out_file.write("regardless what you have asked in your submission script file: " + "nprocs=" + str(nprocs) + "\n")
         out_file.write("" "\n")
 
+
+
+   ## detect number of flexible atoms
+    if inputs["natoms_flex"] == "auto":
+        natoms_flex = len(flex_atoms)
+    else:
+        natoms_flex = int(inputs["natoms_flex"])
+
+    # check set up makes sense
+    relax = bool_cast(inputs["relax"])
+    normal_modes = bool_cast(inputs["normal_modes"])
+
+
+    newtonx = None
+    flex_method = any([relax, dynamics, normal_modes, newtonx])
+    if natoms_flex == 0 or flex_method is None: 
+        out_file.write("Flexible ONIOM method selected: {}\n".format(flex_method))
+        out_file.write("Number of flexible atoms: {}\n".format(natoms_flex))
+        if natoms_flex == 0:
+            out_file.write("Please specify flexible region\n")
+        else:
+            out_file.write("Please specify a method (relax, normal_modes, newtonx) in fromage.in\n")
+        out_file.write("fromage is dying now :-( "+ "\n")
+        sys.exit()
+
+    # start scf counter
     iteration = 0
+
+    out_file.write("flexi scheme: {}\n".format(flexi_scheme))
 
     # clean up the last output
     if normal_modes is None:
@@ -404,15 +540,7 @@ if __name__ == '__main__':
         if os.path.exists("geom_cluster.xyz"):
             subprocess.call("rm geom_cluster.xyz", shell=True)
 
-    # read initial coordniates
-    mol_atoms = rf.read_xyz(mol_file)[0]   
-    # read atoms for the flexible shell
-    flex_atoms = rf.read_xyz(shell_file_flex)[0]
-    # read atoms for the fixed shell
-    fixed_atoms = rf.read_xyz(shell_file_fixed)[0]
-    # Define the entire flexible region
-    all_flex_atoms = mol_atoms + flex_atoms
-    all_atoms = mol_atoms + flex_atoms + fixed_atoms
+
     # make the initial coordinates into a flat list
     atoms_array = []
     fixed_atoms_array = []
@@ -431,11 +559,11 @@ if __name__ == '__main__':
         fixed_atoms_array.append(atom.x)
         fixed_atoms_array.append(atom.y)
         fixed_atoms_array.append(atom.z)
-#        charges_array.append(atom.q)	#Initial charges
+
+
     # make the list into an array
     atoms_array = np.array(atoms_array)
     fixed_atoms_array = np.array(fixed_atoms_array)
-#    charges_array = np.array(charges_array)
     dim_flex = int(3*natoms_flex)
     QM_natoms = len(mol_atoms)
     dim_qm = int(3*QM_natoms)
@@ -449,7 +577,10 @@ if __name__ == '__main__':
 #        res = start_trajectory(dyn_array,inputs,mol_atoms,flex_atoms,fixed_atoms) # FJH
     elif relax:
         out_file.write("An ONIOM optimization has been requested\n")
-        res = minimize(sequence, atoms_array, jac=True,
+        if bool_opt:
+            preoptimisation_minimization()
+        else:
+            res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
     if normal_modes:
         res = start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array)
