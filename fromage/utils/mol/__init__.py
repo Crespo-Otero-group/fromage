@@ -65,8 +65,8 @@ class Mol(object):
     from ._listyness import append, extend, insert, remove, index, pop, clear, count, __add__, __len__, __getitem__, __setitem__, __contains__
     from ._bonding import set_bonding, set_bonding_str, bonded, per_bonded
     from ._char import es_pot, change_charges, charges, raw_assign_charges, populate, set_connectivity
-    from ._selecting import select, per_select, segregate
-    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, supercell_for_cluster, gen_exclusive_clust, gen_inclusive_clust, make_cluster, centered_mols, confined
+    from ._selecting import select, per_select, segregate #, mof_select, per_select_poly
+    from ._cell_operations import complete_mol, complete_cell, supercell, centered_supercell, trans_from_rad, supercell_for_cluster, gen_exclusive_clust, gen_inclusive_clust, make_cluster, centered_mols, confined #, make_cluster_poly, supercell_for_cluster_poly, add_hydrogens, centered_mols_poly, complete_mol_poly, detect_dangling
     from ._geom import GeomInfo, coord_array, calc_coord_array, plane_coeffs, calc_plane_coeffs, axes, calc_axes
 
     def __init__(self, in_atoms=[], vectors=np.zeros((3, 3)), bonding='dis', thresh=1.8):
@@ -230,3 +230,107 @@ class Mol(object):
         mol_b.atoms = self[-int(dim_len / 2):]
 
         return mol_a, mol_b
+
+###### MICHAEL NEW MOL METHODS 13/10/2023
+
+    def load_connectivity_matrix(self):
+        """
+        Get the cponnectivity matrix. This method will save it to the repository
+        so that it can be rapidly loaded. Useful for large clusters where calculating
+        the matrix can take some time
+        """
+        import os
+        from fromage.scripts.fro_assign_charges import get_connectivity_mat
+        
+        #obtain connectivity matrix if necessary
+        if os.path.isfile("connectivity_matrix.npy"):
+            connectivity_matrix = np.load("connectivity_matrix.npy")
+        else: 
+            connectivity_matrix = get_connectivity_mat(self)
+            np.save('connectivity_matrix.npy', arr=connectivity_matrix, allow_pickle=True)
+
+        return connectivity_matrix
+
+    def get_index_by_pos(self, atom_in):
+        """
+        Get index of Atom at same position in mol. Useful when you want to index
+        an atom which doesn't have the same charge (where index() won't work). 
+
+        Paramters
+        ---------
+        atom_in : Atom
+            Atom whose index you want to find
+        
+        Returns
+        -------
+        atom_index : int
+            Index of atom in the molecule
+        """
+        atom_index=None
+        for i, atom in enumerate(self):
+            if atom.very_close(atom_in):
+                atom_index = i
+        return atom_index
+
+    def get_total_charge(self):
+        """Get total charge on Mol object by summing charges"""
+        return sum([atom.q for atom in self])
+
+    def detect_bondcuts(self, sub_atoms):
+        """
+        Detect bonding between region, and therefore the bonds being cut
+
+        Paramters
+        ---------
+        sub_atoms : Mol
+            subsystem atoms within Mol object (the model region, for instance) 
+
+        Return
+        ------
+        lac_atoms, lah_atoms : Mol
+            Link atom connects (LAC, in QM region) and link atom host (LAH, in QM') mol objects
+        
+        """
+        lac_atoms = Mol([])
+        lah_atoms = Mol([])
+        
+        for atoms_m in sub_atoms:
+            for atoms_s in self:
+                if self.bonded(atoms_m,atoms_s):
+                    lac_atoms.append(atoms_m)
+                    lah_atoms.append(atoms_s)
+
+        return lac_atoms, lah_atoms
+
+    def rearrange_mol(self, end_atoms):
+        """Move end atoms to end of molecule"""
+        mol_rearranged = Mol([])
+        for atom in self:
+            if atom not in end_atoms:
+                mol_rearranged.append(atom)
+        for atom in end_atoms:
+            mol_rearranged.append(atom)
+        return mol_rearranged
+
+    def add_linkatoms(self, lac_atoms,lah_atoms):
+        """
+        Add link atoms to model region
+
+        Parameters
+        ----------
+        lac_atoms, lah_atoms : Mol
+            link atom connects (in model) and link atom hosts (in shell) either side of bond cut. Indices must be the same.
+
+        """
+        from fromage.utils.linkatom import LinkAtom
+        out_linkatoms = Mol([])
+        out_mol = self.copy()
+        for i, (lac, lah) in enumerate(zip(lac_atoms, lah_atoms)):
+            linkatom = LinkAtom(lac, lah)
+            print(f"\nLink atom connect {i+1}:", lac)
+            print(f"Link atom host {i+1}:", lah)
+            print(f"Link atom {i+1}:", linkatom)
+            if linkatom not in out_mol:
+                out_mol.append(linkatom) 
+                out_linkatoms.append(linkatom) 
+        return out_mol, out_linkatoms
