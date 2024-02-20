@@ -18,7 +18,7 @@ from fromage.utils import array_operations as ao
 
 
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
-
+# reciprocal bohr to reciprocal angstrom
 
 def setup_calc(calc_name, calc_type):
     """
@@ -70,13 +70,6 @@ class Calc(object):
 
         """
         raise NotImplementedError("Please Implement this method")
-  
-    def run_freq(self, atoms, nprocs):
-        """
-        Write all of the variable inputs necessary for a frequency calculation
-
-        """
-        raise NotImplementedError("Please Implement this method")
 
     def read_out(self, positions, in_mol=None, in_shell=None):
         """
@@ -85,22 +78,10 @@ class Calc(object):
         """
         raise NotImplementedError("Please Implement this method")
 
-    def read_hessian(self):
-        """
-        Read the Hessian matrix elements
-        """
-        raise NotImplementedError("Please Implement this method")
-
     def read_nacs(self):
         """
         Read the Nonadiabatic coupling matrix elements    
 
-        """
-        raise NotImplementedError("Please Implement this method")
-
-    def read_mu(self):
-        """
-        Read dipole vectors and dipole derivative matrix
         """
         raise NotImplementedError("Please Implement this method")
  
@@ -150,6 +131,7 @@ class Calc(object):
         return
 
 
+
 class DFTB_calc(Calc):
     """
     Calculation of DFTB+ tested with v22.2
@@ -157,8 +139,7 @@ class DFTB_calc(Calc):
     """
     def run(self, atoms, points_flex = None, nprocs=None):
         """
-        Runs a DFTB+ force calculation using a .xyz file 
-        and return a subprocess.Popen
+        Write a DFTB .gen file and return a subprocess.Popen
 
         Parameters
         ----------
@@ -177,35 +158,6 @@ class DFTB_calc(Calc):
                             [], self.calc_name + ".temp")
         if points_flex is not None:
             ef.write_dftb_charges("charges.dat", points_flex)
-        # Run DFTB+
-        proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
-
-        os.chdir(self.here)
-
-        return proc
-
-    def run_freq(self, atoms, points_flex = None, nprocs=None):
-        """
-        Runs a DFTB+ freq calculation using a .xyz file 
-        and return a subprocess.Popen
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with DFTB+
-        Returns
-        -------
-        proc : subprocess.Popen object
-            the object should have a .wait() method
-
-        """
-        dftb_path = os.path.join(self.here, self.calc_name)
-        os.chdir(dftb_path)
-
-        ef.write_dftb("geom.xyz",atoms,
-                            [], self.calc_name + ".temp", freq = True)
-        if points_flex is not None:
-            ef.write_dftb_charges("charges.dat", point_flex)
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
 
@@ -241,26 +193,49 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        energy, gradients_bohr, scf_energy = rf.read_dftb_out("detailed.out")
-
+        energy, gradients_b, scf_energy = rf.read_dftb_out("detailed.out")
+        # fix gradients units to Hartree/Angstrom
+        #gradients = gradients_b * bohrconv
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
-        # truncate gradients if too long and fix gradients units to Hartree/Angstrom
+        # # truncate gradients if too long
+        # gradients = gradients[:len(positions)]
+
+                        
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                gradients = np.zeros(dim_flex)
-            else:
-                gradients = np.zeros(len(positions))
-            # Fix gradients units to Hartree/Angstrom
-            gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
+            
+           
+            if in_shell != None:
+                required_length = len(positions)
+            else: 
+                required_length = len(positions)  +  3 * natoms_flex
+            
+            print("padding gradients: {}".format(self.calc_name))
+            print("Current number of gradients: {}".format(len(positions)))
+
+            dim_flex = int(required_length)
+            print("Gradients to add: {}".format(dim_flex))
+            gradients = np.zeros(dim_flex)
+            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+
         else:
-            # Fix gradients units to Hartree/Angstrom
-            gradients = gradients_bohr[:len(positions)] * bohrconv
+            gradients = gradients_b[:len(positions)] * bohrconv
+       
+
+        # truncate gradients if too long and fix gradients units to Hartree/Angstrom
+        # if natoms_flex is not None:
+        #     if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+        #         dim_flex = int(len(positions) + 3. * natoms_flex)
+        #         gradients = np.zeros(dim_flex)
+        #     else:
+        #         gradients = np.zeros(len(positions))
+        # else:
+        #     gradients = gradients_bohr[:len(positions)] * bohrconv
 
         os.chdir(self.here)
+
         return (energy, gradients, scf_energy)
 
     def read_charges(self):
@@ -271,76 +246,19 @@ class DFTB_calc(Calc):
         ----------
         charges : array of atom charges
         """
-        ## Add section to read CM5 charges
-   
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
         charges = rf.read_dftb_charges("detailed.out")
         os.chdir(self.here)
         return charges
 
-    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Read dipole moment and dipole derivatives from a dftb+ output
-
-        Returns
-        ----------
-        d_mu : array of dipole derivatives
-        """
-
-        dftb_path = os.path.join(self.here, self.calc_name)
-        os.chdir(dftb_path)
-        d_mu_tmp = rf.read_dftb_mu('born.out')
-
-        #truncate the dipole derivatives matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                d_mu = np.zeros((dim_flex,3))
-            else:
-                d_mu = np.zeros((len(positions),3))
-            d_mu[:len(positions),:3] = d_mu_tmp[:len(positions),:3]
-        else:
-            d_mu = d_mu_tmp[:len(positions),:3]
-        
-        os.chdir(self.here)
-
-        return d_mu
-
-    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Get the Hessian matrix from a dftb+ output
-
-        Returns
-        ----------
-        hess : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
-        QM region or plus the atoms in the flexible QM' region.
-        """
-        dftb_path = os.path.join(self.here, self.calc_name)
-        os.chdir(dftb_path)
-        hess_tmp = rf.read_hessian_dftb("hessian.out")
-        #truncate the hessian matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                hess = np.zeros((dim_flex,dim_flex))
-            else:
-                hessian = np.zeros((len(positions),len(positions)))
-            # Fix gradients units to Hartree/Angstrom
-            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
-        else:
-            hess = hess_tmp[:len(positions),:len(positions)]
-
-        os.chdir(self.here)
-        return hess
-
 class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09/16
     """
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+
+    def run(self, atoms, point_flex = None, nprocs=None, state=None, states=None):
+#    def run(self, atoms, point_flex = None, nprocs=None):
         """
         Write a Gaussian input file and return a subprocess.Popen
 
@@ -449,49 +367,30 @@ class Gauss_calc(Calc):
         """
         gauss_path = os.path.join(self.here, self.calc_name)
         os.chdir(gauss_path)
-        proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
-        fchk_file="gck.fchk"
 
         nac = []
         soc = []
 
-        if state is not None and states is not None:
-            energy, gradients_b, scf_energy, nac, soc = rf.read_gauss_dyn(self.calc_name+".log",
-                                                                          fchk_file,
-                                                                          natoms,
-                                                                          state,
-                                                                          states,
-                                                                          mult,
-                                                                          singlestate,
-                                                                          soc_coupling)
-
+        if dyn_bool:
+            #HERE I NEED TO CREATE A FUNCTION TO READ THE GRADIENTS AND THE ENERGIES
+            #SPECIFICALLY FOR THE DYNAMICS
+            energy = []
+            gradients_b = np.array([])
+            proc_fchk = subprocess.call("formchk -0 gck_GS.chk gck_GS.fchk", shell=True)
+            proc_fchk = subprocess.call("formchk -0 gck_ES.chk gck_ES.fchk", shell=True)
+            energy_ES, gradients_b_ES, scf_energy = rf.read_fchk("gck_ES.fchk")
+            energy_GS, gradients_b_GS, scf_energy = rf.read_fchk("gck_GS.fchk")
+            energy.append(scf_energy)
+            energy.append(energy_ES)
+            energy = np.reshape(np.array(energy),(-1,1))
+            gradients_b = np.concatenate((gradients_b_GS, gradients_b_ES))
             # fix gradients units to Hartree/Angstrom
-            gradients = gradients_b * bohrconv
-#                                                                     #
-#           ADD THE LINES TO ACCOUNT FOR THE FELIXIBILITY OF REGION 2 #
-#                                                                     #
-
-
-#        if dyn_bool:
-#            #HERE I NEED TO CREATE A FUNCTION TO READ THE GRADIENTS AND THE ENERGIES
-#            #SPECIFICALLY FOR THE DYNAMICS
-#            energy = []
-#            gradients_b = np.array([])
-#            proc_fchk = subprocess.call("formchk -0 gck_GS.chk gck_GS.fchk", shell=True)
-#            proc_fchk = subprocess.call("formchk -0 gck_ES.chk gck_ES.fchk", shell=True)
-#            energy_ES, gradients_b_ES, scf_energy = rf.read_fchk("gck_ES.fchk")
-#            energy_GS, gradients_b_GS, scf_energy = rf.read_fchk("gck_GS.fchk")
-#            energy.append(scf_energy)
-#            energy.append(energy_ES)
-#            energy = np.reshape(np.array(energy),(-1,1))
-#            gradients_b = np.concatenate((gradients_b_GS, gradients_b_ES))
-#            # fix gradients units to Hartree/Angstrom
-#            gradients = gradients_b * bohrconv        
+            gradients = gradients_b * bohrconv        
 
         else:
             # stdout=FNULL to not have to read the output of formchk
             # FNULL = open(os.devnull, 'w')
-#            proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
+            proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
             energy, gradients_b, scf_energy = rf.read_fchk("gck.fchk")
             # fix gradients units to Hartree/Angstrom
 #            gradients = gradients_b * bohrconv
@@ -501,15 +400,25 @@ class Gauss_calc(Calc):
             # truncate gradients if too long
 #          
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
-            if natoms_flex is not None:
-                if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                    dim_flex = int(len(positions) + 3. * natoms_flex)
-                    gradients = np.zeros(dim_flex)
-                else:
-                    gradients = np.zeros(len(positions))
-                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
-            else:
-                gradients = gradients_b[:len(positions)] * bohrconv
+                
+        if natoms_flex is not None:
+                  
+            if in_shell != None:
+                required_length = len(positions)
+            else:   
+                required_length = len(positions) +  3 * natoms_flex
+            
+            print("padding gradients: {}".format(self.calc_name))
+            print("Current number of gradients: {}".format(len(positions)))
+            
+            dim_flex = int(required_length)
+            print("Gradients to add: {}".format(dim_flex))
+            gradients = np.zeros(dim_flex)
+            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+
+        else:
+            gradients = gradients_b[:len(positions)] * bohrconv
+                
 ##############################3 OLD IDEA ############################################## 
 #            dim_flex = int(len(positions) + 3. * natoms_flex)
 #            gradients = np.zeros(dim_flex)
@@ -517,7 +426,7 @@ class Gauss_calc(Calc):
 #######################################################################################                        
         os.chdir(self.here)
 
-        return (energy, gradients, scf_energy, nac, soc)
+        return (energy, gradients, scf_energy)
 
     def read_out_mol(self, pop="EPS"):
         """Read the output log file and return Mol"""
@@ -537,8 +446,8 @@ class Gauss_calc(Calc):
         hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
         QM region plus the atoms in the flexible QM' region. 
         """
-        gauss_path = os.path.join(self.here, self.calc_name)
-        os.chdir(gauss_path)
+        xtb_path = os.path.join(self.here, self.calc_name)
+        os.chdir(xtb_path)
         proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
         hess_tmp = rf.read_hessian_g_fchk("gck.fchk")
         #truncate the hessian matrix if it is too long
@@ -556,34 +465,9 @@ class Gauss_calc(Calc):
         os.chdir(self.here)
         return hess
 
-    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Read dipole moment and dipole derivatives from a G09/G16 output
 
-        Returns
-        ----------
-        d_mu : array of dipole derivatives
-        """
 
-        gauss_path = os.path.join(self.here, self.calc_name)
-        os.chdir(gauss_path)
-        proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
-        d_mu_tmp = rf.read_gauss_mu('gck.fchk')
 
-        #truncate the dipole derivatives matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                d_mu = np.zeros((dim_flex,3))
-            else:
-                d_mu = np.zeros((len(positions),3))
-            d_mu[:len(positions),:3] = d_mu_tmp[:len(positions),:3]
-        else:
-            d_mu = d_mu_tmp[:len(positions),:3]
-
-        os.chdir(self.here)
-        return d_mu
 
     def read_nacs(self):
         """
@@ -597,6 +481,20 @@ class Gauss_calc(Calc):
         os.chdir(self.here)
 
         return nacs
+
+    def read_charges(self, pop="ESP"):
+        """
+        Get the atomic charges of the whole system
+        
+        Returns
+        ----------
+        charges : array of atom charges
+        """
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+        charges, eng = rf.read_g_char("{}.log".format(self.calc_name), pop=pop, debug=False)
+        os.chdir(self.here)
+        return charges
 
 class Gauss_CAS_calc(Calc):
     """
@@ -691,10 +589,11 @@ def turbo_redefine(atoms):
 
 class Turbo_calc_TDDFT(Calc):
     """
-    Calculation of TDDFT energy and gradients with Turbomole
+    Calculation of TDDFT energy and gradients with Turbomole 7.0
 
     """
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+
+    def run(self, atoms, nprocs=None):
         """
         Write a Turbomole coord file and return a subprocess.Popen
 
@@ -714,9 +613,6 @@ class Turbo_calc_TDDFT(Calc):
         os.chdir(turbo_path)
 
         turbo_redefine(atoms)
-
-        if state is not None and states is not None:
-            ef.write_turbo_dyn("control", "control.temp", state, states, singlestate, nac_coupling, soc_coupling)
 
         # Run Turbomole
         proc = subprocess.Popen(
@@ -726,62 +622,7 @@ class Turbo_calc_TDDFT(Calc):
 
         return proc
 
-    def run_freq(self, atoms, point_flex = None, nprocs = None, state = None):
-        """
-        Write a Turbomole coord file and return a subprocess.Popen
-        If the input file is going to be used for a normal modes 
-        calculation.
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with Gaussian
-        Returns
-        -------
-        proc : subprocess.Popen object
-            the object should have a .wait() method
-
-        """
-        FNULL = open(os.devnull, 'w')
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-
-        turbo_redefine(atoms)
-
-        # Run normal modes calculation in the excited state
-#        env = os.environ.copy()
-#        env["state"] = state
-
-        commands = ["actual -r",
-            "dscf > dscf.out",
-            "egrad > grad.out",
-            "aoforce > force.out"
-        ]
-
-        for command in commands:
-            result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
-
-            if result.returncode != 0:print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            break
-
-        os.chdir(self.here)
-
-        return proc
-
-    def read_out(self,
-                 positions,
-                 dyn_bool = False,
-                 in_mol = None,
-                 in_shell = None,
-                 natoms_flex = None,
-                 natoms = None,
-                 state = None,
-                 states = None,
-                 mult = [],
-                 singlestate = 0,
-                 soc_coupling = []):
+    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
         Analyse a Turbomole grad.out file while printing geometry updates
 
@@ -809,62 +650,18 @@ class Turbo_calc_TDDFT(Calc):
         turbo_path = os.path.join(self.here, self.calc_name)
         os.chdir(turbo_path)
 
-        nac = []
-        soc = []
-
-        if state is not None and states is not None:
-            energy, gradients_b, scf_energy, nac, soc = rf.read_tb_dyn_tddft("grad.out",
-                                                                              natoms,
-                                                                              state,
-                                                                              states,
-                                                                              mult,
-                                                                              singlestate,
-                                                                              soc_coupling)
-
-            # fix gradients units to Hartree/Angstrom
-            gradients = gradients_b * bohrconv
-
-        else:
-            energy, gradients_b, scf_energy = rf.read_tb_grout("grad.out")
-            # fix gradients units to Hartree/Angstrom
-            gradients = gradients_b * bohrconv
-            # update the geometry log
+        energy, gradients_b, scf_energy = rf.read_tb_grout("grad.out")
+        # fix gradients units to Hartree/Angstrom
+        gradients = gradients_b * bohrconv
+        # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
+
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
 
         os.chdir(self.here)
-        return (energy, gradients, scf_energy, nac, soc)
-
-    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Read dipole moment and dipole derivatives from a Turbomole output
-
-        Returns
-        ----------
-        d_mu : array of dipole derivatives
-        """
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-        d_mu_tmp = rf.read_turbo_mu('dipgrad')
-
-        #truncate the dipole derivatives matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                d_mu = np.zeros((dim_flex,3))
-            else:
-                d_mu = np.zeros((len(positions),3))
-            d_mu[:len(positions),:3] = d_mu_tmp[:len(positions),:3]
-        else:
-            d_mu = d_mu_tmp[:len(positions),:3]
-
-        os.chdir(self.here)
-
-        return d_mu
+        return (energy, gradients, scf_energy)
 
 class Turbo_calc_MP2(Calc):
     """
@@ -901,46 +698,6 @@ class Turbo_calc_MP2(Calc):
         # Run Turbomole
         proc = subprocess.Popen(
             "jobex -level cc2 -c 1 > opt.out", stdout=FNULL, shell=True)
-
-        os.chdir(self.here)
-
-        return proc
-
-    def run_freq(self, atoms, point_flex = None, nprocs = None):
-        """
-        Write a Turbomole coord file and return a subprocess.Popen
-        If the input file is going to be used for a normal modes 
-        calculation.
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with Gaussian
-        Returns
-        -------
-        proc : subprocess.Popen object
-            the object should have a .wait() method
-
-        """
-        FNULL = open(os.devnull, 'w')
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-
-        turbo_redefine(atoms)
-
-        commands = ["actual -r",
-            "dscf > dscf.out",
-            "ricc2 > ricc2.out",
-            "aoforce > force.out"
-        ]
-
-        for command in commands:
-            result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
-
-            if result.returncode != 0:print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            print(f"Error executing '{command}' in Turbo MP2: {result.stderr.decode()}")
-            break
 
         os.chdir(self.here)
 
@@ -996,6 +753,7 @@ class Turbo_calc(Calc):
 
     """
 
+#    def run(self, atoms, nprocs=None):
     def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Turbomole coord file and return a subprocess.Popen
@@ -1031,52 +789,6 @@ class Turbo_calc(Calc):
 
         return proc
 
-    def run_freq(self, atoms, point_flex = None, nprocs = None, state = None):
-        """
-        Write a Turbomole coord file and return a subprocess.Popen
-        If the input file is going to be used for a normal modes 
-        calculation.
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with Gaussian
-        Returns
-        -------
-        proc : subprocess.Popen object
-            the object should have a .wait() method
-
-        """
-        FNULL = open(os.devnull, 'w')
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-
-        turbo_redefine(atoms)
-
-        # Run normal modes calculation in the excited state
-#        env = os.environ.copy()
-#        env["state"] = state
-
-        commands = ["actual -r",
-            "dscf > dscf.out",
-            "ricc2 > ricc2.out",
-            "aoforce > force.out"
-        ]
-     
-#            "NumForce -ex $state -central -level cc2 > force.out"
-
-        for command in commands:
-            result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
-
-            if result.returncode != 0:print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            break
-
-        os.chdir(self.here)
-
-        return proc
-
     def read_out(self,
                  positions,
                  dyn_bool = False,
@@ -1090,6 +802,7 @@ class Turbo_calc(Calc):
                  singlestate = 0,
                  soc_coupling = []):
 
+#    def read_out(self, positions, in_mol=None, in_shell=None):
         """
         Analyse a Turbomole ricc2.out file while printing geometry updates
 
@@ -1120,7 +833,8 @@ class Turbo_calc(Calc):
         nac = []
         soc = []
 
-        if state is not None and states is not None:
+        if dyn_bool:
+#        if state is not None and states is not None:
                         # read ouptut
             energy, gradients_b, scf_energy, nac, soc = rf.read_turbo_dyn("ricc2.out",
                                                                            natoms,
@@ -1134,7 +848,7 @@ class Turbo_calc(Calc):
             gradients = gradients_b * bohrconv
 
             # clean turbomole CC* files
-#            subprocess.call("rm CC*", shell=True)
+            subprocess.call("rm CC*", shell=True)
         else:
             energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
             # fix gradients units to Hartree/Angstrom
@@ -1147,36 +861,6 @@ class Turbo_calc(Calc):
  
         os.chdir(self.here)
         return (energy, gradients, scf_energy, nac, soc)
-
-
-    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):        
-        """
-        Read dipole moment and dipole derivatives from a Turbomole output
-
-        Returns
-        ----------
-        d_mu : array of dipole derivatives
-        """
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-        d_mu_tmp = rf.read_turbo_mu('dipgrad')
-
-        #truncate the dipole derivatives matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                d_mu = np.zeros((dim_flex,3))
-            else:
-                d_mu = np.zeros((len(positions),3))
-            d_mu[:len(positions),:3] = d_mu_tmp[:len(positions),:3]
-        else:
-            d_mu = d_mu_tmp[:len(positions),:3]
-
-        os.chdir(self.here)
-
-        return d_mu
 
     def save_checkpoint(self,
                         stp_iter = None,
@@ -1224,7 +908,7 @@ class Turbo_calc(Calc):
 
 class Turbo_SCF_calc(Calc):
     """
-    Calculation of SCF like DFT or HF with Turbomole
+    Calculation of SCF like DFT or HF with Turbomole 7.0
 
     """
 
@@ -1254,48 +938,6 @@ class Turbo_SCF_calc(Calc):
         # Run Turbomole
         proc = subprocess.Popen(
             "dscf > dscf.out && grad > grad.out", stdout=FNULL, shell=True)
-
-        os.chdir(self.here)
-
-        return proc
-
-    def run_freq(self, atoms, point_flex = None, nprocs = None):
-        """
-        Write a Turbomole coord file and return a subprocess.Popen
-        If the input file is going to be used for a normal modes 
-        calculation.
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with Gaussian
-        Returns
-        -------
-        proc : subprocess.Popen object
-            the object should have a .wait() method
-
-        """
-        FNULL = open(os.devnull, 'w')
-
-        turbo_path = os.path.join(self.here, self.calc_name)
-        os.chdir(turbo_path)
-
-        turbo_redefine(atoms)
-
-        # Run normal modes calculation in the excited state
-
-        commands = ["actual -r",
-            "dscf > dscf.out",
-            "grad > grad.out",
-            "aoforce > force.out"
-        ]
-
-        for command in commands:
-            result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
-
-            if result.returncode != 0:print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            print(f"Error executing '{command}' in Turbo ADC2/CC2: {result.stderr.decode()}")
-            break
 
         os.chdir(self.here)
 
@@ -1447,15 +1089,14 @@ class Molcas_calc(Calc):
         # run molcas calculation in molcas_calcdir
         # add '-b 1' to print output on-the-fly
         os.chdir(self.molcas_calcdir)
-        os.environ["np"] = nprocs
 
         if state is not None and states is not None:
             proc = subprocess.Popen(
-            "pymolcas -nt $np molcas.input -f -b 1", shell=True)
+            "pymolcas molcas.input -f -b 1", shell=True)
         else:
-#            os.environ["np"] = nprocs
+            os.environ["np"] = nprocs
             proc = subprocess.Popen(
-                "pymolcas -nt $np molcas.input -f -b 1", shell=True)
+                "pymolcas -np $np molcas.input -f -b 1", shell=True)
 
         os.chdir(self.here)
 
@@ -1510,7 +1151,7 @@ class Molcas_calc(Calc):
 
         #if state is not None and states is not None:
         proc = subprocess.Popen(
-            "pymolcas -nt molcas.input -f -b 1", shell=True)
+            "pymolcas molcas.input -f -b 1", shell=True)
 
         #os.environ["np"] = nprocs
         #proc = subprocess.Popen(
@@ -1567,7 +1208,12 @@ class Molcas_calc(Calc):
         subprocess.call("cp -rf %s/%s.rasscf.h5 %s.rasscf.h5" % (self.molcas_calcdir, self.molcas_project, self.molcas_project), shell=True)
         subprocess.call("cp -rf %s/%s.rasscf.molden %s.rasscf.molden" % (self.molcas_calcdir, self.molcas_project, self.molcas_project), shell=True)
 
-        if state is not None and states is not None:
+        if dyn_bool:
+            # copy the RasOrb and output files from molcas_calcdir back to $PWD/mh
+#            subprocess.call("cp -rf %s/%s.RasOrb %s.RasOrb" % (self.molcas_calcdir, self.molcas_project, self.molcas_project), shell=True)
+#            subprocess.call("cp -rf %s/molcas.log molcas.log" % (self.molcas_calcdir), shell=True)
+#            subprocess.call("cp -rf %s/%s.rasscf.h5 %s.rasscf.h5" % (self.molcas_calcdir, self.molcas_project, self.molcas_project), shell=True)
+#            subprocess.call("cp -rf %s/%s.rasscf.molden %s.rasscf.molden" % (self.molcas_calcdir, self.molcas_project, self.molcas_project), shell=True)
 
             # read ouptut
             energy, gradients_b, scf_energy, nac, soc = rf.read_molcas_ext("molcas.log",
@@ -1623,6 +1269,12 @@ class Molcas_calc(Calc):
         os.chdir(self.here)
 
         return (energy, gradients, scf_energy, nac, soc)
+
+        ########## FJH ##################
+#        with open("Molcas_grad.dat","a") as check:
+#            check.write("%s\n" % "Gradients"+self.calc_name)
+#            check.write("%s\n" % gradients_b)
+#            check.write("%s\n" % " ")
 
     def read_hessian(self):
         """
@@ -1769,7 +1421,7 @@ class xtb_calc(Calc):
         if os.path.isfile("xtb.input"):
             xtb_run_string = "xtb -I xtb.input geom.xyz --grad --iterations 2000 --norestart > xtb.out"
         else:
-            xtb_run_string = "xtb geom.xyz --grad --iterations 2000 --acc 10 --norestart > xtb.out"
+            xtb_run_string = "xtb geom.xyz --grad --iterations 2000 --acc 10 --norestart --molden > xtb.out"
 
         proc = subprocess.Popen(
             xtb_run_string, shell=True)
@@ -1777,6 +1429,43 @@ class xtb_calc(Calc):
         os.chdir(self.here)
         
         return proc
+ 
+    def relax_flex(self, atoms, model_dim, flex_dim,  nproces=None):
+
+        xtb_path = os.path.join(self.here, self.calc_name)
+        os.chdir(xtb_path)
+
+        ef.write_xtb("geom.xyz", atoms,
+                           [], self.calc_name + ".temp")
+
+        xtb_run_string = "xtb -o lax --grad  --norestart -I xtb.input geom.xyz > xtb.out"
+    
+        # fix shell and model regions
+        with open("xtb.input", "w") as f:
+            f.write("$constrain\n")
+            f.write("   atoms: 1-{}, {}-{}\n".format(int(model_dim/3),int(model_dim/3 + flex_dim/3) ,int(len(atoms))))
+            f.write("   force constant=1.0\n")
+            f.write("$end\n")    
+
+        proc = subprocess.Popen(xtb_run_string, shell=True)
+        proc.wait()
+
+        opt_atoms = rf.mol_from_file("xtbopt.xyz")
+
+        print("\n\nCHANGE IN ATOMS:\n")
+        for atom, atom_b in zip(atoms, opt_atoms):
+            print("\n")
+            print(atom.elem)
+            print(atom.get_pos())
+            print(atom_b.get_pos())
+
+       
+        os.chdir(self.here)
+
+        
+
+
+        return opt_atoms
  
     def run_freq(self,atoms, point_flex = None, nprocs=None):
         """
@@ -1803,7 +1492,7 @@ class xtb_calc(Calc):
                            [], self.calc_name + ".temp")
 
         if os.path.isfile("xtb.input"):
-            xtb_run_string = "xtb -I xtb.input geom.xyz --etemp 100 --iterations 2000 --hess --norestart > xtb.out"
+            xtb_run_string = "xtb -I xtb.input geom.xyz --etemp 100 --iterations 2000 --hess > xtb.out"
         else:
             xtb_run_string = "xtb geom.xyz --etemp 100 --iterations 2000 --hess --norestart > xtb.out"
 
@@ -1853,17 +1542,26 @@ class xtb_calc(Calc):
             self.update_geom(positions, in_mol, in_shell)
 
 
+
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                gradients = np.zeros(dim_flex)
-            else:
-                gradients = np.zeros(len(positions))
+            if in_shell != None:
+                required_length = len(positions)
+            else:   
+                required_length = len(positions) +  3 * natoms_flex
+            
+            print("padding gradients: {}".format(self.calc_name))
+            print("Current number of gradients: {}".format(len(positions)))
+            
+            dim_flex = int(required_length)
+            print("Total gradients: {}".format(dim_flex))
+            
+            gradients = np.zeros(dim_flex)
             gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
         else:
             gradients = gradients_bohr[:len(positions)] * bohrconv
-        # Fix gradients units to Hartree/Angstrom
+
+                # Fix gradients units to Hartree/Angstrom
 #        gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
 
         os.chdir(self.here)
@@ -1943,9 +1641,9 @@ class xtb_calc_gfnff(Calc):
                            [], self.calc_name + ".temp")
 
         if os.path.isfile("xtb.input"):
-            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --gfnff --iterations 2000 --norestart > xtb.out"
+            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --gfnff --iterations 2000 > xtb.out"
         else:
-            xtb_run_string = "xtb geom.xyz --grad --gfnff --iterations 2000 --acc 10 --norestart > xtb.out"
+            xtb_run_string = "xtb geom.xyz --grad --gfnff --iterations 2000 --acc 10 > xtb.out"
 
         proc = subprocess.Popen(
             xtb_run_string, shell=True)
@@ -1979,9 +1677,9 @@ class xtb_calc_gfnff(Calc):
                            [], self.calc_name + ".temp")
 
         if os.path.isfile("xtb.input"):
-            xtb_run_string = "xtb -I xtb.input geom.xyz --gfnff --etemp 100 --iterations 2000 --hess --norestart > xtb.out"
+            xtb_run_string = "xtb -I xtb.input geom.xyz --gfnff --etemp 100 --iterations 2000 --hess > xtb.out"
         else:
-            xtb_run_string = "xtb geom.xyz --gfnff --etemp 100 --iterations 2000 --hess --norestart > xtb.out"
+            xtb_run_string = "xtb geom.xyz --gfnff --etemp 100 --iterations 2000 --hess > xtb.out"
 
         proc = subprocess.Popen(
             xtb_run_string, shell=True)
@@ -2266,6 +1964,10 @@ class fomo_ci_calc(Calc):
         mol = Mol(atoms)
 
         if self.calc_name == 'rl':
+#            region_2_file = "r2.xyz"
+#            if os.path.exists(region_2_file):
+#                mol_r2 = rf.mol_from_file(region_2_file)
+#                mol += mol_r2
             # Write modified mopac inputs
             ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp")
         else:
@@ -2342,16 +2044,16 @@ class fomo_ci_calc(Calc):
 
 class Orca_calc(Calc):
     """
-    DFT, TDDFT, SF-DFT and CASSCF calculations computed with Orca
+    DFT and TDDFT calculation performed with Orca
     """
-    def run(self, atoms, points_flex = None, nprocs=None):
+    def run(self, atoms,nprocs):
         """
         Write a Orca input file and return a subprocess.Popen
 
         Parameters
         ----------
         atoms : list of Atom objects
-            Atoms to be calculated with Orca
+            Atoms to be calculated with QChem
         Returns
         -------
         proc : subprocess.Popen object
@@ -2359,37 +2061,9 @@ class Orca_calc(Calc):
 
         orca_path = os.path.join(self.here, self.calc_name)
         os.chdir(orca_path)
+        # Writes modified qchem input
         ef.write_orca(self.calc_name + ".inp", atoms,
-                       "mh.temp")
-        if points_flex is not None:
-            ef.write_orca_charges(("charges.pc", point_flex))
-        os.environ["np"] = nprocs
-        proc = subprocess.Popen(
-            "orca " + self.calc_name + ".inp" + " > " + self.calc_name + ".out", shell=True)
-
-        os.chdir(self.here)
-
-        return proc
-
-    def run_freq(self, atoms, points_flex = None, nprocs=None):
-        """
-        Write a Orca input file and return a subprocess.Popen
-
-        Parameters
-        ----------
-        atoms : list of Atom objects
-            Atoms to be calculated with Orca
-        Returns
-        -------
-        proc : subprocess.Popen object
-        """
-
-        orca_path = os.path.join(self.here, self.calc_name)
-        os.chdir(orca_path)
-        ef.write_orca(self.calc_name + ".inp", atoms,
-                       "mh.temp")
-        if points_flex is not None:
-            ef.write_orca_charges(("charges.pc", point_flex))
+                       "orca.temp")
         os.environ["np"] = nprocs
         proc = subprocess.Popen(
             "orca " + self.calc_name + ".inp" + " > " + self.calc_name + ".out", shell=True)
@@ -2430,80 +2104,18 @@ class Orca_calc(Calc):
 
         # energies are in Hartree
         # gradients are in Hartree/Bohr
-        energy, gradients_bohr, scf_energy = rf.read_orca_out(self.calc_name + ".out")
-
-        # truncate gradients if too long and fix gradients units to Hartree/Angstrom
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                gradients = np.zeros(dim_flex)
-            else:
-                gradients = np.zeros(len(positions))
-            # Fix gradients units to Hartree/Angstrom
-            gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
-        else:
-            # Fix gradients units to Hartree/Angstrom
-            gradients = gradients_bohr[:len(positions)] * bohrconv
-
+        energy, gradients_b, scf_energy = rf.read_orca_out(self.calc_name + ".out")
+        # fix gradients units to Hartree/Angstrom
+        print("gradients")
+        print(gradients_b)
+        gradients = gradients_b * bohrconv
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
 
+        # truncate gradients if too long
+        gradients = gradients[:len(positions)]
+
         os.chdir(self.here)
 
         return (energy, gradients, scf_energy)
-
-    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Get the Hessian matrix from an Orca output
-
-        Returns
-        ----------
-        hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
-        QM region plus the atoms in the flexible QM' region. 
-        """
-        orca_path = os.path.join(self.here, self.calc_name)
-        os.chdir(orca_path)
-        hess_tmp = rf.read_hessian_orca(self.calc_name + ".hess")
-        #truncate the hessian matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                hess = np.zeros((dim_flex,dim_flex))
-            else:
-                hess = np.zeros((len(positions),len(positions)))
-        # Fix gradients units to Hartree/Angstrom
-            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
-        else:
-            hess = hess_tmp[:len(positions),:len(positions)]
-        os.chdir(self.here)
-        return hess
-
-    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-        """
-        Read dipole moment and dipole derivatives from a Turbomole output
-       
-        Returns
-        ----------
-        d_mu : array of dipole derivatives
-        """
-
-        orca_path = os.path.join(self.here, self.calc_name)
-        os.chdir(orca_path)
-        d_mu_tmp = rf.read_orca_mu(self.calc_name + '.hess')
-
-        #truncate the dipole derivatives matrix if it is too long
-
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                d_mu = np.zeros((dim_flex,3))
-            else:
-                d_mu = np.zeros((len(positions),3))
-            d_mu[:len(positions),:3] = d_mu_tmp[:len(positions),:3]
-        else:
-            d_mu = d_mu_tmp[:len(positions),:3]
-
-        os.chdir(self.here)
-        return
