@@ -23,9 +23,13 @@ from fromage.io import read_file as rf
 from fromage.utils import array_operations as ao
 from fromage.utils import calc
 from fromage.utils import fro_dyn as fd
-from fromage.utils.newtonx import fro_nx as nx
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
+
+from fromage.utils.jacobian import jacobian,jac_transform
+
+from fromage.utils.atom import Atom
+from fromage.utils.mol import Mol
 
 
 def sequence(in_pos):
@@ -68,55 +72,102 @@ def sequence(in_pos):
     # at the same time. This order is optimised for the mh calculation being
     # the longest
 
-    if high_level == "fomo-ci" or high_level == "mopac" and at_reparam is not None:
-        mh_proc = mh.run(atoms = ao.array2atom(mol_atoms, in_pos), 
-                         nprocs = nprocs, at_reparam = at_reparam)
+    if bool_la:
+        #add new link atoms
+        aug_mol_atoms, linkatoms =  mol_atoms.add_linkatoms(lac_atoms,lah_atoms) 
+        # get coord pos and add to in_pos (needed for mh/ml calculation input)
+        #print("Aug_mol_atoms:\n ", aug_mol_atoms, "\n################")
+        la_pos = np.hstack([la.get_pos() for la in linkatoms ])
+
+        in_pos_la = np.hstack([in_pos, la_pos])
+        la_input = ao.array2atom(aug_mol_atoms, in_pos_la)
+
+        #run 
+        mh_proc = mh.run(la_input,nprocs = nprocs)
         if bool_ci:
-            mg_proc = mg.run(atoms = ao.array2atom(mol_atoms, in_pos), 
-                             nprocs = nprocs, at_reparam = at_reparam)
-    else:
-        mh_proc = mh.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
+            mg_proc = mg.run(la_input, nprocs = nprocs)
+        
+        rl_proc = rl.run(ao.array2atom(mol_atoms, in_pos),nprocs)
+        rl_proc.wait()
+        ml_proc = ml.run(la_input,nprocs)
+        ml_proc.wait()
         mh_proc.wait()
+
+        if bool_ci:
+            mg_proc.wait()
+    else:
+        if high_level == "fomo-ci" or high_level == "mopac" and at_reparam is not None:
+            mh_proc = mh.run(atoms = ao.array2atom(mol_atoms, in_pos), 
+                            nprocs = nprocs, at_reparam = at_reparam)
+            if bool_ci:
+                mg_proc = mg.run(atoms = ao.array2atom(mol_atoms, in_pos), 
+                                nprocs = nprocs, at_reparam = at_reparam)
+        else:
+            mh_proc = mh.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
+            mh_proc.wait()
+            if bool_ci and high_level != "gaussian_cas":
+                mg_proc = mg.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
+                
+        if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
+            rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs ,at_reparam = at_reparam)
+            rl_proc.wait()
+            ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),
+                            nprocs = nprocs , at_reparam = at_reparam)
+            ml_proc.wait()
+        else:
+            rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
+            rl_proc.wait()
+            ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
+            ml_proc.wait()
+    #    mh_proc.wait()
         if bool_ci and high_level != "gaussian_cas":
-            mg_proc = mg.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
-            
-    if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
-        rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs ,at_reparam = at_reparam)
-        rl_proc.wait()
-        ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),
-                         nprocs = nprocs , at_reparam = at_reparam)
-        ml_proc.wait()
-    else:
-        rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
-        rl_proc.wait()
-        ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
-        ml_proc.wait()
-#    mh_proc.wait()
-    if bool_ci and high_level != "gaussian_cas":
-        mg_proc.wait()
+            mg_proc.wait()
 
-    # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
-    rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
-    ml_en_gr = ml.read_out(in_pos)
-#
-    if high_level == "gaussian_cas":
-        mh_en_gr = mh.read_out(in_pos)[0:3]
+    if bool_la:
+        print("i/o:\n",in_pos, mol_atoms,shell_atoms)
+        rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms)
+        ml_en_gr = ml.read_out(in_pos_la)
+        mh_en_gr = mh.read_out(in_pos_la) 
         if bool_ci:
-            mg_en_gr = (mh.read_out(in_pos)[2], mh.read_out(
-                in_pos)[3], mh.read_out(in_pos)[2])
-    else:
-        mh_en_gr = mh.read_out(in_pos)
-        if bool_ci:
-            mg_en_gr = mg.read_out(in_pos)
+            mg_en_gr = mg.read_out(in_pos_la)
 
-    # combine results
-    en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
-    scf_combo = rl_en_gr[2] - ml_en_gr[2] + mh_en_gr[2]
-    
-    if single_point:
-        gr_combo = 0
-    else:
+        print("\n\n\n##### in_pos, in_pos_la:\n\n")
+        for i in range(len(in_pos_la)):
+            try:
+                print(in_pos[i], in_pos_la[i])
+            except IndexError:
+                print(in_pos_la[i])
+
+        print("\nlinkatoms:\n", linkatoms)
+        print("NUMBER OF MODEL GRADS:", len(ml_en_gr[1]),len(mh_en_gr[1]))
+        ml_en_gr = jac_transform(ml_en_gr, jac, linkatoms)
+        mh_en_gr = jac_transform(mh_en_gr, jac, linkatoms)
+        
+        # combine results
+
+        en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
         gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
+        scf_combo = rl_en_gr[2] - ml_en_gr[2] + mh_en_gr[2]
+
+    else:
+        # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
+        rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
+        ml_en_gr = ml.read_out(in_pos)
+    #
+        if high_level == "gaussian_cas":
+            mh_en_gr = mh.read_out(in_pos)[0:3]
+            if bool_ci:
+                mg_en_gr = (mh.read_out(in_pos)[2], mh.read_out(
+                    in_pos)[3], mh.read_out(in_pos)[2])
+        else:
+            mh_en_gr = mh.read_out(in_pos)
+            if bool_ci:
+                mg_en_gr = mg.read_out(in_pos)
+
+        # combine results
+        en_combo = rl_en_gr[0] - ml_en_gr[0] + mh_en_gr[0]
+        gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
+        scf_combo = rl_en_gr[2] - ml_en_gr[2] + mh_en_gr[2]
 
     if bool_ci:
         # corresponding ground state energy and gradients
@@ -130,28 +181,47 @@ def sequence(in_pos):
         g_ij = e_diff**2 / (e_diff + alpha)
         en_out = e_mean + sigma * g_ij
         gr_out = 0.5 * (gr_combo + gr_combo_g) + sigma * ((e_diff**2 + 2 *
-                                                           alpha * e_diff) / (e_diff + alpha)**2) * (gr_combo - gr_combo_g)
+                                                        alpha * e_diff) / (e_diff + alpha)**2) * (gr_combo - gr_combo_g)
     else:
         en_out = en_combo
         gr_out = gr_combo
-        e_diff = 0
 
+    
+
+    # print some updates in the output
+    out_file.write("------------------------------\n")
     global iteration
     iteration += 1
-    _write_calc_info(out_file = out_file,
-                     mh_en_gr = mh_en_gr,
-                     ml_en_gr = ml_en_gr,
-                     rl_en_gr = rl_en_gr,
-                     en_combo = en_combo,
-                     gr_combo = gr_combo,
-                     scf_combo = scf_combo,
-                     evconv = evconv,
-                     iteration = iteration,
-                     en_out = en_out,
-                     gr_out = gr_out,
-                     e_diff = e_diff,
-                     bool_ci = bool_ci)
+    out_file.write("Iteration: " + str(iteration) + "\n")
+    out_file.write("Real low energy: {:>30.8f} eV\n".format(
+        rl_en_gr[0] * evconv))
+    out_file.write("Model low energy: {:>29.8f} eV\n".format(
+        ml_en_gr[0] * evconv))
+    out_file.write("Model high energy: {:>28.8f} eV\n".format(
+        mh_en_gr[0] * evconv))
+    out_file.write(
+        "ONIOM Total energy: {:>27.8f} eV\n".format(en_combo * evconv))
+    out_file.write(
+        "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
+    out_file.write(
+        "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
+    
 
+    out_file.write(
+        "Grad RMS: {:>37.8f} eV/A\n".format( np.sqrt(np.mean(np.square(gr_combo)))))
+    out_file.write(
+        "Max gradient: {:>33.8f} eV/A\n".format(np.max(np.abs(gr_combo))))
+    if bool_ci:
+        out_file.write(
+            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
+        out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
+            np.linalg.norm(gr_out * evconv)))
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            e_diff*evconv))
+    else:
+        out_file.write("Gap: {:>42.8f} eV\n".format(
+            (en_combo - scf_combo) * evconv))
+        out_file.flush()
     return (en_out, gr_out)
 
 def start_trajectory(geometry, dyn_sett, mol_atoms, shell_atoms):
@@ -174,89 +244,6 @@ def start_trajectory(geometry, dyn_sett, mol_atoms, shell_atoms):
 
     return None
 
-def set_newtonx(atoms_array,inputs):
-    """
-    This subroutine prepare all the environments and files to use fromage
-    as a third-party program of Newton-X for the calculation of spectra
-    and dynamics
-    """
-    natoms, nstates, state = nx.read_nx_control()
-    nx.newtonx_sequence(atoms_array,inputs,natoms,nstates,state)
-
-    return None
-
-def _write_head(out_file):
-    """
-    """
-    # print start time
-    start_time = datetime.now()
-    out_file.write("STARTING TIME: " + str(start_time) + "\n")
-    out_file.write("" "\n")
-    out_file.write("************************************************" "\n")
-    out_file.write(" Find the bug between the code and the output " "\n")
-    out_file.write("\n")
-    out_file.write("If you see something that it doesn't look right" "\n")
-    out_file.write("          See it, Say it, Sort it...           " "\n")
-    out_file.write("\n")
-    out_file.write("************************************************" "\n")
-    return start_time
-
-def _write_calc_info(out_file,
-                     mh_en_gr,
-                     ml_en_gr,
-                     rl_en_gr,
-                     en_combo,
-                     gr_combo,
-                     scf_combo,
-                     evconv,
-                     iteration,
-                     en_out,
-                     gr_out,
-                     e_diff,
-                     bool_ci = None):
-    """
-    print some updates in the output
-    """ 
-    out_file.write("------------------------------\n")
-    out_file.write("Iteration: " + str(iteration) + "\n")
-    out_file.write("Real low energy: {:>30.8f} eV\n".format(
-        rl_en_gr[0] * evconv))
-    out_file.write("Model low energy: {:>29.8f} eV\n".format(
-        ml_en_gr[0] * evconv))
-    out_file.write("Model high energy: {:>28.8f} eV\n".format(
-        mh_en_gr[0] * evconv))
-    out_file.write(
-        "ONIOM Total energy: {:>27.8f} eV\n".format(en_combo * evconv))
-    out_file.write(
-        "ONIOM SCF energy: {:>29.8f} eV\n".format(scf_combo * evconv))
-    out_file.write(
-        "Energy grad. norm: {:>28.8f} eV/A\n".format(np.linalg.norm(gr_combo * evconv)))
-    if bool_ci:
-        out_file.write(
-            "Penalty function value: {:>23.8f} eV\n".format(en_out * evconv))
-        out_file.write("Penalty function grad. norm: {:>18.8f} eV\n".format(
-            np.linalg.norm(gr_out * evconv)))
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            e_diff*evconv))
-    else:
-        out_file.write("Gap: {:>42.8f} eV\n".format(
-            (en_combo - scf_combo) * evconv))
-        out_file.flush()
-
-    return
-
-def _write_tail(start_time,out_file):
-    """
-    Writes the time info when the optimization process
-    or dynamics is finished
-    """
-    out_file.write("DONE\n")
-    end_time = datetime.now()
-    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
-    out_file.write("ENDING TIME: " + str(end_time) + "\n")
-    out_file.close()
-
-    return None
 
 if __name__ == '__main__':
 
@@ -270,7 +257,9 @@ if __name__ == '__main__':
         "out_file": "fromage.out",
         "bool_ci": "0",
         "high_level": "gaussian",
-        "low_level": "gaussian",
+        "jac_off" : "0",
+        "pyberny" : "0",
+        "low_level" : "gaussian",
         "high_level_mg" : None,
         "nprocs": "1",
         "sigma": "3.5",
@@ -281,7 +270,7 @@ if __name__ == '__main__':
         "relax_qmprime": "0",
         "at_reparam": "0",
         "natoms_flex": "0",
-        "newtonx" : "0"} 
+        "bool_la": "0"} 
 
     inputs = def_inputs.copy()
 
@@ -290,12 +279,14 @@ if __name__ == '__main__':
         new_inputs = rf.read_config("fromage.in")
         inputs.update(new_inputs)
 
+########### FJH #################################
     out_file = inputs["out_file"]
 #
     # output
     out_file = open(out_file, "w", 1)
-    # write head in the output file
-    start_time = _write_head(out_file)
+    # print start time
+    start_time = datetime.now()
+    out_file.write("STARTING TIME: " + str(start_time) + "\n")
 #
     natoms_flex = bool_cast(inputs["natoms_flex"])
     relax_qmprime = bool_cast(inputs["relax_qmprime"])
@@ -312,7 +303,7 @@ if __name__ == '__main__':
         out_file.write("natoms_flex is reset to OFF to continue with a calculation considreing a frozen environment"+ "\n")
         natoms_flex = None
         out_file.write(" "+ "\n")
-
+#################################################
     mol_file = inputs["mol_file"]
     shell_file = inputs["shell_file"]
     bool_ci = bool_cast(inputs["bool_ci"])
@@ -324,7 +315,11 @@ if __name__ == '__main__':
     single_point = bool_cast(inputs["single_point"])
     dynamics = bool_cast(inputs["dynamics"])
     dyn_restart = bool_cast(inputs["dyn_restart"])
-    newtonx = bool_cast(inputs["newtonx"])
+
+    bool_la = bool_cast(inputs["bool_la"])
+    bool_jac = bool_cast(inputs["jac_off"])
+
+    pyberny = bool_cast(inputs["pyberny"])
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
     sigma = float(inputs["sigma"])
@@ -339,7 +334,10 @@ if __name__ == '__main__':
         at_reparam = None
 
 #    # output
+#    out_file = open(out_file, "w", 1)
 #    # print start time
+#    start_time = datetime.now()
+#    out_file.write("STARTING TIME: " + str(start_time) + "\n")
     if nprocs=="1":
         out_file.write("If Q-Chem, Molcas, NWChem or MOPAC are to be used, have in mind that" "\n")
         out_file.write("the default number of cores are asked for the calculation,")
@@ -355,11 +353,60 @@ if __name__ == '__main__':
         subprocess.call("rm geom_cluster.xyz", shell=True)
 
     # read initial coordniates
-    mol_atoms = rf.read_xyz(mol_file)[0]
+    mol_atoms = rf.mol_from_file(mol_file)
 
     
     # read shell atoms
-    shell_atoms = rf.read_xyz(shell_file)[0]
+    shell_atoms = rf.mol_from_file(shell_file)
+
+    if bool_la:
+
+        print("Link atoms turned on") 
+        
+        #detect bonding between regions; LAH stay fixed during optimisation
+        lac_atoms, lah_atoms = shell_atoms.detect_bondcuts(mol_atoms)
+
+        #rearrange so that lac are at end - can just index in_pos without having to search again
+        mol_atoms = mol_atoms.rearrange_mol(lac_atoms)
+        
+        print("Model region:\n",mol_atoms)
+        #real_atoms = real_atoms.rearrange_mol(shell_atoms)
+        from fromage.utils.mol import Mol
+
+        ##### ENSURE MOL AND REAL ARE IN SAME ORDER
+        shell_rearranged = Mol([])
+        for atom in lah_atoms:
+            shell_rearranged.append(atom)
+        for atom in shell_atoms:
+            if atom not in shell_rearranged:
+                shell_rearranged.append(atom)
+        shell_atoms = shell_rearranged.copy()
+
+        #use to add link atoms to model region (create augmented model)
+        aug_mol_atoms, linkatoms = mol_atoms.add_linkatoms(lac_atoms,lah_atoms)
+        print("\nAugmented model:\n", aug_mol_atoms)
+
+        
+        for atom in lah_atoms:
+            if atom in shell_atoms:
+                shell_atoms.remove(atom)
+
+        shell_atoms = lah_atoms + shell_atoms
+        shell_atoms.write_xyz("shell.xyz")
+        
+        #get jacobian
+        real_atoms = mol_atoms + shell_atoms
+
+       
+        print(type(inputs["jac_off"]))
+        jac = jacobian(real_atoms, aug_mol_atoms, lac_atoms,lah_atoms, linkatoms)
+        if bool_jac:
+            jac = np.identity(np.shape(jac)[0]) 
+            print(jac)
+    
+
+        n_linkatoms = len(linkatoms)
+        print("Total link atoms: ", n_linkatoms)
 
     # make the initial coordinates into a flat list
     atoms_array = []
@@ -369,18 +416,19 @@ if __name__ == '__main__':
         atoms_array.append(atom.x)
         atoms_array.append(atom.y)
         atoms_array.append(atom.z)
-#
-    # make the list into an array
+
     atoms_array = np.array(atoms_array)
     if single_point:
         sequence(atoms_array)
     elif dynamics:
-        res = start_trajectory(dyn_array, inputs)
-    elif newtonx:
-        set_newtonx(atoms_array,inputs)
+        res = start_trajectory(dyn_array, inputs, mol_atoms, shell_atoms)
     else:
         res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
+        subprocess.run(["./save_out.sh"])
 
-    _write_tail(start_time,out_file)
-
+    out_file.write("DONE\n")
+    end_time = datetime.now()
+    out_file.write("ELAPSED TIME: " + str(end_time - start_time) + "\n")
+    out_file.write("ENDING TIME: " + str(end_time) + "\n")
+    out_file.close()
