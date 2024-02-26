@@ -791,10 +791,11 @@ class Turbo_calc(Calc):
 
     def read_out(self,
                  positions,
-                 dyn_bool = False,
+                 
                  in_mol = None,
                  in_shell = None,
                  natoms_flex = None,
+                 dyn_bool = False,
                  natoms = None,
                  state = None,
                  states = None,
