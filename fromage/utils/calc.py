@@ -791,7 +791,6 @@ class Turbo_calc(Calc):
 
     def read_out(self,
                  positions,
-                 
                  in_mol = None,
                  in_shell = None,
                  natoms_flex = None,
@@ -1462,8 +1461,6 @@ class xtb_calc(Calc):
 
        
         os.chdir(self.here)
-
-        
 
 
         return opt_atoms

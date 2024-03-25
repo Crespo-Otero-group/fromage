@@ -63,7 +63,7 @@ def preopt_minimize(atoms_array, dim_qm, gtol, dtol=1e-5):
             subprocess.run(f"cp rl/rl.temp flex_opt/flex_opt.temp", shell=True)
 
     i = 1
-    while i == 0:
+    while i == 1:
         # run 3-step minimization with preliminary optimisation; currently only single point calculation
         out_file.write("Macrioteration: {}\n".format(i))
 
@@ -563,6 +563,7 @@ if __name__ == "__main__":
         "flexi_scheme": "2",  # Scheme 1: version1 charge assignment; scheme 2 (recommended): read real-low charges on-the-fly
         "algo": "BFGS",  # experimental: use those documented in SciPy that don't require Hessian
         "mwfn_charges": "off",  # experimental post-processing for xTB; Mulliken, Lowdin, dipole-corrected Hirshfeld, RESP
+        "v1": "0"
     }
 
     inputs = def_inputs.copy()
@@ -646,17 +647,21 @@ if __name__ == "__main__":
 
     newtonx = None
     flex_method = any([relax, dynamics, normal_modes, newtonx])
-    if natoms_flex == 0 or flex_method is None:
-        out_file.write("Flexible ONIOM method selected: {}\n".format(flex_method))
-        out_file.write("Number of flexible atoms: {}\n".format(natoms_flex))
-        if natoms_flex == 0:
-            out_file.write("Please specify flexible region\n")
-        else:
-            out_file.write(
-                "Please specify a method (relax, normal_modes, newtonx) in fromage.in\n"
-            )
-        out_file.write("fromage is dying now :-( " + "\n")
-        sys.exit()
+
+    run_v1 = bool_cast(inputs["v1"])
+    v1 =False
+    if not v1:
+        if natoms_flex == 0 or flex_method is None:
+            out_file.write("Flexible ONIOM method selected: {}\n".format(flex_method))
+            out_file.write("Number of flexible atoms: {}\n".format(natoms_flex))
+            if natoms_flex == 0:
+                out_file.write("Please specify flexible region\n")
+            else:
+                out_file.write(
+                    "Please specify a method (relax, normal_modes, newtonx) in fromage.in\n"
+                )
+            out_file.write("fromage is dying now :-( " + "\n")
+            sys.exit()
 
     # start scf counter
     iteration = 0
@@ -696,6 +701,8 @@ if __name__ == "__main__":
     QM_natoms = len(mol_atoms)
     dim_qm = int(3 * QM_natoms)
 
+    
+ 
     if single_point:
         out_file.write("A single point calculation has been requested\n")
         sequence(atoms_array)

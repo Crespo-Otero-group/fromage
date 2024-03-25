@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def update_jac(jac, mol_a, mol_b):
     for i, j in zip(mol_a, mol_b):
         jac[i, j] = 1
@@ -65,8 +64,6 @@ def jacobian(real_atoms, aug_mol_atoms, lac_atoms, lah_atoms, la_atoms):
     # print(inner_R, lac_R, lah_R, outer_R)
 
     return jac
-
-
 
 def transform_grads(in_grad,jacobian, linkatoms):
     """
