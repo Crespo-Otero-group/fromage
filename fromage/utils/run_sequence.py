@@ -218,3 +218,11 @@ class RunSeq(object):
             dev = self.single_sc_loop(sc_iter, initial_bg)
         self.write_out("Tolerance reached: " + str(dev) + " < " + str(self.inputs["dev_tol"]) + "\n")
         return
+
+#### MI edits
+    def run_ewald_only(self, region_2):
+        self.region_2 = region_2
+
+        ew_points = self.run_ewald()
+
+        return ew_points

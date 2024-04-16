@@ -187,10 +187,9 @@ def assign_charges(char_atoms, unchar_atoms):
     kinds = set(kinds)
     q_kinds = charged_kinds(char_atoms, kinds)
 
-    # detect uncharged atom connectivity
-    unchar_first = detect_1_connect(unchar_atoms)
-    unchar_cnct = complete_expand(unchar_first)
-
+    #MI Edit
+    import os
+    unchar_cnct = unchar_atoms.load_connectivity_matrix()
     # determine kind and cross check with charged kinds
     for i, atom in enumerate(unchar_atoms):
         atom.set_connectivity(unchar_atoms, unchar_cnct[i])

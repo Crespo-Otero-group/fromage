@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script seeks to implement the EE(L1) and EE(L2) point-charge embedding scheme of Caricato and
+Implementation of the EE(L1) and EE(L2) point-charge embedding scheme of Caricato and
 co-workers (https://doi.org/10.1063/1.4972000). 
 
 This scheme uses constrained ESP fitting to improve the envionrment point charges ({qR} in their paper's 
