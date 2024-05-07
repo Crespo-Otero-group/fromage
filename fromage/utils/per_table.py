@@ -15,6 +15,7 @@ periodic_list = [("", "", 0, 0, 0.0, 0.0,0.0),
                  ("se","Se", 34, 6, 1,16, 1,9,78.96),
                  ("br", "Br", 35, 7, 1.14, 1.85, 79.904),
                  ("cl", "Cl", 17, 7, 0.99, 1.75, 35.453),
+                 ("i", "I", 53,7,139, 1.98, 126.90447),
                  ("n", "N", 7, 5, 0.68, 1.55, 14.007),
                  ("o", "O", 8, 6, 0.68, 1.52, 15.999),
                  ("f", "F", 9, 7, 0.64, 1.47, 18.998),
@@ -28,12 +29,14 @@ periodic_list = [("", "", 0, 0, 0.0, 0.0,0.0),
                  ("cw", "Cw", 9999, 9999, 9999, 9999, 9999),    #  FJH 29/03/22
                  ("hw", "Hw", 9999, 9999, 9999, 9999, 9999),    # These lines are included to be used in the 
                  ("ow", "Ow", 9999, 9999, 9999, 9999, 9999),     # reparametrisations of FOMO-CI method
-                 ("nw", "Nw", 9999, 9999, 9999, 9999, 9999),]    # If another special case is required
+                 ("nw", "Nw", 9999, 9999, 9999, 9999, 9999),    # If another special case is required
                                                             # included in the same format. For instance,
                                                             # if a special case of sulfour atom is needed,
                                                             # include it as sw, Sw, etc.
                                                             # Note that I have left meaningless numbers for 
                                                             # all the other info
+
+                ("y", "Y", 8888,8888, -10, -10, 8888)] # placeholder for experimental cluster generation for MOFs, sorry to anyone doing ytterbium chemistry...
 
 periodic = {}
 

@@ -293,12 +293,13 @@ class Mol(object):
         """
         lac_atoms = Mol([])
         lah_atoms = Mol([])
+
         
-        for atoms_m in sub_atoms:
-            for atoms_s in self:
-                if self.bonded(atoms_m,atoms_s):
-                    lac_atoms.append(atoms_m)
-                    lah_atoms.append(atoms_s)
+        for atom_m in sub_atoms:
+            for atom_s in self:
+                if self.bonded(atom_m,atom_s): # not duplicates if real (not shell)
+                    lac_atoms.append(atom_m)
+                    lah_atoms.append(atom_s)
 
         return lac_atoms, lah_atoms
 
@@ -311,6 +312,16 @@ class Mol(object):
         for atom in end_atoms:
             mol_rearranged.append(atom)
         return mol_rearranged
+    
+    def remove_model(self, model):
+        """Remove model region from real region to return shell"""
+        shell = self.copy()
+        
+        for atom_m in model:
+            for atom_s in shell:
+                if atom_s.very_close(atom_m):
+                    shell.remove(atom_s)
+        return shell
 
     def add_linkatoms(self, lac_atoms,lah_atoms):
         """

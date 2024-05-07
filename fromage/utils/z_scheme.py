@@ -316,7 +316,7 @@ def redistribute_charges(region_1, in_char, real_atoms, z_scheme="Z2", z_thresh=
     output_file.write(f"Number of M1 atoms detected: {len(M1_atoms)}\n")
 
     # run charge Zint scheme
-    if z_scheme in ["z1", "z2", "z3", "Z1", "Z2", "Z3"]:
+    if z_scheme.upper() in ["Z1", "Z2", "Z3"]:
         z_index = get_z_index(z_scheme)
         Mn_charges = find_Mn_atoms(real_atoms, in_char,M1_atoms,z_index, sys_type=sys_type)
         output_file.write(f"Charges up to M{z_index} to be removed: {len(Mn_charges)}\n")

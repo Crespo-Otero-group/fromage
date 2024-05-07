@@ -175,8 +175,6 @@ if __name__ == '__main__':
     
 
     print(high_points.get_total_charge())
-
-   
     
     #### MICHAEL Z-SCHEME EDITS 13/10/2023
     molden_low = os.path.join(here,  "molden_low.chg")

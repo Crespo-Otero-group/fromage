@@ -417,7 +417,7 @@ def centered_mols(self, labels, return_trans=False):
         The new confined cell corresponding to the now translated molecules
 
     """
-    mol, mod_cell = self.complete_mol(labels)
+    mol, mod_cell = self.completde_mol(labels)
     centro = mol.centroid()
     mol.translate(-centro)
     mod_cell.translate(-centro)

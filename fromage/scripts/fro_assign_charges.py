@@ -18,7 +18,6 @@ Includes options for Mulliken or RESP and ouptut file names.
 import numpy as np
 import sys
 import argparse
-
 import fromage.io.read_file as rf
 
 
@@ -187,9 +186,8 @@ def assign_charges(char_atoms, unchar_atoms):
     kinds = set(kinds)
     q_kinds = charged_kinds(char_atoms, kinds)
 
-    #MI Edit
-    import os
-    unchar_cnct = unchar_atoms.load_connectivity_matrix()
+    unchar_first = detect_1_connect(unchar_atoms)
+    unchar_cnct = complete_expand(unchar_first)
     # determine kind and cross check with charged kinds
     for i, atom in enumerate(unchar_atoms):
         atom.set_connectivity(unchar_atoms, unchar_cnct[i])

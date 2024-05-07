@@ -1608,6 +1608,82 @@ class xtb_calc(Calc):
         os.chdir(self.here)
         return hess
 
+    def run_quick(self, atoms, xtb_path, charges=None):
+        
+        """
+        Lightweight version of run
+        """
+        here = os.getcwd()
+    
+        os.chdir(xtb_path)
+
+        atoms.write_xyz("geom.xyz")
+
+        xtb_run_string = "xtb geom.xyz --grad --iterations 2000 --acc 10 --norestart --molden > xtb.out"
+
+
+        # write point charge embedding
+        if charges !=None: 
+            with open("xtb.input", "w") as f:
+                f.write("$embedding\ninput=xtb_charge.pc\n$end")
+            
+            with open("xtb_charge.pc", "w") as f:
+                f.write(f"{len(charges)}\n")
+                for charge in charges:
+                    
+                    f.write(f"{charge.q} {charge.x} {charge.y} {charge.z}\n")
+            
+            xtb_run_string = "xtb -I xtb.input geom.xyz --iterations 2000 --acc 10 --norestart --molden > xtb.out"
+
+
+       
+        proc = subprocess.run(
+            xtb_run_string, shell=True)
+
+        os.chdir(here)
+        
+        return proc
+    
+    # def prep_xtb(atoms,path, charges=None):
+    #     """lightweight functino for writing xTB prep files"""
+
+    #     os.chdir(path)
+
+    #     atoms.write_xyz("geom.xyz")
+
+    #     xtb_run_string = "xtb --molden > xtb.out"
+    
+    #     # write point charge embedding
+    #     if charges !=None: 
+    #         with open("xtb.input", "w") as f:
+    #             f.write("$embedding\ninput=xtb_charge.pc\n$end")
+            
+    #         with open("xtb_charge.pc", "w") as f:
+    #             f.write(f"{len(charges)}\n")
+    #             for charge in charges:
+    #                 f.write(charge.q, charge.x, charge.y, charge.z)
+
+    #     proc = subprocess.run(xtb_run_string, shell=True)
+    #     proc.wait()
+
+    #     opt_atoms = rf.mol_from_file("xtbopt.xyz")
+
+    #     print("\n\nCHANGE IN ATOMS:\n")
+    #     for atom, atom_b in zip(atoms, opt_atoms):
+    #         print("\n")
+    #         print(atom.elem)
+    #         print(atom.get_pos())
+    #         print(atom_b.get_pos())
+
+       
+    #     os.chdir(self.here)
+
+
+    #     return opt_atoms
+ 
+
+
+
 class xtb_calc_gfnff(Calc):
     """
     Calculation of energy and gradients with GFN2-FF from xTB
@@ -2117,3 +2193,89 @@ class Orca_calc(Calc):
         os.chdir(self.here)
 
         return (energy, gradients, scf_energy)
+    
+
+class Multiwfn_calc():
+    """
+    Not sure this needs to be child class of calc
+    
+    Purpose of this object is to provide straighforward method for
+    performing Multiwfn calculations automatically, specically for the
+    fro_el.py script.
+    """
+    def __init__(self, input_file, path=None,  qM=None, qB=None, mk_grid =1.0,  command="Multiwfn_noGUI", constraint_file = "constraint"):
+        self.input_file = input_file
+        self.command = command
+        self.mk_grid = mk_grid
+        self.input = None
+        self.input_name = 'mwfn_in'
+        self.path = path
+        self.here = os.getcwd()
+        self.qM = qM
+        self.qB = qB
+        self.constraint_file = constraint_file
+    def write_config(self, filename="mwfn_in"):
+        """make auto_resp file for multiwfn calculation"""
+        with open(filename, "w") as file:
+            file.write(self.input)
+        return
+    
+    def set_input(self, type="RESP"):
+        """default inputs"""            
+        if type=="RESP" and self.qM != None:
+            print("Running constrained resp")
+            self.input = f"7\n18\n3\n1\n1\n{self.mk_grid}\n0\n6\n1\n{self.constraint_file}\n2\ny\n0\n0\nq"
+            
+        elif type=="RESP":
+            print("Running resp")
+            self.input = f"7\n18\n3\n1\n1\n{self.mk_grid}\n0\n1\ny\n0\n0\nq"
+
+        return
+    
+    def constrain_resp(self, filename="constraint"):
+        """write constrain file for RESP calculation"""
+
+        #remove previous
+        if os.path.exists(filename):
+            os.remove(filename)
+
+        with open(filename, "w") as constraint_file:
+
+            for i, char in enumerate(self.qM): # this stays fixed
+                constraint_file.write(f"{i+1}, {char.q}\n")  # atom number, constraint value
+            for i, char in enumerate(self.qB): # this changes every iteration
+                constraint_file.write(f"{i+len(self.qM)+1}, {char.q}\n")
+        return
+
+
+    def run(self, nprocs):
+        """Run Multiwfn for given input file"""
+
+
+        if self.path != None:
+            os.chdir(f"{self.path}")
+
+        self.write_config()
+
+        if self.qM != None and self.qB != None: 
+            self.constrain_resp()
+        if os.path.exists("molden.chg"):
+            os.rename("molden.chg", "molden_old.chg")
+
+        os.environ["np"] = str(nprocs)
+        mfwn_command = f"{self.command} {self.input_file} -nt $np < {self.input_name} > mwfn.out"
+        proc = subprocess.run(mfwn_command, shell=True)
+        
+        os.chdir(self.here)
+        return proc
+
+    def read_charges(self, filename ="molden.chg"):
+        os.chdir(self.path)
+        charges = [float(line.split()[4]) for line in open(filename) if line.strip()]  
+        os.chdir(self.here)
+        return charges 
+    
+    def set_custom_input(self, newstring):
+        """use to harcode troublesome cases """
+        self.set_custom_input = newstring
+        return 
