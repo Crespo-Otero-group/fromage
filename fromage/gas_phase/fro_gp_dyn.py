@@ -318,7 +318,7 @@ def dynamics_sequence(traj):
     if stop_traj is not None:
         es_gs_gap = (float(en_combo[state-1]) - float(scf_combo)*evconv
         if es_gs_gap < stop_traj:
-           sys.exit("Excited state and ground state energies are too close (DE = {} eV)".format(es_gs_gap))
+            sys.exit("Excited state and ground state energies are too close (DE = {} eV)".format(es_gs_gap))
 
     # print some updates in the output
     out_file.write("------------------------------\n")

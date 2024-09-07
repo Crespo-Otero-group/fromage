@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 ## Extension library for fromage for ab initio Molecular Dynamics
-## based largely (with permission) on the PyRAI2MD package.
-## 
-## Developers
-## Jordan Cox
-## Jingbai Li
-## Federico J Hernandez
+## based largely (with permission) on the PyRAI2MD package, developed
+## by Dr Jordan Cox and Dr Jingbai Li
+
+      ## Federico J Hernandez ##
 
 import time,datetime,os
 import numpy as np
+import sys
 from fromage.dynamics.periodic_table import Element
 from fromage.dynamics.verlet import NoseHoover, VerletI, VerletII
 from fromage.dynamics.surfacehopping import FSSH, GSH, NOSH
@@ -41,7 +40,21 @@ def getMass(symbol):
 ############# Input Parameters Parser #############
 ###################################################
 
-def initTrajParams(symbols, init_pos, init_vel, settings, curr_step=None, Eini=None, prev_grad=None):
+def initTrajParams(symbols, 
+                   init_pos, 
+                   init_vel, 
+                   settings, 
+                   flex_atoms = None,
+                   fixed_atoms = None,
+                   fixed_atoms_array = None,
+                   all_flex_atoms = None,
+                   all_atoms = None,
+                   dim_flex = None,
+                   QM_natoms = None,
+                   dim_qm = None,
+                   curr_step=None, 
+                   Eini=None, 
+                   prev_grad=None):
     """
     Parse input parameters and return dict of settings
 
@@ -75,6 +88,7 @@ def initTrajParams(symbols, init_pos, init_vel, settings, curr_step=None, Eini=N
     ip["HopType"] = settings["hop_method"]
     ip["low_level"] = settings["low_level"]
     ip["high_level"] = settings["high_level"]
+    ip["pop_an"] = settings["pop_an"]
     ip["out_file"] = settings["out_file"]
     if "temp" in settings.keys():
         ip["temp"] = settings["temp"]
@@ -214,84 +228,80 @@ def dynamics_sequence(traj):
     soc_out : list<float>
         List of spin-orbit coupling between spin states
     """
+
     SH_methods = ['molcas','turbomole','turbomole_tddft','qchem','gaussian']
+
     # Read parameters from Trajectory object
-    in_pos = atoms_to_fromage(traj.R.copy())
-    mol_atoms = traj.mol_atoms
-    shell_atoms = traj.shell_atoms
-    state = traj.state
-    states = traj.states
-    mult = traj.mult
-    statemult = traj.statemult
-    nstates = traj.nstates
+    
     low_level = traj.low
     high_level = traj.high
-    out_file = open(traj.out_file,'a+')
-    natoms = traj.natoms
-    singlestate = traj.singlestate
-    nactype = traj.nactype
-    nac_coupling = traj.nac_coupling
-    soc_coupling = traj.soc_coupling
-    nprocs = traj.nprocs
-    natoms_flex = traj.natoms_flex
-    stop_traj = traj.stop_traj
-    
+
     # Check the method selected for the high_level is supported for SH-dynamics
     if high_level in SH_methods:
-        pass
+        rl = calc.setup_calc("rl", low_level)
+        ml = calc.setup_calc("ml", low_level)
+        mh = calc.setup_calc("mh", high_level)
     else:
         out_file.write(" The method %s is not implemented for SH dynamics\n" % (high_level))
         out_file.write("The job is dying now :-( ")
-        import sys
         sys.exit()
-    # initialise calculation objects
-    rl = calc.setup_calc("rl", low_level)
-    ml = calc.setup_calc("ml", low_level)
-    mh = calc.setup_calc("mh", high_level)
 
-    # Run the calculations as subprocesses in parallel
     calcs = []
 
-    pass_nac = []
-    if nactype == 'nac':
-        pass_nac = nac_coupling
+    # Continue reading parameters from Trajectory object    
+    in_pos = atoms_to_fromage(traj.R.copy())
+    mol_atoms = traj.mol_atoms
+    shell_atoms = traj.shell_atoms
+    mult = traj.mult
+    statemult = traj.statemult
+    state = traj.state
+    states = traj.states
+    nstates = traj.nstates
+    soc_coupling = traj.soc_coupling 
+    out_file = open(traj.out_file,'a+')
+    natoms = traj.natoms
+    singlestate = traj.singlestate
+    stop_traj = traj.stop_traj
+    natoms_flex = traj.natoms_flex
+    flex = None
+    # Flexible ONIOM
+    if traj.flex_atoms and traj.fixed_atoms:
+        flex = True
+        all_flex_atoms = traj.all_flex_atoms
+        fixed_atoms = traj.fixed_atoms
+        QM_natoms = traj.QM_natoms
+        dim_qm = traj.dim_qm
 
-    mh_proc = mh.run(ao.array2atom(mol_atoms, in_pos),
-                     nprocs = nprocs,
-                     state = state,
-                     states = states,
-                     singlestate = singlestate,
-                     nac_coupling = pass_nac,
-                     soc_coupling = soc_coupling)
-    calcs.append(mh_proc)
-    rl_proc = rl.run(ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
-    calcs.append(rl_proc)
-    ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
-    calcs.append(ml_proc)
-
-    ## Wait until all parallel calculations are finished
-    for proc in calcs:
-        proc.communicate()
+    if flex:
+        run_calcs(traj,mol_atoms,shell_atoms,mh,ml,rl,flex)                  
+    else:
+        run_calcs(traj,mol_atoms,shell_atoms,mh,ml,rl)
 
      # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
-    rl_en_gr = rl.read_out(in_pos, mol_atoms, shell_atoms, natoms_flex = natoms_flex) #FJH
-    ml_en_gr = ml.read_out(in_pos, natoms_flex = natoms_flex)
 
-    if high_level == "gaussian_cas":
-        mh_en_gr = mh.read_out(in_pos, natoms_r2 = natoms_r2)[0:3]
-    elif high_level in SH_methods:
-#    elif high_level == "molcas":
-        mh_en_gr = mh.read_out(in_pos,
-                               dyn_bool = True,
-                               natoms_flex = natoms_flex, # FJH
-                               natoms = natoms,
-                               state = state,
-                               states = states,
-                               mult = mult,
-                               singlestate = singlestate,
-                               soc_coupling = soc_coupling)
-         
-#        mh_en_gr = mh.read_out(in_pos)
+    if flex:
+        rl_en_gr = rl.read_out(in_pos,
+                               in_mol = all_flex_atoms,
+                               in_shell = fixed_atoms,
+                               natoms_flex = natoms_flex)
+        ml_en_gr = ml.read_out(in_pos[:dim_qm], 
+                               natoms_flex = natoms_flex)
+    else:
+        rl_en_gr = rl.read_out(in_pos, 
+                               mol_atoms, 
+                               shell_atoms, 
+                               natoms_flex = natoms_flex)
+        ml_en_gr = ml.read_out(in_pos, natoms_flex = natoms_flex)
+
+
+    mh_en_gr = mh.read_out(in_pos,
+                           natoms_flex = natoms_flex,
+                           natoms = natoms,
+                           state = state,
+                           states = states,
+                           mult = mult,
+                           singlestate = singlestate,
+                           soc_coupling = soc_coupling)
 
     # Format energies and gradients for dynamics processing
     """ data format
@@ -312,23 +322,36 @@ def dynamics_sequence(traj):
        	1 grad 	    (natoms * 3,)
        	2 gr_energy float
     """
-    mh_en, mh_gr, mh_scf, nac, soc = mh_en_gr
+    mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
     ml_en, ml_gr, ml_scf = ml_en_gr
     rl_en, rl_gr, rl_scf = rl_en_gr 
 
-    ml_gr = np.array(ml_gr).reshape((1, natoms, 3))
-    rl_gr = np.array(rl_gr).reshape((1, natoms, 3))
+    if flex:
+        ml_gr = np.array(ml_gr).reshape((1, len(all_flex_atoms), 3))
+        mh_gr = np.zeros((nstates, len(all_flex_atoms), 3))
+        mh_gr[:,:QM_natoms,:] = mh_gr_tmp
+        rl_gr = np.array(rl_gr).reshape((1, len(all_flex_atoms), 3))
+    else:
+        ml_gr = np.array(ml_gr).reshape((1, natoms, 3))
+        mh_gr = mh_gr_tmp
+        rl_gr = np.array(rl_gr).reshape((1, natoms, 3))
 
     # combine ONIOM result without cap atoms
     # note for future
     # if cap atoms are included, mg_gr and mh_gr need to multiply the jocabian between capped and uncapped model
-    en_combo = rl_en - ml_en + mh_en  #numpy automatically broadcast float to match the mh_en array
-    gr_combo = rl_gr - ml_gr + mh_gr  #numpy automatically broadcast (1, natoms, 3) to match the mh_gr array (nstates, natoms, 3)
+    #numpy automatically broadcast float to match the mh_en array
+    gr_combo = mh_gr
+    en_combo = rl_en - ml_en + mh_en
+    #numpy automatically broadcast (1, natoms, 3) to match the mh_gr array (nstates, natoms, 3)
+    gr_combo[state-1,:,:] = rl_gr - ml_gr + mh_gr[state-1,:,:]
     scf_combo = rl_scf - ml_scf + mh_scf
     en_out = en_combo
     gr_out = gr_combo
     nac_out = nac
     soc_out = soc
+
+    # if linker atoms are included, gr_combo has to be defined as:
+    #gr_combo = rl_en_gr[1] - ml_en_gr[1] x Jac + mh_en_gr[1] x Jac
 
     evconv = 27.2114 # eV / Hartree
 
@@ -337,7 +360,97 @@ def dynamics_sequence(traj):
         if es_gs_gap < stop_traj:
            sys.exit("Excited state and ground state energies are too close (DE = {} eV)".format(es_gs_gap))
 
-    # print some updates in the output
+    # Save all necessary data to restart a trajectory
+    if traj.iter % traj.chk_stp == 0:
+        mh.save_checkpoint(traj.iter,traj.Eini,traj.E,traj.G,traj.Gp,traj.V,traj.R)
+ 
+    return (en_out, gr_out, nac_out, soc_out)
+
+def atoms_to_fromage(atoms):
+    """
+    Transform a 3D matrix of atomic Cartesian coordinates into a 1D array
+    for use by fromage's sequence() function
+
+    """
+    return np.reshape(atoms,(-1,))
+
+def run_calcs(traj,mol_atoms,shell_atoms,mh,ml,rl,flex = None):
+    """
+    Run the calculations as subprocesses in parallel
+    Note that the schemes are different if frozen or
+    flexible ONIOM is required
+    """
+
+    in_pos = atoms_to_fromage(traj.R.copy())
+    pop_an = traj.pop_an
+    state = traj.state
+    states = traj.states
+    nstates = traj.nstates
+    singlestate = traj.singlestate
+    nactype = traj.nactype
+    nac_coupling = traj.nac_coupling
+    soc_coupling = traj.soc_coupling
+    nprocs = traj.nprocs 
+
+    pass_nac = []
+    if nactype == 'nac':
+        pass_nac = nac_coupling
+
+    calcs = []    
+
+    # Flexible ONIOM
+    if flex:
+        flex_atoms = traj.flex_atoms
+        fixed_atoms = traj.fixed_atoms
+        fixed_atoms_array = traj.fixed_atoms_array
+        all_flex_atoms = traj.all_flex_atoms
+        all_atoms = traj.all_atoms
+        dim_flex = traj.dim_flex
+        QM_natoms = traj.QM_natoms
+        dim_qm = traj.dim_qm
+        all_pos = np.concatenate((in_pos, fixed_atoms_array), axis = 0)
+
+        rl_proc = rl.run(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
+        rl_proc.wait()
+        rl_charges_array = rl.read_charges(pop = pop_an)
+
+        mh_proc = mh.run(ao.array2atom(mol_atoms,in_pos[:dim_qm]),
+                                       ao.array2atom(all_atoms[QM_natoms:],all_pos[dim_qm:],rl_charges_array[QM_natoms:]),
+                                       nprocs,
+                                       state = state,
+                                       states = states,
+                                       singlestate = singlestate,
+                                       nac_coupling = pass_nac,
+                                       soc_coupling = soc_coupling)
+        calcs.append(mh_proc)
+        ml_proc = ml.run(ao.array2atom(mol_atoms,in_pos[:dim_qm]),
+                                       ao.array2atom(all_atoms[QM_natoms:],all_pos[dim_qm:],rl_charges_array[QM_natoms:]),
+                                       nprocs)
+        calcs.append(ml_proc)
+    else:
+        mh_proc = mh.run(ao.array2atom(mol_atoms, in_pos),
+                         nprocs = nprocs,
+                         state = state,
+                         states = states,
+                         singlestate = singlestate,
+                         nac_coupling = pass_nac,
+                         soc_coupling = soc_coupling)
+        calcs.append(mh_proc)
+        rl_proc = rl.run(ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
+        calcs.append(rl_proc)
+        ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
+        calcs.append(ml_proc)
+
+    ## Wait until all parallel calculations are finished
+    for proc in calcs:
+        proc.communicate()
+
+    return None
+
+def _write_calc_info(out_file,mh_en,ml_en,rl_en,state,en_combo,scf_combo,evconv,iteration):
+    """
+    Print updates in the output
+    """
     out_file.write("------------------------------\n")
     out_file.write("Iteration: " + str(traj.iter) + "\n")
     out_file.write("Real low energy: {:>30.8f} eV{:>14.8f} au\n".format(
@@ -358,21 +471,7 @@ def dynamics_sequence(traj):
 
     out_file.flush()
 
-    # Save all necessary data to restart a trajectory
-    if traj.iter % traj.chk_stp == 0:
-        mh.save_checkpoint(traj.iter,traj.Eini,traj.E,traj.G,traj.Gp,traj.V,traj.R)
- 
-    return (en_out, gr_out, nac_out, soc_out)
-
-
-def atoms_to_fromage(atoms):
-    """
-    Transform a 3D matrix of atomic Cartesian coordinates into a 1D array
-    for use by fromage's sequence() function
-
-    """
-    return np.reshape(atoms,(-1,))
-
+    return
 
 ###################################################
 ########### Trajectory Class Definition ###########
@@ -392,7 +491,18 @@ class Trajectory:
 ######## Trajectory Initialization Function ########
 ####################################################
 
-    def __init__(self,init_dict, mol_atoms, shell_atoms):
+    def __init__(self,
+                 init_dict, 
+                 mol_atoms, 
+                 shell_atoms,
+                 flex_atoms = None,
+                 fixed_atoms = None,
+                 fixed_atoms_array = None,
+                 all_flex_atoms = None,
+                 all_atoms = None, 
+                 dim_flex = None,
+                 QM_natoms = None,
+                 dim_qm = None):
         """
         Initialize a Trajectory object with settings provided by user and parsed
             by initTrajParams(). Below is a table of possible attributes set by
@@ -422,6 +532,7 @@ class Trajectory:
         self.HopType = init_dict["HopType"].lower()
         self.low = init_dict["low_level"].lower()
         self.high = init_dict["high_level"].lower()
+        self.pop_an = init_dict["pop_an"]
         self.out_file = init_dict["out_file"]
         self.statemult = init_dict["statemult"]
         self.nac_coupling = init_dict["nac_coupling"]
@@ -545,6 +656,29 @@ class Trajectory:
         self.mol_atoms = mol_atoms
         self.shell_atoms = shell_atoms
 
+        # Flexible ONIOM
+        if flex_atoms is not None:
+            self.flex_atoms = flex_atoms
+        else:
+            self.flex_atoms = None
+        if fixed_atoms is not None:
+            self.fixed_atoms = fixed_atoms
+        else:
+            self.fixed_atoms = None
+        if fixed_atoms_array is not None:
+            self.fixed_atoms_array = fixed_atoms_array
+        if all_flex_atoms is not None:
+            self.all_flex_atoms = all_flex_atoms
+        if all_atoms is not None:
+            self.all_atoms = all_atoms
+        if dim_flex is not None:
+            self.dim_flex = dim_flex
+        if QM_natoms is not None:
+            self.QM_natoms = int(QM_natoms)
+        if dim_qm is not None:
+            self.dim_qm = dim_qm
+        
+
 ###################################################
 ########## Dynamics Function Definitions ##########
 ###################################################
@@ -604,6 +738,7 @@ class Trajectory:
         """
 
         # Compute energy and gradients using sequence function in fro_run.py
+
         energy, gradients, NACs, SOCs = dynamics_sequence(self)
 
         # Convert gradients from Eh/Angstrom to Eh/Bohr

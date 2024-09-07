@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import os,sys
 import numpy as np
+import glob
 import argparse
 from shutil import copyfile
 from dynamixsampling import Condition
 
-
+# Functions based (with permission) on the PyRAI2MD package
+# Adapted and modified by Federico J. Hernandez 
 
 
 def getCondition(text):
@@ -85,7 +87,7 @@ def read_input(in_file):
     return conditions
 
 
-def write_data_to_file(data, file_name, directory=None, header=None, types=None):
+def write_data_to_file(data, file_name, directory=None, header=None, types=None, start_line=0, end_line=None):
     """
     Writes a given set of data line-by-line into a file. If 'directory' is
     provided, the file will be created in that directory. Otherwise it will
@@ -108,21 +110,25 @@ def write_data_to_file(data, file_name, directory=None, header=None, types=None)
         Default is current working directory (os.getcwd())
 
     """
-    if directory is None:
-        directory = os.getcwd()
+    if end_line is None:
+        end_line = len(data)
+    elif end_line > len(data):
+        sys.exit('natoms_flex + natoms_qm exceeds the amunt of atoms present in the initial conditions file')
+ 
+    directory = directory or '.'
+    file_path = os.path.join(directory, file_name)
 
-    with open(directory + "/" + file_name, 'w+') as wf:
+    with open(file_path, 'w+') as wf:
         if header is not None:
             for line in header:
                 wf.write(line + "\n")
 
-        for i,line in enumerate(data):
-            line_string = "{:>12.8f} {:>12.8f} {:>12.8f}"
-            line_string = line_string.format(line[0], line[1], line[2])
+        for i in range(start_line, min(end_line, len(data))):
+            line = data[i]
+            line_string = "{:>12.8f} {:>12.8f} {:>12.8f}".format(line[0], line[1], line[2])
             if types is not None:
                 line_string = "{:>2s} ".format(types[i]) + line_string
             wf.write(line_string + "\n")
-
 
 def make_directory_structure(directory=None,phase=1):
     """
@@ -160,16 +166,23 @@ def copy_files( directory, phase ):
     if phase == 0:
         fro_files = ["fromage.in"]
     elif phase == 1:
-        fro_files = ["fromage.in", "shell.xyz"]
+        fro_files = ["fromage.in", "shell*"]
+
 
     for fro_file in fro_files:
-#    for fro_file in ["fromage.in", "shell.xyz"]:
-        src_file = os.path.join( os.getcwd(), fro_file )
-        dest_file = os.path.join( directory, fro_file )
-        copyfile( src_file, dest_file )
+        if '*' in fro_file:
+            match_files = glob.glob(os.path.join(os.getcwd(), fro_file))
+            for src_file in match_files:
+                filename = os.path.basename(src_file)
+                dest_file = os.path.join(directory, filename)
+                copyfile(src_file, dest_file)
+        else:
+            # Handle non-pattern filenames as before
+            src_file = os.path.join(os.getcwd(), fro_file)
+            dest_file = os.path.join(directory, fro_file)
+            copyfile(src_file, dest_file)
 
-
-def setup_conditions(conditions,phase):
+def setup_conditions(conditions,phase,flex,natoms_flex,natoms_qm):
     """
     Write data contained in a set of Condition objects to a series of files
     for running dynamics trajectories on each initial condition separately
@@ -178,17 +191,52 @@ def setup_conditions(conditions,phase):
     ----------
     conditions : list<Condition>
         A list of Condition objects
+    phase : int 
+        phase = 0 --> Gas phase 
+        phase = 1 --> Crystal
 
+    flex : boolean
+        True Flexible ONIOM
+
+    natoms_flex : int
+        Amount of atoms in the QM' region    
+
+    natoms_qm : int
+        Amount of atoms in the QM region
     """
     for i,condition in enumerate(conditions, phase):
-#        directory = "TRAJ_" + "{:05}".format(i+1)
         directory = f"TRAJ_{i}"
         directory = os.path.join(os.getcwd(), directory)
         make_directory_structure(directory,phase)
         copy_files( directory, phase )
-        header_string = [ str(len(condition.coordinates)), "" ]
-        write_data_to_file(condition.coordinates, "mol.init.xyz", directory, header_string, condition.types)
-        write_data_to_file(condition.velocities, "velocity", directory)
+        if flex:
+            header_string = [str(natoms_qm),""]
+            write_data_to_file(data = condition.coordinates,
+                               file_name = "mol.init.xyz", 
+                               directory = directory, 
+                               header= header_string, 
+                               types = condition.types,
+                               end_line = natoms_qm) 
+            header_string = [str(natoms_flex),""]
+            write_data_to_file(data = condition.coordinates, 
+                               file_name = "shell_flex.xyz", 
+                               directory = directory, 
+                               header = header_string, 
+                               types = condition.types,
+                               start_line = natoms_qm,
+                               end_line = natoms_qm + natoms_flex)
+            write_data_to_file(data = condition.velocities,
+                               file_name = "velocity", 
+                               directory = directory,
+                               end_line = natoms_qm + natoms_flex)
+        else:
+            header_string = [ str(len(condition.coordinates)), "" ]
+            write_data_to_file(data = condition.coordinates,
+                           file_name = "mol.init.xyz",
+                           directory = directory,
+                           header = header_string,
+                           types = condition.types)
+            write_data_to_file(condition.velocities, "velocity", directory)
 
 
 def main():
@@ -207,17 +255,25 @@ def main():
     # Set up argument parser
     parser = argparse.ArgumentParser(description='Setup script for fromage dynamics')
     parser.add_argument('-i','--ifile', type=str, nargs='?', default='initconds', help='File containing initial conditions, output by dynamixsampling.py')
-    parser.add_argument('-p','--phase', type=int, default=1, help="Define the pase of the calculation: 0: gas - 1: crystal (Default = 1)")
+    parser.add_argument('-p','--phase', type=int, default=1, help="Define the phase of the calculation: 0: gas - 1: crystal (Default = 1)")
+    parser.add_argument('-f','--flex', type=bool, default=False, help="Define if using a flexible environment (Default = False)")
+    parser.add_argument('-nf','--natoms_flex', type=int, default=0, help="Amount of atoms in the QM' flexible region. (Default = 0)")
+    parser.add_argument('-nqm','--natoms_qm', type=int, default=0, help="Amount of atoms in the QM region. This option is only used when flex=True. (Default = 0)")
     # Read name of initconds file from command line arguments
     args = parser.parse_args()
     in_file = args.ifile
     phase = args.phase
+    flex = args.flex
+    natoms_flex = args.natoms_flex
+    natoms_qm = args.natoms_qm
 
     if not os.path.isfile(in_file):
         sys.exit("Initial conditions file {} does not exist".format(in_file))
+    if flex and natoms_qm <= 0:
+        sys.exit("A flexible environment is required but the number of qm atoms is 0")
 
     conditions = read_input(in_file)
-    setup_conditions( conditions, phase )
+    setup_conditions( conditions, phase, flex, natoms_flex, natoms_qm )
 
 
 if __name__ == '__main__':

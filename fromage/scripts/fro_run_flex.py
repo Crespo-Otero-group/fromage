@@ -16,6 +16,7 @@ reaching this module
 import numpy as np
 import subprocess
 import os
+import sys
 from datetime import datetime
 from scipy.optimize import minimize
 
@@ -76,7 +77,7 @@ def sequence(in_pos):
 
     # Get the charges and use them for the model region
 
-    rl_charges_array = rl.read_charges()
+    rl_charges_array = rl.read_charges( pop = pop_an )
 
     if high_level == "fomo-ci" or high_level == "mopac" and at_reparam is not None:
         mh_proc = mh.run(ao.array2atom(mol_atoms, in_pos[:dim_qm]),
@@ -107,8 +108,8 @@ def sequence(in_pos):
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     rl_en_gr = rl.read_out(in_pos, 
-                           in_mol = all_flex_atoms, # FJH here I giving QM and flex QM' region instead of mol_atoms
-                           in_shell = fixed_atoms, # FJH here I giving only the fixed atoms instead of all the shell_atoms
+                           in_mol = all_flex_atoms, # FJH here I am giving QM and flex QM' region instead of mol_atoms
+                           in_shell = fixed_atoms, # FJH here I am giving only the fixed atoms instead of all the shell_atoms
                            natoms_flex = natoms_flex)
     ml_en_gr = ml.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex)
 #
@@ -156,6 +157,11 @@ def sequence(in_pos):
         gr_out = gr_combo
         e_diff = 0
 
+    if frozen_at is not None:
+        for atom in freeze_atoms:
+            dim = int(atom*3)
+            gr_out[dim-3:dim] = 0.0
+
     global iteration
     iteration += 1
     _write_calc_info(out_file = out_file,
@@ -174,9 +180,19 @@ def sequence(in_pos):
 
     return (en_out, gr_out)
 
-#start_trajectory(dyn_array,inputs,mol_atoms,flex_atoms,fixed_atoms)
 
-def start_trajectory(geometry,dyn_sett,mol_atoms,shell_atoms):
+def start_trajectory(geometry,
+                     dyn_sett,
+                     mol_atoms,
+                     flex_atoms,
+                     fixed_atoms,
+                     fixed_atoms_array,
+                     all_flex_atoms,
+                     all_atoms,
+                     dim_flex,
+                     QM_natoms,
+                     dim_qm):
+
     # Read initial velocities from file
     in_vel = rf.read_velocities(dyn_sett["vel_file"])
     # Read the gradient of the step previous the dynamics crashed
@@ -187,28 +203,50 @@ def start_trajectory(geometry,dyn_sett,mol_atoms,shell_atoms):
     atomic_symbols = [ x[0] for x in geometry ]
     in_pos = [ [x[1], x[2], x[3]] for x in geometry ]
     if dyn_restart:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett, curr_step, Eini, prev_grad)
+        in_params = fd.initTrajParams(symbols = atomic_symbols,
+                                      init_pos = in_pos,
+                                      init_vel = in_vel,
+                                      settings = dyn_sett,
+                                      flex_atoms = flex_atoms,
+                                      fixed_atoms = fixed_atoms,
+                                      fixed_atoms_array = fixed_atoms_array,
+                                      all_flex_atoms = all_flex_atoms,
+                                      all_atoms = all_atoms,
+                                      dim_flex = dim_flex,
+                                      QM_natoms = QM_natoms,
+                                      dim_qm = dim_qm,
+                                      curr_step = curr_step,
+                                      Eini = Eini,
+                                      prev_grad = prev_grad)
     else:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett)
-    traj = fd.Trajectory(in_params, mol_atoms, shell_atoms)
+        in_params = fd.initTrajParams(symbols = atomic_symbols, 
+                                      init_pos = in_pos,
+                                      init_vel = in_vel,
+                                      settings = dyn_sett,
+                                      flex_atoms = flex_atoms,
+                                      fixed_atoms = fixed_atoms,
+                                      fixed_atoms_array = fixed_atoms_array,
+                                      all_flex_atoms = all_flex_atoms,
+                                      all_atoms = all_atoms,
+                                      dim_flex = dim_flex,
+                                      QM_natoms = QM_natoms, 
+                                      dim_qm = dim_qm)
+
+    traj = fd.Trajectory(init_dict = in_params, 
+                         mol_atoms = mol_atoms, 
+                         shell_atoms = None,
+                         flex_atoms = flex_atoms,
+                         fixed_atoms = fixed_atoms,
+                         fixed_atoms_array = fixed_atoms_array,
+                         all_flex_atoms = all_flex_atoms,
+                         all_atoms = all_atoms,
+                         dim_flex = dim_flex,
+                         QM_natoms = QM_natoms,
+                         dim_qm = dim_qm)
 
     traj.run_dynamics()
 
     return None
-
-###########################################################################
-################################### FJH ###################################
-def set_newtonx(atoms_array,inputs):
-    """
-    This subroutine prepare all the environments and files to use fromage
-    as a third-party program of Newton-X for the calculation of spectra
-    and dynamics
-    """
-    natoms, nstates, state = nx.read_nx_control()
-    nx.newtonx_sequence(atoms_array,inputs,natoms,nstates,state)
-
-    return None
-############################################################################
 
 def start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array):
     """
@@ -228,6 +266,20 @@ def start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_a
 
     # Compute the ONIOM normal modes
     Nmodes.compute_nmodes()
+
+    return None
+
+def set_newtonx(inputs,single_point=None):
+    """
+    This subroutine prepare all the environments and files to use fromage
+    as a third-party program of Newton-X for the calculation of spectra
+    and dynamics
+    """
+    natoms, nstates, state = nx.read_nx_control()
+    if single_point:
+        nx.newtonx_initconds(inputs,natoms,nstates,state)
+    else:
+        nx.newtonx_sequence(inputs,natoms,nstates,state)
 
     return None
 
@@ -319,6 +371,8 @@ if __name__ == '__main__':
         "bool_ci": "0",
         "high_level": "gaussian",
         "low_level": "gaussian",
+        "high_level_mg" : None,
+        "pop_an" : None,
         "nprocs": "1",
         "sigma": "3.5",
         "gtol": "1e-5",
@@ -326,9 +380,11 @@ if __name__ == '__main__':
         "dynamics": "0",
         "dyn_restart": "0",
         "relax": "0",
-        "at_reparam": "0",
+        "at_reparam": None,
         "natoms_flex": "0",
-        "normal_modes" : "0"} 
+        "normal_modes" : "0",
+        "newtonx" : "0",
+        "frozen_at" : None} 
 
     inputs = def_inputs.copy()
 
@@ -344,24 +400,32 @@ if __name__ == '__main__':
     # write head in the output file
     start_time = _write_head(out_file)
 #
+    flex_method = None
     natoms_flex = int(inputs["natoms_flex"])
+    if "ll_flex_natoms" in inputs.keys():
+        ll_flex_natoms = int(inputs["ll_flex_natoms"])
+    else:
+        ll_flex_natoms = None
+    if ll_flex_natoms and ll_flex_natoms != natoms_flex:
+        natoms_flex = ll_flex_natoms
     relax = bool_cast(inputs["relax"])
+    dynamics = bool_cast(inputs["dynamics"])
     normal_modes = bool_cast(inputs["normal_modes"])
-    if natoms_flex > 0 and not relax and not normal_modes:
-        out_file.write(" "+ "\n")
+    newtonx = bool_cast(inputs["newtonx"])
+    flex_method = any([relax, dynamics, normal_modes, newtonx])
+    if natoms_flex > 0 and flex_method is None:
+        out_file.write("\n")
         out_file.write("You are trying to run fromage with the relaxation of the QMprime region option OFF"+ "\n")
         out_file.write("Include *relax* keyword in fromage.in"+ "\n")
         out_file.write("fromage is dying now :-( "+ "\n")
-        import sys
-        sys.exit()
-    elif (relax and natoms_flex == 0) or (normal_modes and natoms_flex == 0) :
+        sys.exit('fromage is sying :-( - Include *relax* keyword in fromage.in \n')
+    elif flex_method is not None and natoms_flex == 0:
         out_file.write(" "+ "\n")
         out_file.write("You are trying to run either fromage with the relaxation of the QMprime region option ON"+ "\n")
         out_file.write("You are trying to run either fromage with ONIOM normal modes"+ "\n")
         out_file.write("However, the number of flexible atoms set in fromage.in is %s" % (natoms_flex) + "\n")
         out_file.write(" Include the keyword *natoms_flex* along with the number of flexible atoms in fromage.in and re run"+ "\n")
         out_file.write("fromage is dying now :-( "+ "\n")
-        import sys
         sys.exit()
 
     mol_file = inputs["mol_file"]
@@ -370,10 +434,11 @@ if __name__ == '__main__':
     bool_ci = bool_cast(inputs["bool_ci"])
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
+    pop_an = inputs["pop_an"]
     nprocs = inputs["nprocs"]
     gtol = float(inputs["gtol"])
+    at_reparam = inputs["at_reparam"]
     single_point = bool_cast(inputs["single_point"])
-    dynamics = bool_cast(inputs["dynamics"])
     dyn_restart = bool_cast(inputs["dyn_restart"])
     
     # sigma is called lambda in some papers but that is a bad variable name
@@ -382,12 +447,6 @@ if __name__ == '__main__':
     # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
     # If so, the atom number is collected and a "w" symbol is added next to 
     # the atom symbol in the coordinates added to the FOMO-CI input.
-    if "at_reparam" in inputs.keys():
-         at_reparam = [] 
-         at_reparam = [int(x) for x in inputs["at_reparam"]]
-         at_reparam = np.array(at_reparam)
-    else:
-        at_reparam = None
 
     if nprocs=="1":
         out_file.write("If Q-Chem, Molcas, NWChem or MOPAC are to be used, have in mind that" "\n")
@@ -398,11 +457,25 @@ if __name__ == '__main__':
     iteration = 0
 
     # clean up the last output
-    if normal_modes is None:
+    if not normal_modes:
         if os.path.exists("geom_mol.xyz"):
             subprocess.call("rm geom_mol.xyz", shell=True)
         if os.path.exists("geom_cluster.xyz"):
             subprocess.call("rm geom_cluster.xyz", shell=True)
+
+    # Skip all the following if SH dynamis with NX is selected
+    if newtonx:
+        set_newtonx(inputs,single_point)
+        _write_tail(start_time,out_file)
+        sys.exit('Finished fromage module')
+
+    # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
+    #If so, the atom number is collected and a "w" symbol is added next to 
+    # the atom symbol in the coordinates added to the FOMO-CI input.
+    if at_reparam:
+         at_reparam = []
+         at_reparam = [int(x) for x in inputs["at_reparam"]]
+         at_reparam = np.array(at_reparam)
 
     # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]   
@@ -413,6 +486,7 @@ if __name__ == '__main__':
     # Define the entire flexible region
     all_flex_atoms = mol_atoms + flex_atoms
     all_atoms = mol_atoms + flex_atoms + fixed_atoms
+
     # make the initial coordinates into a flat list
     atoms_array = []
     fixed_atoms_array = []
@@ -431,28 +505,47 @@ if __name__ == '__main__':
         fixed_atoms_array.append(atom.x)
         fixed_atoms_array.append(atom.y)
         fixed_atoms_array.append(atom.z)
-#        charges_array.append(atom.q)	#Initial charges
     # make the list into an array
     atoms_array = np.array(atoms_array)
+
+    # Organise dimensions for flexible ONIOM
     fixed_atoms_array = np.array(fixed_atoms_array)
-#    charges_array = np.array(charges_array)
     dim_flex = int(3*natoms_flex)
     QM_natoms = len(mol_atoms)
     dim_qm = int(3*QM_natoms)
     
+    frozen_at = inputs["frozen_at"]
+    if frozen_at is not None:
+        freeze_atoms = [int(num) for num in frozen_at]
+
     if single_point:
         out_file.write("A single point calculation has been requested\n")
         sequence(atoms_array)
     elif dynamics:
         out_file.write("A dynamics calculation has been requested\n")
-        res = start_trajectory(dyn_array,inputs,mol_atoms,shell_atoms)
-#        res = start_trajectory(dyn_array,inputs,mol_atoms,flex_atoms,fixed_atoms) # FJH
+        res = start_trajectory(geometry = dyn_array,
+                               dyn_sett =  inputs,
+                               mol_atoms = mol_atoms,
+                               flex_atoms = flex_atoms,
+                               fixed_atoms = fixed_atoms,
+                               fixed_atoms_array = fixed_atoms_array,
+                               all_flex_atoms = all_flex_atoms,
+                               all_atoms = all_atoms,
+                               dim_flex = dim_flex,
+                               QM_natoms = QM_natoms,
+                               dim_qm = dim_qm) 
     elif relax:
         out_file.write("An ONIOM optimization has been requested\n")
         res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
     if normal_modes:
-        res = start_normal_modes(inputs,mol_atoms,QM_natoms,natoms_flex,flex_atoms,fixed_atoms,fixed_atoms_array)
+        res = start_normal_modes(inputs = inputs,
+                                 mol_atoms = mol_atoms,
+                                 QM_natoms = QM_natoms,
+                                 natoms_flex = natoms_flex,
+                                 flex_atoms = flex_atoms,
+                                 fixed_atoms = fixed_atoms,
+                                 fixed_atoms_array = fixed_atoms_array)
 
     _write_tail(start_time,out_file)
 

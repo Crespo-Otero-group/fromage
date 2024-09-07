@@ -5,7 +5,7 @@
 ## Federico J Hernandez
 ## October 2023
 
-import time,datetime,os
+import time,datetime,os,sys
 import numpy as np
 import subprocess
 import configparser
@@ -28,29 +28,24 @@ def read_nx_control():
             line = file.readline()
             info = line.split(',')
             natoms = int(info[0].strip())
-            states_tmp = info[2].strip()
-            states = [int(x) for x in states_tmp]
+            states = [int(info[2].strip())]
             nstates = int(np.sum(states))
             state = int(info[3].strip())        
     except FileNotFoundError:
         try:
-            config = configparser.ConfigParser()
-            config.read("initqp")
-
-            if "dat" in config:
-                section = config["dat"]
-                if "NUMAT" in section:
-                    natoms = int(section["NUMAT"])
-                if "NFS" in section:
-                    states_tmp = section["NFS"]
-                    states = [int(x) for x in states_tmp]
-                    nstates = int(np.sum(states))
-                if "NIS" in section:
-                    state = int(section["NIS"])
+            with open("initqp_input", "r") as data:
+                lines = data.readlines()
+            for line in lines:
+                if "NUMAT" in line:
+                    natoms = int(line.split()[2])
+                if "NFS" in line:
+                    states = [int(line.split()[2])]
+                if "NIS" in line:
+                    state = int(line.split()[2])
              
         except FileNotFoundError:
             print("Error in subroutine fromage/utils/newtonx/fro_nx.py.")
-            print("Both 'control.d' and 'initqp' files not found.")
+            print("Both 'control.d' and 'initqp_input' files not found.")
             print("Check you have properly set the input files for NX")
             data = None
 
@@ -107,7 +102,25 @@ def parse_fro_input(inputs,states):
     shell_file = inputs["shell_file"]
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
+    if "hl_natoms" in inputs.keys():    
+        hl_natoms = int(inputs["hl_natoms"])
+    else:
+        hl_natoms = None
+    if "ll_flex_natoms" in inputs.keys():        
+        ll_natoms = int(inputs["ll_flex_natoms"])
+    else:
+        ll_natoms = None
     nprocs = inputs["nprocs"]
+
+    at_reparam = inputs["at_reparam"]
+    if at_reparam:
+         at_reparam = []
+         at_reparam = [int(x) for x in inputs["at_reparam"]]
+         at_reparam = np.array(at_reparam)
+
+    pop_an = inputs["pop_an"]
+    nprocs = inputs["nprocs"]
+
     if "singlestate" in inputs.keys():
         singlestate = int(inputs["singlestate"])
     else:
@@ -126,16 +139,22 @@ def parse_fro_input(inputs,states):
         ms = int(spin[n] * 2 + 1)
         mult.append(ms)
 
+    soc_coupling = []
+
     vals.append(out_file)
     vals.append(mol_file)
     vals.append(shell_file)
     vals.append(high_level)
     vals.append(low_level)
+    vals.append(hl_natoms)
+    vals.append(ll_natoms)
+    vals.append(pop_an)
     vals.append(nprocs)
     vals.append(singlestate)
     vals.append(spin)
     vals.append(mult)
     vals.append(soc_coupling)
+    vals.append(at_reparam)
 
     return (vals)
 
@@ -164,9 +183,39 @@ def open_files_for_nx(write_nac=False,write_soc=False):
 
     return nx_files
 
-def write_nx_info(high_level,energies,grads,nacs,socs):
+def write_ener_oos(energies, oos):
+    """
+    Write energies and oscillator strengths to separate files.
+    """
+    e_nx  = open("fro_energies.dat", "w")
+    oos_nx = open("fro_oos.dat", "w")
+    for energy in energies:
+        e_nx.write(f"{energy}\n")
+    for os in oos:
+        oos_nx.write(f"{os}\n")
+
+
+#    for i in range(1,oos.shape[0]+1):
+#        with open("epot.{}".format(i + 1), 'w') as en_fl, \
+#             open("oos.{}".format(i + 1), 'w') as oos_fl:
+#            en_str = "{:15.10f}\n{:15.10f}".format(
+#                energies[0], energies[i])
+#            oos_str = "{:15.10f}".format(oos[i-1])
+#            en_fl.write(en_str)
+#            oos_fl.write(oos_str)
+#    subprocess.run("mv mh/epot* .", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+#    subprocess.run("mv mh/oos* .", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    return
+
+def write_nx_info(high_level,energies,grads,nacs,socs,oos=[],flex_natoms=None):
     """
     """
+
+    # Write information for initial Conditions
+    if len(oos) > 0:
+        write_ener_oos(energies,oos)
+        return None
+
     write_nac = False
     write_soc = False
     # Open output files
@@ -187,11 +236,17 @@ def write_nx_info(high_level,energies,grads,nacs,socs):
             nx_files[1].write(grad_str)
 
     if write_nac:
+        nac_ll = 0.
         for i in range(nacs.shape[0]):
             for j in range(nacs.shape[1]):
                 nac_str = "{:15.10f} {:15.10f} {:15.10f}".format(
                     nacs[i,j,0], nacs[i,j,1], nacs[i,j,2]) + "\n"
                 nx_files[2].write(nac_str)
+            if flex_natoms:
+                for k in range(flex_natoms):
+                    nac_str = "{:15.10f} {:15.10f} {:15.10f}".format(
+                        0.0, 0.0, 0.0) + "\n"     
+                    nx_files[2].write(nac_str)
 
     # Organise outputs for NX
     copy_output_files(high_level)
@@ -235,52 +290,109 @@ def copy_outputs_molcas():
 
     return None
 
-def newtonx_sequence(atoms_array,inputs,natoms,states,state):
+def _chk_hlevel_in_methods(high_level):
     """
     """
-    # Parse fromage.in file
-    (
-    out_file,
-    mol_file,
-    shell_file,
-    high_level,
-    low_level,
-    nprocs,
-    singlestate,
-    spin,
-    mult,
-    soc_coupling
-    ) = parse_fro_input(inputs,states)
-
-    write_nx_head(out_file)
-
     methods = ['molcas','turbomole','turbomole_tddft','gaussian']
-    methods_wnacs = ['molcas'] # Extend this list to other methods that compute NACs  
-  
-    # Check the method selected for the high_level is supported for SH-dynamics
+    # Check if the high_level method is supported for SH-dynamics with NX
     if high_level in methods:
-       pass 
+       pass
     else:
-        out_file.write(" The method %s is not implemented for fromage with Newton-X\n" % (high_level))
+        out_file.write(" The method %s is not implemented in fromage&Newton-X\n" % (high_level))
         out_file.write("The job is dying now :-( ")
-        import sys
-        sys.exit()
+        sys.exit("The method %s is not implemented in fromage&Newton-X :-(\n" % (high_level))
+    
+    return None
 
+def get_mol_shell_atoms(mol_file,shell_file,flex=None):
+    """
+    """
     # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]
 
-    # read shell atoms
-    shell_atoms = rf.read_xyz(shell_file)[0]
+    if flex:
+        # read shell atoms
+        shell_atoms = rf.read_xyz(shell_file)[0]
+    else:
+        shell_atoms = []
     # make the initial coordinates into a flat list
     atoms_array = []
     for atom in mol_atoms:
         atoms_array.append(atom.x)
         atoms_array.append(atom.y)
         atoms_array.append(atom.z)
-  
+
     in_pos = np.array(atoms_array)
 
-    natoms_flex = None
+    return in_pos, mol_atoms, shell_atoms
+
+def newtonx_initconds(inputs,natoms,states,state):
+    """
+    """
+    (out_file, mol_file, shell_file, high_level,
+    low_level, hl_natoms, ll_natoms,  pop_an, 
+    nprocs, singlestate, spin, mult, soc_coupling, 
+    at_reparam) = parse_fro_input(inputs,states)
+
+    write_nx_head(out_file)
+    _chk_hlevel_in_methods(high_level)
+
+    flex = None
+    if hl_natoms and ll_natoms:
+        flex = True
+        natoms_flex = ll_natoms
+        dim_hl = int(3*hl_natoms)
+
+    in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
+
+    # initialise calculation objects
+    rl = calc.setup_calc("rl", low_level)
+    ml = calc.setup_calc("ml", low_level)
+    mh = calc.setup_calc("mh", high_level)
+
+    pass_nac = []
+    in_cond = True
+    if flex:
+        run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
+                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,in_cond)
+    else:
+        run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
+                  singlestate,pass_nac,soc_coupling,in_cond=in_cond)
+        
+    mh_en_gr = mh.read_out(in_pos,natoms_flex = ll_natoms,natoms = hl_natoms,state = state,
+                           states = states, mult = mult, singlestate = singlestate,
+                           soc_coupling = soc_coupling)
+
+    mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
+
+    oos = mh.read_osc_str()
+
+    write_nx_info(high_level=high_level,energies=mh_en,grads=[],
+                  nacs=[], socs=[], oos=oos)
+
+    return
+
+def newtonx_sequence(inputs,natoms,states,state):
+    """
+    """
+    # Parse fromage.in file
+    (out_file, mol_file, shell_file, high_level, 
+    low_level, hl_natoms, ll_natoms,  pop_an, 
+    nprocs, singlestate, spin, mult, soc_coupling, 
+    at_reparam) = parse_fro_input(inputs,states)
+
+    write_nx_head(out_file)
+    _chk_hlevel_in_methods(high_level)
+
+    flex = None
+    if hl_natoms and ll_natoms:
+        flex = True
+        natoms_flex = ll_natoms
+        dim_hl = int(3*hl_natoms)
+
+    in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
+
+    methods_wnacs = ['molcas'] # Extend this list to other methods that compute NACs
     pass_nac = []
 
     if high_level in methods_wnacs:
@@ -288,55 +400,31 @@ def newtonx_sequence(atoms_array,inputs,natoms,states,state):
         if vdoth == 0:
             pass_nac = get_nacs_coup()
 
-
     # initialise calculation objects
     rl = calc.setup_calc("rl", low_level)
     ml = calc.setup_calc("ml", low_level)
     mh = calc.setup_calc("mh", high_level)
- 
-    # Run the calculations as subprocesses in parallel
-    calcs = []    
 
-    if high_level == "fomo-ci" or high_level == "mopac" and at_reparam is not None:
-        mh_proc = mh.run(atoms = ao.array2atom(mol_atoms, in_pos),
-                         nprocs = nprocs, at_reparam = at_reparam)
+    if flex:
+        run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
+                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,None)
     else:
-        mh_proc = mh.run(atoms=ao.array2atom(mol_atoms, in_pos), 
-                         nprocs = nprocs, 
-                         state = state,
-                         states = states,
-                         singlestate = singlestate,
-                         nac_coupling = pass_nac, 
-                         soc_coupling = soc_coupling)
-    calcs.append(mh_proc)
-    if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
-        rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs ,at_reparam = at_reparam)
-        calcs.append(rl_proc)
-        ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),
-                         nprocs = nprocs , at_reparam = at_reparam)
-        calcs.append(ml_proc)
-    else:
-        rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
-        calcs.append(rl_proc)
-        ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
-        calcs.append(ml_proc)
-
-    # Wait until all parallel calculations are finished
-    for proc in calcs:
-        proc.communicate()
+        run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
+                  singlestate,pass_nac,soc_coupling)
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
-    rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
-    ml_en_gr = ml.read_out(in_pos)
-#
-    if high_level in methods:
-        mh_en_gr = mh.read_out(in_pos,
-                               natoms_flex = natoms_flex, # FJH
-                               natoms = natoms,
-                               state = state,
-                               states = states,
-                               mult = mult,
-                               singlestate = singlestate,
+    if flex:
+        rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms,natoms_flex = ll_natoms)
+        ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex = ll_natoms)
+        mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
+                               states = states, mult = mult, singlestate = singlestate, 
+                               soc_coupling = soc_coupling) 
+        
+    else:
+        rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
+        ml_en_gr = ml.read_out(in_pos)
+        mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = natoms, state = state,
+                               states = states, mult = mult, singlestate = singlestate,
                                soc_coupling = soc_coupling)
 
     """ data format
@@ -357,22 +445,98 @@ def newtonx_sequence(atoms_array,inputs,natoms,states,state):
         1 grad      (natoms * 3,)
         2 gr_energy float
     """
-    mh_en, mh_gr, mh_scf, nac, soc = mh_en_gr
+    mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
     ml_en, ml_gr, ml_scf = ml_en_gr
     rl_en, rl_gr, rl_scf = rl_en_gr
 
-    ml_gr = np.array(ml_gr).reshape((1, natoms, 3))
-    rl_gr = np.array(rl_gr).reshape((1, natoms, 3))
-
+    if flex:
+        flex_natoms = hl_natoms + ll_natoms
+        nstates = int(np.sum(states))
+        ml_gr = np.array(ml_gr).reshape((1, flex_natoms, 3))
+        mh_gr = np.zeros((nstates, flex_natoms, 3))
+        mh_gr[:,:hl_natoms,:] = mh_gr_tmp
+        rl_gr = np.array(rl_gr).reshape((1, flex_natoms, 3))
+    else:
+        ml_gr = np.array(ml_gr).reshape((1, natoms, 3))
+        mh_gr = mh_gr_tmp
+        rl_gr = np.array(rl_gr).reshape((1, natoms, 3))
+    
     en_combo = rl_en - ml_en + mh_en
-    gr_combo = rl_gr - ml_gr + mh_gr
+    gr_combo = mh_gr.copy()
+    gr_combo[state-1,:,:]  = rl_gr - ml_gr + mh_gr[state-1,:,:]
     scf_combo = rl_scf - ml_scf + mh_scf
 
-    write_nx_info(high_level,en_combo,gr_combo,nac,soc)
+    if flex:
+        write_nx_info(high_level,en_combo,gr_combo,nac,soc,[],ll_natoms)
+    else:
+        write_nx_info(high_level,en_combo,gr_combo,nac,soc)
 
     write_ONIOM_info(out_file,mh_en,ml_en,rl_en,en_combo,scf_combo,state)
 
     return None  
+
+def run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,singlestate,
+              pass_nac=[],soc_coupling=[],shell_atoms=None,hl_natoms=None,ll_natoms=None,in_cond=None):
+    """
+    Run the calculations as subprocesses in parallel
+    Note that the schemes are different if frozen or
+    flexible ONIOM is required
+    """
+
+    # Run the calculations as subprocesses in parallel
+    calcs = []
+
+    if hl_natoms and ll_natoms:
+        all_atoms = mol_atoms + shell_atoms
+        dim_hl = 3*hl_natoms
+        fixed_atoms_array = []
+        for atom in shell_atoms:
+            fixed_atoms_array.append(atom.x)
+            fixed_atoms_array.append(atom.y)
+            fixed_atoms_array.append(atom.z)
+        fixed_atoms_array = np.array(fixed_atoms_array)
+        all_pos = np.concatenate((in_pos, fixed_atoms_array), axis = 0)
+
+        rl_proc = rl.run(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
+        rl_proc.wait()
+        rl_charges_array = rl.read_charges(pop = pop_an)
+
+        mh_proc = mh.run(ao.array2atom(mol_atoms,in_pos[:dim_hl]),
+                                       ao.array2atom(all_atoms[hl_natoms:],all_pos[dim_hl:],rl_charges_array[hl_natoms:]),
+                                       nprocs,
+                                       state = state,
+                                       states = states,
+                                       singlestate = singlestate,
+                                       nac_coupling = pass_nac,
+                                       soc_coupling = soc_coupling)
+        calcs.append(mh_proc)
+        mh_proc.wait()
+        if in_cond is None:
+            ml_proc = ml.run(ao.array2atom(mol_atoms,in_pos[:dim_hl]),
+                                           ao.array2atom(all_atoms[hl_natoms:],all_pos[dim_hl:],rl_charges_array[hl_natoms:]),
+                                           nprocs)
+            calcs.append(ml_proc)
+            ml_proc.wait()
+    else:
+        mh_proc = mh.run(atoms=ao.array2atom(mol_atoms, in_pos),
+                         nprocs = nprocs,
+                         state = state,
+                         states = states,
+                         singlestate = singlestate,
+                         nac_coupling = pass_nac,
+                         soc_coupling = soc_coupling)
+        calcs.append(mh_proc)
+        if in_cond is None:
+            rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
+            calcs.append(rl_proc)
+            ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
+            calcs.append(ml_proc)
+
+        # Wait until all parallel calculations are finished
+        for proc in calcs:
+            proc.communicate()
+
+    return None
 
 def write_ONIOM_info(out_file,mh_en,ml_en,rl_en,en_combo,scf_combo,state):
     """

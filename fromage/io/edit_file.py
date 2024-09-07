@@ -221,22 +221,27 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
             out_file.write(line.replace("XXX__NAME__XXX", proj_name))
 #        if line.startswith("#") and freq is not None:
         if line.startswith("#"):
-            if freq is not None:
+            if freq:
                 if "force" in line.strip():
-                    out_file.write(line.replace("force", "freq"))
+                    out_file.write(line.replace("force", "freq=(SaveNormalModes)"))
+                    continue  
                 elif "Force" in line.strip():
-                    out_file.write(line.replace("Force", "freq"))                
+                    out_file.write(line.replace("Force", "freq=(SaveNormalModes)"))                
+                    continue
                 else:
                     line = line.strip() + ' freq\n'
                     out_file.write(line)
-            if not ("symmetry=none" in line or "Nosymm" in line or "nosymm" in line):
-                line += " symmetry=none"
-            if "&STATE" in line and state != None:
-                if "&NSTATES" in line and states != None:
+                    continue
+#            if not ("symmetry=none" in line or "Nosymm" in line or "nosymm" in line):
+ #               line += " symmetry=none"
+            if "&NSTATES" in line and states != None:
+                nstates = '%s' % (int(np.sum(states))-1)
+                if "&STATE" in line and state != None:
                     curr_state = '%s' % (state - 1)
-                    nstates = '%s' % (int(np.sum(states))-1)
                     modified_line = line.replace("&STATE", curr_state).replace("&NSTATES", nstates)
-                    out_file.write(modified_line)
+                else:
+                    modified_line = line.replace("&NSTATES", nstates)
+                out_file.write(modified_line)
             else:
                 out_file.write(line)
         elif "XXX__POS__XXX" in line:
@@ -268,19 +273,12 @@ def write_dftb(file_name, atoms, points, temp_name, proj_name='dftb',freq=None):
                 atomStr = " {:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 out_file.write(atomStr)
-#        if "XXX__CHARGES__XXX" in line:
-#            for point in points:
-#                point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
-#                    point.x, point.y, point.z, point.q) + "\n"
-#                out_file.write(point_str)            
         else:
             out_file.write(line)
     out_file.close()
 
     if freq is not None:
-#        subprocess.call("mv dftb_in.hsd dftb_in.hsd.temp", shell=True)
         write_dftb_freq_calc('dftb_in.hsd')
-
     return
 
 def write_dftb_freq_calc(file_name):
@@ -344,7 +342,6 @@ def write_xtb(file_name, atoms, points, temp_name, proj_name='xtb'):
         else:
             out_file.write(line)
     out_file.close()
-############## Added by FJH ######################
     if len(points) > 0:
         out_file = open("xtb_charge.pc","w")
         out_file.write("%s \n" % len(points))
@@ -356,13 +353,14 @@ def write_xtb(file_name, atoms, points, temp_name, proj_name='xtb'):
          
     return
 
-def write_turbo_dyn(file_name,
+def write_turbo(file_name,
                     temp_name,
                     state : int,
                     states : list,
                     singlestate : int,
                     nac_coupling : list,
-                    soc_coupling : list):
+                    soc_coupling : list,
+                    q_points : list):
 
     """
      Modify the Turbomole control file to include the calculation of the gradients for all
@@ -373,8 +371,9 @@ def write_turbo_dyn(file_name,
 
     """
 
+    bohrconv = 1.88973
+
     with open(temp_name, 'r') as temp_file:
-#        temp_content = temp_file.read().split('&')
         temp_content = temp_file.readlines()
 
     with open(file_name, 'w') as out_file:
@@ -406,6 +405,13 @@ def write_turbo_dyn(file_name,
                 exopt = '$exopt %s' % (state - 1)
                 line = line.replace('&EXOPT', exopt)
 
+           # Block for point charges
+            if 'XXX__CHARGES__XXX' in stripped_line:
+                for point in q_points:
+                    point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+                        point.x * bohrconv, point.y * bohrconv, point.z * bohrconv, point.q) + "\n"
+                    out_file.write(point_str) 
+                line = line.replace('XXX__CHARGES__XXX', '\n')
             out_file.write(line)
 
     return   
@@ -448,7 +454,7 @@ def write_molcas(file_name, temp_name, point_charges=None, freq=None):
         out_file.close()
 
     return
-
+"""
 def write_molcas_free(file_name, 
                       temp_name,
                       state : int,
@@ -457,7 +463,6 @@ def write_molcas_free(file_name,
                       nac_coupling : list,
                       soc_coupling : list,
                       point_flex : list):
-    """
     Write a free format Molcas input file for dynamics run
 
     A tempalte file needs to be prepared which has the placeholder &GRAD and &NAC
@@ -484,7 +489,6 @@ def write_molcas_free(file_name,
     soc_coupling : list
         List of soc state pairs
 
-    """
 
     with open(temp_name, 'r') as temp_file:
         temp_content = temp_file.read().split('&')
@@ -555,6 +559,118 @@ def write_molcas_free(file_name,
 
     return
 
+"""
+
+def write_molcas_free(file_name,
+                      temp_name,
+                      state: int,
+                      states: list,
+                      singlestate: int,
+                      nac_coupling: list,
+                      soc_coupling: list,
+                      point_flex: list):
+
+    """
+    Write  Molcas input file for dynamics calculation
+
+    A tempalte file needs to be prepared which has the placeholders  &GRAD and &NAC
+    and also  XXX__CHARGES__XXX in the case of flexible environments
+    It may contain multiple sets of &RASSCF, &GRAD, and &NAC sections for different spin states
+
+    Parameters
+    ----------
+    file_name : str
+        Name of the Molcas input file to be written, default molcas.input
+    temp_name : str
+        Name of the template file ("mh.temp")
+    state : int
+        Root number of the electronic state for which gradients should
+        be followed for dynamics. Roots start with 1, so, for example,
+        state = 2 is the first excited state.
+    states : list
+        List of number of states per spin multiplicity
+    singlestate : int
+        Flag to only compute gradient of the current state, the others will be zero to keep the (nstates, natom, 3) shape
+    nac_coupling : list
+        List of nac state pairs
+    soc_coupling : list
+        List of soc state pairs
+
+    """
+
+    with open(temp_name, 'r') as temp_file:
+        temp_content = temp_file.readlines()
+
+    # prepare grad section
+    grad = []  # grad sections
+    sect = []  # section index for each state
+    indx = 0   # state index
+    for s, ns in enumerate(states):
+        sub = []  # subsections of grad
+        for n in range(ns):
+            indx += 1
+            if singlestate == 1 and indx != state:  # skip other state if only single state grad is requested
+                alaska = ''
+            else:
+                alaska = '&ALASKA\nROOT=%s\n' % (n + 1)
+            sub.append(alaska)
+            sect.append(s)
+        grad.append(sub)
+
+    # prepare nac section
+    nac = [[] for x in grad]  # nac should have the same number of section as the grad
+    if len(nac_coupling) > 0:
+        for pair in nac_coupling:
+            s1, s2 = pair  # two states
+            alaska = '&ALASKA\nNAC=%s %s\n' % (s1 + 1, s2 + 1)
+            nac[sect[s1 - 1]].append(alaska)
+
+    # prepare soc section
+    soc = ['>>COPY  $WorkDir/$Project.JobIph  $WorkDir/JOB001\n', '>>COPY  $WorkDir/$Project.JobIph  $WorkDir/JOB002\n', '']
+    if len(soc_coupling) > 0:
+        na = states[0]  # number of spin state a
+        nb = states[1]  # number of spin state b
+        sa = [str(x + 1) for x in range(na)]  # states of spin a
+        sb = [str(x + 1) for x in range(nb)]  # states of spin b
+        sa = ' '.join(sa)
+        sb = ' '.join(sb)
+        soc[2] = '&RASSI\nNrofJobIph=2 %s %s;%s;%s\nSpinOrbit\nEJob\nSOCOupling=0\n' % (na, nb, sa, sb)
+
+    if point_flex:
+        charge_str = "%s Angstrom\n" % len(point_flex)
+        for point in point_flex:
+            charge_str += "{:10.6f} {:10.6f} {:10.6f} {:10.6f}\n".format(
+                point.x, point.y, point.z, point.q)
+
+    # combine input
+    input = []
+    section = -1
+    for line in temp_content:
+        if "XXX__CHARGES__XXX" in line.upper():
+            input.append(charge_str)
+            input.append("")
+        elif '&RASSCF' in line.upper():
+            section += 1
+            input.append(line)
+        elif '&GRAD' in line:
+            for x in grad[section]:
+                input.append(x)
+            input.append("")
+        elif '&NAC' in line:
+            for x in nac[section]:
+                input.append(x)
+            input.append("")
+        elif '&SOC' in line:
+            input.append(soc[section])
+        else:
+            input.append(line)
+
+    input = ''.join([x for x in input if x.strip()])  # remove empty lines
+
+    with open(file_name, 'w') as out_file:
+        out_file.write(input)
+
+    return
 
 def write_dynamics(file_name, temp_name, state : int, nstates : int):
     """

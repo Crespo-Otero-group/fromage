@@ -552,17 +552,13 @@ def read_gauss_dyn(in_name,fchk_file,natom,state,states,mult,singlestate,soc_cou
             read_nac = True
         if line.startswith("SCF Energy"):
             gr_energy = float(line.split()[3])
-#    data_fchk.close()
 
     with open(in_name) as data:
         lines = data.readlines()
 
     for line in lines:
         if "Excited State" in line:  
-#        if line.startswith("Excited State"):
             ener_temp.append(float(line.split()[4]))
-
-#    data.close()
 
     # Pack data
     energies.append(gr_energy)
@@ -774,6 +770,8 @@ def read_turbo_dyn(in_name, natom, state, states, mult, singlestate, soc_couplin
         if "cartesian gradient of the energy" in line:
             reading = True 
 
+    natom = int(len(grad_tmp) / 3)
+
     if singlestate == 1:
         gradall = np.zeros((np.sum(states), natom, 3))
         grad_tmp = np.array(grad_tmp).reshape(natom,3)
@@ -960,6 +958,7 @@ def read_tb_dyn_tddft(in_name, natom, state, states, mult, singlestate, soc_coup
         if "cartesian gradient of the energy" in line:
             reading = True
 
+    natom = int(len(grad_tmp) / 3)
     if singlestate == 1:
         gradall = np.zeros((np.sum(states), natom, 3))
         grad_tmp = np.array(grad_tmp).reshape(natom,3)
@@ -1193,8 +1192,9 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             g = log[i + 8: i + 8 + natom]
             g = S2F(g)
             gradient.append(g)
-
-        elif """CI derivative coupling""" in line:
+                                                                           # FJH
+        elif """Total derivative coupling""" in line: #Added this for from&NX interface. It will cause conflicts
+#        elif """CI derivative coupling""" in line:   #with fro&PyRAI2MD which needs the CI der.. form. Fix this            
             n = log[i + 8: i + 8 + natom]
             n = S2F(n)
             nac.append(n)
@@ -1405,16 +1405,20 @@ def read_dftb_charges(in_name):
             if not line.strip():
                 read_charges = False
                 read_charges_cm5 = False
-            if read_charges:
-                charges.append(line.split()[-1])
+            if read_charges and line.strip():
+                charges.append(float(line.split()[-1]))
             # Info about CM5 corrected charges can be
             # found here: J. Chem. Theory Comput. 2012, 8, 2, 527-541
             if read_charges_cm5:
-                charges_cm5.append(line.split()[-1])
+                charges_cm5.append(float(line.split()[-1]))
             if "Atomic gross charges" in line:
                 read_charges = True
+                next(lines)
+                continue
             if "CM5 corrected atomic gross charges" in line:
                 read_charges_cm5 = True
+                next(lines)
+                continue
 
     if len(charges_cm5) == len(charges):
         charges = np.array(charges_cm5)
@@ -1736,7 +1740,7 @@ def read_molcas_nacs(in_file):
 
     for line in rf_lines:
         if line.strip():
-            if "CI derivative coupling" in line:
+            if "Total derivative coupling" in line:
 #            if "CSF derivative coupling" in line:
                 reading = True
             if reading:
@@ -2259,12 +2263,18 @@ def read_hessian_dftb(in_name):
     """
     with open(in_name) as data:
         lines = data.readlines()
-    hess = []
+    hess_tmp = []
     for line in lines:
         for num in map(float, line.split()):
-            hess.append(num)
-    hess_dim = int(np.sqrt(len(hess)))
-    hess = np.array(hess).reshape(hess_dim,hess_dim)
+            hess_tmp.append(num)
+    hess_tmp = np.array(hess_tmp)
+    dim = int(np.sqrt(len(hess_tmp)))
+    hess = np.zeros((dim,dim))
+    cont = -1
+    for i in range(dim):
+        for j in range(dim):
+            cont += 1
+            hess[j,i] = hess_tmp[cont]
     return hess
 
 def read_hessian_g_fchk(in_name):
@@ -2297,8 +2307,14 @@ def read_hessian_turbomole(in_name):
     for line in lines[1:-1]:
         for num in map(float, line.split()[2:]):
             hess.append(num)
-    hess_dim = int(np.sqrt(len(hess)))
-    hess = np.array(hess).reshape(hess_dim,hess_dim)
+    hess_tmp = np.array(hess_tmp)
+    dim = int(np.sqrt(len(hess_tmp)))
+    hess = np.zeros((dim,dim))
+    cont = -1
+    for i in range(dim):
+        for j in range(dim):
+            cont += 1
+            hess[j,i] = hess_tmp[cont]
     return hess
 #
 def read_hessian_molcas(in_name):
@@ -2373,7 +2389,7 @@ def read_hessian_orca(in_name):
 """
 ###################################################################
 ################  Read dipole derivatives  ########################
-def read_dfrb_mu(in_name):
+def read_dftb_mu(in_name):
     """
     Read the dipole derivatives computed with dftb+
     """
@@ -2384,7 +2400,7 @@ def read_dfrb_mu(in_name):
     for line in lines:
         for num in map(float, line.split()):
             d_mu.append(num)
-    d_mu = np.array(hess).reshape(dim,3)
+    d_mu = np.array(d_mu).reshape(dim,3)
 
     return d_mu
 
@@ -2396,7 +2412,10 @@ def read_gauss_mu(in_name):
     nums = []
     dim = 0
 
-    for line in in_name.splitlines():
+    with open(in_name, 'r') as data:
+        lines = data.readlines()
+
+    for line in lines:
         if 'Dipole Derivatives' in line:
             start_reading = True
             dim = int(line.split()[-1])
@@ -2406,7 +2425,7 @@ def read_gauss_mu(in_name):
         if start_reading:
             nums.extend([float(num) for num in line.split()])
 
-    return np.array(numbers).reshape((int(dim / 3), 3))
+    return np.array(nums).reshape((int(dim / 3), 3))
 
 def read_turbo_mu(in_name):
     """
@@ -2430,7 +2449,7 @@ def read_orca_mu(in_name):
     """
 
     lines = in_name.splitlines()
-    numbers = []
+    nums = []
     dim = 0
     read_data = False
 
@@ -2444,4 +2463,66 @@ def read_orca_mu(in_name):
             if len(nums) // 3 == dim:
                 break
 
-    return np.array(numbers).reshape((dim, 3))
+    return np.array(nums).reshape((dim, 3))
+
+#def read_turbo_os(in_file):
+#    """
+#    Get oscillator strengths values from a Turbomole .log file
+#    """
+#    oos = []
+#
+#    with open(in_name, 'r') as data:
+#        for line in data:
+#            if 'oscillator strength' in line:
+#                oos.append(float(line.split()[-1]))
+#
+#    oos = np.array(oos)
+#
+#    return oos
+
+def read_turbo_os(in_file):
+    """
+    Get oscillator strengths values from a Turbomole .log file
+    """
+
+    oos = []
+
+    with open(in_file, 'r') as data:
+        for line in data:
+            if line.startswith('#'):
+                continue
+            parts = line.split()
+            if len(parts) >= 2:
+                try:
+                    oos.append(float(parts[1]))    
+                except ValueError:
+                    continue
+
+    oos = np.array(oos)
+
+    return oos
+
+def read_gauss_os(in_file):
+    """
+    Get oscillator strengths values from a Gaussian .log file
+    """
+    oos = []
+
+    with open(in_file, 'r') as data:
+        reading = False
+        for line in data:
+            if 'Dip. S.' in line and 'Osc.' in line:
+                reading = True
+                continue
+            if 'Ground to excited state transition velocity dipole moments' in line:
+                reading = False
+                break
+            if reading:
+                parts = line.split()
+                try:
+                    oos.append(float(line.split()[-1]))
+                except ValueError:
+                    continue
+    oos = np.array(oos)
+
+    return oos

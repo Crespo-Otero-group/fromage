@@ -9,6 +9,7 @@ preferences, it should be contained here in its Calc object member methods.
 """
 import numpy as np
 import subprocess
+import sys
 import os
 
 from fromage.utils.mol import Mol
@@ -249,7 +250,7 @@ class DFTB_calc(Calc):
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:
@@ -263,7 +264,7 @@ class DFTB_calc(Calc):
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
 
-    def read_charges(self):
+    def read_charges(self, pop = None):
         """
         Get the atomic charges of the whole system
         
@@ -271,8 +272,6 @@ class DFTB_calc(Calc):
         ----------
         charges : array of atom charges
         """
-        ## Add section to read CM5 charges
-   
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
         charges = rf.read_dftb_charges("detailed.out")
@@ -295,7 +294,7 @@ class DFTB_calc(Calc):
         #truncate the dipole derivatives matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3 * natoms_flex)
                 d_mu = np.zeros((dim_flex,3))
             else:
@@ -323,11 +322,11 @@ class DFTB_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
-                hessian = np.zeros((len(positions),len(positions)))
+                hess = np.zeros((len(positions),len(positions)))
             # Fix gradients units to Hartree/Angstrom
             hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
         else:
@@ -410,7 +409,6 @@ class Gauss_calc(Calc):
 
         return proc
 
-
     def read_out(self, 
                  positions, 
                  dyn_bool=False, 
@@ -456,6 +454,14 @@ class Gauss_calc(Calc):
         soc = []
 
         if state is not None and states is not None:
+            with open("ERRORES","a") as check:
+                check.write("%s" % " DATA ")
+                check.write("STATE\n")
+                check.write("%s\n" % state)
+                check.write("STATES\n")
+                check.write("%s\n" % states)
+                check.write("NATOMS\n")
+                check.write("%s\n" % natoms)
             energy, gradients_b, scf_energy, nac, soc = rf.read_gauss_dyn(self.calc_name+".log",
                                                                           fchk_file,
                                                                           natoms,
@@ -467,54 +473,23 @@ class Gauss_calc(Calc):
 
             # fix gradients units to Hartree/Angstrom
             gradients = gradients_b * bohrconv
-#                                                                     #
-#           ADD THE LINES TO ACCOUNT FOR THE FELIXIBILITY OF REGION 2 #
-#                                                                     #
-
-
-#        if dyn_bool:
-#            #HERE I NEED TO CREATE A FUNCTION TO READ THE GRADIENTS AND THE ENERGIES
-#            #SPECIFICALLY FOR THE DYNAMICS
-#            energy = []
-#            gradients_b = np.array([])
-#            proc_fchk = subprocess.call("formchk -0 gck_GS.chk gck_GS.fchk", shell=True)
-#            proc_fchk = subprocess.call("formchk -0 gck_ES.chk gck_ES.fchk", shell=True)
-#            energy_ES, gradients_b_ES, scf_energy = rf.read_fchk("gck_ES.fchk")
-#            energy_GS, gradients_b_GS, scf_energy = rf.read_fchk("gck_GS.fchk")
-#            energy.append(scf_energy)
-#            energy.append(energy_ES)
-#            energy = np.reshape(np.array(energy),(-1,1))
-#            gradients_b = np.concatenate((gradients_b_GS, gradients_b_ES))
-#            # fix gradients units to Hartree/Angstrom
-#            gradients = gradients_b * bohrconv        
-
         else:
-            # stdout=FNULL to not have to read the output of formchk
-            # FNULL = open(os.devnull, 'w')
-#            proc_fchk = subprocess.call("formchk -0 gck.chk gck.fchk", shell=True)
             energy, gradients_b, scf_energy = rf.read_fchk("gck.fchk")
-            # fix gradients units to Hartree/Angstrom
-#            gradients = gradients_b * bohrconv
             # update the geometry log
             if in_mol != None:
                 self.update_geom(positions, in_mol, in_shell)                      
-            # truncate gradients if too long
 #          
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
             if natoms_flex is not None:
-                if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
+                    # truncate gradients if too long
                     gradients = np.zeros(len(positions))
                 gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
             else:
                 gradients = gradients_b[:len(positions)] * bohrconv
-##############################3 OLD IDEA ############################################## 
-#            dim_flex = int(len(positions) + 3. * natoms_flex)
-#            gradients = np.zeros(dim_flex)
-#            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
-#######################################################################################                        
         os.chdir(self.here)
 
         return (energy, gradients, scf_energy, nac, soc)
@@ -544,7 +519,7 @@ class Gauss_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
@@ -555,6 +530,24 @@ class Gauss_calc(Calc):
             hess = hess_tmp[:len(positions),:len(positions)] 
         os.chdir(self.here)
         return hess
+
+    def read_charges(self, pop = None):
+        """
+        Get the atomic charges of the whole system
+        
+        Returns
+        ----------
+        charges : array of atom charges
+        """
+        if isinstance(pop, str):
+            pop = pop.lower()
+        else:
+            pop = "mulliken"
+        gauss_path = os.path.join(self.here, self.calc_name)
+        os.chdir(gauss_path)
+        charges, energy = rf.read_g_char(self.calc_name + ".log", pop)
+        os.chdir(self.here)
+        return charges
 
     def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
@@ -573,7 +566,7 @@ class Gauss_calc(Calc):
         #truncate the dipole derivatives matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3 * natoms_flex)
                 d_mu = np.zeros((dim_flex,3))
             else:
@@ -584,6 +577,18 @@ class Gauss_calc(Calc):
 
         os.chdir(self.here)
         return d_mu
+
+    def read_osc_str(self):
+        """
+        Get the osc str. values from the .log file of a TD-DFT calc
+        """
+        gauss_path = os.path.join(self.here,self.calc_name)
+        os.chdir(gauss_path)
+        osc_str = rf.read_gauss_os(self.calc_name + ".log")
+   
+        os.chdir(self.here)
+
+        return osc_str
 
     def read_nacs(self):
         """
@@ -694,7 +699,8 @@ class Turbo_calc_TDDFT(Calc):
     Calculation of TDDFT energy and gradients with Turbomole
 
     """
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+    def run(self, atoms, point_flex = None, nprocs = None, state=None, 
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Turbomole coord file and return a subprocess.Popen
 
@@ -714,9 +720,34 @@ class Turbo_calc_TDDFT(Calc):
         os.chdir(turbo_path)
 
         turbo_redefine(atoms)
+        
+        if point_flex is not None:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control",
+                               temp_name = "control.temp",
+                               state = state,
+                               states = states,
+                               singlestate = singlestate,
+                               nac_coupling = nac_coupling,
+                               soc_coupling = soc_coupling,
+                               q_points = point_flex)
+            else:
+                ef.write_turbo(file_name = "control",
+                                   temp_name = "control.temp",
+                                   state = 0, states = [], singlestate = 0,
+                                   nac_coupling = [], soc_coupling = [],
+                                   q_points = point_flex)
 
-        if state is not None and states is not None:
-            ef.write_turbo_dyn("control", "control.temp", state, states, singlestate, nac_coupling, soc_coupling)
+        else:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control",
+                               temp_name = "control.temp",
+                               state = state,
+                               states = states,
+                               singlestate = singlestate,
+                               nac_coupling = nac_coupling,
+                               soc_coupling = soc_coupling,
+                               q_points = [])        
 
         # Run Turbomole
         proc = subprocess.Popen(
@@ -821,14 +852,23 @@ class Turbo_calc_TDDFT(Calc):
                                                                               singlestate,
                                                                               soc_coupling)
 
-            # fix gradients units to Hartree/Angstrom
             gradients = gradients_b * bohrconv
 
         else:
             energy, gradients_b, scf_energy = rf.read_tb_grout("grad.out")
             # fix gradients units to Hartree/Angstrom
-            gradients = gradients_b * bohrconv
-            # update the geometry log
+            if natoms_flex is not None:
+                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                    dim_flex = int(len(positions) + 3. * natoms_flex)
+                    gradients = np.zeros(dim_flex)
+                else:
+                    # truncate gradients if too long and fix units to Hartree/Angstrom
+                    gradients = np.zeros(len(positions))
+                # fix gradients units to Hartree/Angstrom
+                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+            else:
+                gradients = gradients_b[:len(positions)] * bohrconv
+        # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
         # truncate gradients if too long
@@ -836,6 +876,19 @@ class Turbo_calc_TDDFT(Calc):
 
         os.chdir(self.here)
         return (energy, gradients, scf_energy, nac, soc)
+
+    def read_osc_str(self):
+        """
+        Get the osc str. values from a Turbomole calculation
+        """
+        turbo_path = os.path.join(self.here,self.calc_name)
+        os.chdir(turbo_path)
+        file_path = 'spectrum'
+        osc_str = rf.read_turbo_os(file_path)
+        os.remove(file_path)
+        os.chdir(self.here)
+
+        return osc_str
 
     def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
@@ -871,7 +924,9 @@ class Turbo_calc_MP2(Calc):
     Calculation with MP2 with Turbomole 7.0 and 7.6
 
     """
-    def run(self, atoms, nprocs=None):
+
+    def run(self, atoms, point_flex = None, nprocs = None, state=None, 
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Turbomole coord file and return a subprocess.Popen
         If the input file is going to be used for a SH dynamics,
@@ -893,7 +948,35 @@ class Turbo_calc_MP2(Calc):
         turbo_path = os.path.join(self.here, self.calc_name)
         os.chdir(turbo_path)
 
-        subprocess.call("cp control.temp control", shell=True)
+#        subprocess.call("cp control.temp control", shell=True)
+
+        if point_flex is not None:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control",
+                               temp_name = "control.temp",
+                               state = state,
+                               states = states,
+                               singlestate = singlestate,
+                               nac_coupling = nac_coupling,
+                               soc_coupling = soc_coupling,
+                               q_points = point_flex)
+            else:
+                ef.write_turbo(file_name = "control",
+                               temp_name = "control.temp",
+                               state = 0, states = [], singlestate = 0,
+                               nac_coupling = [], soc_coupling = [],
+                               q_points = point_flex)
+
+        else:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control",
+                               temp_name = "control.temp",
+                               state = state,
+                               states = states,
+                               singlestate = singlestate,
+                               nac_coupling = nac_coupling,
+                               soc_coupling = soc_coupling,
+                               q_points = [])
 
 #        turbo_redefine(atoms) FJH
         ef.write_coord(atoms)
@@ -946,7 +1029,9 @@ class Turbo_calc_MP2(Calc):
 
         return proc
 
-    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+    def read_out(self, positions, dyn_bool, in_mol=None, in_shell=None, 
+                 natoms_flex=None, natoms = None, state = None, states = None, 
+                 mult = [], singlestate = 0, soc_coupling = None):
         """
         Analyse a Turbomole job.last file while printing geometry updates
 
@@ -974,15 +1059,29 @@ class Turbo_calc_MP2(Calc):
         turbo_path = os.path.join(self.here, self.calc_name)
         os.chdir(turbo_path)
 
-        energy, gradients_b, scf_energy = rf.read_tb_MP2_grout("job.last")
-        # fix gradients units to Hartree/Angstrom
-        gradients = gradients_b * bohrconv
+        nac = []
+        soc = []
+
+        if state is not None and states is not None:
+            sys.exit("MP2 with Turbomole is not currently implemented for dynamics")
+        else:
+            energy, gradients_b, scf_energy = rf.read_tb_MP2_grout("job.last")
+
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                gradients = np.zeros(dim_flex)
+            else:
+                # truncate gradients if too long and fix units to Hartree/Angstrom
+                gradients = np.zeros(len(positions))
+            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+        else:
+            gradients = gradients_b[:len(positions)] * bohrconv
+
+
         # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
-
-        # truncate gradients if too long
-        gradients = gradients[:len(positions)]
 
         subprocess.call("rm CC*", shell=True)
 
@@ -996,7 +1095,8 @@ class Turbo_calc(Calc):
 
     """
 
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+    def run(self, atoms, point_flex = None, nprocs = None, state=None, 
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Turbomole coord file and return a subprocess.Popen
         If the input file is going to be used for a SH dynamics,
@@ -1020,8 +1120,34 @@ class Turbo_calc(Calc):
 
         turbo_redefine(atoms)
 
-        if state is not None and states is not None:
-            ef.write_turbo_dyn("control", "control.temp", state, states, singlestate, nac_coupling, soc_coupling)
+        if point_flex is not None:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control", 
+                               temp_name = "control.temp", 
+                               state = state, 
+                               states = states,
+                               singlestate = singlestate, 
+                               nac_coupling = nac_coupling, 
+                               soc_coupling = soc_coupling,
+                               q_points = point_flex)
+            else:
+                ef.write_turbo(file_name = "control", 
+                               temp_name = "control.temp",
+                               state = 0, states = [], singlestate = 0, 
+                               nac_coupling = [], soc_coupling = [],
+                               q_points = point_flex)
+        
+        else:
+            if state is not None and states is not None:
+                ef.write_turbo(file_name = "control", 
+                               temp_name = "control.temp", 
+                               state = state, 
+                               states = states,
+                               singlestate = singlestate,
+                               nac_coupling = nac_coupling, 
+                               soc_coupling = soc_coupling,
+                               q_points = [])
+   
 
         # Run Turbomole
         proc = subprocess.Popen(
@@ -1130,20 +1256,24 @@ class Turbo_calc(Calc):
                                                                            singlestate,
                                                                            soc_coupling)
 
-            # fix gradients units to Hartree/Angstrom
             gradients = gradients_b * bohrconv
 
-            # clean turbomole CC* files
-#            subprocess.call("rm CC*", shell=True)
         else:
             energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
-            # fix gradients units to Hartree/Angstrom
-            gradients = gradients_b * bohrconv
-            # update the geometry log
+            if natoms_flex is not None:
+                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                    dim_flex = int(len(positions) + 3. * natoms_flex)
+                    gradients = np.zeros(dim_flex)
+                else:
+                    # truncate gradients if too long and fix units to Hartree/Angstrom
+                    gradients = np.zeros(len(positions))
+                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+            else:
+                gradients = gradients_b[:len(positions)] * bohrconv
+
+        # update the geometry log
         if in_mol != None:
             self.update_geom(positions, in_mol, in_shell)
-        # truncate gradients if too long
-        gradients = gradients[:len(positions)]
  
         os.chdir(self.here)
         return (energy, gradients, scf_energy, nac, soc)
@@ -1177,6 +1307,19 @@ class Turbo_calc(Calc):
         os.chdir(self.here)
 
         return d_mu
+
+    def read_osc_str(self):
+        """
+        Get the osc str. values from a Turbomole calculation
+        """
+        turbo_path = os.path.join(self.here,self.calc_name)
+        os.chdir(turbo_path)
+        file_path = 'spectrum'
+        osc_str = rf.read_turbo_os(file_path)
+        os.remove(file_path)
+        os.chdir(self.here)
+
+        return osc_str
 
     def save_checkpoint(self,
                         stp_iter = None,
@@ -1385,7 +1528,8 @@ class Molcas_calc(Calc):
 
         self.molcas_scratch = os.path.join(self.molcas_workdir, self.molcas_project)
 
-    def run(self, atoms, point_flex = None, nprocs=None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]): #FJH
+    def run(self, atoms, point_flex = None, nprocs=None, state=None, 
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]): 
         """
         Write a Molcas input file and return a subprocess.Popen
 
@@ -1410,12 +1554,15 @@ class Molcas_calc(Calc):
 
         if point_flex is not None:
             if state is not None and states is not None:
-                ef.write_molcas_free("molcas.input", self.calc_name + ".temp", state, states, singlestate, nac_coupling, soc_coupling, point_flex) 
+                ef.write_molcas_free("molcas.input", self.calc_name + ".temp", state, states, 
+                                     singlestate, nac_coupling, soc_coupling, point_flex) 
             else: 
-                ef.write_molcas("molcas.input", self.calc_name + ".temp", point_flex, freq = None) # The last bool turn the freq calc OFF
+                ef.write_molcas("molcas.input", self.calc_name + ".temp", 
+                                 point_flex, freq = None) # The last bool turn the freq calc OFF
         else:
             if state is not None and states is not None:
-                ef.write_molcas_free("molcas.input", self.calc_name + ".temp", state, states, singlestate, nac_coupling, soc_coupling, [])
+                ef.write_molcas_free("molcas.input", self.calc_name + ".temp", state, states,
+                                      singlestate, nac_coupling, soc_coupling, [])
 
         # Make molcas calculation folder and scratch if they do not exist 
         # as Molcas may not have the perssion to create it during calculation.
@@ -1449,13 +1596,8 @@ class Molcas_calc(Calc):
         os.chdir(self.molcas_calcdir)
         os.environ["np"] = nprocs
 
-        if state is not None and states is not None:
-            proc = subprocess.Popen(
+        proc = subprocess.Popen(
             "pymolcas -nt $np molcas.input -f -b 1", shell=True)
-        else:
-#            os.environ["np"] = nprocs
-            proc = subprocess.Popen(
-                "pymolcas -nt $np molcas.input -f -b 1", shell=True)
 
         os.chdir(self.here)
 
@@ -1508,13 +1650,9 @@ class Molcas_calc(Calc):
         # add '-b 1' to print output on-the-fly
         os.chdir(self.molcas_calcdir)
 
-        #if state is not None and states is not None:
+        os.environ["np"] = nprocs
         proc = subprocess.Popen(
-            "pymolcas -nt molcas.input -f -b 1", shell=True)
-
-        #os.environ["np"] = nprocs
-        #proc = subprocess.Popen(
-        #    "pymolcas -np $np molcas.input -f -b 1", shell=True)
+            "pymolcas -nt $np molcas.input -f -b 1", shell=True)
 
         return proc
 
@@ -1588,15 +1726,11 @@ class Molcas_calc(Calc):
 
         else:
             energy, gradients_b, scf_energy = rf.read_molcas("molcas.log")
-            # fix gradients units to Hartree/Angstrom
-#            gradients = gradients_b * bohrconv
             # update the geometry log
-            if in_mol != None:
-                self.update_geom(positions, in_mol, in_shell)
 
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
             if natoms_flex is not None:
-                if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
@@ -1605,21 +1739,9 @@ class Molcas_calc(Calc):
             else:
                 gradients = gradients_b[:len(positions)] * bohrconv
 
- #           if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
- #               dim_flex = int(len(positions) + 3. * natoms_flex)
- #               gradients = np.zeros(dim_flex)
- #           else:
- #               gradients = np.zeros(len(positions))
-            # Fix gradients units to Hartree/Angstrom
-            # truncate gradients if too long
- #           gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+        if in_mol != None:
+            self.update_geom(positions, in_mol, in_shell)
 
-
-#            dim_flex = int(len(positions) + 3. * natoms_flex)
-#            gradients = np.zeros(dim_flex)
-            # truncate gradients if too long
-#            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
-#            gradients = gradients[:len(positions)]
         os.chdir(self.here)
 
         return (energy, gradients, scf_energy, nac, soc)
@@ -1648,7 +1770,7 @@ class Molcas_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
@@ -1870,7 +1992,7 @@ class xtb_calc(Calc):
  
         return (energy, gradients, scf_energy)
 
-    def read_charges(self):
+    def read_charges(self, pop = None):
         """
         Get the atomic charges of the whole system
         
@@ -1883,6 +2005,20 @@ class xtb_calc(Calc):
         charges = rf.read_xtb_charges("charges")
         os.chdir(self.here)
         return charges
+
+    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Dipole derivatives is not yet implemented in xTB
+
+        Returns
+        ----------
+        a continue sentence to avoid the code crashing
+        """
+
+        print("The dipole derivatives module is not implemented in xTB \n")
+        print("fromage continues after the warning \n")
+
+        return None
    
     def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
@@ -1899,11 +2035,11 @@ class xtb_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
-                hessian = np.zeros((len(positions),len(positions)))
+                hess = np.zeros((len(positions),len(positions)))
             # Fix gradients units to Hartree/Angstrom
             hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
         else:
@@ -2044,7 +2180,7 @@ class xtb_calc_gfnff(Calc):
 
         return (energy, gradients, scf_energy)
 
-    def read_charges(self):
+    def read_charges(self, pop = None):
         """
         Get the atomic charges of the whole system
         
@@ -2057,6 +2193,20 @@ class xtb_calc_gfnff(Calc):
         charges = rf.read_xtb_charges("gfnff_charges")
         os.chdir(self.here)
         return charges
+
+        def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+            """
+            Dipole derivatives is not yet implemented in xTB
+
+            Returns
+            ----------
+            a continue sentence to avoid the code crashing
+            """
+
+            print("The dipole derivatives module is not implemented in xTB \n")
+            print("fromage continues after the warning \n")
+
+        return None
 
     def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
@@ -2073,7 +2223,7 @@ class xtb_calc_gfnff(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
@@ -2279,7 +2429,7 @@ class fomo_ci_calc(Calc):
 
         os.environ["np"] = nprocs
         proc = subprocess.Popen(
-            "mpirun -np $np mopac2002.x " + self.calc_name + ".dat" , shell=True)
+            "mpirun -np $np mopacpi.x " + self.calc_name + ".dat" , shell=True)
 
         os.chdir(self.here)
 
@@ -2468,7 +2618,7 @@ class Orca_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
@@ -2496,7 +2646,7 @@ class Orca_calc(Calc):
         #truncate the dipole derivatives matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
                 dim_flex = int(len(positions) + 3 * natoms_flex)
                 d_mu = np.zeros((dim_flex,3))
             else:

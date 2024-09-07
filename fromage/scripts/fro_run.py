@@ -16,6 +16,7 @@ reaching this module
 import numpy as np
 import subprocess
 import os
+import sys
 from datetime import datetime
 from scipy.optimize import minimize
 
@@ -136,6 +137,11 @@ def sequence(in_pos):
         gr_out = gr_combo
         e_diff = 0
 
+    if frozen_at is not None:
+        for atom in freeze_atoms:
+            dim = int(atom*3)
+            gr_out[dim-3:dim] = 0.0
+
     global iteration
     iteration += 1
     _write_calc_info(out_file = out_file,
@@ -164,24 +170,40 @@ def start_trajectory(geometry, dyn_sett, mol_atoms, shell_atoms):
     # Create Trajectory object with dynamics info and initial conditions
     atomic_symbols = [ x[0] for x in geometry ]
     in_pos = [ [x[1], x[2], x[3]] for x in geometry ]
+
     if dyn_restart:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett, curr_step, Eini, prev_grad)
+        in_params = fd.initTrajParams(symbols = atomic_symbols, 
+                                      init_pos = in_pos, 
+                                      init_vel = in_vel, 
+                                      settings = dyn_sett, 
+                                      curr_step = curr_step, 
+                                      Eini = Eini,
+                                      prev_grad = prev_grad)
     else:
-        in_params = fd.initTrajParams(atomic_symbols, in_pos, in_vel, dyn_sett)
+        in_params = fd.initTrajParams(symbols = atomic_symbols,
+                                      init_pos = in_pos,
+                                      init_vel = in_vel,
+                                      settings = dyn_sett)
+
     traj = fd.Trajectory(in_params, mol_atoms, shell_atoms)
 
     traj.run_dynamics()
 
     return None
 
-def set_newtonx(atoms_array,inputs):
+def set_newtonx(inputs,single_point=None):
     """
     This subroutine prepare all the environments and files to use fromage
     as a third-party program of Newton-X for the calculation of spectra
     and dynamics
     """
-    natoms, nstates, state = nx.read_nx_control()
-    nx.newtonx_sequence(atoms_array,inputs,natoms,nstates,state)
+    natoms, states, state = nx.read_nx_control()
+    if high_level == 'molcas':
+        states = [states]
+    if single_point:
+        nx.newtonx_initconds(inputs, natoms, states, state)
+    else:
+        nx.newtonx_sequence(inputs, natoms, states, state)
 
     return None
 
@@ -196,7 +218,7 @@ def _write_head(out_file):
     out_file.write(" Find the bug between the code and the output " "\n")
     out_file.write("\n")
     out_file.write("If you see something that it doesn't look right" "\n")
-    out_file.write("          See it, Say it, Sort it...           " "\n")
+    out_file.write("          See it, Say it, Sort it              " "\n")
     out_file.write("\n")
     out_file.write("************************************************" "\n")
     return start_time
@@ -272,6 +294,7 @@ if __name__ == '__main__':
         "high_level": "gaussian",
         "low_level": "gaussian",
         "high_level_mg" : None,
+        "pop_an" : None,
         "nprocs": "1",
         "sigma": "3.5",
         "gtol": "1e-5",
@@ -279,9 +302,10 @@ if __name__ == '__main__':
         "dynamics": "0",
         "dyn_restart": "0",
         "relax_qmprime": "0",
-        "at_reparam": "0",
+        "at_reparam": None,
         "natoms_flex": "0",
-        "newtonx" : "0"} 
+        "newtonx" : "0",
+        "frozen_at" : None} 
 
     inputs = def_inputs.copy()
 
@@ -304,11 +328,10 @@ if __name__ == '__main__':
         out_file.write("You are trying to run fromage with the relaxation of the QMprime region ON"+ "\n")
         out_file.write("You should run *fro_run_flex.py* instead"+ "\n")
         out_file.write("fromage is dying now :-("+ "\n")
-        import sys 
         sys.exit()
     elif natoms_flex and not relax_qmprime:
         out_file.write(" "+ "\n")
-        out_file.write("The natoms_flex option is ON but the QM' relaxation option (relax_QMprime) is OFF " + "\n")
+        out_file.write("The natoms_flex option is ON but the QM' relaxation option (relax_QMprime) is OFF" + "\n")
         out_file.write("natoms_flex is reset to OFF to continue with a calculation considreing a frozen environment"+ "\n")
         natoms_flex = None
         out_file.write(" "+ "\n")
@@ -319,8 +342,10 @@ if __name__ == '__main__':
     high_level = inputs["high_level"]
     high_level_mg = inputs["high_level_mg"]
     low_level = inputs["low_level"]
+    pop_an = inputs["pop_an"]
     nprocs = inputs["nprocs"]
     gtol = float(inputs["gtol"])
+    at_reparam = inputs["at_reparam"]
     single_point = bool_cast(inputs["single_point"])
     dynamics = bool_cast(inputs["dynamics"])
     dyn_restart = bool_cast(inputs["dyn_restart"])
@@ -328,24 +353,12 @@ if __name__ == '__main__':
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
     sigma = float(inputs["sigma"])
-    # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
-    #If so, the atom number is collected and a "w" symbol is added next to 
-    # the atom symbol in the coordinates added to the FOMO-CI input.
-    if "at_reparam" in inputs.keys():
-         at_reparam = [] 
-         at_reparam = [int(x) for x in inputs["at_reparam"]]
-         at_reparam = np.array(at_reparam)
-    else:
-        at_reparam = None
 
-#    # output
-#    # print start time
     if nprocs=="1":
         out_file.write("If Q-Chem, Molcas, NWChem or MOPAC are to be used, have in mind that" "\n")
         out_file.write("the default number of cores are asked for the calculation,")
         out_file.write("regardless what you have asked in your submission script file: " + "nprocs=" + str(nprocs) + "\n")
         out_file.write("" "\n")
-
     iteration = 0
 
     # clean up the last output
@@ -354,10 +367,23 @@ if __name__ == '__main__':
     if os.path.exists("geom_cluster.xyz"):
         subprocess.call("rm geom_cluster.xyz", shell=True)
 
+    # Skip all the following if SH dynamis with NX is selected
+    if newtonx:
+        set_newtonx(inputs,single_point)
+        _write_tail(start_time,out_file)
+        sys.exit('Finished fromage module')
+        
+    # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
+    #If so, the atom number is collected and a "w" symbol is added next to 
+    # the atom symbol in the coordinates added to the FOMO-CI input.
+    if at_reparam:
+         at_reparam = []
+         at_reparam = [int(x) for x in inputs["at_reparam"]]
+         at_reparam = np.array(at_reparam)
+
     # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]
 
-    
     # read shell atoms
     shell_atoms = rf.read_xyz(shell_file)[0]
 
@@ -372,12 +398,20 @@ if __name__ == '__main__':
 #
     # make the list into an array
     atoms_array = np.array(atoms_array)
+
+    frozen_at = inputs["frozen_at"]
+    if frozen_at is not None:
+        freeze_atoms = [int(num) - 1 for num in frozen_at]
+
     if single_point:
         sequence(atoms_array)
+
     elif dynamics:
-        res = start_trajectory(dyn_array, inputs)
-    elif newtonx:
-        set_newtonx(atoms_array,inputs)
+        res = start_trajectory(geometry = dyn_array,
+                               dyn_sett = inputs,
+                               mol_atoms = mol_atoms,
+                               shell_atoms = shell_atoms)
+
     else:
         res = minimize(sequence, atoms_array, jac=True,
                        options={'disp': True, 'gtol': gtol})
