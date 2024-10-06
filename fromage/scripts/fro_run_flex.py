@@ -419,14 +419,13 @@ if __name__ == '__main__':
         out_file.write("Include *relax* keyword in fromage.in"+ "\n")
         out_file.write("fromage is dying now :-( "+ "\n")
         sys.exit('fromage is sying :-( - Include *relax* keyword in fromage.in \n')
+        out_file.write("\n")
     elif flex_method is not None and natoms_flex == 0:
         out_file.write(" "+ "\n")
-        out_file.write("You are trying to run either fromage with the relaxation of the QMprime region option ON"+ "\n")
-        out_file.write("You are trying to run either fromage with ONIOM normal modes"+ "\n")
+        out_file.write("WARNING!"+ "\n")
+        out_file.write("You are trying to run either fromage with the relaxation of the QMprime region or with ONIOM normal modes."+ "\n")
         out_file.write("However, the number of flexible atoms set in fromage.in is %s" % (natoms_flex) + "\n")
-        out_file.write(" Include the keyword *natoms_flex* along with the number of flexible atoms in fromage.in and re run"+ "\n")
-        out_file.write("fromage is dying now :-( "+ "\n")
-        sys.exit()
+        out_file.write(" "+ "\n")
 
     mol_file = inputs["mol_file"]
     shell_file_flex = inputs["shell_file_flex"]
