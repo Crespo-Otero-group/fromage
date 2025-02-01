@@ -250,7 +250,7 @@ class DFTB_calc(Calc):
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): 
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:
@@ -481,7 +481,7 @@ class Gauss_calc(Calc):
 #          
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
             if natoms_flex is not None:
-                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex): 
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
@@ -858,7 +858,7 @@ class Turbo_calc_TDDFT(Calc):
             energy, gradients_b, scf_energy = rf.read_tb_grout("grad.out")
             # fix gradients units to Hartree/Angstrom
             if natoms_flex is not None:
-                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex): 
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
@@ -1068,7 +1068,7 @@ class Turbo_calc_MP2(Calc):
             energy, gradients_b, scf_energy = rf.read_tb_MP2_grout("job.last")
 
         if natoms_flex is not None:
-            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): 
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:
@@ -1261,7 +1261,7 @@ class Turbo_calc(Calc):
         else:
             energy, gradients_b, scf_energy = rf.read_ricc2("ricc2.out")
             if natoms_flex is not None:
-                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex): 
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
@@ -1730,7 +1730,7 @@ class Molcas_calc(Calc):
 
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
             if natoms_flex is not None:
-                if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+                if int(len(positions)) <= int(3*natoms_flex):
                     dim_flex = int(len(positions) + 3. * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
@@ -1977,7 +1977,7 @@ class xtb_calc(Calc):
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex):
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:
@@ -2165,7 +2165,7 @@ class xtb_calc_gfnff(Calc):
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) < int(3*natoms_flex): 
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:
@@ -2584,7 +2584,7 @@ class Orca_calc(Calc):
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
         if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) < int(3*natoms_flex): 
                 dim_flex = int(len(positions) + 3 * natoms_flex)
                 gradients = np.zeros(dim_flex)
             else:

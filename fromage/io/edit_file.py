@@ -3,6 +3,7 @@
 import numpy as np
 import subprocess
 import os
+import re
 from random import randint
 
 def write_cp2k(in_name, file_name, vectors, atoms, temp_name):
@@ -222,18 +223,10 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
 #        if line.startswith("#") and freq is not None:
         if line.startswith("#"):
             if freq:
-                if "force" in line.strip():
-                    out_file.write(line.replace("force", "freq=(SaveNormalModes)"))
-                    continue  
-                elif "Force" in line.strip():
-                    out_file.write(line.replace("Force", "freq=(SaveNormalModes)"))                
-                    continue
-                else:
-                    line = line.strip() + ' freq\n'
-                    out_file.write(line)
-                    continue
-#            if not ("symmetry=none" in line or "Nosymm" in line or "nosymm" in line):
- #               line += " symmetry=none"
+                line = re.sub(r'(?i)\bforce\b', 'freq=(SaveNormalModes)', line.strip())
+                line += ' \n'
+                if "freq=(SaveNormalModes)" not in line:
+                    line += ' freq=(SaveNormalModes)'
             if "&NSTATES" in line and states != None:
                 nstates = '%s' % (int(np.sum(states))-1)
                 if "&STATE" in line and state != None:
@@ -291,19 +284,19 @@ def write_dftb_freq_calc(file_name):
     with open(file_name, 'r') as file:
         lines = file.readlines()
 
-    if any('Driver = SecondDerivatives{' in line for line in lines):
+    if any(re.search(r'\bDriver\s*=\s*SecondDerivatives\s*{', line) for line in lines):
         return
 
     new_driver_block = [
         "Driver = SecondDerivatives {\n",
         "    Atoms = 1:-1\n",
         "    Delta = 1e-5\n",
-        "    }\n"
+        "}\n"
     ]
 
     with open(file_name, 'w') as file:
         for line in lines:
-            if line.strip() == 'Driver = {}':
+            if re.match(r'^\s*Driver\s*=\s*{\s*}\s*$', line):
                 file.writelines(new_driver_block)
             else:
                 file.write(line)
