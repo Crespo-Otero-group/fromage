@@ -23,7 +23,7 @@ from scipy.optimize import minimize
 from fromage.io import read_file as rf
 from fromage.utils import array_operations as ao
 from fromage.utils import calc
-from fromage.utils import fro_dyn as fd
+from fromage.dynamics import fro_dyn as fd
 from fromage.utils import vib_analysis as va
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
