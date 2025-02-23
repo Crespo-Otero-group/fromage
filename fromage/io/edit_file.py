@@ -599,6 +599,10 @@ def write_molcas_free(file_name,
     sect = []  # section index for each state
     indx = 0   # state index
     for s, ns in enumerate(states):
+        if isinstance(ns, list) and len(ns) > 0:
+            ns = ns[0]  # Extract first number safely
+        else:
+            raise RuntimeError("Dynamics with singlets and triplets is not tested yet.")
         sub = []  # subsections of grad
         for n in range(ns):
             indx += 1
@@ -611,7 +615,8 @@ def write_molcas_free(file_name,
         grad.append(sub)
 
     # prepare nac section
-    nac = [[] for x in grad]  # nac should have the same number of section as the grad
+    nac = [[] for x in nac_coupling] #  FJH Test this with internal modules for FSSH
+#    nac = [[] for x in grad]  # nac should have the same number of section as the grad
     if len(nac_coupling) > 0:
         for pair in nac_coupling:
             s1, s2 = pair  # two states
@@ -645,6 +650,7 @@ def write_molcas_free(file_name,
         elif '&RASSCF' in line.upper():
             section += 1
             input.append(line)
+            input.append("")
         elif '&GRAD' in line:
             for x in grad[section]:
                 input.append(x)
@@ -655,6 +661,7 @@ def write_molcas_free(file_name,
             input.append("")
         elif '&SOC' in line:
             input.append(soc[section])
+            input.append("")
         else:
             input.append(line)
 
