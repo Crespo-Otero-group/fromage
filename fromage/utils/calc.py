@@ -519,7 +519,7 @@ class Gauss_calc(Calc):
         #truncate the hessian matrix if it is too long
 
         if natoms_flex is not None:
-            if int(len(positions)) <= int(3*natoms_flex): # CHANGE THIS AWFULNESS PLEASE!
+            if int(len(positions)) <= int(3*natoms_flex): 
                 dim_flex = int(len(positions) + 3. * natoms_flex)
                 hess = np.zeros((dim_flex,dim_flex))
             else:
@@ -780,15 +780,20 @@ class Turbo_calc_TDDFT(Calc):
 
         turbo_redefine(atoms)
 
-        # Run normal modes calculation in the excited state
-#        env = os.environ.copy()
-#        env["state"] = state
+        # Run normal modes calculation in the ground or in the excited state
+        env = os.environ.copy()
+        env["state"] = state
 
-        commands = ["actual -r",
-            "dscf > dscf.out",
-            "egrad > grad.out",
-            "aoforce > force.out"
-        ]
+        if int(state) != 0:
+            commands = ["actual -r",
+            "egrad > egrad.out",
+            "NumForce -frznuclei -ecnomic -c -ex $state > freq.out"
+            ""
+        else:
+            commands = ["actual -r",
+                "grad > grad.out",
+                "NumForce -frznuclei -ecnomic -c > freq.out"
+            ]
 
         for command in commands:
             result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
@@ -919,6 +924,32 @@ class Turbo_calc_TDDFT(Calc):
 
         return d_mu
 
+    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Get the Hessian matrix from a Turbomole output
+
+        Returns
+        ----------
+        hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
+        QM region plus the atoms in the flexible QM' region.
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+        hess_tmp = rf.read_hessian_turbo("numforce/hessian")
+        #truncate the hessian matrix if it is too long
+
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                hess = np.zeros((dim_flex,dim_flex))
+            else:
+                hess = np.zeros((len(positions),len(positions)))
+            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
+        else:
+            hess = hess_tmp[:len(positions),:len(positions)]
+        os.chdir(self.here)
+        return hess
+
 class Turbo_calc_MP2(Calc):
     """
     Calculation with MP2 with Turbomole 7.0 and 7.6
@@ -1015,7 +1046,7 @@ class Turbo_calc_MP2(Calc):
         commands = ["actual -r",
             "dscf > dscf.out",
             "ricc2 > ricc2.out",
-            "aoforce > force.out"
+            "NumForce -frznuclei -level cc2 -ecnomic -c > freq.out"
         ]
 
         for command in commands:
@@ -1088,6 +1119,31 @@ class Turbo_calc_MP2(Calc):
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
 
+    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Get the Hessian matrix from a Turbomole output
+
+        Returns
+        ----------
+        hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
+        QM region plus the atoms in the flexible QM' region.
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+        hess_tmp = rf.read_hessian_turbo("numforce/hessian")
+        #truncate the hessian matrix if it is too long
+
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                hess = np.zeros((dim_flex,dim_flex))
+            else:
+                hess = np.zeros((len(positions),len(positions)))
+            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
+        else:
+            hess = hess_tmp[:len(positions),:len(positions)]
+        os.chdir(self.here)
+        return hess
 
 class Turbo_calc(Calc):
     """
@@ -1181,17 +1237,21 @@ class Turbo_calc(Calc):
         turbo_redefine(atoms)
 
         # Run normal modes calculation in the excited state
-#        env = os.environ.copy()
-#        env["state"] = state
+        env = os.environ.copy()
+        env["state"] = state
 
-        commands = ["actual -r",
+        if int(state) != 0:
+            commands = ["actual -r",
             "dscf > dscf.out",
             "ricc2 > ricc2.out",
-            "aoforce > force.out"
-        ]
-     
-#            "NumForce -ex $state -central -level cc2 > force.out"
-
+            "NumForce -frznuclei -level cc2 -ecnomic -c -ex $state > freq.out"
+        else:
+            commands = ["actual -r",
+                "dscf > dscf.out",
+                "ricc2 > ricc2.out",
+                "NumForce -frznuclei -level cc2 -ecnomic -c > freq.out"
+            ]
+    
         for command in commands:
             result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, shell=True, env=env)
 
@@ -1365,6 +1425,32 @@ class Turbo_calc(Calc):
         os.chdir(self.here)
         return
 
+    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Get the Hessian matrix from a Turbomole output
+
+        Returns
+        ----------
+        hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
+        QM region plus the atoms in the flexible QM' region.
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+        hess_tmp = rf.read_hessian_turbo("numforce/hessian")
+        #truncate the hessian matrix if it is too long
+
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                hess = np.zeros((dim_flex,dim_flex))
+            else:
+                hess = np.zeros((len(positions),len(positions)))
+            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
+        else:
+            hess = hess_tmp[:len(positions),:len(positions)]
+        os.chdir(self.here)
+        return hess
+
 class Turbo_SCF_calc(Calc):
     """
     Calculation of SCF like DFT or HF with Turbomole
@@ -1428,9 +1514,8 @@ class Turbo_SCF_calc(Calc):
         # Run normal modes calculation in the excited state
 
         commands = ["actual -r",
-            "dscf > dscf.out",
             "grad > grad.out",
-            "aoforce > force.out"
+            "NumForce -frznuclei -level cc2 -ecnomic -c > freq.out"
         ]
 
         for command in commands:
@@ -1489,6 +1574,31 @@ class Turbo_SCF_calc(Calc):
         os.chdir(self.here)
         return (energy, gradients, scf_energy)
 
+    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Get the Hessian matrix from a Turbomole output
+
+        Returns
+        ----------
+        hessian : 3Natoms x 3Natoms array where Natoms is the amount of atoms in the
+        QM region plus the atoms in the flexible QM' region.
+        """
+        turbo_path = os.path.join(self.here, self.calc_name)
+        os.chdir(turbo_path)
+        hess_tmp = rf.read_hessian_turbo("numforce/hessian")
+        #truncate the hessian matrix if it is too long
+
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                hess = np.zeros((dim_flex,dim_flex))
+            else:
+                hess = np.zeros((len(positions),len(positions)))
+            hess[:len(positions),:len(positions)] = hess_tmp[:len(positions),:len(positions)]
+        else:
+            hess = hess_tmp[:len(positions),:len(positions)]
+        os.chdir(self.here)
+        return hess
 
 class Molcas_calc(Calc):
     """
@@ -2194,17 +2304,17 @@ class xtb_calc_gfnff(Calc):
         os.chdir(self.here)
         return charges
 
-        def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
-            """
-            Dipole derivatives is not yet implemented in xTB
+    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        """
+        Dipole derivatives is not yet implemented in xTB
 
-            Returns
-            ----------
-            a continue sentence to avoid the code crashing
-            """
+        Returns
+        ----------
+        a continue sentence to avoid the code crashing
+        """
 
-            print("The dipole derivatives module is not implemented in xTB \n")
-            print("fromage continues after the warning \n")
+        print("The dipole derivatives module is not implemented in xTB \n")
+        print("fromage continues after the warning \n")
 
         return None
 

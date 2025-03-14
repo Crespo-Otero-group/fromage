@@ -2300,13 +2300,15 @@ def read_hessian_g_fchk(in_name):
     hess[np.tril_indices(hess.shape[0], k = 0)] = hess_lt
     return hess
 #
-def read_hessian_turbomole(in_name):
+def read_hessian_turbo(in_name):
     with open(in_name) as data:
         lines = data.readlines()
-    hess = []
+    hess_tmp = []
     for line in lines[1:-1]:
+        if "$hessian" in line:
+            break
         for num in map(float, line.split()[2:]):
-            hess.append(num)
+            hess_tmp.append(num)
     hess_tmp = np.array(hess_tmp)
     dim = int(np.sqrt(len(hess_tmp)))
     hess = np.zeros((dim,dim))
