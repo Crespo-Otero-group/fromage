@@ -1191,7 +1191,10 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             else:
                 shift_line = 3  # relativistic energy output format
                 en_col = 1
-            e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            if isinstance(states, list) and all(isinstance(item, list) for item in states):
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            else:
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin]]]
             casscf += e
 
         elif """Total XMS-CASPT2 energies:""" in line:
@@ -1202,7 +1205,10 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             else:
                 shift_line = 3  # relativistic energy output format
                 en_col = 1
-            e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            if isinstance(states, list) and all(isinstance(item, list) for item in states):
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            else:
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin]]]
             casscf += e
 
         elif """Molecular gradients """ in line:
