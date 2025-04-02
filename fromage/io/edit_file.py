@@ -227,9 +227,9 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
                 line += ' \n'
                 if "freq=(SaveNormalModes)" not in line:
                     line += ' freq=(SaveNormalModes)'
-            if "&NSTATES" in line and states != None:
+            if "&NSTATES" in line and states is not None:
                 nstates = '%s' % (int(np.sum(states))-1)
-                if "&STATE" in line and state != None:
+                if "&STATE" in line and state is not None:
                     curr_state = '%s' % (state - 1)
                     modified_line = line.replace("&STATE", curr_state).replace("&NSTATES", nstates)
                 else:
@@ -250,6 +250,35 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
         else:
             out_file.write(line)
     out_file.close()
+    return
+
+def write_dftb_dyn(file_name, 
+                   temp_name, 
+                   state: int, 
+                   states: list, 
+                   nac_coupling: list,
+                   soc_cupling: list
+                   point_flex: list):
+
+    with open(temp_name) as temp_file:
+        temp_content = temp_file.readlines()
+    
+    out_file = open(file_name, "w")
+
+    for line in temp_content:
+        if "&NSTATES" in line:
+            nstates = '%s' % ((int(np.sum(states))-1) + 10)
+            modified_line = line.replace("&NSTATES", nstates)
+            out_file.write(modified_line)
+        elif "&STATE" in line:
+            curr_state = '%s' % (state - 1)
+            modified_line = line.replace("&STATE",curr_state)
+            out_file.write(modified_line)
+        elif "&NAC" in line:
+            nac = '{%s %s}' % (0, nstates)
+            modified_line = line.replace("&NAC",nac)
+        else:
+            out_file.write(line)
     return
 
 def write_dftb(file_name, atoms, points, temp_name, proj_name='dftb',freq=None):
@@ -601,8 +630,6 @@ def write_molcas_free(file_name,
     for s, ns in enumerate(states):
         if isinstance(ns, list) and len(ns) > 0:
             ns = ns[0]  # Extract first number safely
-        else:
-            raise RuntimeError("Dynamics with singlets and triplets is not tested yet.")
         sub = []  # subsections of grad
         for n in range(ns):
             indx += 1
@@ -616,7 +643,6 @@ def write_molcas_free(file_name,
 
     # prepare nac section
     nac = [[] for x in nac_coupling] #  FJH Test this with internal modules for FSSH
-#    nac = [[] for x in grad]  # nac should have the same number of section as the grad
     if len(nac_coupling) > 0:
         for pair in nac_coupling:
             s1, s2 = pair  # two states

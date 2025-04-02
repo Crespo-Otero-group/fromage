@@ -1102,7 +1102,7 @@ def MolcasCoord(M):
 
     return coord
 
-def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupling):
+def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupling, newtonx = None):
     """
     This function is used to read the Molcas output when the nonadiabatic dynamics 
     option is ON.
@@ -1138,6 +1138,17 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
     sin_state  = 0
     tri_state  = 0
 
+    # PyRAI2MD gets the CI derivative coupling and then divides it by \DeltaE
+    # Eq 4 in [1]
+    # NewtonX gets the Total derivative coupling: CI_coup / DE + CSF_coup
+    # Eq 6 in [1]
+
+    # [1] J. Chem. Theory Comput. 2016, 12, 3636−3653
+
+    if newtonx is not None:
+        nacs_chain_str="""Total derivative coupling"""
+    else:
+        nacs_chain_str="""CI derivative coupling"""
 
     for i, line in enumerate(log):
         if   """Cartesian coordinates in Angstrom""" in line:
@@ -1152,7 +1163,10 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             else:
                 shift_line = 5  # relativistic energy output format
                 en_col = 1
-            e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            if isinstance(states, list) and all(isinstance(item, list) for item in states):
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            else:
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin]]]
             casscf += e
 
         elif """Total CASPT2 energies:""" in line:
@@ -1163,7 +1177,10 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             else:
                 shift_line = 3  # relativistic energy output format FJH check this!!!!
                 en_col = 1
-            e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            if isinstance(states, list) and all(isinstance(item, list) for item in states):
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin][0]]]
+            else:
+                e = [float(x.split()[en_col]) for x in log[i + shift_line: i + shift_line + states[spin]]]
             casscf += e
 
         elif """Total MS-CASPT2 energies:""" in line:
@@ -1192,8 +1209,9 @@ def read_molcas_ext(in_name, natom, state, states, mult, singlestate, soc_coupli
             g = log[i + 8: i + 8 + natom]
             g = S2F(g)
             gradient.append(g)
-                                                                           # FJH
-        elif """Total derivative coupling""" in line: #Added this for from&NX interface. It will cause conflicts
+
+        elif nacs_chain_str in line:
+#        elif """Total derivative coupling""" in line: #Added this for from&NX interface. It will cause conflicts
 #        elif """CI derivative coupling""" in line:   #with fro&PyRAI2MD which needs the CI der.. form. Fix this            
             n = log[i + 8: i + 8 + natom]
             n = S2F(n)
@@ -1364,8 +1382,7 @@ def read_dftb_out(in_name):
             if not line.strip():
                 read_grad = False
             if read_grad:
-#                atom_grads = [float(i) for i in line.split()]
-                atom_grads = [float(i) for i in line.split()[1:]] # FJH
+                atom_grads = [float(i) for i in line.split()[1:]] 
                 grad.extend(atom_grads)
             if "Total Forces" in line:
                 read_grad = True
@@ -1379,6 +1396,76 @@ def read_dftb_out(in_name):
     ex_energy = gr_energy + exci
 
     return ex_energy, grad, gr_energy
+
+def read_dftb_dyn(grad_file,
+                  ex_ener_file,
+                  nacs_file,
+                  natom,
+                  state,
+                  states,
+                  mult,
+                  nac_coupling,
+                  soc_coupling):
+
+    grad = []
+    energy = []
+    soc = []
+    nstates = np.sum(states)
+
+    with open(grad_file) as lines:
+        read_grad = False
+        for line in lines:
+            if not line.strip():
+                read_grad = False
+            if read_grad:
+                atom_grads = [float(i) for i in line.split()[1:]]
+                grad.extend(atom_grads)
+            if "Total Forces" in line:
+                read_grad = True
+            if "Total energy" in line:
+                gr_energy = float(line.split()[2])
+
+    energy.append(gr_energy)
+    gradient = np.zeros((nstates, natom, 3))
+    gradient[state - 1] = -np.array(grad)
+
+    with open(ex_ener_file) as lines:
+        content = lines.readlines()
+
+    for line in content[5:5+nstates]:
+        energy.append(float(line.split()[0]))
+
+    energy = np.array(energy)
+
+    nac = read_dftb_nac(nacs_file, natom)   
+
+    return energy, gradient, gr_energy, nac, soc
+
+def read_dftb_nac(nacs_file,natom):
+    """
+    read nac vectors from a td-dftb+ calculation
+
+    """
+    data = []
+    with open(nacs_file, 'r') as file:
+        lines = file.readlines()
+        current_batch = []
+        for line in lines:
+            parts = line.strip().split()
+            # Try to parse lines with exactly 3 float values
+            if len(parts) == 3:
+                try:
+                    floats = [float(p) for p in parts]
+                    current_batch.append(floats)
+                    if len(current_batch) == natom:
+                        data.append(current_batch)
+                        current_batch = []
+                except ValueError:
+                    continue  # skip lines that can't be converted
+            else:
+                continue
+
+    return np.array(data)
 
 def read_dftb_charges(in_name):
     """
@@ -2206,6 +2293,7 @@ def read_orca_out(in_name):
     with open(in_name) as Orca_file:
         content = Orca_file.readlines()
 
+    disp = 0.
     grad = []
     gr_energy=None
     state_energy=None
@@ -2220,17 +2308,24 @@ def read_orca_out(in_name):
         if "CARTESIAN GRADIENT" in line:
             orig_line = i
             break
+        if "Dispersion correction" in line:
+            disp = float(line.split()[2])
+
     for line in content[orig_line + 3:]:
         if len(line.split()) == 6:
             atom_grads = [float(i) for i in line.split()[3:]]
             grad = np.concatenate((grad,atom_grads))
         else:
             break
-#
+    
+    state_energy += disp
     if gr_energy == None:
         gr_energy = state_energy
-#
+    else:
+        gr_energy += disp
+
     return state_energy, grad, gr_energy
+
 ###################################################################
 #####################  Read Hessians  #############################
 """
@@ -2319,13 +2414,13 @@ def read_hessian_turbo(in_name):
             hess[j,i] = hess_tmp[cont]
     return hess
 #
-def read_hessian_molcas(in_name):
+def read_molcas_hessian(hess_file):
     """
     In Molcas, the hessian is obtained from a binary h5 file. Hence,
     the module h5py must be imported
     """
     import h5py
-    f = h5py.File(in_name, 'r')
+    f = h5py.File(hess_file, 'r')
     nuclei_key = list(f.keys())[0]
     hessian_key = list(f.keys())[-1]
     natoms = len(list(f[nuclei_key]))
@@ -2337,54 +2432,34 @@ def read_hessian_molcas(in_name):
     hess = np.zeros((hess_dim,hess_dim))
     # convert the lower triangle matrix to the symetric full Hessian
     hess[np.tril_indices(hess.shape[0], k = 0)] = hess_lt
+    hess = hess + hess.T - np.diag(hess.diagonal())
     return hess
-#
+
 def read_hessian_orca(in_name):
     """
     Read the hessian matrix computed by Orca
     """
+
     with open(in_name, 'r') as file:
-        lines = file.readlines()
+        lines = data.read().splitlines()
 
-    # Find the line index where $hessian is located
-#    hessian_index = -1
-#    for i, line in enumerate(lines):
-#        if "$hessian" in line:
-#            hessian_index = i
-#            break
+    hess = None
+    for n, line in enumerate(lines):
+        if '$hessian' in line:
+            nmode = int(lines[n + 1].split()[0])
+            nline = (nmode + 1) * (int(nmode / 5) + (nmode % 5 > 0))
+            vects = lines[n + 2: n + 2 + nline]
+            nmodes = [[] for _ in range(nmode)]
+            for m, i in enumerate(vects):
+                row = m % (nmode + 1) - 1
+                if row >= 0:
+                    nmodes[row] += [float(j) for j in i.split()[1:]]
+            hess = np.array(nmodes).T.reshape((nmode, nmode))
 
-#    if hessian_index == -1:
-#        raise ValueError(f"Hessian data not found in the file {file_path}")
-
-    hessian_index = next((i for i, line in enumerate(lines) if "$hessian" in line), None)
-    if hessian_index is None:
+    if hess is None:
         raise ValueError(f"Hessian data not found in the file {in_name}")
 
-    dim = int(lines[hessian_index + 1].strip())
-    hess = np.zeros((dim, dim))
-
-    current_row = 0
-    total_col_index = 0  # Total column index across all blocks
-
-    for line in lines[hessian_index + 2:]:
-        if line.strip(): 
-            values = [float(val) for val in line.split()[1:]]
-
-            for i, value in enumerate(values):
-                if total_col_index + i < dim:
-                    hess[current_row, total_col_index + i] = value
-
-            current_row += 1
-
-            if current_row == dim:
-                total_col_index += len(values)
-                current_row = 0
-
-                if total_col_index >= dim:
-                    break
-
     return hess
-
 
 """
  To implement: Q-Chem - NWChem - dftbplus

@@ -229,7 +229,7 @@ def dynamics_sequence(traj):
         List of spin-orbit coupling between spin states
     """
 
-    SH_methods = ['molcas','turbomole','turbomole_tddft','qchem','gaussian']
+    SH_methods = ['molcas','turbomole','turbomole_tddft','qchem','gaussian', 'dftb']
 
     # Read parameters from Trajectory object
     

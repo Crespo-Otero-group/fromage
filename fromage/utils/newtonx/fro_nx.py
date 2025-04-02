@@ -23,13 +23,15 @@ def read_nx_control():
     This subrutine identifies if the Newton-X calculation is to compute a spectra
     or dynamics
     """
+    states = []
     try:
         with open("control.d", "r") as file:
             line = file.readline()
             info = line.split(',')
             natoms = int(info[0].strip())
-            states = [int(info[2].strip())]
-            nstates = int(np.sum(states))
+            states.append(int(info[2].strip()))
+#            states = [int(info[2].strip())]
+#            nstates = int(np.sum(states))
             state = int(info[3].strip())        
     except FileNotFoundError:
         try:
@@ -133,7 +135,7 @@ def parse_fro_input(inputs,states):
         spin = [int(x) for x in inputs["spin"]]
 
     mult = []
-    nstates = int(np.sum(states))
+#    nstates = int(np.sum(states))
 
     for n, s in enumerate(states):
         ms = int(spin[n] * 2 + 1)
@@ -392,7 +394,7 @@ def newtonx_sequence(inputs,natoms,states,state):
 
     in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
 
-    methods_wnacs = ['molcas'] # Extend this list to other methods that compute NACs
+    methods_wnacs = ['molcas', 'dftb'] # Extend this list to other methods that compute NACs
     pass_nac = []
 
     if high_level in methods_wnacs:
@@ -416,16 +418,26 @@ def newtonx_sequence(inputs,natoms,states,state):
     if flex:
         rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms,natoms_flex = ll_natoms)
         ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex = ll_natoms)
-        mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
-                               states = states, mult = mult, singlestate = singlestate, 
-                               soc_coupling = soc_coupling) 
+        if high_level == 'molcas':
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling, newtonx = True)
+        else:
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling)
         
     else:
         rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
         ml_en_gr = ml.read_out(in_pos)
-        mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = natoms, state = state,
-                               states = states, mult = mult, singlestate = singlestate,
-                               soc_coupling = soc_coupling)
+        if high_level == 'molcas':
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling, newtonx = True)
+        else:
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling)
 
     """ data format
     mh_en_gr

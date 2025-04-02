@@ -156,7 +156,9 @@ class DFTB_calc(Calc):
     Calculation of DFTB+ tested with v22.2
 
     """
-    def run(self, atoms, points_flex = None, nprocs=None):
+    def run(self, atoms, point_flex = None, nprocs = None, state=None,
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+#def run(self, atoms, points_flex = None, nprocs=None):
         """
         Runs a DFTB+ force calculation using a .xyz file 
         and return a subprocess.Popen
@@ -178,6 +180,14 @@ class DFTB_calc(Calc):
                             [], self.calc_name + ".temp")
         if points_flex is not None:
             ef.write_dftb_charges("charges.dat", points_flex)
+            if state is not None and states is not None:
+                ef.write_dftb_dyn('dftb_in.hsd', self.calc_name + ".temp", state,
+                                  states, nac_coupling, soc_coupling, point_flex)
+        else:
+            if state is not None and states is not None:
+                ef.write_dftb_dyn('dftb_in.hsd', self.calc_name + ".temp", state, states,
+                                  singlestate, nac_coupling, soc_coupling, [])
+                
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
 
@@ -214,7 +224,19 @@ class DFTB_calc(Calc):
 
         return proc
 
-    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+#    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+    def read_out(self, 
+                 positions, 
+                 dyn_bool=False,
+                 in_mol=None, 
+                 in_shell=None, 
+                 natoms_flex=None,
+                 natoms = None,
+                 state = None,
+                 states = None,
+                 mult = [],
+                 singlestate = 0,
+                 soc_coupling = []):
         """
         Analyse a DFTB+ detailed.out file while printing geometry updates
 
@@ -242,27 +264,44 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        energy, gradients_bohr, scf_energy = rf.read_dftb_out("detailed.out")
+        nac = []
+        soc = []
+
+        if state is not None and states is not None:
+            energy, gradients_b, scf_energy, nac, soc = rf.read_dftb_dyn("detailed.out",
+                                                                         'EXC.DAT',
+                                                                         'NACV.dat',
+                                                                          natoms,
+                                                                          state,
+                                                                          states,
+                                                                          mult,
+                                                                          singlepoint,
+                                                                          nac_coupling,
+                                                                          soc_coupling)
+
+            # fix gradients units to Hartree/Angstrom
+            gradients = gradients_b * bohrconv
+        else:
+            energy, gradients_b, scf_energy = rf.read_dftb_out("detailed.out")
+            if natoms_flex is not None:
+                if int(len(positions)) <= int(3*natoms_flex): 
+                    dim_flex = int(len(positions) + 3. * natoms_flex)
+                    gradients = np.zeros(dim_flex)
+                else:
+                    # truncate gradients if too long and fix gradients units to Hartree/Angstrom
+                    gradients = np.zeros(len(positions))
+                # Fix gradients units to Hartree/Angstrom
+                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+            else:
+                # Fix gradients units to Hartree/Angstrom
+                gradients = gradients_b[:len(positions)] * bohrconv
 
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
-        # truncate gradients if too long and fix gradients units to Hartree/Angstrom
-        if natoms_flex is not None:
-            if int(len(positions)) <= int(3*natoms_flex): 
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                gradients = np.zeros(dim_flex)
-            else:
-                gradients = np.zeros(len(positions))
-            # Fix gradients units to Hartree/Angstrom
-            gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
-        else:
-            # Fix gradients units to Hartree/Angstrom
-            gradients = gradients_bohr[:len(positions)] * bohrconv
-
         os.chdir(self.here)
-        return (energy, gradients, scf_energy)
+        return (energy, gradients, scf_energy, nac, soc)
 
     def read_charges(self, pop = None):
         """
@@ -335,11 +374,14 @@ class DFTB_calc(Calc):
         os.chdir(self.here)
         return hess
 
+    #### ADD HERE the functions for read_trans_mu and read_oos
+
 class Gauss_calc(Calc):
     """
     Calculation with Gaussian 09/16
     """
-    def run(self, atoms, point_flex = None, nprocs = None, state=None, states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
+    def run(self, atoms, point_flex = None, nprocs = None, state=None, 
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Gaussian input file and return a subprocess.Popen
 
@@ -357,14 +399,14 @@ class Gauss_calc(Calc):
         os.chdir(gauss_path)
 
         if point_flex is not None:
-            if state != None and states != None:
+            if state is not None and states is not None:
                 ef.write_gauss(self.calc_name + ".com", atoms,
                            point_flex, self.calc_name + ".temp", state = state, states = states)
             else:
                 ef.write_gauss(self.calc_name + ".com", atoms,
                            point_flex, self.calc_name + ".temp")
         else:
-            if state != None and states != None:
+            if state is not None and states is not None:
                 ef.write_gauss(self.calc_name + ".com", atoms,
                        [], self.calc_name + ".temp", state = state, states = states)
             else:
@@ -476,7 +518,7 @@ class Gauss_calc(Calc):
         else:
             energy, gradients_b, scf_energy = rf.read_fchk("gck.fchk")
             # update the geometry log
-            if in_mol != None:
+            if in_mol is not None:
                 self.update_geom(positions, in_mol, in_shell)                      
 #          
             # truncate gradients if too long and fix gradients units to Hartree/Angstrom
@@ -668,7 +710,7 @@ class Gauss_CAS_calc(Calc):
         grad_e = grad_e * bohrconv
         grad_g = grad_g * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -874,7 +916,7 @@ class Turbo_calc_TDDFT(Calc):
             else:
                 gradients = gradients_b[:len(positions)] * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
@@ -1111,7 +1153,7 @@ class Turbo_calc_MP2(Calc):
 
 
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         subprocess.call("rm CC*", shell=True)
@@ -1332,7 +1374,7 @@ class Turbo_calc(Calc):
                 gradients = gradients_b[:len(positions)] * bohrconv
 
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
  
         os.chdir(self.here)
@@ -1562,7 +1604,7 @@ class Turbo_SCF_calc(Calc):
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -1777,7 +1819,8 @@ class Molcas_calc(Calc):
                  states = None,
                  mult = [],
                  singlestate = 0,
-                 soc_coupling = []):
+                 soc_coupling = [],
+                 newtonx = None):
         """
         Analyse a Molcas .log file while printing geometry updates
 
@@ -1824,7 +1867,8 @@ class Molcas_calc(Calc):
                                                                            states,
                                                                            mult,
                                                                            singlestate,
-                                                                           soc_coupling)
+                                                                           soc_coupling,
+                                                                           newtonx)
 
             # fix gradients units to Hartree/Angstrom
             gradients = gradients_b * bohrconv
@@ -1849,7 +1893,7 @@ class Molcas_calc(Calc):
             else:
                 gradients = gradients_b[:len(positions)] * bohrconv
 
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         os.chdir(self.here)
@@ -2081,7 +2125,7 @@ class xtb_calc(Calc):
         # Fix gradients units to Hartree/Angstrom
 #        gradients = gradients_bohr * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
 
@@ -2270,7 +2314,7 @@ class xtb_calc_gfnff(Calc):
         # Fix gradients units to Hartree/Angstrom
 #        gradients = gradients_bohr * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long and fix gradients units to Hartree/Angstrom
@@ -2413,7 +2457,7 @@ class Qchem(Calc):
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -2490,7 +2534,7 @@ class nwchem_calc_DFT(Calc):
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -2580,7 +2624,7 @@ class fomo_ci_calc(Calc):
         # fix gradients units to Hartree/Angstrom
         gradients = gradients_b * bohrconv
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         # truncate gradients if too long
@@ -2706,7 +2750,7 @@ class Orca_calc(Calc):
             gradients = gradients_bohr[:len(positions)] * bohrconv
 
         # update the geometry log
-        if in_mol != None:
+        if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
         os.chdir(self.here)
