@@ -831,6 +831,7 @@ class Turbo_calc_TDDFT(Calc):
             "egrad > egrad.out",
             "NumForce -frznuclei -ecnomic -c -ex $state > freq.out"
             ""
+            ]
         else:
             commands = ["actual -r",
                 "grad > grad.out",
@@ -1287,6 +1288,7 @@ class Turbo_calc(Calc):
             "dscf > dscf.out",
             "ricc2 > ricc2.out",
             "NumForce -frznuclei -level cc2 -ecnomic -c -ex $state > freq.out"
+            ]
         else:
             commands = ["actual -r",
                 "dscf > dscf.out",
