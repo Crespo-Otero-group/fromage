@@ -257,7 +257,7 @@ def write_dftb_dyn(file_name,
                    state: int, 
                    states: list, 
                    nac_coupling: list,
-                   soc_cupling: list
+                   soc_cupling: list,
                    point_flex: list):
 
     with open(temp_name) as temp_file:
