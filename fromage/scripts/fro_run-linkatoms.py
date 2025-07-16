@@ -1,13 +1,29 @@
 #!/bin/python
+"""
+fro_run-linkatom.py
 
-import numpy as np
-import matplotlib.pyplot as plt
-import fromage.io.read_file as rf
-from fromage.utils.atom import Atom
+New fromage implementation for performing ONIOM(QM:QM')-EE calculations where the QM:QM' boundary
+cuts through covalent bonds. It is similar to fro_run.py with additional functions for adding link
+atoms to the model region, redistributing point charges at the QM:QM' boundary, and a Jacobian for
+proper treatment of gradients.
+
+Pre-print: https://doi.org/10.26434/chemrxiv-2025-spfvh
+
+Author: Michael Ingham
+"""
+
 import os
 import subprocess
-from scipy.optimize import minimize
 from datetime import datetime
+
+from scipy.optimize import minimize
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+import fromage.io.read_file as rf
+from fromage.utils.atom import Atom
+
 from fromage.io.parse_config_file import bool_cast
 from fromage.utils import calc
 from fromage.utils import array_operations as ao
@@ -316,7 +332,6 @@ def redistribute_charges(
     real_atoms,
     z_scheme="Z2",
     z_thresh=2.0,
-    sys_type="crystal",
     redistribute_charge=True,
 ):
     """
@@ -405,6 +420,7 @@ def resize_jacobian(matrix_in):
 
 def derivative(jacobian, con, link, prefactor, xyz1, xyz2, dist2=None, dynamic=False):
     """update jacobian derivatives"""
+
     # xyz for each con and link
     con3 = con * 3
     link3 = link * 3
@@ -471,7 +487,6 @@ def derivative(jacobian, con, link, prefactor, xyz1, xyz2, dist2=None, dynamic=F
 
 
 def newcoord(conXyz, hostXyz, jacobian, i, j, real, dynamic=False):
-
     # C-H
     dist = 1.084
 
@@ -762,6 +777,7 @@ def singlepoint(atom_array):
         for atom_a in rl_charges:
             if atom_b.very_close(atom_a, thresh=0.1):
                 rl_charges.remove(atom_a)
+
     if not scheme == "z0":
         rl_charges = redistribute_charges(
             region_1=model,
@@ -769,7 +785,6 @@ def singlepoint(atom_array):
             real_atoms=real,
             z_scheme=scheme,
             z_thresh=z_thresh,
-            sys_type="crystal",
             redistribute_charge=True,
         )
 
