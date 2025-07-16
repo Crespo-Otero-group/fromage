@@ -1,0 +1,5 @@
+bonding dis
+thresh 1.8
+low_level xtb 
+nopt 28
+scheme z3

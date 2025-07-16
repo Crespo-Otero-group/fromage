@@ -1,0 +1,1 @@
+Example of s0 optimisation with ONIOM(PBE:xTB)-Z3 for the BTBT molecular crystal.

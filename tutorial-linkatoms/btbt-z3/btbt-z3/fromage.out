@@ -1,0 +1,1828 @@
+STARTING TIME: 2025-07-15 07:27:22.803360
+No recalculation of PCE. Point charges are fixed to their initial values
+------------------------------
+Iteration: 1
+Real low energy:                -26818.04461855 eV
+Model low energy:                -1276.24333691 eV
+Model high energy:              -38417.14597120 eV
+ONIOM Total energy:             -63958.94725284 eV
+ONIOM SCF energy:               -63958.94725284 eV
+Energy grad. norm:                   4.36535807 eV/A
+Grad RMS:                            0.36377984 eV/A
+Max gradient:                        1.09439977 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 2
+Real low energy:                -26817.70516633 eV
+Model low energy:                -1275.91231552 eV
+Model high energy:              -38417.14403404 eV
+ONIOM Total energy:             -63958.93688485 eV
+ONIOM SCF energy:               -63958.93688485 eV
+Energy grad. norm:                   6.83072056 eV/A
+Grad RMS:                            0.56922671 eV/A
+Max gradient:                        2.28076955 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 3
+Real low energy:                -26818.03667882 eV
+Model low energy:                -1276.21344129 eV
+Model high energy:              -38417.29211582 eV
+ONIOM Total energy:             -63959.11535335 eV
+ONIOM SCF energy:               -63959.11535335 eV
+Energy grad. norm:                   2.69158625 eV/A
+Grad RMS:                            0.22429885 eV/A
+Max gradient:                        0.87642046 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 4
+Real low energy:                -26817.92055674 eV
+Model low energy:                -1276.08989571 eV
+Model high energy:              -38417.35787801 eV
+ONIOM Total energy:             -63959.18853904 eV
+ONIOM SCF energy:               -63959.18853904 eV
+Energy grad. norm:                   3.10058230 eV/A
+Grad RMS:                            0.25838186 eV/A
+Max gradient:                        0.94700688 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 5
+Real low energy:                -26817.91865819 eV
+Model low energy:                -1276.06362276 eV
+Model high energy:              -38417.38159369 eV
+ONIOM Total energy:             -63959.23662912 eV
+ONIOM SCF energy:               -63959.23662912 eV
+Energy grad. norm:                   1.95941347 eV/A
+Grad RMS:                            0.16328446 eV/A
+Max gradient:                        0.50930306 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 6
+Real low energy:                -26817.97327421 eV
+Model low energy:                -1276.11153818 eV
+Model high energy:              -38417.40321803 eV
+ONIOM Total energy:             -63959.26495406 eV
+ONIOM SCF energy:               -63959.26495406 eV
+Energy grad. norm:                   1.66975967 eV/A
+Grad RMS:                            0.13914664 eV/A
+Max gradient:                        0.69913813 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 7
+Real low energy:                -26818.00502975 eV
+Model low energy:                -1276.14696062 eV
+Model high energy:              -38417.42495881 eV
+ONIOM Total energy:             -63959.28302793 eV
+ONIOM SCF energy:               -63959.28302793 eV
+Energy grad. norm:                   1.37723047 eV/A
+Grad RMS:                            0.11476921 eV/A
+Max gradient:                        0.43896885 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 8
+Real low energy:                -26818.00027964 eV
+Model low energy:                -1276.13917566 eV
+Model high energy:              -38417.44008777 eV
+ONIOM Total energy:             -63959.30119174 eV
+ONIOM SCF energy:               -63959.30119174 eV
+Energy grad. norm:                   0.98674482 eV/A
+Grad RMS:                            0.08222874 eV/A
+Max gradient:                        0.22619998 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 9
+Real low energy:                -26817.96383909 eV
+Model low energy:                -1276.09577557 eV
+Model high energy:              -38417.44716807 eV
+ONIOM Total energy:             -63959.31523159 eV
+ONIOM SCF energy:               -63959.31523159 eV
+Energy grad. norm:                   1.05204830 eV/A
+Grad RMS:                            0.08767069 eV/A
+Max gradient:                        0.32187033 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 10
+Real low energy:                -26817.96130181 eV
+Model low energy:                -1276.08845028 eV
+Model high energy:              -38417.45540109 eV
+ONIOM Total energy:             -63959.32825263 eV
+ONIOM SCF energy:               -63959.32825263 eV
+Energy grad. norm:                   0.86250900 eV/A
+Grad RMS:                            0.07187575 eV/A
+Max gradient:                        0.38532987 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 11
+Real low energy:                -26817.98243125 eV
+Model low energy:                -1276.11153853 eV
+Model high energy:              -38417.46758378 eV
+ONIOM Total energy:             -63959.33847649 eV
+ONIOM SCF energy:               -63959.33847649 eV
+Energy grad. norm:                   0.65085767 eV/A
+Grad RMS:                            0.05423814 eV/A
+Max gradient:                        0.16554529 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 12
+Real low energy:                -26817.99248030 eV
+Model low energy:                -1276.11858424 eV
+Model high energy:              -38417.46887861 eV
+ONIOM Total energy:             -63959.34277467 eV
+ONIOM SCF energy:               -63959.34277467 eV
+Energy grad. norm:                   0.55857077 eV/A
+Grad RMS:                            0.04654756 eV/A
+Max gradient:                        0.15972372 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 13
+Real low energy:                -26817.98871503 eV
+Model low energy:                -1276.11298583 eV
+Model high energy:              -38417.47097782 eV
+ONIOM Total energy:             -63959.34670702 eV
+ONIOM SCF energy:               -63959.34670702 eV
+Energy grad. norm:                   0.43158780 eV/A
+Grad RMS:                            0.03596565 eV/A
+Max gradient:                        0.11260684 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 14
+Real low energy:                -26817.97944690 eV
+Model low energy:                -1276.10321437 eV
+Model high energy:              -38417.47223264 eV
+ONIOM Total energy:             -63959.34846516 eV
+ONIOM SCF energy:               -63959.34846516 eV
+Energy grad. norm:                   0.60726103 eV/A
+Grad RMS:                            0.05060509 eV/A
+Max gradient:                        0.17008386 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 15
+Real low energy:                -26817.97933574 eV
+Model low energy:                -1276.10233024 eV
+Model high energy:              -38417.47391551 eV
+ONIOM Total energy:             -63959.35092101 eV
+ONIOM SCF energy:               -63959.35092101 eV
+Energy grad. norm:                   0.33557220 eV/A
+Grad RMS:                            0.02796435 eV/A
+Max gradient:                        0.07061232 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 16
+Real low energy:                -26817.98163650 eV
+Model low energy:                -1276.10296466 eV
+Model high energy:              -38417.47453164 eV
+ONIOM Total energy:             -63959.35320348 eV
+ONIOM SCF energy:               -63959.35320348 eV
+Energy grad. norm:                   0.33591961 eV/A
+Grad RMS:                            0.02799330 eV/A
+Max gradient:                        0.08335926 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 17
+Real low energy:                -26817.98235040 eV
+Model low energy:                -1276.10375984 eV
+Model high energy:              -38417.47626477 eV
+ONIOM Total energy:             -63959.35485533 eV
+ONIOM SCF energy:               -63959.35485533 eV
+Energy grad. norm:                   0.33007996 eV/A
+Grad RMS:                            0.02750666 eV/A
+Max gradient:                        0.09204656 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 18
+Real low energy:                -26817.97514023 eV
+Model low energy:                -1276.09582723 eV
+Model high energy:              -38417.47720990 eV
+ONIOM Total energy:             -63959.35652290 eV
+ONIOM SCF energy:               -63959.35652290 eV
+Energy grad. norm:                   0.30350958 eV/A
+Grad RMS:                            0.02529247 eV/A
+Max gradient:                        0.07613208 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 19
+Real low energy:                -26817.96513717 eV
+Model low energy:                -1276.08303549 eV
+Model high energy:              -38417.47630126 eV
+ONIOM Total energy:             -63959.35840294 eV
+ONIOM SCF energy:               -63959.35840294 eV
+Energy grad. norm:                   0.29303387 eV/A
+Grad RMS:                            0.02441949 eV/A
+Max gradient:                        0.07772401 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 20
+Real low energy:                -26817.96404925 eV
+Model low energy:                -1276.07906222 eV
+Model high energy:              -38417.47481289 eV
+ONIOM Total energy:             -63959.35979993 eV
+ONIOM SCF energy:               -63959.35979993 eV
+Energy grad. norm:                   0.46990399 eV/A
+Grad RMS:                            0.03915867 eV/A
+Max gradient:                        0.18579870 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 21
+Real low energy:                -26817.97135198 eV
+Model low energy:                -1276.08507776 eV
+Model high energy:              -38417.47533854 eV
+ONIOM Total energy:             -63959.36161275 eV
+ONIOM SCF energy:               -63959.36161275 eV
+Energy grad. norm:                   0.31667266 eV/A
+Grad RMS:                            0.02638939 eV/A
+Max gradient:                        0.09485055 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 22
+Real low energy:                -26817.98268982 eV
+Model low energy:                -1276.09359600 eV
+Model high energy:              -38417.47474508 eV
+ONIOM Total energy:             -63959.36383890 eV
+ONIOM SCF energy:               -63959.36383890 eV
+Energy grad. norm:                   0.26802642 eV/A
+Grad RMS:                            0.02233554 eV/A
+Max gradient:                        0.07198450 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 23
+Real low energy:                -26817.99128999 eV
+Model low energy:                -1276.09873711 eV
+Model high energy:              -38417.47324863 eV
+ONIOM Total energy:             -63959.36580151 eV
+ONIOM SCF energy:               -63959.36580151 eV
+Energy grad. norm:                   0.40454540 eV/A
+Grad RMS:                            0.03371212 eV/A
+Max gradient:                        0.14935066 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 24
+Real low energy:                -26817.99852787 eV
+Model low energy:                -1276.10269269 eV
+Model high energy:              -38417.47218215 eV
+ONIOM Total energy:             -63959.36801733 eV
+ONIOM SCF energy:               -63959.36801733 eV
+Energy grad. norm:                   0.37049604 eV/A
+Grad RMS:                            0.03087467 eV/A
+Max gradient:                        0.12959587 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 25
+Real low energy:                -26817.99791649 eV
+Model low energy:                -1276.09909166 eV
+Model high energy:              -38417.47210936 eV
+ONIOM Total energy:             -63959.37093420 eV
+ONIOM SCF energy:               -63959.37093420 eV
+Energy grad. norm:                   0.39023747 eV/A
+Grad RMS:                            0.03251979 eV/A
+Max gradient:                        0.13730853 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 26
+Real low energy:                -26817.99381651 eV
+Model low energy:                -1276.09146193 eV
+Model high energy:              -38417.47253061 eV
+ONIOM Total energy:             -63959.37488519 eV
+ONIOM SCF energy:               -63959.37488519 eV
+Energy grad. norm:                   0.40745936 eV/A
+Grad RMS:                            0.03395495 eV/A
+Max gradient:                        0.12370450 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 27
+Real low energy:                -26817.98814711 eV
+Model low energy:                -1276.08127589 eV
+Model high energy:              -38417.47231655 eV
+ONIOM Total energy:             -63959.37918777 eV
+ONIOM SCF energy:               -63959.37918777 eV
+Energy grad. norm:                   0.48973137 eV/A
+Grad RMS:                            0.04081095 eV/A
+Max gradient:                        0.11601009 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 28
+Real low energy:                -26817.98084466 eV
+Model low energy:                -1276.07034802 eV
+Model high energy:              -38417.47175269 eV
+ONIOM Total energy:             -63959.38224933 eV
+ONIOM SCF energy:               -63959.38224933 eV
+Energy grad. norm:                   0.56617719 eV/A
+Grad RMS:                            0.04718143 eV/A
+Max gradient:                        0.18138841 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 29
+Real low energy:                -26817.98556731 eV
+Model low energy:                -1276.07238104 eV
+Model high energy:              -38417.47263136 eV
+ONIOM Total energy:             -63959.38581763 eV
+ONIOM SCF energy:               -63959.38581763 eV
+Energy grad. norm:                   0.49658874 eV/A
+Grad RMS:                            0.04138239 eV/A
+Max gradient:                        0.12839304 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 30
+Real low energy:                -26817.99622985 eV
+Model low energy:                -1276.07790443 eV
+Model high energy:              -38417.47182963 eV
+ONIOM Total energy:             -63959.39015505 eV
+ONIOM SCF energy:               -63959.39015505 eV
+Energy grad. norm:                   0.43198646 eV/A
+Grad RMS:                            0.03599887 eV/A
+Max gradient:                        0.11715639 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 31
+Real low energy:                -26818.00634639 eV
+Model low energy:                -1276.08016333 eV
+Model high energy:              -38417.46793913 eV
+ONIOM Total energy:             -63959.39412220 eV
+ONIOM SCF energy:               -63959.39412220 eV
+Energy grad. norm:                   0.53443852 eV/A
+Grad RMS:                            0.04453654 eV/A
+Max gradient:                        0.15699321 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 32
+Real low energy:                -26818.00825328 eV
+Model low energy:                -1276.07903572 eV
+Model high energy:              -38417.46782654 eV
+ONIOM Total energy:             -63959.39704410 eV
+ONIOM SCF energy:               -63959.39704410 eV
+Energy grad. norm:                   0.45455279 eV/A
+Grad RMS:                            0.03787940 eV/A
+Max gradient:                        0.16786482 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 33
+Real low energy:                -26818.00534103 eV
+Model low energy:                -1276.07536683 eV
+Model high energy:              -38417.46953063 eV
+ONIOM Total energy:             -63959.39950482 eV
+ONIOM SCF energy:               -63959.39950482 eV
+Energy grad. norm:                   0.33077041 eV/A
+Grad RMS:                            0.02756420 eV/A
+Max gradient:                        0.09197211 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 34
+Real low energy:                -26818.00663023 eV
+Model low energy:                -1276.07474921 eV
+Model high energy:              -38417.46949648 eV
+ONIOM Total energy:             -63959.40137750 eV
+ONIOM SCF energy:               -63959.40137750 eV
+Energy grad. norm:                   0.36048559 eV/A
+Grad RMS:                            0.03004047 eV/A
+Max gradient:                        0.11112006 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 35
+Real low energy:                -26818.00966618 eV
+Model low energy:                -1276.07718811 eV
+Model high energy:              -38417.47117440 eV
+ONIOM Total energy:             -63959.40365247 eV
+ONIOM SCF energy:               -63959.40365247 eV
+Energy grad. norm:                   0.30193422 eV/A
+Grad RMS:                            0.02516118 eV/A
+Max gradient:                        0.08209402 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 36
+Real low energy:                -26818.01398412 eV
+Model low energy:                -1276.08054669 eV
+Model high energy:              -38417.47262503 eV
+ONIOM Total energy:             -63959.40606245 eV
+ONIOM SCF energy:               -63959.40606245 eV
+Energy grad. norm:                   0.27039705 eV/A
+Grad RMS:                            0.02253309 eV/A
+Max gradient:                        0.07269477 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 37
+Real low energy:                -26818.01630661 eV
+Model low energy:                -1276.07928347 eV
+Model high energy:              -38417.47046620 eV
+ONIOM Total energy:             -63959.40748935 eV
+ONIOM SCF energy:               -63959.40748935 eV
+Energy grad. norm:                   0.28564099 eV/A
+Grad RMS:                            0.02380342 eV/A
+Max gradient:                        0.07027166 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 38
+Real low energy:                -26818.01959664 eV
+Model low energy:                -1276.08254215 eV
+Model high energy:              -38417.47154171 eV
+ONIOM Total energy:             -63959.40859620 eV
+ONIOM SCF energy:               -63959.40859620 eV
+Energy grad. norm:                   0.21512610 eV/A
+Grad RMS:                            0.01792717 eV/A
+Max gradient:                        0.05443816 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 39
+Real low energy:                -26818.02033003 eV
+Model low energy:                -1276.08333485 eV
+Model high energy:              -38417.47241724 eV
+ONIOM Total energy:             -63959.40941241 eV
+ONIOM SCF energy:               -63959.40941241 eV
+Energy grad. norm:                   0.20238607 eV/A
+Grad RMS:                            0.01686551 eV/A
+Max gradient:                        0.04395748 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 40
+Real low energy:                -26818.02065916 eV
+Model low energy:                -1276.08258179 eV
+Model high energy:              -38417.47181129 eV
+ONIOM Total energy:             -63959.40988866 eV
+ONIOM SCF energy:               -63959.40988866 eV
+Energy grad. norm:                   0.21224481 eV/A
+Grad RMS:                            0.01768707 eV/A
+Max gradient:                        0.05765321 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 41
+Real low energy:                -26818.02206385 eV
+Model low energy:                -1276.08400822 eV
+Model high energy:              -38417.47233138 eV
+ONIOM Total energy:             -63959.41038700 eV
+ONIOM SCF energy:               -63959.41038700 eV
+Energy grad. norm:                   0.12187615 eV/A
+Grad RMS:                            0.01015635 eV/A
+Max gradient:                        0.02700465 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 42
+Real low energy:                -26818.02527174 eV
+Model low energy:                -1276.08775201 eV
+Model high energy:              -38417.47329746 eV
+ONIOM Total energy:             -63959.41081720 eV
+ONIOM SCF energy:               -63959.41081720 eV
+Energy grad. norm:                   0.15555897 eV/A
+Grad RMS:                            0.01296325 eV/A
+Max gradient:                        0.04033332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 43
+Real low energy:                -26818.02938780 eV
+Model low energy:                -1276.09165074 eV
+Model high energy:              -38417.47362503 eV
+ONIOM Total energy:             -63959.41136209 eV
+ONIOM SCF energy:               -63959.41136209 eV
+Energy grad. norm:                   0.15043791 eV/A
+Grad RMS:                            0.01253649 eV/A
+Max gradient:                        0.05399797 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 44
+Real low energy:                -26818.03390794 eV
+Model low energy:                -1276.09587576 eV
+Model high energy:              -38417.47389879 eV
+ONIOM Total energy:             -63959.41193097 eV
+ONIOM SCF energy:               -63959.41193097 eV
+Energy grad. norm:                   0.11206935 eV/A
+Grad RMS:                            0.00933911 eV/A
+Max gradient:                        0.03213763 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 45
+Real low energy:                -26818.03657325 eV
+Model low energy:                -1276.09796515 eV
+Model high energy:              -38417.47378911 eV
+ONIOM Total energy:             -63959.41239721 eV
+ONIOM SCF energy:               -63959.41239721 eV
+Energy grad. norm:                   0.13673431 eV/A
+Grad RMS:                            0.01139453 eV/A
+Max gradient:                        0.03725807 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 46
+Real low energy:                -26818.03932125 eV
+Model low energy:                -1276.09980989 eV
+Model high energy:              -38417.47340532 eV
+ONIOM Total energy:             -63959.41291668 eV
+ONIOM SCF energy:               -63959.41291668 eV
+Energy grad. norm:                   0.16303406 eV/A
+Grad RMS:                            0.01358617 eV/A
+Max gradient:                        0.04089883 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 47
+Real low energy:                -26818.03998971 eV
+Model low energy:                -1276.09924496 eV
+Model high energy:              -38417.47279719 eV
+ONIOM Total energy:             -63959.41354194 eV
+ONIOM SCF energy:               -63959.41354194 eV
+Energy grad. norm:                   0.14545183 eV/A
+Grad RMS:                            0.01212099 eV/A
+Max gradient:                        0.02989021 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 48
+Real low energy:                -26818.03942584 eV
+Model low energy:                -1276.09701029 eV
+Model high energy:              -38417.47177577 eV
+ONIOM Total energy:             -63959.41419132 eV
+ONIOM SCF energy:               -63959.41419132 eV
+Energy grad. norm:                   0.14243033 eV/A
+Grad RMS:                            0.01186919 eV/A
+Max gradient:                        0.03740826 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 49
+Real low energy:                -26818.03997762 eV
+Model low energy:                -1276.09669661 eV
+Model high energy:              -38417.47138593 eV
+ONIOM Total energy:             -63959.41466694 eV
+ONIOM SCF energy:               -63959.41466694 eV
+Energy grad. norm:                   0.11949499 eV/A
+Grad RMS:                            0.00995792 eV/A
+Max gradient:                        0.02850510 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 50
+Real low energy:                -26818.04197905 eV
+Model low energy:                -1276.09763963 eV
+Model high energy:              -38417.47083383 eV
+ONIOM Total energy:             -63959.41517325 eV
+ONIOM SCF energy:               -63959.41517325 eV
+Energy grad. norm:                   0.13478020 eV/A
+Grad RMS:                            0.01123168 eV/A
+Max gradient:                        0.03081204 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 51
+Real low energy:                -26818.04465878 eV
+Model low energy:                -1276.09928454 eV
+Model high energy:              -38417.47026624 eV
+ONIOM Total energy:             -63959.41564048 eV
+ONIOM SCF energy:               -63959.41564048 eV
+Energy grad. norm:                   0.14092992 eV/A
+Grad RMS:                            0.01174416 eV/A
+Max gradient:                        0.04523382 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 52
+Real low energy:                -26818.04589385 eV
+Model low energy:                -1276.10034191 eV
+Model high energy:              -38417.47037470 eV
+ONIOM Total energy:             -63959.41592664 eV
+ONIOM SCF energy:               -63959.41592664 eV
+Energy grad. norm:                   0.10179055 eV/A
+Grad RMS:                            0.00848255 eV/A
+Max gradient:                        0.02656161 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 53
+Real low energy:                -26818.04613527 eV
+Model low energy:                -1276.10043658 eV
+Model high energy:              -38417.47050463 eV
+ONIOM Total energy:             -63959.41620333 eV
+ONIOM SCF energy:               -63959.41620333 eV
+Energy grad. norm:                   0.10045711 eV/A
+Grad RMS:                            0.00837143 eV/A
+Max gradient:                        0.02624556 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 54
+Real low energy:                -26818.04513456 eV
+Model low energy:                -1276.09931843 eV
+Model high energy:              -38417.47070469 eV
+ONIOM Total energy:             -63959.41652081 eV
+ONIOM SCF energy:               -63959.41652081 eV
+Energy grad. norm:                   0.11317867 eV/A
+Grad RMS:                            0.00943156 eV/A
+Max gradient:                        0.03067455 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 55
+Real low energy:                -26818.04373648 eV
+Model low energy:                -1276.09813024 eV
+Model high energy:              -38417.47122936 eV
+ONIOM Total energy:             -63959.41683559 eV
+ONIOM SCF energy:               -63959.41683559 eV
+Energy grad. norm:                   0.10744889 eV/A
+Grad RMS:                            0.00895407 eV/A
+Max gradient:                        0.03297377 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 56
+Real low energy:                -26818.04159758 eV
+Model low energy:                -1276.09610140 eV
+Model high energy:              -38417.47171323 eV
+ONIOM Total energy:             -63959.41720942 eV
+ONIOM SCF energy:               -63959.41720942 eV
+Energy grad. norm:                   0.10000965 eV/A
+Grad RMS:                            0.00833414 eV/A
+Max gradient:                        0.02718196 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 57
+Real low energy:                -26818.03971780 eV
+Model low energy:                -1276.09413972 eV
+Model high energy:              -38417.47211741 eV
+ONIOM Total energy:             -63959.41769550 eV
+ONIOM SCF energy:               -63959.41769550 eV
+Energy grad. norm:                   0.11966425 eV/A
+Grad RMS:                            0.00997202 eV/A
+Max gradient:                        0.02376811 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 58
+Real low energy:                -26818.03964341 eV
+Model low energy:                -1276.09422944 eV
+Model high energy:              -38417.47272981 eV
+ONIOM Total energy:             -63959.41814378 eV
+ONIOM SCF energy:               -63959.41814378 eV
+Energy grad. norm:                   0.14091259 eV/A
+Grad RMS:                            0.01174272 eV/A
+Max gradient:                        0.03170346 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 59
+Real low energy:                -26818.03953337 eV
+Model low energy:                -1276.09417440 eV
+Model high energy:              -38417.47321361 eV
+ONIOM Total energy:             -63959.41857258 eV
+ONIOM SCF energy:               -63959.41857258 eV
+Energy grad. norm:                   0.10044783 eV/A
+Grad RMS:                            0.00837065 eV/A
+Max gradient:                        0.02368081 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 60
+Real low energy:                -26818.04033717 eV
+Model low energy:                -1276.09490129 eV
+Model high energy:              -38417.47352851 eV
+ONIOM Total energy:             -63959.41896439 eV
+ONIOM SCF energy:               -63959.41896439 eV
+Energy grad. norm:                   0.10358680 eV/A
+Grad RMS:                            0.00863223 eV/A
+Max gradient:                        0.02626174 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 61
+Real low energy:                -26818.04007863 eV
+Model low energy:                -1276.09439482 eV
+Model high energy:              -38417.47355758 eV
+ONIOM Total energy:             -63959.41924139 eV
+ONIOM SCF energy:               -63959.41924139 eV
+Energy grad. norm:                   0.12555031 eV/A
+Grad RMS:                            0.01046253 eV/A
+Max gradient:                        0.04795127 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 62
+Real low energy:                -26818.03926444 eV
+Model low energy:                -1276.09382097 eV
+Model high energy:              -38417.47412107 eV
+ONIOM Total energy:             -63959.41956454 eV
+ONIOM SCF energy:               -63959.41956454 eV
+Energy grad. norm:                   0.08703989 eV/A
+Grad RMS:                            0.00725332 eV/A
+Max gradient:                        0.01961572 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 63
+Real low energy:                -26818.03662801 eV
+Model low energy:                -1276.09106841 eV
+Model high energy:              -38417.47442361 eV
+ONIOM Total energy:             -63959.41998321 eV
+ONIOM SCF energy:               -63959.41998321 eV
+Energy grad. norm:                   0.08574475 eV/A
+Grad RMS:                            0.00714540 eV/A
+Max gradient:                        0.02698128 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 64
+Real low energy:                -26818.03514037 eV
+Model low energy:                -1276.08987971 eV
+Model high energy:              -38417.47491416 eV
+ONIOM Total energy:             -63959.42017482 eV
+ONIOM SCF energy:               -63959.42017482 eV
+Energy grad. norm:                   0.10830099 eV/A
+Grad RMS:                            0.00902508 eV/A
+Max gradient:                        0.02935490 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 65
+Real low energy:                -26818.03492859 eV
+Model low energy:                -1276.08972657 eV
+Model high energy:              -38417.47516597 eV
+ONIOM Total energy:             -63959.42036800 eV
+ONIOM SCF energy:               -63959.42036800 eV
+Energy grad. norm:                   0.06961936 eV/A
+Grad RMS:                            0.00580161 eV/A
+Max gradient:                        0.01842018 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 66
+Real low energy:                -26818.03552984 eV
+Model low energy:                -1276.09012035 eV
+Model high energy:              -38417.47518142 eV
+ONIOM Total energy:             -63959.42059091 eV
+ONIOM SCF energy:               -63959.42059091 eV
+Energy grad. norm:                   0.06877218 eV/A
+Grad RMS:                            0.00573101 eV/A
+Max gradient:                        0.02397725 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 67
+Real low energy:                -26818.03534555 eV
+Model low energy:                -1276.08995191 eV
+Model high energy:              -38417.47530262 eV
+ONIOM Total energy:             -63959.42069627 eV
+ONIOM SCF energy:               -63959.42069627 eV
+Energy grad. norm:                   0.06685941 eV/A
+Grad RMS:                            0.00557162 eV/A
+Max gradient:                        0.01865535 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 68
+Real low energy:                -26818.03569328 eV
+Model low energy:                -1276.09057903 eV
+Model high energy:              -38417.47565370 eV
+ONIOM Total energy:             -63959.42076795 eV
+ONIOM SCF energy:               -63959.42076795 eV
+Energy grad. norm:                   0.05032394 eV/A
+Grad RMS:                            0.00419366 eV/A
+Max gradient:                        0.01348437 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 69
+Real low energy:                -26818.03558198 eV
+Model low energy:                -1276.09042783 eV
+Model high energy:              -38417.47567902 eV
+ONIOM Total energy:             -63959.42083316 eV
+ONIOM SCF energy:               -63959.42083316 eV
+Energy grad. norm:                   0.04020978 eV/A
+Grad RMS:                            0.00335081 eV/A
+Max gradient:                        0.00977261 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 70
+Real low energy:                -26818.03464501 eV
+Model low energy:                -1276.08938747 eV
+Model high energy:              -38417.47564509 eV
+ONIOM Total energy:             -63959.42090263 eV
+ONIOM SCF energy:               -63959.42090263 eV
+Energy grad. norm:                   0.04488850 eV/A
+Grad RMS:                            0.00374071 eV/A
+Max gradient:                        0.01329136 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 71
+Real low energy:                -26818.03376237 eV
+Model low energy:                -1276.08852082 eV
+Model high energy:              -38417.47572506 eV
+ONIOM Total energy:             -63959.42096660 eV
+ONIOM SCF energy:               -63959.42096660 eV
+Energy grad. norm:                   0.04674091 eV/A
+Grad RMS:                            0.00389508 eV/A
+Max gradient:                        0.01451491 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 72
+Real low energy:                -26818.03370540 eV
+Model low energy:                -1276.08848067 eV
+Model high energy:              -38417.47578665 eV
+ONIOM Total energy:             -63959.42101138 eV
+ONIOM SCF energy:               -63959.42101138 eV
+Energy grad. norm:                   0.02787165 eV/A
+Grad RMS:                            0.00232264 eV/A
+Max gradient:                        0.00707185 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 73
+Real low energy:                -26818.03358005 eV
+Model low energy:                -1276.08834358 eV
+Model high energy:              -38417.47581910 eV
+ONIOM Total energy:             -63959.42105557 eV
+ONIOM SCF energy:               -63959.42105557 eV
+Energy grad. norm:                   0.03406023 eV/A
+Grad RMS:                            0.00283835 eV/A
+Max gradient:                        0.01023786 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 74
+Real low energy:                -26818.03351001 eV
+Model low energy:                -1276.08832291 eV
+Model high energy:              -38417.47591599 eV
+ONIOM Total energy:             -63959.42110309 eV
+ONIOM SCF energy:               -63959.42110309 eV
+Energy grad. norm:                   0.04901314 eV/A
+Grad RMS:                            0.00408443 eV/A
+Max gradient:                        0.01999898 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 75
+Real low energy:                -26818.03365544 eV
+Model low energy:                -1276.08852025 eV
+Model high energy:              -38417.47601984 eV
+ONIOM Total energy:             -63959.42115503 eV
+ONIOM SCF energy:               -63959.42115503 eV
+Energy grad. norm:                   0.03936706 eV/A
+Grad RMS:                            0.00328059 eV/A
+Max gradient:                        0.01012848 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 76
+Real low energy:                -26818.03348661 eV
+Model low energy:                -1276.08841244 eV
+Model high energy:              -38417.47613893 eV
+ONIOM Total energy:             -63959.42121309 eV
+ONIOM SCF energy:               -63959.42121309 eV
+Energy grad. norm:                   0.03232746 eV/A
+Grad RMS:                            0.00269396 eV/A
+Max gradient:                        0.00800398 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 77
+Real low energy:                -26818.03322437 eV
+Model low energy:                -1276.08806101 eV
+Model high energy:              -38417.47610748 eV
+ONIOM Total energy:             -63959.42127085 eV
+ONIOM SCF energy:               -63959.42127085 eV
+Energy grad. norm:                   0.03937012 eV/A
+Grad RMS:                            0.00328084 eV/A
+Max gradient:                        0.01113144 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 78
+Real low energy:                -26818.03330681 eV
+Model low energy:                -1276.08827411 eV
+Model high energy:              -38417.47628554 eV
+ONIOM Total energy:             -63959.42131823 eV
+ONIOM SCF energy:               -63959.42131823 eV
+Energy grad. norm:                   0.03677102 eV/A
+Grad RMS:                            0.00306425 eV/A
+Max gradient:                        0.01072056 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 79
+Real low energy:                -26818.03321541 eV
+Model low energy:                -1276.08797000 eV
+Model high energy:              -38417.47611951 eV
+ONIOM Total energy:             -63959.42136492 eV
+ONIOM SCF energy:               -63959.42136492 eV
+Energy grad. norm:                   0.03144245 eV/A
+Grad RMS:                            0.00262020 eV/A
+Max gradient:                        0.00844869 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 80
+Real low energy:                -26818.03321006 eV
+Model low energy:                -1276.08815028 eV
+Model high energy:              -38417.47632990 eV
+ONIOM Total energy:             -63959.42138968 eV
+ONIOM SCF energy:               -63959.42138968 eV
+Energy grad. norm:                   0.02858791 eV/A
+Grad RMS:                            0.00238233 eV/A
+Max gradient:                        0.00945932 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 81
+Real low energy:                -26818.03347116 eV
+Model low energy:                -1276.08832128 eV
+Model high energy:              -38417.47625503 eV
+ONIOM Total energy:             -63959.42140491 eV
+ONIOM SCF energy:               -63959.42140491 eV
+Energy grad. norm:                   0.01938066 eV/A
+Grad RMS:                            0.00161506 eV/A
+Max gradient:                        0.00403998 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 82
+Real low energy:                -26818.03364733 eV
+Model low energy:                -1276.08837229 eV
+Model high energy:              -38417.47614640 eV
+ONIOM Total energy:             -63959.42142143 eV
+ONIOM SCF energy:               -63959.42142143 eV
+Energy grad. norm:                   0.02600302 eV/A
+Grad RMS:                            0.00216692 eV/A
+Max gradient:                        0.00839094 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 83
+Real low energy:                -26818.03363100 eV
+Model low energy:                -1276.08836864 eV
+Model high energy:              -38417.47617509 eV
+ONIOM Total energy:             -63959.42143745 eV
+ONIOM SCF energy:               -63959.42143745 eV
+Energy grad. norm:                   0.02980307 eV/A
+Grad RMS:                            0.00248359 eV/A
+Max gradient:                        0.00899232 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 84
+Real low energy:                -26818.03393811 eV
+Model low energy:                -1276.08869268 eV
+Model high energy:              -38417.47620982 eV
+ONIOM Total energy:             -63959.42145525 eV
+ONIOM SCF energy:               -63959.42145525 eV
+Energy grad. norm:                   0.01885902 eV/A
+Grad RMS:                            0.00157159 eV/A
+Max gradient:                        0.00584390 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 85
+Real low energy:                -26818.03380535 eV
+Model low energy:                -1276.08864295 eV
+Model high energy:              -38417.47630721 eV
+ONIOM Total energy:             -63959.42146961 eV
+ONIOM SCF energy:               -63959.42146961 eV
+Energy grad. norm:                   0.01369620 eV/A
+Grad RMS:                            0.00114135 eV/A
+Max gradient:                        0.00289428 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 86
+Real low energy:                -26818.03412124 eV
+Model low energy:                -1276.08894282 eV
+Model high energy:              -38417.47629916 eV
+ONIOM Total energy:             -63959.42147758 eV
+ONIOM SCF energy:               -63959.42147758 eV
+Energy grad. norm:                   0.01541703 eV/A
+Grad RMS:                            0.00128475 eV/A
+Max gradient:                        0.00378854 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 87
+Real low energy:                -26818.03454762 eV
+Model low energy:                -1276.08943129 eV
+Model high energy:              -38417.47637106 eV
+ONIOM Total energy:             -63959.42148739 eV
+ONIOM SCF energy:               -63959.42148739 eV
+Energy grad. norm:                   0.01634778 eV/A
+Grad RMS:                            0.00136231 eV/A
+Max gradient:                        0.00437038 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 88
+Real low energy:                -26818.03441580 eV
+Model low energy:                -1276.08927836 eV
+Model high energy:              -38417.47635332 eV
+ONIOM Total energy:             -63959.42149077 eV
+ONIOM SCF energy:               -63959.42149077 eV
+Energy grad. norm:                   0.01285738 eV/A
+Grad RMS:                            0.00107145 eV/A
+Max gradient:                        0.00361219 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 89
+Real low energy:                -26818.03457323 eV
+Model low energy:                -1276.08943451 eV
+Model high energy:              -38417.47635675 eV
+ONIOM Total energy:             -63959.42149547 eV
+ONIOM SCF energy:               -63959.42149547 eV
+Energy grad. norm:                   0.01103663 eV/A
+Grad RMS:                            0.00091972 eV/A
+Max gradient:                        0.00342937 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 90
+Real low energy:                -26818.03460313 eV
+Model low energy:                -1276.08948908 eV
+Model high energy:              -38417.47638666 eV
+ONIOM Total energy:             -63959.42150072 eV
+ONIOM SCF energy:               -63959.42150072 eV
+Energy grad. norm:                   0.01192874 eV/A
+Grad RMS:                            0.00099406 eV/A
+Max gradient:                        0.00269312 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 91
+Real low energy:                -26818.03459149 eV
+Model low energy:                -1276.08947377 eV
+Model high energy:              -38417.47638701 eV
+ONIOM Total energy:             -63959.42150473 eV
+ONIOM SCF energy:               -63959.42150473 eV
+Energy grad. norm:                   0.01633395 eV/A
+Grad RMS:                            0.00136116 eV/A
+Max gradient:                        0.00433163 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 92
+Real low energy:                -26818.03466317 eV
+Model low energy:                -1276.08956417 eV
+Model high energy:              -38417.47641271 eV
+ONIOM Total energy:             -63959.42151170 eV
+ONIOM SCF energy:               -63959.42151170 eV
+Energy grad. norm:                   0.01258088 eV/A
+Grad RMS:                            0.00104841 eV/A
+Max gradient:                        0.00329013 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 93
+Real low energy:                -26818.03463284 eV
+Model low energy:                -1276.08953415 eV
+Model high energy:              -38417.47642028 eV
+ONIOM Total energy:             -63959.42151897 eV
+ONIOM SCF energy:               -63959.42151897 eV
+Energy grad. norm:                   0.00983683 eV/A
+Grad RMS:                            0.00081974 eV/A
+Max gradient:                        0.00260134 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 94
+Real low energy:                -26818.03460222 eV
+Model low energy:                -1276.08949389 eV
+Model high energy:              -38417.47641635 eV
+ONIOM Total energy:             -63959.42152468 eV
+ONIOM SCF energy:               -63959.42152468 eV
+Energy grad. norm:                   0.00850574 eV/A
+Grad RMS:                            0.00070881 eV/A
+Max gradient:                        0.00200173 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 95
+Real low energy:                -26818.03456670 eV
+Model low energy:                -1276.08946892 eV
+Model high energy:              -38417.47642982 eV
+ONIOM Total energy:             -63959.42152760 eV
+ONIOM SCF energy:               -63959.42152760 eV
+Energy grad. norm:                   0.00845327 eV/A
+Grad RMS:                            0.00070444 eV/A
+Max gradient:                        0.00205942 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 96
+Real low energy:                -26818.03449715 eV
+Model low energy:                -1276.08942139 eV
+Model high energy:              -38417.47645363 eV
+ONIOM Total energy:             -63959.42152939 eV
+ONIOM SCF energy:               -63959.42152939 eV
+Energy grad. norm:                   0.01013674 eV/A
+Grad RMS:                            0.00084473 eV/A
+Max gradient:                        0.00333017 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 97
+Real low energy:                -26818.03446286 eV
+Model low energy:                -1276.08943506 eV
+Model high energy:              -38417.47650317 eV
+ONIOM Total energy:             -63959.42153097 eV
+ONIOM SCF energy:               -63959.42153097 eV
+Energy grad. norm:                   0.00692481 eV/A
+Grad RMS:                            0.00057707 eV/A
+Max gradient:                        0.00155893 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 98
+Real low energy:                -26818.03441372 eV
+Model low energy:                -1276.08942630 eV
+Model high energy:              -38417.47654472 eV
+ONIOM Total energy:             -63959.42153214 eV
+ONIOM SCF energy:               -63959.42153214 eV
+Energy grad. norm:                   0.00609149 eV/A
+Grad RMS:                            0.00050762 eV/A
+Max gradient:                        0.00137399 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 99
+Real low energy:                -26818.03433892 eV
+Model low energy:                -1276.08939489 eV
+Model high energy:              -38417.47658946 eV
+ONIOM Total energy:             -63959.42153349 eV
+ONIOM SCF energy:               -63959.42153349 eV
+Energy grad. norm:                   0.00586912 eV/A
+Grad RMS:                            0.00048909 eV/A
+Max gradient:                        0.00142227 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 100
+Real low energy:                -26818.03422645 eV
+Model low energy:                -1276.08933218 eV
+Model high energy:              -38417.47664085 eV
+ONIOM Total energy:             -63959.42153512 eV
+ONIOM SCF energy:               -63959.42153512 eV
+Energy grad. norm:                   0.00615252 eV/A
+Grad RMS:                            0.00051271 eV/A
+Max gradient:                        0.00160617 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 101
+Real low energy:                -26818.03406432 eV
+Model low energy:                -1276.08922578 eV
+Model high energy:              -38417.47669828 eV
+ONIOM Total energy:             -63959.42153681 eV
+ONIOM SCF energy:               -63959.42153681 eV
+Energy grad. norm:                   0.00618996 eV/A
+Grad RMS:                            0.00051583 eV/A
+Max gradient:                        0.00135807 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 102
+Real low energy:                -26818.03392729 eV
+Model low energy:                -1276.08911894 eV
+Model high energy:              -38417.47672977 eV
+ONIOM Total energy:             -63959.42153812 eV
+ONIOM SCF energy:               -63959.42153812 eV
+Energy grad. norm:                   0.00531053 eV/A
+Grad RMS:                            0.00044254 eV/A
+Max gradient:                        0.00127364 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 103
+Real low energy:                -26818.03384853 eV
+Model low energy:                -1276.08904088 eV
+Model high energy:              -38417.47673167 eV
+ONIOM Total energy:             -63959.42153932 eV
+ONIOM SCF energy:               -63959.42153932 eV
+Energy grad. norm:                   0.00453726 eV/A
+Grad RMS:                            0.00037810 eV/A
+Max gradient:                        0.00110499 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 104
+Real low energy:                -26818.03379778 eV
+Model low energy:                -1276.08897274 eV
+Model high energy:              -38417.47671571 eV
+ONIOM Total energy:             -63959.42154075 eV
+ONIOM SCF energy:               -63959.42154075 eV
+Energy grad. norm:                   0.00521927 eV/A
+Grad RMS:                            0.00043494 eV/A
+Max gradient:                        0.00122886 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 105
+Real low energy:                -26818.03376314 eV
+Model low energy:                -1276.08891417 eV
+Model high energy:              -38417.47669347 eV
+ONIOM Total energy:             -63959.42154245 eV
+ONIOM SCF energy:               -63959.42154245 eV
+Energy grad. norm:                   0.00665385 eV/A
+Grad RMS:                            0.00055449 eV/A
+Max gradient:                        0.00163117 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 106
+Real low energy:                -26818.03371862 eV
+Model low energy:                -1276.08884962 eV
+Model high energy:              -38417.47667567 eV
+ONIOM Total energy:             -63959.42154467 eV
+ONIOM SCF energy:               -63959.42154467 eV
+Energy grad. norm:                   0.00739233 eV/A
+Grad RMS:                            0.00061603 eV/A
+Max gradient:                        0.00159143 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 107
+Real low energy:                -26818.03366184 eV
+Model low energy:                -1276.08879545 eV
+Model high energy:              -38417.47668042 eV
+ONIOM Total energy:             -63959.42154680 eV
+ONIOM SCF energy:               -63959.42154680 eV
+Energy grad. norm:                   0.00631978 eV/A
+Grad RMS:                            0.00052665 eV/A
+Max gradient:                        0.00148019 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 108
+Real low energy:                -26818.03361004 eV
+Model low energy:                -1276.08876937 eV
+Model high energy:              -38417.47670765 eV
+ONIOM Total energy:             -63959.42154832 eV
+ONIOM SCF energy:               -63959.42154832 eV
+Energy grad. norm:                   0.00483738 eV/A
+Grad RMS:                            0.00040312 eV/A
+Max gradient:                        0.00117314 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 109
+Real low energy:                -26818.03358174 eV
+Model low energy:                -1276.08877150 eV
+Model high energy:              -38417.47673933 eV
+ONIOM Total energy:             -63959.42154957 eV
+ONIOM SCF energy:               -63959.42154957 eV
+Energy grad. norm:                   0.00480571 eV/A
+Grad RMS:                            0.00040048 eV/A
+Max gradient:                        0.00097161 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 110
+Real low energy:                -26818.03357698 eV
+Model low energy:                -1276.08879436 eV
+Model high energy:              -38417.47676835 eV
+ONIOM Total energy:             -63959.42155097 eV
+ONIOM SCF energy:               -63959.42155097 eV
+Energy grad. norm:                   0.00541304 eV/A
+Grad RMS:                            0.00045109 eV/A
+Max gradient:                        0.00127784 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 111
+Real low energy:                -26818.03360296 eV
+Model low energy:                -1276.08883953 eV
+Model high energy:              -38417.47678926 eV
+ONIOM Total energy:             -63959.42155270 eV
+ONIOM SCF energy:               -63959.42155270 eV
+Energy grad. norm:                   0.00551095 eV/A
+Grad RMS:                            0.00045925 eV/A
+Max gradient:                        0.00133728 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 112
+Real low energy:                -26818.03365770 eV
+Model low energy:                -1276.08889725 eV
+Model high energy:              -38417.47679392 eV
+ONIOM Total energy:             -63959.42155437 eV
+ONIOM SCF energy:               -63959.42155437 eV
+Energy grad. norm:                   0.00478331 eV/A
+Grad RMS:                            0.00039861 eV/A
+Max gradient:                        0.00135433 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 113
+Real low energy:                -26818.03371779 eV
+Model low energy:                -1276.08894847 eV
+Model high energy:              -38417.47678632 eV
+ONIOM Total energy:             -63959.42155564 eV
+ONIOM SCF energy:               -63959.42155564 eV
+Energy grad. norm:                   0.00425929 eV/A
+Grad RMS:                            0.00035494 eV/A
+Max gradient:                        0.00145176 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 114
+Real low energy:                -26818.03376588 eV
+Model low energy:                -1276.08898781 eV
+Model high energy:              -38417.47677858 eV
+ONIOM Total energy:             -63959.42155664 eV
+ONIOM SCF energy:               -63959.42155664 eV
+Energy grad. norm:                   0.00445359 eV/A
+Grad RMS:                            0.00037113 eV/A
+Max gradient:                        0.00122404 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 115
+Real low energy:                -26818.03380105 eV
+Model low energy:                -1276.08902218 eV
+Model high energy:              -38417.47677879 eV
+ONIOM Total energy:             -63959.42155766 eV
+ONIOM SCF energy:               -63959.42155766 eV
+Energy grad. norm:                   0.00478086 eV/A
+Grad RMS:                            0.00039840 eV/A
+Max gradient:                        0.00104281 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 116
+Real low energy:                -26818.03381790 eV
+Model low energy:                -1276.08905132 eV
+Model high energy:              -38417.47679215 eV
+ONIOM Total energy:             -63959.42155873 eV
+ONIOM SCF energy:               -63959.42155873 eV
+Energy grad. norm:                   0.00459871 eV/A
+Grad RMS:                            0.00038323 eV/A
+Max gradient:                        0.00111824 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 117
+Real low energy:                -26818.03381614 eV
+Model low energy:                -1276.08907032 eV
+Model high energy:              -38417.47681388 eV
+ONIOM Total energy:             -63959.42155970 eV
+ONIOM SCF energy:               -63959.42155970 eV
+Energy grad. norm:                   0.00388665 eV/A
+Grad RMS:                            0.00032389 eV/A
+Max gradient:                        0.00083766 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 118
+Real low energy:                -26818.03380882 eV
+Model low energy:                -1276.08907897 eV
+Model high energy:              -38417.47683057 eV
+ONIOM Total energy:             -63959.42156042 eV
+ONIOM SCF energy:               -63959.42156042 eV
+Energy grad. norm:                   0.00327101 eV/A
+Grad RMS:                            0.00027258 eV/A
+Max gradient:                        0.00070659 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 119
+Real low energy:                -26818.03380879 eV
+Model low energy:                -1276.08908328 eV
+Model high energy:              -38417.47683555 eV
+ONIOM Total energy:             -63959.42156106 eV
+ONIOM SCF energy:               -63959.42156106 eV
+Energy grad. norm:                   0.00291110 eV/A
+Grad RMS:                            0.00024259 eV/A
+Max gradient:                        0.00072779 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 120
+Real low energy:                -26818.03381879 eV
+Model low energy:                -1276.08908758 eV
+Model high energy:              -38417.47683041 eV
+ONIOM Total energy:             -63959.42156161 eV
+ONIOM SCF energy:               -63959.42156161 eV
+Energy grad. norm:                   0.00260170 eV/A
+Grad RMS:                            0.00021681 eV/A
+Max gradient:                        0.00057475 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 121
+Real low energy:                -26818.03383461 eV
+Model low energy:                -1276.08909300 eV
+Model high energy:              -38417.47682040 eV
+ONIOM Total energy:             -63959.42156201 eV
+ONIOM SCF energy:               -63959.42156201 eV
+Energy grad. norm:                   0.00232479 eV/A
+Grad RMS:                            0.00019373 eV/A
+Max gradient:                        0.00057965 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 122
+Real low energy:                -26818.03384796 eV
+Model low energy:                -1276.08909876 eV
+Model high energy:              -38417.47681305 eV
+ONIOM Total energy:             -63959.42156225 eV
+ONIOM SCF energy:               -63959.42156225 eV
+Energy grad. norm:                   0.00213246 eV/A
+Grad RMS:                            0.00017770 eV/A
+Max gradient:                        0.00049541 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 123
+Real low energy:                -26818.03385413 eV
+Model low energy:                -1276.08910465 eV
+Model high energy:              -38417.47681288 eV
+ONIOM Total energy:             -63959.42156236 eV
+ONIOM SCF energy:               -63959.42156236 eV
+Energy grad. norm:                   0.00195364 eV/A
+Grad RMS:                            0.00016280 eV/A
+Max gradient:                        0.00047706 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 124
+Real low energy:                -26818.03385398 eV
+Model low energy:                -1276.08910981 eV
+Model high energy:              -38417.47681824 eV
+ONIOM Total energy:             -63959.42156241 eV
+ONIOM SCF energy:               -63959.42156241 eV
+Energy grad. norm:                   0.00172872 eV/A
+Grad RMS:                            0.00014406 eV/A
+Max gradient:                        0.00042240 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 125
+Real low energy:                -26818.03385362 eV
+Model low energy:                -1276.08911352 eV
+Model high energy:              -38417.47682235 eV
+ONIOM Total energy:             -63959.42156244 eV
+ONIOM SCF energy:               -63959.42156244 eV
+Energy grad. norm:                   0.00156728 eV/A
+Grad RMS:                            0.00013061 eV/A
+Max gradient:                        0.00044902 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 126
+Real low energy:                -26818.03385420 eV
+Model low energy:                -1276.08911688 eV
+Model high energy:              -38417.47682515 eV
+ONIOM Total energy:             -63959.42156247 eV
+ONIOM SCF energy:               -63959.42156247 eV
+Energy grad. norm:                   0.00144866 eV/A
+Grad RMS:                            0.00012072 eV/A
+Max gradient:                        0.00044592 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 127
+Real low energy:                -26818.03385557 eV
+Model low energy:                -1276.08912030 eV
+Model high energy:              -38417.47682723 eV
+ONIOM Total energy:             -63959.42156250 eV
+ONIOM SCF energy:               -63959.42156250 eV
+Energy grad. norm:                   0.00135491 eV/A
+Grad RMS:                            0.00011291 eV/A
+Max gradient:                        0.00043296 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 128
+Real low energy:                -26818.03385752 eV
+Model low energy:                -1276.08912384 eV
+Model high energy:              -38417.47682885 eV
+ONIOM Total energy:             -63959.42156252 eV
+ONIOM SCF energy:               -63959.42156252 eV
+Energy grad. norm:                   0.00127805 eV/A
+Grad RMS:                            0.00010650 eV/A
+Max gradient:                        0.00041581 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 129
+Real low energy:                -26818.03386528 eV
+Model low energy:                -1276.08913797 eV
+Model high energy:              -38417.47683526 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00114949 eV/A
+Grad RMS:                            0.00009579 eV/A
+Max gradient:                        0.00034720 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 130
+Real low energy:                -26818.03387683 eV
+Model low energy:                -1276.08915438 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121914 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 131
+Real low energy:                -26818.03387793 eV
+Model low energy:                -1276.08915566 eV
+Model high energy:              -38417.47684030 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122163 eV/A
+Grad RMS:                            0.00010180 eV/A
+Max gradient:                        0.00038377 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 132
+Real low energy:                -26818.03388232 eV
+Model low energy:                -1276.08916079 eV
+Model high energy:              -38417.47684104 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00123892 eV/A
+Grad RMS:                            0.00010324 eV/A
+Max gradient:                        0.00038561 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 133
+Real low energy:                -26818.03387880 eV
+Model low energy:                -1276.08915668 eV
+Model high energy:              -38417.47684045 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122413 eV/A
+Grad RMS:                            0.00010201 eV/A
+Max gradient:                        0.00038414 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 134
+Real low energy:                -26818.03388112 eV
+Model low energy:                -1276.08915939 eV
+Model high energy:              -38417.47684084 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00123306 eV/A
+Grad RMS:                            0.00010275 eV/A
+Max gradient:                        0.00038511 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 135
+Real low energy:                -26818.03387923 eV
+Model low energy:                -1276.08915718 eV
+Model high energy:              -38417.47684052 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122553 eV/A
+Grad RMS:                            0.00010213 eV/A
+Max gradient:                        0.00038432 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 136
+Real low energy:                -26818.03387889 eV
+Model low energy:                -1276.08915678 eV
+Model high energy:              -38417.47684046 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122442 eV/A
+Grad RMS:                            0.00010203 eV/A
+Max gradient:                        0.00038418 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 137
+Real low energy:                -26818.03387881 eV
+Model low energy:                -1276.08915668 eV
+Model high energy:              -38417.47684045 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122415 eV/A
+Grad RMS:                            0.00010201 eV/A
+Max gradient:                        0.00038414 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 138
+Real low energy:                -26818.03387880 eV
+Model low energy:                -1276.08915668 eV
+Model high energy:              -38417.47684045 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122413 eV/A
+Grad RMS:                            0.00010201 eV/A
+Max gradient:                        0.00038414 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 139
+Real low energy:                -26818.03387880 eV
+Model low energy:                -1276.08915668 eV
+Model high energy:              -38417.47684045 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122413 eV/A
+Grad RMS:                            0.00010201 eV/A
+Max gradient:                        0.00038414 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 140
+Real low energy:                -26818.03387880 eV
+Model low energy:                -1276.08915668 eV
+Model high energy:              -38417.47684045 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122413 eV/A
+Grad RMS:                            0.00010201 eV/A
+Max gradient:                        0.00038414 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 141
+Real low energy:                -26818.03387793 eV
+Model low energy:                -1276.08915566 eV
+Model high energy:              -38417.47684030 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122163 eV/A
+Grad RMS:                            0.00010180 eV/A
+Max gradient:                        0.00038377 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 142
+Real low energy:                -26818.03387736 eV
+Model low energy:                -1276.08915500 eV
+Model high energy:              -38417.47684021 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00122025 eV/A
+Grad RMS:                            0.00010169 eV/A
+Max gradient:                        0.00038354 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 143
+Real low energy:                -26818.03387702 eV
+Model low energy:                -1276.08915459 eV
+Model high energy:              -38417.47684015 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121951 eV/A
+Grad RMS:                            0.00010163 eV/A
+Max gradient:                        0.00038339 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 144
+Real low energy:                -26818.03387691 eV
+Model low energy:                -1276.08915446 eV
+Model high energy:              -38417.47684013 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121928 eV/A
+Grad RMS:                            0.00010161 eV/A
+Max gradient:                        0.00038335 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 145
+Real low energy:                -26818.03387685 eV
+Model low energy:                -1276.08915440 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121917 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 146
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 147
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 148
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 149
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 150
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 151
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+Moving fixed value charges
+------------------------------
+Iteration: 152
+Real low energy:                -26818.03387684 eV
+Model low energy:                -1276.08915439 eV
+Model high energy:              -38417.47684012 eV
+ONIOM Total energy:             -63959.42156257 eV
+ONIOM SCF energy:               -63959.42156257 eV
+Energy grad. norm:                   0.00121916 eV/A
+Grad RMS:                            0.00010160 eV/A
+Max gradient:                        0.00038332 eV/A
+Gap:                                 0.00000000 eV
+DONE
+ELAPSED TIME: 1:55:37.043473
+ENDING TIME: 2025-07-15 09:22:59.846833

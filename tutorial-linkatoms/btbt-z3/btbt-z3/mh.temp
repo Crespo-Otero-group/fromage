@@ -1,0 +1,12 @@
+%Nproc=40
+%mem=100GB
+%chk=gck.chk
+#p pbepbe svp nosymm force charge
+
+polythiophene
+
+0  1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX
+
