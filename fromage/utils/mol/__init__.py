@@ -234,108 +234,107 @@ class Mol(object):
     
 ## MI: new Mol methods for fro_run-linkatom.py
 
-
-def load_connectivity_matrix(self, name="connectivity_matrix.npy"):
-    """
-    Get the cponnectivity matrix. This method will save it to the repository
-    so that it can be rapidly loaded. Useful for large clusters where calculating
-    the matrix can take some time. 
-    
-    NB: Be careful in using this function in cases where more the one matrix is 
-        needed (i.e. in fro_prep_run.py). 
-    """
-    import os
-    from fromage.scripts.fro_assign_charges import get_connectivity_mat
-
-    #obtain connectivity matrix if necessary
-    if os.path.isfile(name):
-        connectivity_matrix = np.load(name)
-    else:
-        connectivity_matrix = get_connectivity_mat(self)
-        np.save(name, arr=connectivity_matrix, allow_pickle=True)
-
-    return connectivity_matrix
-
-def get_index_by_pos(self, atom_in):
-    """
-    Get index of Atom at same position in mol. Useful when you want to index
-    an atom which doesn't have the same charge (where index() won't work).
-
-    Paramters
-    ---------
-    atom_in : Atom
-        Atom whose index you want to find
-
-    Returns
-    -------
-    atom_index : int
-        Index of atom in the molecule
-    """
-    atom_index=None
-    for i, atom in enumerate(self):
-        if atom.very_close(atom_in):
-            atom_index = i
-    return atom_index
-
-def get_total_charge(self):
-    """Get total charge on Mol object by summing charges"""
-    return sum([atom.q for atom in self])
-
-def detect_bondcuts(self, sub_atoms):
-    """
-    Detect bonding between region, and therefore the bonds being cut
-
-    Paramters
-    ---------
-    sub_atoms : Mol
-        subsystem atoms within Mol object (the model region, for instance)
-
-    Return
-    ------
-    lac_atoms, lah_atoms : Mol
-        Link atom connects (LAC, in QM region) and link atom host (LAH, in QM') mol objects
-
-    """
-    lac_atoms = Mol([])
-    lah_atoms = Mol([])
-
-    for atom_m in sub_atoms:
-        for atom_s in self:
-            if self.bonded(atom_m,atom_s): # not duplicates if real (not shell)
-                lac_atoms.append(atom_m)
-                lah_atoms.append(atom_s)
-
-    return lac_atoms, lah_atoms
-
-def rearrange_mol(self, end_atoms):
-    """
-    Move the specified end_atoms to the end of Mol object. This is used
-    to arrange the atoms in fro_run-linkatoms.py and frooverdia.py scripts.
-
-    end_atoms : Mol
-        atoms in Mol to be moved
-    
-    """
-    mol_rearranged = Mol([])
-    for atom in self:
-        if atom not in end_atoms:
-            mol_rearranged.append(atom)
-    for atom in end_atoms:
-        mol_rearranged.append(atom)
-    return mol_rearranged
-
-def remove_model(self, model):
-    """
-    Remove model region from real region to return shell
-    
-    model : Mol 
-        atoms to be removed in Mol
-    """
-    shell = self.copy()
-
-    for atom_m in model:
-        for atom_s in shell:
-            if atom_s.very_close(atom_m):
-                shell.remove(atom_s)
-    return shell
+    def load_connectivity_matrix(self, name="connectivity_matrix.npy"):
+        """
+        Get the cponnectivity matrix. This method will save it to the repository
+        so that it can be rapidly loaded. Useful for large clusters where calculating
+        the matrix can take some time. 
         
+        NB: Be careful in using this function in cases where more the one matrix is 
+            needed (i.e. in fro_prep_run.py). 
+        """
+        import os
+        from fromage.scripts.fro_assign_charges import get_connectivity_mat
+
+        #obtain connectivity matrix if necessary
+        if os.path.isfile(name):
+            connectivity_matrix = np.load(name)
+        else:
+            connectivity_matrix = get_connectivity_mat(self)
+            np.save(name, arr=connectivity_matrix, allow_pickle=True)
+
+        return connectivity_matrix
+
+    def get_index_by_pos(self, atom_in):
+        """
+        Get index of Atom at same position in mol. Useful when you want to index
+        an atom which doesn't have the same charge (where index() won't work).
+
+        Paramters
+        ---------
+        atom_in : Atom
+            Atom whose index you want to find
+
+        Returns
+        -------
+        atom_index : int
+            Index of atom in the molecule
+        """
+        atom_index=None
+        for i, atom in enumerate(self):
+            if atom.very_close(atom_in):
+                atom_index = i
+        return atom_index
+
+    def get_total_charge(self):
+        """Get total charge on Mol object by summing charges"""
+        return sum([atom.q for atom in self])
+
+    def detect_bondcuts(self, sub_atoms):
+        """
+        Detect bonding between region, and therefore the bonds being cut
+
+        Paramters
+        ---------
+        sub_atoms : Mol
+            subsystem atoms within Mol object (the model region, for instance)
+
+        Return
+        ------
+        lac_atoms, lah_atoms : Mol
+            Link atom connects (LAC, in QM region) and link atom host (LAH, in QM') mol objects
+
+        """
+        lac_atoms = Mol([])
+        lah_atoms = Mol([])
+
+        for atom_m in sub_atoms:
+            for atom_s in self:
+                if self.bonded(atom_m,atom_s): # not duplicates if real (not shell)
+                    lac_atoms.append(atom_m)
+                    lah_atoms.append(atom_s)
+
+        return lac_atoms, lah_atoms
+
+    def rearrange_mol(self, end_atoms):
+        """
+        Move the specified end_atoms to the end of Mol object. This is used
+        to arrange the atoms in fro_run-linkatoms.py and frooverdia.py scripts.
+
+        end_atoms : Mol
+            atoms in Mol to be moved
+        
+        """
+        mol_rearranged = Mol([])
+        for atom in self:
+            if atom not in end_atoms:
+                mol_rearranged.append(atom)
+        for atom in end_atoms:
+            mol_rearranged.append(atom)
+        return mol_rearranged
+
+    def remove_model(self, model):
+        """
+        Remove model region from real region to return shell
+        
+        model : Mol 
+            atoms to be removed in Mol
+        """
+        shell = self.copy()
+
+        for atom_m in model:
+            for atom_s in shell:
+                if atom_s.very_close(atom_m):
+                    shell.remove(atom_s)
+        return shell
+            
