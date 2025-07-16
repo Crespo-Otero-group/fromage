@@ -1,6 +1,6 @@
 #!/bin/python
 """
-fro_run-linkatom.py
+fro_run-linkatoms.py
 
 New fromage implementation for performing ONIOM(QM:QM')-EE calculations where the QM:QM' boundary
 cuts through covalent bonds. It is similar to fro_run.py with additional functions for adding link
@@ -622,7 +622,13 @@ def get_aug_model(real, model, model_indices):
 
 
 def prep_model(real, model_indices):
-    """rearrange model to be at start"""
+    """
+    Pre-process model region for addition of link atoms at QM:QM' boundary
+
+    model_indices : list of int
+
+    
+    """
     from fromage.utils.mol import Mol
 
     # get model region
@@ -700,14 +706,23 @@ def prep_model(real, model_indices):
 
 
 def singlepoint(atom_array):
-    """configure job"""
+    """
+    Run a single-point ONIOM(QM:QM')-EE calculation to calculate energies and gradients of
+    from three calculations: model-high (QM-EE), model-low (QM'-EE) and real-low (QM'). For S1 optimisations,
+    make sure to use the excited state gradients. 
+
+    The output is fed into the SciPy.optimize.minimize function
+    """
     global iteration
     iteration += 1
 
+
     print("atoms in atom_array: ", len(atom_array) / 3)
+
     # update atom_array
     atoms_array = np.concatenate([atom_array, end_atoms])
     print("atoms in atoms_array: ", len(atoms_array) / 3)
+
     # initialise calculation objects
     rl = calc.setup_calc("rl", low_level)
     ml = calc.setup_calc("ml", low_level)
@@ -724,13 +739,12 @@ def singlepoint(atom_array):
     ## get model and jacobian
     aug_model, jacobian = get_aug_model(real, model, model_indices)  #
 
-    if not os.path.exists("jac.png"):
-        plt.imshow(jacobian)
-
-        plt.savefig("jac.png")
+    # visualise jacobian
+    # if not os.path.exists("jac.png"):
+    #     plt.imshow(jacobian)
+    #     plt.savefig("jac.png")
 
     model_array = np.concatenate([atom.get_pos() for atom in aug_model])
-
     rl_proc = rl.run(ao.array2atom(real, atoms_array), None)
     rl_proc.wait()
 
@@ -750,23 +764,15 @@ def singlepoint(atom_array):
         with open("fromage.out", "a") as f:
             f.write("Moving fixed value charges\n")
         subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
-        # molden_char = rl.read_charges()
-        # print("MOLDEN: ", molden_char)
 
     subprocess.run(f"head rl/{charge_keyword}", shell=True)
     with open(f"rl/{charge_keyword}", "r") as f:
         molden_char = [float(char) for char in f.readlines()]
         print(molden_char)
 
-    print("charges: ", molden_char)
-    with open("molden.char", "a") as f:
-        f.write(str(molden_char[:5]) + "\n")
-
     for atom, char in zip(rl_charges, molden_char):
-        # print(atom,char)
         atom.q = float(char)
 
-    model.write_xyz("model_tmp.xyz")
 
     for atom_b in model:
         for atom_a in rl_charges:
@@ -783,7 +789,15 @@ def singlepoint(atom_array):
             redistribute_charge=True,
         )
 
-    rl_charges.write_xyz("rl_temp.xyz")
+    ## visualise model with embedding
+    if iteration == 1:
+        rl_charges_vis = aug_model.copy()
+        for atom in rl_charges:
+            pce = atom.copy()
+            pce.elem="H"
+            rl_charges_vis.append(pce)
+           
+        rl_charges_vis.write_xyz("model-vis.xyz")
 
     # First, calculate the current charge
     current_charge = sum([atom.q for atom in rl_charges])
@@ -801,12 +815,6 @@ def singlepoint(atom_array):
         correction = (current_charge - char_init) / len(rl_charges)
         for atom in rl_charges:
             atom.q -= correction
-
-    # Write the corrected charge to a new file
-    # with open("charge-corrected.dat", "a") as corrected_file:
-        # corrected_charge = sum([atom.q for atom in rl_charges])
-        # corrected_file.write(f"{corrected_charge}\n")
-
 
     mh_proc = mh.run(ao.array2atom(aug_model, model_array), point_flex=rl_charges)
     mh_proc.wait()
@@ -854,7 +862,7 @@ def singlepoint(atom_array):
     ## ONIOM gradient equation
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
 
-    ## fix some gradients
+    ## fix positions of some atoms 
     # for i, grad in enumerate(gr_combo):
     #     if i > len(aug_model)*3: ## must be 3 for each xyz
     #         print(grad)
@@ -928,6 +936,7 @@ if __name__ == "__main__":
         "jac_bool": "1",
         "scheme": "Z3",
         "z_thresh": 1.8,
+        "optimizer": "BFGS",
     }
 
     ## initialise
@@ -945,6 +954,7 @@ if __name__ == "__main__":
     high_level = inputs["high_level"]
     high_level_mg = inputs["high_level_mg"]
     low_level = inputs["low_level"]
+    opto = inputs["optimizer"]
     jac_bool = bool_cast(inputs["jac_bool"])
     z_thresh = float(inputs["z_thresh"])
 
@@ -980,12 +990,10 @@ if __name__ == "__main__":
     atoms_array = np.concatenate([atom.get_pos() for atom in real])
 
     ## number of atoms to be optimised (aug model + lah)
-
     if os.path.exists("flex.xyz"):
         print("partial relaxation of QM' will be performed")
         flex = rf.mol_from_file("flex.xyz")
         n_atoms_opt = len(flex) * 3
-
         print("Atoms to optimised: ", n_atoms_opt)
 
     else:
@@ -1020,7 +1028,7 @@ if __name__ == "__main__":
             atom_array,
             jac=True,
             options={"disp": True, "gtol": 1e-5 / damp_fac},
-        )  # ,  method="CG")
+            method=opto)
         # res = minimize(singlepoint, atom_array,options={'disp': True, 'gtol':1e-6}) #, method="Newton-CG")
     with open(out_file, "a") as f:
         f.write("DONE\n")
