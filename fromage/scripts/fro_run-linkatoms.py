@@ -122,34 +122,12 @@ def find_Mn_atoms(real_region, point_charges, m1_atoms, z_index, sys_type="cryst
     return Mn_atoms
 
 
-def run_z_scheme(point_charges, Mn_charges):
-    """Redistributes point charges across the cluster according to Zn scheme"""
-
-    # Starting charges
-    out_char = point_charges.copy()
-    tot_mn_char = Mn_charges.get_total_charge()
-
-    # Redistribute Mn charges over rest of cluster
-    n_charges = len(out_char) - len(Mn_charges)
-    charge_corr = tot_mn_char / n_charges
-
-    # Add charge correction
-    for pc in out_char:
-        if pc not in Mn_charges:
-            pc.q += charge_corr
-        else:
-            pc.q = 0
-
-    return out_char
-
-
 ### Redistributed charge and dipole (RCD) scheme
-### Author: Michael Ingham 14/11/2023
+### Author: Michael Ingham 16/07/2025
 
 
 def calc_dipole(atom1, atom2):
     """Calculate dipole between two charged atoms"""
-    # print("R:", round(atom1.dist(atom2),2) )
     return atom1.dist(atom2) * abs(atom2.q - atom1.q)
 
 
@@ -201,10 +179,20 @@ def group_M2(real_region, m1_atoms, point_charges, m3=False):
     return m2_atoms
 
 
-def run_new_Z_scheme(
+def run_Z_scheme(
     real_region, point_charges, m1_atoms, z_index, redistribute_charge=True
 ):
-    """Run RCD scheme of Lin and Truhlar"""
+    """
+    Run the redistributed charge schemes 
+
+    z_index : int
+        Z1,Z2, or Z3. Delete point charges cumulatively on the M1, M2, or M3 atoms. 
+        Only Z2 or Z3 should be used. 
+    redistribute_charge : Bool
+        add uniform charge redistribution correction to point_charges to conserve the
+        deleted charges
+    
+    """
     from fromage.utils.atom import Atom
 
     out_char = point_charges.copy()
@@ -252,7 +240,10 @@ def run_new_Z_scheme(
 
 
 def run_RC_scheme(real_region, point_charges, m1_atoms, redistribute_dipoles=False):
-    """Run RCD scheme of Lin and Truhlar"""
+    """
+    Run the redistiibuted charge (RC) and redistributed charge and dipoles (RCD) scheme from 
+    Lin and Truhlar (https://doi.org/10.1021/jp0446332). NB: in general the Z3 scheme is reccomended.
+    """
     from fromage.utils.atom import Atom
 
     out_char = point_charges.copy()
@@ -271,7 +262,6 @@ def run_RC_scheme(real_region, point_charges, m1_atoms, redistribute_dipoles=Fal
         print("\n##################")
         print("m1 atom:", m1_atom)
         print("initial m2 atoms:", m2_atom_bonded)
-        # print("Initial total charge: ", out_char )  #m1_atom.q + sum([atom.q for atom in m2_atom_bonded]))
         n_m2_atoms = len(m2_atom_bonded)
         print("Number of redistribution points: ", n_m2_atoms)
         q0 = m1_atom.q / n_m2_atoms
@@ -377,7 +367,7 @@ def redistribute_charges(
     if z_scheme.upper() in ["Z1", "Z2", "Z3"]:
         z_index = int(get_z_index(z_scheme))
         print("M1 atoms: ", M1_atoms)
-        out_char = run_new_Z_scheme(
+        out_char = run_Z_scheme(
             real_atoms,
             in_char,
             M1_atoms,
@@ -401,6 +391,10 @@ def redistribute_charges(
 
     return out_char
 
+"""
+the following Jacobian and link atom functions are translated from a Fortran script from Plett and co-workers
+from the xTB ONIOM implementation (https://github.com/grimme-lab/xtb/blob/main/src/oniom.f90)
+"""
 
 def create_jacobian(n_real_atoms):
     """initialise empty matrix of 3N by 3N"""
@@ -751,6 +745,7 @@ def singlepoint(atom_array):
             )
         # molden_char = rl.read_charges()
         subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
+
     elif not recalculate_charge:
         with open("fromage.out", "a") as f:
             f.write("Moving fixed value charges\n")
@@ -808,13 +803,10 @@ def singlepoint(atom_array):
             atom.q -= correction
 
     # Write the corrected charge to a new file
-    with open("charge-corrected.dat", "a") as corrected_file:
-        corrected_charge = sum([atom.q for atom in rl_charges])
-        corrected_file.write(f"{corrected_charge}\n")
+    # with open("charge-corrected.dat", "a") as corrected_file:
+        # corrected_charge = sum([atom.q for atom in rl_charges])
+        # corrected_file.write(f"{corrected_charge}\n")
 
-    # print("rl_char", rl_char)
-    # embedding = ao.array2atom(rl_charges, , [atom.q for atom in rl_charges])
-    # [print(atom) for atom in embedding]
 
     mh_proc = mh.run(ao.array2atom(aug_model, model_array), point_flex=rl_charges)
     mh_proc.wait()
@@ -843,11 +835,12 @@ def singlepoint(atom_array):
     rl_en_gr[1] = rl_en_gr[1] * damp_fac
     rl_en_gr = tuple(rl_en_gr)
 
+    # remove artifical link atom gradients
     if jacobian_transform:
-
         ml_jac = jac_transform(jacobian, ml_en_gr[1]) * damp_fac
         mh_jac = jac_transform(jacobian, mh_en_gr[1]) * damp_fac
 
+    ## for testing only
     else:
         ml_jac = ml_en_gr[1]
         mh_jac = mh_en_gr[1]
@@ -862,7 +855,6 @@ def singlepoint(atom_array):
     gr_combo = rl_en_gr[1] - ml_en_gr[1] + mh_en_gr[1]
 
     ## fix some gradients
-
     # for i, grad in enumerate(gr_combo):
     #     if i > len(aug_model)*3: ## must be 3 for each xyz
     #         print(grad)
@@ -941,6 +933,7 @@ if __name__ == "__main__":
     ## initialise
     here = os.getcwd()
     inputs = def_inputs.copy()
+
     if os.path.isfile("fromage.in"):
         new_inputs = rf.read_config("fromage.in")
         inputs.update(new_inputs)
