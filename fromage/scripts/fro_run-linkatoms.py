@@ -731,19 +731,16 @@ def singlepoint(atom_array):
     global iteration
     iteration += 1
 
-
     print("atoms in atom_array: ", len(atom_array) / 3)
 
     # update atom_array
     atoms_array = np.concatenate([atom_array, end_atoms])
     print("atoms in atoms_array: ", len(atoms_array) / 3)
 
-    
-    if not restart:
-        # initialise calculation objects
-        rl = calc.setup_calc("rl", low_level)
-        ml = calc.setup_calc("ml", low_level)
-        mh = calc.setup_calc("mh", high_level)
+    # initialise calculation objects
+    rl = calc.setup_calc("rl", low_level)
+    ml = calc.setup_calc("ml", low_level)
+    mh = calc.setup_calc("mh", high_level)
 
     ## get new real coordinates
     for atom, pos in zip(real, atoms_array.reshape(int(len(atoms_array) / 3), 3)):
@@ -756,15 +753,12 @@ def singlepoint(atom_array):
     ## get model and jacobian
     aug_model, jacobian = get_aug_model(real, model, model_indices)  #
 
-    # visualise jacobian
-    # if not os.path.exists("jac.png"):
-    #     plt.imshow(jacobian)
-    #     plt.savefig("jac.png")
-
+    ## run rl
     model_array = np.concatenate([atom.get_pos() for atom in aug_model])
     rl_proc = rl.run(ao.array2atom(real, atoms_array), None)
     rl_proc.wait()
 
+    # mol object for charge distribution
     rl_charges = rf.mol_from_file("rl/geom.xyz")
 
     ## generate point charge embedding between optimisation steps
@@ -775,7 +769,10 @@ def singlepoint(atom_array):
                 "No recalculation of PCE. Point charges are fixed to their initial values\n"
             )
         # molden_char = rl.read_charges()
-        subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
+
+        ## copy charges to charge_init if starting from scratch
+        if not restart:
+            subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
 
     elif not recalculate_charge:
         with open("fromage.out", "a") as f:
@@ -783,6 +780,7 @@ def singlepoint(atom_array):
         subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
 
     subprocess.run(f"head rl/{charge_keyword}", shell=True)
+
     with open(f"rl/{charge_keyword}", "r") as f:
         molden_char = [float(char) for char in f.readlines()]
         print(molden_char)
@@ -976,7 +974,7 @@ if __name__ == "__main__":
     jac_bool = bool_cast(inputs["jac_bool"])
     z_thresh = float(inputs["z_thresh"])
     restart = bool_cast(inputs["restart"])
-    
+
     # clean up old output
     if os.path.exists("geom_out.xyz"):
         os.remove("geom_out.xyz")
@@ -1030,7 +1028,6 @@ if __name__ == "__main__":
 
     # char_file = open("molden.char", "w")
     char_file = open("charge.dat", "w")
-    # char_file2 = open("charge-corrected.dat", "w")
 
     if low_level == "xtb_gfnff":
         with open("fromage.out", "a") as f:
