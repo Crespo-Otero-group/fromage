@@ -631,7 +631,7 @@ def prep_model(real, model_indices):
     """
     from fromage.utils.mol import Mol
 
-    # get model region
+    # get model region 
     model = Mol([])
     for i in range(max(model_indices) + 1):
         model.append(real[i])
@@ -663,25 +663,40 @@ def prep_model(real, model_indices):
             if atom.very_close(atom_b, thresh=0.5):
                 shell.remove(atom)
 
-    if os.path.exists("flex.xyz"):
+    
+    if os.path.exists("flex.xyz"): 
         flex = rf.mol_from_file("flex.xyz")
-        
 
+         ## update flex file if restarting - if there are substantial changes in the geometry, make a new flex.xyz file from geom_out.xyz 
+        flex_tmp = Mol([])
+        for atom in real:
+            for atom_flex in flex:
+                if atom.very_close(atom_flex, thresh=0.5):
+                    flex_tmp.append(atom)
+        if len(flex_tmp) != len(flex):
+            raise ValueError("mol.init.xyz is not compatible with flex.xyz. Please regenerate it.")
+        flex = flex_tmp.copy()
+    
+        # remove model from flexible region
         for atom in model:
             for atom_b in flex:
                 if atom.very_close(atom_b, thresh=0.5):
                     flex.remove(atom_b)
 
+        # remove flexible region from shell
         for atom in flex:
             for atom_b in shell:
                 if atom.very_close(atom_b, thresh=0.5):
                     shell.remove(atom_b)
-
+                    
+        
+        # remmove lah from flex 
         for atom in lah:
             for atom_b in flex:
                 if atom.very_close(atom_b, thresh=0.5):
                     flex.remove(atom_b)
 
+        # reorder shell to be [lah, flex, env]
         shell = Mol([atom for atom in lah]) + flex + shell
 
     else:
@@ -723,10 +738,12 @@ def singlepoint(atom_array):
     atoms_array = np.concatenate([atom_array, end_atoms])
     print("atoms in atoms_array: ", len(atoms_array) / 3)
 
-    # initialise calculation objects
-    rl = calc.setup_calc("rl", low_level)
-    ml = calc.setup_calc("ml", low_level)
-    mh = calc.setup_calc("mh", high_level)
+    restart=False
+    if not restart:
+        # initialise calculation objects
+        rl = calc.setup_calc("rl", low_level)
+        ml = calc.setup_calc("ml", low_level)
+        mh = calc.setup_calc("mh", high_level)
 
     ## get new real coordinates
     for atom, pos in zip(real, atoms_array.reshape(int(len(atoms_array) / 3), 3)):
@@ -982,6 +999,7 @@ if __name__ == "__main__":
     ## real file
     real = rf.mol_from_file(inputs["mol_file"])
     real.set_bonding(bonding, thresh)
+    
 
     # model_indices = [a-1 for a in model_indices]
     model, real, n_la = prep_model(real, model_indices)
