@@ -1,0 +1,11 @@
+tutorial for using the fro_run-linkatoms.py script
+--------------------------------------------------
+
+Please see the JCTC publication for more details.
+
+There are some important changes compared to fro_run.py
+1. 'mol.init.xyz' is now the real region of the MOF. For MOFs, this can be generated with a GUI program such as mercury. 
+2. The model region should be at the start of this file, or more easily specified through the file 'flex.xyz' file. In fromage.in, the 'nopt' variable specifies the number of atoms (including link atom hosts) that will be present in the QM region. As such, 'flex.xyz' also allows partial relaxation of the QM' region, which is reccomended for proper treatment of gradients at the QM:QM' cut. 
+3. In fromage.in, 'scheme' refers to the charge redistribution scheme. We strongly reccomend the use of Z3 (the default) however other options are available (Z1, Z2, Z3, RC, and RCD). 
+4. Please only use xtb or xtb_gfnff for the low-level.
+5. fro_run-linkatoms.py will calculate and save the connectivity matrix ('connectivity_matrix.npy') on the first run. This can be quite a long calculation for the MOF, but only has to be performed once. IMPORTANT: If you do anything that requires a new connectivity matrix, it is imperative to delete the .npy file which is read automatically. 

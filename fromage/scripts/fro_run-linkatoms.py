@@ -768,24 +768,24 @@ def singlepoint(atom_array):
             f.write(
                 "No recalculation of PCE. Point charges are fixed to their initial values\n"
             )
-        # molden_char = rl.read_charges()
 
         ## copy charges to charge_init if starting from scratch
         if not restart:
             subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
+        else:
+            subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
+
 
     elif not recalculate_charge:
         with open("fromage.out", "a") as f:
             f.write("Moving fixed value charges\n")
         subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
 
-    subprocess.run(f"head rl/{charge_keyword}", shell=True)
-
     with open(f"rl/{charge_keyword}", "r") as f:
-        molden_char = [float(char) for char in f.readlines()]
-        print(molden_char)
+        charges_in = [float(char) for char in f.readlines()]
+        # print(molden_char)
 
-    for atom, char in zip(rl_charges, molden_char):
+    for atom, char in zip(rl_charges, charges_in):
         atom.q = float(char)
 
 
