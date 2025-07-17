@@ -911,10 +911,10 @@ def singlepoint(atom_array):
     en_out = en_combo
     gr_out = gr_combo
 
-    with open(f"{here}/geom_out.xyz", "a") as f:
-        f.write(f"\n{len(real)}\niteration {iteration}")
+    with open(f"{here}/geom_clust.xyz", "a") as f:
+        f.write(f"{len(real)}\niteration {iteration}\n")
         for atom in real:
-            f.write(f"\n{atom.elem}   {atom.x}   {atom.y} {atom.z}")
+            f.write(f"{atom.elem}   {atom.x:.5f}   {atom.y:.5f} {atom.z:.5f}\n")
 
     print(f"{en_out},{gr_out})")
     return (en_out, gr_out)
