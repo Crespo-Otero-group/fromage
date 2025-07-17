@@ -772,10 +772,7 @@ def singlepoint(atom_array):
         ## copy charges to charge_init if starting from scratch
         if not restart:
             subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
-        else:
-            subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
-
-
+    
     elif not recalculate_charge:
         with open("fromage.out", "a") as f:
             f.write("Moving fixed value charges\n")
@@ -909,7 +906,12 @@ def singlepoint(atom_array):
     en_out = en_combo
     gr_out = gr_combo
 
-    with open(f"{here}/geom_clust.xyz", "a") as f:
+    if iteration==1:
+        read_mode = "w"
+    else: 
+        read_mode="a"
+    
+    with open(f"{here}/geom_clust.xyz", read_mode) as f:
         f.write(f"{len(real)}\niteration {iteration}\n")
         for atom in real:
             f.write(f"{atom.elem}   {atom.x:.5f}   {atom.y:.5f} {atom.z:.5f}\n")
