@@ -772,6 +772,9 @@ def singlepoint(atom_array):
         ## copy charges to charge_init if starting from scratch
         if not restart:
             subprocess.Popen(["cp", f"rl/{charge_keyword}", f"rl/{charge_keyword}_init"])
+        ## copy charges to charge_init if starting from scratch
+        else:
+            subprocess.Popen(["cp", f"rl/{charge_keyword}_init", f"rl/{charge_keyword}"])
     
     elif not recalculate_charge:
         with open("fromage.out", "a") as f:
