@@ -738,7 +738,7 @@ def singlepoint(atom_array):
     atoms_array = np.concatenate([atom_array, end_atoms])
     print("atoms in atoms_array: ", len(atoms_array) / 3)
 
-    restart=False
+    
     if not restart:
         # initialise calculation objects
         rl = calc.setup_calc("rl", low_level)
@@ -954,6 +954,7 @@ if __name__ == "__main__":
         "scheme": "Z3",
         "z_thresh": 1.8,
         "optimizer": "BFGS",
+        "restart": "0"
     }
 
     ## initialise
@@ -974,7 +975,8 @@ if __name__ == "__main__":
     opto = inputs["optimizer"]
     jac_bool = bool_cast(inputs["jac_bool"])
     z_thresh = float(inputs["z_thresh"])
-
+    restart = bool_cast(inputs["restart"])
+    
     # clean up old output
     if os.path.exists("geom_out.xyz"):
         os.remove("geom_out.xyz")
