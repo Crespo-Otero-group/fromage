@@ -665,22 +665,22 @@ def prep_model(real, model_indices):
 
     if os.path.exists("flex.xyz"):
         flex = rf.mol_from_file("flex.xyz")
-        # remove lah from shell
+        
 
         for atom in model:
             for atom_b in flex:
                 if atom.very_close(atom_b, thresh=0.5):
-                    flex.remove(atom)
+                    flex.remove(atom_b)
 
         for atom in flex:
             for atom_b in shell:
                 if atom.very_close(atom_b, thresh=0.5):
-                    shell.remove(atom)
+                    shell.remove(atom_b)
 
         for atom in lah:
             for atom_b in flex:
                 if atom.very_close(atom_b, thresh=0.5):
-                    flex.remove(atom)
+                    flex.remove(atom_b)
 
         shell = Mol([atom for atom in lah]) + flex + shell
 
