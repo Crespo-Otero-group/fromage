@@ -1,0 +1,18 @@
+name benzene
+vectors_file vectors
+cell_file cell.xyz
+high_pop_program gaussian
+high_pop_file pop.log
+high_pop_method esp
+low_pop_program gaussian
+low_pop_file pop.log
+low_pop_method esp
+bond_thresh 1.5
+atom_label 1 16
+nChk 1000
+nAt 500
+aN 2
+bN 2
+cN 2
+clust_rad 4
+ewald false
