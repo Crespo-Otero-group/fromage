@@ -119,18 +119,24 @@ def neutralise_cluster(clust, outfile):
     return clust
 
 
-def set_gauss(filep, nstates, type, nprocs):
+def set_gauss(filep, nstates, type, nprocs, freq_job=False):
     """
     run sed command to add checkpoint string and number of excited states for each. Probably can do this in a better way
     """
-    cmd = f"sed  -i 's/xxxnstatesxxx/{str(nstates)}/g' {filep}"
-    subprocess.run(cmd, shell=True)
+    
 
     cmd = f"sed  -i 's/xxxchkxxx/{type}/g' {filep}"
     subprocess.run(cmd, shell=True)
 
     cmd = f"sed  -i 's/xxxnprocsxxx/{str(nprocs)}/g' {filep}"
     subprocess.run(cmd, shell=True)
+
+    if freq_job:
+        cmd = f"sed  -i 's/td/{str(nprocs)}/g' {filep}"
+        subprocess.run(cmd, shell=True)
+    else:
+        cmd = f"sed  -i 's/td(nstates=xxxnstatesxxx,conver=6)/freq=HPmodes/g' {filep}"
+        subprocess.run(cmd, shell=True)
     return
 
 
@@ -341,7 +347,14 @@ def main(
 
         # write gaussian input
         outfile.write(f"\nWriting G16 file 'mono{i}.com'")
-        ef.write_gauss(path, mono, mono_env, "gauss.temp")
+
+        # optional: write input for normal modes
+        if run_type == "freq":
+            freq = True
+        else: 
+            freq= False
+
+        ef.write_gauss(path, mono, mono_env, "gauss.temp", freq)
         set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs)
 
         # visualise
@@ -385,7 +398,7 @@ if __name__ == "__main__":
         "--run_type",
         type=str,
         default="sp",
-        help="sp: generate files for single-point FrD(EE), freq: generate input for normal mode calculations",
+        help="sp: generate files for single-point FrD(EE), freq: write input for normal mode calculations",
     )
     parser.add_argument(
         "--parallel_job", type=bool, default=True, help="For FrD-LVC(EE): Generate displacements in parallel"
