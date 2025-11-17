@@ -15,6 +15,7 @@ from fromage.io import edit_file as ef
 from fromage.io import parse_config_file as pcf
 import fromage.utils.run_sequence as rs
 import fromage.scripts.fro_assign_charges as fc
+from fromage.utils.atom import Atom
 
 from fromage.utils.mol import Mol
 import argparse
@@ -219,23 +220,70 @@ def main(
     if inputs["print_tweak"]:
         ef.write_xyz("tweaked_cell.xyz", cell)
 
+
     # check len of region_1 is the same as expected
     n_fragments = len(region_1.segregate())
     if not n_fragments == n_monomers:
         raise ValueError("Different number of monomers than specified in config")
     else:
-         outfile.write(f"\nFragments detected: {n_fragments}")
+        outfile.write(f"\nFragments detected: {n_fragments}")
 
-    # generate shell region and PCE
-    outfile.write("\n-------------------------\n     Calling RunSeq\n-------------------------\n")
-    outfile.close()
-    run_sequence = rs.RunSeq(region_1, cell, inputs, out_file_name="fro_overdia.out")
-    region_2, high_points = run_sequence.run()
-    region_2.write_xyz("shell.xyz")
-    outfile = open(here + "/fro_overdia.out", "a")
-    outfile.write("Writing shell.xyz")
+    # read in charge distribution from previous run
+    if reuse_charges:
+        outfile.write("\n----------------------\n     Restart\n----------------------\n")
+        region_2 = rf.mol_from_file("shell.xyz")
+        outfile.write("\nReading in shell.xyz")
+        high_points = Mol([])
+
+        outfile.write("\nReading in high_charges.pc")
+        with open("high_charges.pc", "r") as pc_file:
+            next(pc_file)
+            for pc_line in pc_file:
+                pc_line =  pc_line.split()
+                pc = Atom("H", float(pc_line[0]), float(pc_line[1]), float(pc_line[2]), float(pc_line[3]))
+                # print(pc)
+                high_points.append(pc)
+        
+        outfile.write("\nReading in low_charges.pc")
+        with open("low_charges.pc", "r") as pc_file:
+            next(pc_file)
+            for i, pc in enumerate(pc_file):
+                region_2[i].q = float(pc.split()[-1])
+
+    else:
+        # generate shell region and PCE
+        outfile.write("\n-------------------------\n     Calling RunSeq\n-------------------------\n")
+        outfile.close()
+        run_sequence = rs.RunSeq(region_1, cell, inputs, out_file_name="fro_overdia.out")
+        region_2, high_points = run_sequence.run()
+        region_2.write_xyz("shell.xyz")
+        
+        #reopen output
+        outfile = open(here + "/fro_overdia.out", "a")
+
+        ## store point charges in files for reruns
+        outfile.write("Saving charges to high_charges.pc")
+        with open("high_charges.pc", "w") as pc_file:
+            pc_file.write("{}\n".format(len(high_points)))
+            for pc in high_points:
+                pc_file.write("{} {} {} {}\n".format(
+                pc.x, pc.y, pc.z, pc.q
+                ))
+        
+        outfile.write("Saving charges to low_charges.pc")
+        with open("low_charges.pc", "w") as pc_file:
+            pc_file.write("{}\n".format(len(region_2)))
+            for pc in region_2:
+                pc_file.write("{} {} {} {}\n".format(
+                pc.x, pc.y, pc.z, pc.q
+                ))
+
+
+        outfile = open(here + "/fro_overdia.out", "a")
+        outfile.write("Writing shell.xyz")
+
+
     outfile.write("\n-------------------------------------\n     Generating FrD(EE) input\n-------------------------------------")
-
     ## overwrite generated file read-in custom QM region (e.g. defect or optimised)
     if custom_region != None:
         outfile.write("\nModel region updated from model.init.xyz")
