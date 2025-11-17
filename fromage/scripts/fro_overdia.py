@@ -19,7 +19,6 @@ from fromage.utils.mol import Mol
 import argparse
 import subprocess
 
-
 # a few functions to only be used in main
 def populate_cell(in_mol, program, pop_file, method):
     """
@@ -150,44 +149,6 @@ def vis_pce(mol, charges, name):
     vis.write_xyz(name)
     return
 
-
-def prep_geoopt(agg, region_2, high_points):
-    """
-    Hard-coded to gaussian16 and xTB; a more extensible framework can be made
-    """
-    here = os.getcwd()
-    # write fromage directories
-    calc_paths = ["opt", "opt/mh", "opt/ml", "opt/rl"]
-    for cpath in calc_paths:
-        if not os.path.exists(cpath):
-            os.mkdir(cpath)
-
-    high_level_write, low_level_write = getPrograms()
-
-    # write ml
-    os.chdir("opt/ml")
-    low_level_write("ml.temp", [], region_2, os.path.join(here, "ml.template"))
-    os.chdir(here)
-
-    # write rl
-    os.chdir("opt/rl")
-    low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
-    os.chdir(here)
-
-    # write mh
-    os.chdir("opt/mh")
-    high_level_write("mh.temp", [], region_2, os.path.join(here, "mh.template"))
-    os.chdir(here)
-    return
-
-
-def run_opt(agg):
-    """
-    Call Sequence method from fro_run.py and peform geometry optimisation in this code
-    """
-    return NotImplementedError("Run optimization seperately")
-
-
 def main(
     n_agg_states,
     n_mono_states,
@@ -274,7 +235,6 @@ def main(
 
     ## iterate to get list of fragments and the aggregate object. NB: the atoms in fragments and monomers *must* be in same order
     monomers, mono_envs, mono_paths, agg = [], [], [], Mol([])
-    print(here)
 
     # iterate through number of fragments
     for i in range(n_monomers):
@@ -299,14 +259,6 @@ def main(
     # visualise
     if vis_charges:
         vis_pce(agg, high_points, "vis/agg.xyz")
-
-    # run geometry optimisation
-    if run_type != "sp":
-
-        prep_geoopt(agg, high_points, region_2)
-
-        # 2. generate fromage calculation input files
-        # 3. call scipy.optimize.minize
 
     # make the gaussian16 input
     for i, (mono, mono_env, path) in enumerate(zip(monomers, mono_envs, mono_paths)):
