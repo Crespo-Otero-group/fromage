@@ -107,12 +107,14 @@ def getPrograms():
 def neutralise_cluster(clust, outfile):
     """Remove any net charge from cluster"""
     net_charge = sum([atom.q for atom in clust])
-    # print("Initial charge: ", net_charge)
-    outfile.write(f"\nNet charge: {net_charge}")
+
+    #  neutralise 
+    corr = net_charge / len(clust)
     for atom in clust:
-        atom.q -= net_charge / len(clust)
+        atom.q -= corr
     net_charge = sum([atom.q for atom in clust])
-    # print("Final charge: ", net_charge)
+    outfile.write(f"\nNet charge: {net_charge:.2e} (Correction: {corr:.2e}) ")
+   
     return clust
 
 
@@ -159,6 +161,7 @@ def main(
     run_type,
     parallel_job,
     custom_region,
+    reuse_charges
 ):
     """
     Run RunSequnce object to get point charges, then create three files: mono1.com, mono2.com and agg
@@ -224,7 +227,7 @@ def main(
          outfile.write(f"\nFragments detected: {n_fragments}")
 
     # generate shell region and PCE
-    outfile.write("\n-------------------------\n     Starting RunSeq\n-------------------------\n")
+    outfile.write("\n-------------------------\n     Calling RunSeq\n-------------------------\n")
     outfile.close()
     run_sequence = rs.RunSeq(region_1, cell, inputs, out_file_name="fro_overdia.out")
     region_2, high_points = run_sequence.run()
@@ -261,6 +264,7 @@ def main(
         agg.extend(agg_as_mols[i])
 
         # get list of environment cops
+        outfile.write(f"\nGetting monomer {i+1} charges")
         mono_envs.append(neutralise_cluster(high_points.copy(), outfile))
 
         # get file path
@@ -307,7 +311,7 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Script for generating input files for Overdia diabatisation calculation. Will generate three files (mono1.com, mono2.com, and agg.com) for Gaussian16 calculations. Template file pce.tmp must be specified."
+        description="A script for generating G16 input files (i.e. mono1.com, mono2.com, and agg.com) for Overdia diabatisation calculation. The customizable G16 template file (gauss.temp) must be provided."
     )
 
     # Define optional arguments for variable settings
@@ -315,32 +319,34 @@ if __name__ == "__main__":
         "--N",
         type=int,
         default=60,
-        help="Make input with N aggregate states in Gaussian16",
+        help="N aggregate excited states",
     )
     parser.add_argument(
         "--M",
         type=int,
         default=10,
-        help="Make input with M monomer states in Gaussian16",
+        help="M monomer excited states",
     )
     parser.add_argument(
-        "--nprocs", type=int, default=40, help="Request nprocs processors in Gaussian16"
+        "--nprocs", type=int, default=40, help="nproc processors in input file"
     )
     parser.add_argument(
-        "--vis_charges", type=bool, default=True, help="Visualize charges"
+        "--vis_charges", type=bool, default=True, help="Visualize the electrostatic embedding as .xyz files written to vis/"
     )
     parser.add_argument(
         "--run_type",
         type=str,
         default="sp",
-        help="sp: single-point, opt: geometry optimisation",
+        help="sp: generate files for single-point FrD(EE), freq: generate input for normal mode calculations",
     )
     parser.add_argument(
-        "--parallel_job", type=bool, default=True, help="Generate displacements in parallel"
+        "--parallel_job", type=bool, default=True, help="For FrD-LVC(EE): Generate displacements in parallel"
     )
     parser.add_argument(
-        "--custom_region", type=str, default=None, help="Custom region file"
+        "--custom_region", type=str, default=None, help="Manually specify mol.init.xyz from model.init.xyz file. Useful for investigating different parts of the PES or defects."
     )
+    parser.add_argument('--reuse_charges', type=str, default=False, help='Read charges.pc file, Requires mol.init.xyz, shell.xyz as well')
+
 
     args = parser.parse_args()
     main(
@@ -351,4 +357,5 @@ if __name__ == "__main__":
         args.run_type,
         args.parallel_job,
         args.custom_region,
+        args.reuse_charges
     )

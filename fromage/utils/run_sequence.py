@@ -28,10 +28,11 @@ class RunSeq(object):
         ew_nosc : EEC
         ew_sc : SC-EEC
     """
-    def __init__(self, region_1, cell, inputs):
+    def __init__(self, region_1, cell, inputs, out_file_name="prep.out"):
         self.region_1 = region_1
         self.cell = cell
         self.inputs = inputs
+
         if self.inputs["ewald"]:
             pref = "ew_"
         else:
@@ -41,10 +42,11 @@ class RunSeq(object):
         else:
             post = "nosc"
         self.mode = pref + post
+        
         # dirs
         self.here = os.getcwd()
         self.ewald_path = os.path.join(self.here,"ewald/")
-        self.out_file = open("prep.out","a")
+        self.out_file = open(out_file_name,"a")
         return
 
     def write_out(self,string):
