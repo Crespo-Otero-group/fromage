@@ -8,6 +8,7 @@ Michael Ingham 16/04/24
 """
 import os
 from datetime import datetime
+import numpy as np 
 
 from fromage.io import read_file as rf
 from fromage.io import edit_file as ef
@@ -40,7 +41,7 @@ def populate_cell(in_mol, program, pop_file, method):
         Acceptable strings are "esp", "mulliken" and "hirshfeld"
 
     """
-    outfile = open(os.getcwd() + "/frooverdia.out", "a")
+    outfile = open(os.getcwd() + "/fro_overdia.out", "a")
     if program.lower() == "cp2k":
         charges = rf.read_cp2k(pop_file, method)[0]
         outfile.write("Read " + str(len(in_mol)) + " charges in cp2k_file\n")
@@ -103,15 +104,15 @@ def getPrograms():
     return writer_list[0], writer_list[1]
 
 
-def neutralise_cluster(clust):
+def neutralise_cluster(clust, outfile):
     """Remove any net charge from cluster"""
     net_charge = sum([atom.q for atom in clust])
-    print("Initial charge: ", net_charge)
-    print("Adding correction: ", net_charge / len(clust))
+    # print("Initial charge: ", net_charge)
+    outfile.write(f"\nNet charge: {net_charge}")
     for atom in clust:
         atom.q -= net_charge / len(clust)
     net_charge = sum([atom.q for atom in clust])
-    print("Final charge: ", net_charge)
+    # print("Final charge: ", net_charge)
     return clust
 
 
@@ -130,7 +131,7 @@ def set_gauss(filep, nstates, type, nprocs):
     return
 
 
-def vis_pce(mol, charges, name):
+def vis_pce(mol, charges, name, outfile=None):
     """
     change point atom.elem to hydrogen and add to molecule, then write xyz.
     """
@@ -143,9 +144,10 @@ def vis_pce(mol, charges, name):
         char_vis = char.copy()
         char_vis.elem = "H"
         vis.append(char_vis)
-    print("number of charges: ", len(vis))
+
     vis.remove_duplicates()
-    print("number of charges (2): ", len(vis))
+    if outfile:
+        outfile.write("Number of point charges: ", len(vis))
     vis.write_xyz(name)
     return
 
@@ -161,12 +163,14 @@ def main(
     """
     Run RunSequnce object to get point charges, then create three files: mono1.com, mono2.com and agg
 
-    So far, Ewald is performed for just the agg, then the local charges modified. Indicies is used to specify the fragments for some other scripts I've written
+    So far, Ewald is performed for just the agg, then the local charges modified. Indices is used to specify the fragments for some other scripts I've written
     """
-    # location
-    print("entering main")
     here = os.getcwd()
-    outfile = open(here + "/frooverdia.out", "w")
+
+    if os.path.exists("fro_overdia.out"):
+        os.remove("fro_overdia.out")
+
+    outfile = open(here + "/fro_overdia.out", "w")
 
     # print start time
     start_time = datetime.now()
@@ -178,60 +182,71 @@ def main(
     # read the input cell
     cell = rf.mol_from_file(inputs["cell_file"])
     cell.vectors = inputs["vectors"]
-    print(len(cell))
     cell.bonding = inputs["bonding"]
     cell.thresh = inputs["bond_thresh"]
     cell = cell.confined()
-    outfile.write("Read " + str(len(cell)) + " atoms in cell_file\n")
+
+    # write some nice output
+    outfile.write("-------------------------\n     Input information\n-------------------------")
+    outfile.write(f"\nAtoms in unit cell: {len(cell)}")
+    outfile.write(f"\nBonding: {cell.thresh}-{cell.bonding}")
 
     # get indices from config
     indices = inputs["atom_label"]
+    outfile.write("\nAtom labels: " + " ".join(map(str, np.array(indices)+1)))
     if len(indices) < 2:
         raise ValueError(
             "At least two molecules must be included in model for fragment diabatisation"
         )
     n_monomers = len(indices)
-    outfile.write(f"Number of fragments: {n_mono_states}")
-    print("number of fragments", n_monomers)
 
     # High level charge assignment to cell
-    print("Starting centered_cell")
     populate_cell(
         cell,
         inputs["high_pop_program"],
         inputs["high_pop_file"],
         inputs["high_pop_method"],
     )
+    outfile.write("\nPopulation file: " + inputs["high_pop_file"])
     region_1, cell = cell.centered_mols(indices)  ## use fragments specified by argparse
     region_1_pc = region_1.copy()
 
     region_1.write_xyz("mol.init.xyz")
+    outfile.write("\nWriting mol.init.xyz")
     if inputs["print_tweak"]:
         ef.write_xyz("tweaked_cell.xyz", cell)
 
     # check len of region_1 is the same as expected
-    if not len(region_1.segregate()) == n_monomers:
+    n_fragments = len(region_1.segregate())
+    if not n_fragments == n_monomers:
         raise ValueError("Different number of monomers than specified in config")
+    else:
+         outfile.write(f"\nFragments detected: {n_fragments}")
 
     # generate shell region and PCE
-    print("starting RunSeq")
-    run_sequence = rs.RunSeq(region_1, cell, inputs)
+    outfile.write("\n-------------------------\n     Starting RunSeq\n-------------------------\n")
+    outfile.close()
+    run_sequence = rs.RunSeq(region_1, cell, inputs, out_file_name="fro_overdia.out")
     region_2, high_points = run_sequence.run()
     region_2.write_xyz("shell.xyz")
-    print("Finished RunSeq")
+    outfile = open(here + "/fro_overdia.out", "a")
+    outfile.write("Writing shell.xyz")
+    outfile.write("\n-------------------------------------\n     Generating FrD(EE) input\n-------------------------------------")
 
     ## overwrite generated file read-in custom QM region (e.g. defect or optimised)
-    print("assinging charges to QM region")
     if custom_region != None:
+        outfile.write("\nModel region updated from model.init.xyz")
         region_1 = rf.mol_from_file("model.init.xyz")
         fc.assign_charges(region_1_pc, region_1)
 
     # neutralise shell and write agg file
-    high_points = neutralise_cluster(high_points)
+    outfile.write(f"\nEnsuring fromage point charges are neutral")
+    high_points = neutralise_cluster(high_points, outfile)
 
     # divide agg into respective monomers and reconsitute; consistency of atom indexing between (mono1 + mono2) and agg
     # is required for Overdia to run
     agg_as_mols = region_1.segregate(diff_mols=False)
+    outfile.write(f"\nReordering aggregate atoms by monomer")
 
     ## iterate to get list of fragments and the aggregate object. NB: the atoms in fragments and monomers *must* be in same order
     monomers, mono_envs, mono_paths, agg = [], [], [], Mol([])
@@ -246,36 +261,46 @@ def main(
         agg.extend(agg_as_mols[i])
 
         # get list of environment cops
-        mono_envs.append(neutralise_cluster(high_points.copy()))
+        mono_envs.append(neutralise_cluster(high_points.copy(), outfile))
 
         # get file path
         mono_paths.append(f"mono{i+1}.com")
 
     # Make aggregate gaussian16
+    outfile.write(f"\n\nAggregate")
+    outfile.write(f"\nWriting G16 file 'agg.com'")
     agg_p = "agg.com"
-    ef.write_gauss(agg_p, agg, high_points, "pce.temp")
+    ef.write_gauss(agg_p, agg, high_points, "gauss.temp")
     set_gauss(agg_p, nstates=n_agg_states, type="agg", nprocs=nprocs)
 
     # visualise
     if vis_charges:
+        outfile.write(f"\nGenerating visualisation 'vis/agg.xyz'")
         vis_pce(agg, high_points, "vis/agg.xyz")
 
     # make the gaussian16 input
     for i, (mono, mono_env, path) in enumerate(zip(monomers, mono_envs, mono_paths)):
+        outfile.write(f"\n\nMonmer {i+1}")
         ## add missing point charges from dimer calculation
         for j in range(len(agg_as_mols)):
             if j != i:
-                print(f"Adding missing charges in mono{i} environment")
+                outfile.write(f"\nAdding charges to monomer environment")
                 mono_env.extend(agg_as_mols[j])
 
-        # print("mono1 env: ", len(mono1_env))
-        ef.write_gauss(path, mono, mono_env, "pce.temp")
+        # write gaussian input
+        outfile.write(f"\nWriting G16 file 'mono{i}.com'")
+        ef.write_gauss(path, mono, mono_env, "gauss.temp")
         set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs)
 
         # visualise
         if vis_charges:
+            outfile.write(f"\nGenerating visualisation 'vis/mono{i+1}.xyz'")
             vis_pce(mono, mono_env, f"vis/mono{i+1}.xyz")
 
+    end_time = datetime.now()
+    outfile.write("\n\nELAPSED TIME: " + str(end_time - start_time) + "\n")
+    outfile.write("ENDING TIME: " + str(end_time) + "\n")
+    outfile.close()
     outfile.close()
     return
 
@@ -311,7 +336,7 @@ if __name__ == "__main__":
         help="sp: single-point, opt: geometry optimisation",
     )
     parser.add_argument(
-        "--parallel_job", type=bool, default=True, help="Run in parallel"
+        "--parallel_job", type=bool, default=True, help="Generate displacements in parallel"
     )
     parser.add_argument(
         "--custom_region", type=str, default=None, help="Custom region file"
