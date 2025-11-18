@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 """
-Script to generate point-charge embedded Gaussian16 calculations for diabatisation with Overdia.
+Script to generate TD-DFT input with electrostatic emebdding in Gaussian16. Output is ready
+for FrD(EE) diabatisation with Overdia. TDA may also be used.
 
-Currently only for agg but can be extedended to aggregates. Overdia must use TDDFT or TDA.
-
-Michael Ingham 16/04/24
+Michael Ingham (17/11/25)
 """
 import os
 from datetime import datetime
@@ -123,7 +122,6 @@ def set_gauss(filep, nstates, type, nprocs, freq_job=False):
     """
     run sed command to add checkpoint string and number of excited states for each. Probably can do this in a better way
     """
-    
 
     cmd = f"sed  -i 's/xxxchkxxx/{type}/g' {filep}"
     subprocess.run(cmd, shell=True)
@@ -131,11 +129,13 @@ def set_gauss(filep, nstates, type, nprocs, freq_job=False):
     cmd = f"sed  -i 's/xxxnprocsxxx/{str(nprocs)}/g' {filep}"
     subprocess.run(cmd, shell=True)
 
-    if freq_job:
-        cmd = f"sed  -i 's/td/{str(nprocs)}/g' {filep}"
+    if not freq_job:
+        cmd = f"sed  -i 's/xxxnstatesxxx/{str(nstates)}/g' {filep}"
         subprocess.run(cmd, shell=True)
     else:
         cmd = f"sed  -i 's/td(nstates=xxxnstatesxxx,conver=6)/freq=HPmodes/g' {filep}"
+        subprocess.run(cmd, shell=True)
+        cmd = f"sed  -i 's#iop(9/40=5,3/33=4)#iop(9/9=3)#g' {filep}"
         subprocess.run(cmd, shell=True)
     return
 
@@ -283,13 +283,19 @@ def main(
                 pc_file.write("{} {} {} {}\n".format(
                 pc.x, pc.y, pc.z, pc.q
                 ))
-
-
         outfile = open(here + "/fro_overdia.out", "a")
         outfile.write("Writing shell.xyz")
 
+    # optional: write input for normal modes instead of FrD(EE)
+    if run_type == "freq":
+        freq_bool = True
+        run_str = "Vib. analysis"
+    else: 
+        freq_bool = False
+        run_str = "FrD(EE)"
 
-    outfile.write("\n-------------------------------------\n     Generating FrD(EE) input\n-------------------------------------")
+
+    outfile.write(f"\n-------------------------------------\n     Generating {run_str} input\n-------------------------------------")
     ## overwrite generated file read-in custom QM region (e.g. defect or optimised)
     if custom_region != None:
         outfile.write("\nModel region updated from model.init.xyz")
@@ -329,7 +335,7 @@ def main(
     outfile.write(f"\nWriting G16 file 'agg.com'")
     agg_p = "agg.com"
     ef.write_gauss(agg_p, agg, high_points, "gauss.temp")
-    set_gauss(agg_p, nstates=n_agg_states, type="agg", nprocs=nprocs)
+    set_gauss(agg_p, nstates=n_agg_states, type="agg", nprocs=nprocs, freq_job=freq_bool)
 
     # visualise
     if vis_charges:
@@ -346,27 +352,35 @@ def main(
                 mono_env.extend(agg_as_mols[j])
 
         # write gaussian input
-        outfile.write(f"\nWriting G16 file 'mono{i}.com'")
+        outfile.write(f"\nWriting G16 file 'mono{i+1}.com'")
 
-        # optional: write input for normal modes
-        if run_type == "freq":
-            freq = True
-        else: 
-            freq= False
-
-        ef.write_gauss(path, mono, mono_env, "gauss.temp", freq)
-        set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs)
+    
+        ef.write_gauss(path, mono, mono_env, "gauss.temp")
+        set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs, freq_job=freq_bool)
 
         # visualise
         if vis_charges:
             outfile.write(f"\nGenerating visualisation 'vis/mono{i+1}.xyz'")
             vis_pce(mono, mono_env, f"vis/mono{i+1}.xyz")
 
+    # optional: move frequency files to directory
+    if run_type == "freq":
+        os.makedirs("freq", exist_ok=True)
+        subprocess.run("mv agg.com freq/", shell=True)
+        for i in range(n_fragments):
+            subprocess.run(f"mv mono{i+1}.com freq/", shell=True)  
+    
     end_time = datetime.now()
     outfile.write("\n\nELAPSED TIME: " + str(end_time - start_time) + "\n")
     outfile.write("ENDING TIME: " + str(end_time) + "\n")
     outfile.close()
     outfile.close()
+    return
+
+def gen_displacements():
+    """Generate input for FrD-LVC(EE) calculation"""
+
+
     return
 
 
@@ -398,16 +412,15 @@ if __name__ == "__main__":
         "--run_type",
         type=str,
         default="sp",
-        help="sp: generate files for single-point FrD(EE), freq: write input for normal mode calculations",
+        help="sp: generate files for single-point FrD(EE); freq: write input for normal mode calculations; frd_lvc: also generate displacements",
     )
     parser.add_argument(
-        "--parallel_job", type=bool, default=True, help="For FrD-LVC(EE): Generate displacements in parallel"
+        "--parallel_job", type=bool, default=True, help="For FrD-LVC(EE) only: Generate displacements in parallel"
     )
     parser.add_argument(
         "--custom_region", type=str, default=None, help="Manually specify mol.init.xyz from model.init.xyz file. Useful for investigating different parts of the PES or defects."
     )
     parser.add_argument('--reuse_charges', type=str, default=False, help='Read charges.pc file, Requires mol.init.xyz, shell.xyz as well')
-
 
     args = parser.parse_args()
     main(
