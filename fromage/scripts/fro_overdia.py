@@ -160,6 +160,162 @@ def vis_pce(mol, charges, name, outfile=None):
     vis.write_xyz(name)
     return
 
+def write_inputfc(n_atoms, filep):
+    """
+    write input_prepfc file
+    """
+
+    prepfc_file = open("input_prepfc", "w")
+    prepfc_file.write(f"{int(n_atoms)}\n1.d0\n\'no'\n")
+
+    with open(filep, "r") as f:
+        lines = f.readlines()
+        reading_geom = False
+        reading_freq = False
+        # write input geometry
+        for line in lines:
+            if line.startswith("                          Input orientation:"):
+                reading_geom=True 
+                skip = 0
+
+            if reading_geom:
+                if skip > 4:
+                    prepfc_file.write(line)
+                skip +=1 
+                if skip == n_atoms + 5:
+                    reading_geom=False
+            
+            if line.startswith(" and normal coordinates:"):
+                reading_freq=True 
+                # skip = 0
+            elif reading_freq:
+                # if skip > 1:
+                prepfc_file.write(line)
+
+    prepfc_file.close()
+    return
+
+def write_inputgpd(n_atoms, n_agg_states):
+    """
+    Write input_genepointder
+    
+    Maybe needs some tuning to allow Nsel to be defined
+    """
+    prepgpd_file = open("input_genepointder", "w")
+    prepgpd_file.write(f"{int(n_atoms)}\n")
+    
+    #num modes
+    modes = 3*n_atoms - 6
+    prepgpd_file.write(f"{modes} {modes}\n")
+
+    with open("masses", "r") as massf:
+        lines = massf.readlines()
+        for line in lines:
+            prepgpd_file.write(line)
+
+    prepgpd_file.write(f"state\n0.1d0\n")
+    
+    with open("gauss.temp", "r") as gf:
+        lines = gf.readlines()
+        for line in lines:
+            if line.startswith("#"):
+                prepgpd_file.write(line)
+
+    prepgpd_file.close()
+
+    #change IOP settings
+    cmd = 'sed -i "s#iop(9/40=5,3/33=4)#iop(9/40=4)#g" input_genepointder'
+    subprocess.run(cmd,shell=True)
+
+    # add excited states
+    cmd = f"sed -i 's#xxxnstatesxxx#{n_agg_states}#g' input_genepointder"
+    subprocess.run(cmd,shell=True)
+
+    return
+
+def gen_frd_lvc(agg,n_agg_states, monomers, outfile, charges, parallel_job=True, mode="inter"):
+    """
+    Generate input for FrD-LVC(EE) calculation and run relavent scripts.
+    If you want to customize the FrD-LVC(EE) input (i.e. number of displacements,
+    G16 settings manually, remove imaginary modes, etc) you can modify the files after
+    the initial run
+    """
+
+    outfile.write("\n\nPreparing FrD-LVC(EE) files")
+    
+    n_atoms = len(agg)
+    if mode == "inter":
+        # write input_prepfc
+        if not os.path.exists("input_prepfc"):
+            write_inputfc(n_atoms,"agg.log")
+            outfile.write("\nWriting input_prepfc")
+        else:
+            outfile.write("\Reading input_prepfc from previous run")
+
+        # run
+        cmd = "prep.fc.e < input_prepfc > state"
+        subprocess.run(cmd, shell=True)
+        outfile.write("\nRunning prep.fc.e < input_prepfc > state")
+
+        # write input_prepfc
+        if not os.path.exists("input_genepointder"):
+            write_inputgpd(n_atoms, n_agg_states)
+            outfile.write("\nWriting input_genepointder")
+        else:
+            outfile.write("\Reading input_genepointder from previous run")
+
+        # run
+        cmd = "gene-pointder.e < input_genepointder > output_genepointder"
+        subprocess.run(cmd, shell=True)
+        outfile.write("\nRunning  gene-pointder.e < input_genepointder > output_genepointder")
+        outfile.write("\ngene-pointder.e has written displacements as a multilink G16 file 'gaussian.com'")
+
+    if parallel_job: 
+        outfile.write(f"\n\nWriting {3*n_atoms - 6 + 1 } parallel jobs")
+        with open("gaussian.com", "r") as gf:
+            lines = gf.readlines()
+            count = 1
+            for line in lines:
+                # print(line)
+                if line.startswith("--Link1--"):
+                    # close open directory
+                    if count > 1:
+
+                        # add electrostatic embedding to each displacement 
+                        for pc in charges:
+                            mode_g16.write("{:.5f} {:.5f} {:.5f} {:.9f}\n".format(
+                            pc.x, pc.y, pc.z, pc.q
+                            ))
+
+                        #close old file
+                        mode_g16.write("\n")
+                        mode_g16.close()
+                        outfile.write(f"\ngeometry {count-1}")
+
+                    # make dir for mode
+                    os.makedirs(str(count), exist_ok=True)
+
+                    # open a new gaussian file
+                    mode_g16 = open(f"{count}/td.com", "w")
+
+                    # next mode
+                    count +=1
+                
+                else:
+                    mode_g16.write(line)
+            
+            # Final geometry
+            for pc in charges:
+                mode_g16.write("{:.5f} {:.5f} {:.5f} {:.9f}\n".format(
+                pc.x, pc.y, pc.z, pc.q
+                ))
+
+            #close final file
+            mode_g16.write("\n")
+            mode_g16.close()
+            outfile.write(f"\ngeometry {count-1}")
+    return
+
 def main(
     n_agg_states,
     n_mono_states,
@@ -198,6 +354,7 @@ def main(
 
     # write some nice output
     outfile.write("-------------------------\n     Input information\n-------------------------")
+    outfile.write(f"\nJob type: {run_type}")
     outfile.write(f"\nAtoms in unit cell: {len(cell)}")
     outfile.write(f"\nBonding: {cell.thresh}-{cell.bonding}")
 
@@ -290,7 +447,10 @@ def main(
     if run_type == "freq":
         freq_bool = True
         run_str = "Vib. analysis"
-    else: 
+    elif run_type=="frdlvc": 
+        freq_bool = False
+        run_str = "FrD-LVC(EE)"
+    else:
         freq_bool = False
         run_str = "FrD(EE)"
 
@@ -330,59 +490,57 @@ def main(
         # get file path
         mono_paths.append(f"mono{i+1}.com")
 
-    # Make aggregate gaussian16
-    outfile.write(f"\n\nAggregate")
-    outfile.write(f"\nWriting G16 file 'agg.com'")
-    agg_p = "agg.com"
-    ef.write_gauss(agg_p, agg, high_points, "gauss.temp")
-    set_gauss(agg_p, nstates=n_agg_states, type="agg", nprocs=nprocs, freq_job=freq_bool)
-
-    # visualise
-    if vis_charges:
-        outfile.write(f"\nGenerating visualisation 'vis/agg.xyz'")
-        vis_pce(agg, high_points, "vis/agg.xyz")
-
-    # make the gaussian16 input
-    for i, (mono, mono_env, path) in enumerate(zip(monomers, mono_envs, mono_paths)):
-        outfile.write(f"\n\nMonmer {i+1}")
-        ## add missing point charges from dimer calculation
-        for j in range(len(agg_as_mols)):
-            if j != i:
-                outfile.write(f"\nAdding charges to monomer environment")
-                mono_env.extend(agg_as_mols[j])
-
-        # write gaussian input
-        outfile.write(f"\nWriting G16 file 'mono{i+1}.com'")
-
-    
-        ef.write_gauss(path, mono, mono_env, "gauss.temp")
-        set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs, freq_job=freq_bool)
+    if run_type in ["sp", "freq"]: 
+        # Make aggregate gaussian16
+        outfile.write(f"\n\nAggregate")
+        outfile.write(f"\nWriting G16 file 'agg.com'")
+        agg_p = "agg.com"
+        ef.write_gauss(agg_p, agg, high_points, "gauss.temp")
+        set_gauss(agg_p, nstates=n_agg_states, type="agg", nprocs=nprocs, freq_job=freq_bool)
 
         # visualise
         if vis_charges:
-            outfile.write(f"\nGenerating visualisation 'vis/mono{i+1}.xyz'")
-            vis_pce(mono, mono_env, f"vis/mono{i+1}.xyz")
+            outfile.write(f"\nGenerating visualisation 'vis/agg.xyz'")
+            vis_pce(agg, high_points, "vis/agg.xyz")
 
-    # optional: move frequency files to directory
-    if run_type == "freq":
-        os.makedirs("freq", exist_ok=True)
-        subprocess.run("mv agg.com freq/", shell=True)
-        for i in range(n_fragments):
-            subprocess.run(f"mv mono{i+1}.com freq/", shell=True)  
+        # make the gaussian16 input
+        for i, (mono, mono_env, path) in enumerate(zip(monomers, mono_envs, mono_paths)):
+            outfile.write(f"\n\nMonmer {i+1}")
+            ## add missing point charges from dimer calculation
+            for j in range(len(agg_as_mols)):
+                if j != i:
+                    outfile.write(f"\nAdding charges to monomer environment")
+                    mono_env.extend(agg_as_mols[j])
+
+            # write gaussian input
+            outfile.write(f"\nWriting G16 file 'mono{i+1}.com'")
+
+        
+            ef.write_gauss(path, mono, mono_env, "gauss.temp")
+            set_gauss(path, nstates=n_mono_states, type=f"mono{i+1}", nprocs=nprocs, freq_job=freq_bool)
+
+            # visualise
+            if vis_charges:
+                outfile.write(f"\nGenerating visualisation 'vis/mono{i+1}.xyz'")
+                vis_pce(mono, mono_env, f"vis/mono{i+1}.xyz")
+
+        # optional: move frequency files to directory
+        if run_type == "freq":
+            os.makedirs("freq", exist_ok=True)
+            subprocess.run("mv agg.com freq/", shell=True)
+            for i in range(n_fragments):
+                subprocess.run(f"mv mono{i+1}.com freq/", shell=True)  
     
+    ## generate displacments
+    elif run_type=="frdlvc":
+        gen_frd_lvc(agg, n_agg_states, monomers,outfile,high_points, parallel_job,mode="inter")
+
     end_time = datetime.now()
     outfile.write("\n\nELAPSED TIME: " + str(end_time - start_time) + "\n")
     outfile.write("ENDING TIME: " + str(end_time) + "\n")
     outfile.close()
     outfile.close()
     return
-
-def gen_displacements():
-    """Generate input for FrD-LVC(EE) calculation"""
-
-
-    return
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -423,8 +581,8 @@ if __name__ == "__main__":
     parser.add_argument('--reuse_charges', type=str, default=False, help='Read charges.pc file, Requires mol.init.xyz, shell.xyz as well')
 
     args = parser.parse_args()
-    main(
-        args.N,
+
+    main(args.N,
         args.M,
         args.nprocs,
         args.vis_charges,
