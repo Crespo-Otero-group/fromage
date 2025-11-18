@@ -1,0 +1,44 @@
+STARTING TIME: 2025-11-18 10:25:13.951689
+-------------------------
+     Input information
+-------------------------
+Atoms in unit cell: 48
+Bonding: 1.5-dis
+Atom labels: 1 16
+Population file: pop.log
+Writing mol.init.xyz
+Fragments detected: 2
+-------------------------
+     Calling RunSeq
+-------------------------
+Outer region generated with 1320 atoms.
+Ewald calculation started
+Ewald calculation finished after 15.371 s
+Saving charges to high_charges.pcSaving charges to low_charges.pcWriting shell.xyz
+-------------------------------------
+     Generating FrD(EE) input
+-------------------------------------
+Ensuring fromage point charges are neutral
+Net charge: 1.73e-14 (Correction: 9.84e-10) 
+Reordering aggregate atoms by monomer
+Getting monomer 1 charges
+Net charge: 1.54e-14 (Correction: 5.66e-18) 
+Getting monomer 2 charges
+Net charge: 1.54e-14 (Correction: 5.66e-18) 
+
+Aggregate
+Writing G16 file 'agg.com'
+Generating visualisation 'vis/agg.xyz'
+
+Monmer 1
+Adding charges to monomer environment
+Writing G16 file 'mono0.com'
+Generating visualisation 'vis/mono1.xyz'
+
+Monmer 2
+Adding charges to monomer environment
+Writing G16 file 'mono1.com'
+Generating visualisation 'vis/mono2.xyz'
+
+ELAPSED TIME: 0:06:12.052861
+ENDING TIME: 2025-11-18 10:31:26.004550

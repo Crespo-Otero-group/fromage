@@ -14,5 +14,5 @@ nAt 500
 aN 2
 bN 2
 cN 2
-clust_rad 4
-ewald false
+clust_rad 10
+ewald true
