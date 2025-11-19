@@ -1,0 +1,12 @@
+%nprocshared=xxxnprocsxxx
+%mem=100GB
+%chk=xxxchkxxx.chk
+#p M062X/cc-pvdz charge iop(9/40=5,3/33=4) nosymm scf=tight td(nstates=xxxnstatesxxx,conver=6)
+
+gaussian16 calculation
+
+0  1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX
+

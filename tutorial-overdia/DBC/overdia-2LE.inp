@@ -1,0 +1,18 @@
+'agg.log'    !single point gaussian log file
+0                       !number of modes
+0.1d0                   !dimensionless shift
+60                    !number of electronic states of dimer
+custom_states           !keyword to specify custom states/fragment diabatisation
+2                       !number of diabatic states from input
+2                       !number of fragments
+'mono1'
+'mono2'              !monomer files in same order as dimer
+
+start_read_states           
+! monomer1
+d1 1 s1    
+
+! monomer2
+d2 2 s1    
+end_read_states
+
