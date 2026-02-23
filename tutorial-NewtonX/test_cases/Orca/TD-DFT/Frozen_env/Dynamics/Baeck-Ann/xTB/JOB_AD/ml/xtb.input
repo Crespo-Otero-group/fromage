@@ -1,0 +1,3 @@
+$embedding
+    input=xtb_charge.pc
+$end

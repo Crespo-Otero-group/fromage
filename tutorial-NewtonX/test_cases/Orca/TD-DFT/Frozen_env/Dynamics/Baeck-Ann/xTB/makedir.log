@@ -1,0 +1,1044 @@
+
+          ============================================================  
+                                     NEWTON-X                           
+                   Newtonian dynamics close to the crossing seam        
+          ============================================================  
+
+                                  www.newtonx.org                       
+
+    Newton-X CS version 2.6 (build 01, 2023-10-25)
+    www.newtonx.org
+----------------------------------------------------------------------
+    The Newton-X CS program is distributed free of charge for non-
+    commercial and non-profit uses. You may use the program freely 
+    and adapt the code to your needs. Please, if you have any 
+    enhancements, share them with us. You are, however, not allowed 
+    to re-distribute code or binaries in parts or total. Anyone 
+    intending to use Newton-X must contact us. This program is 
+    shipped to the user "as is". There is no guarantee that it will 
+    work as described. Usage is at your own risk, there is no 
+    liability taken for any damage or loss of data and/or money. 
+    If you experience problems, you may contact the developers and 
+    a community of users at the Newton-X discussion group, but bear 
+    in mind that there is no kind of official support for Newton-X.
+
+    Cite Newton-X as:
+    M. Barbatti, G. Granucci, M. Ruckenbauer, F. Plasser, 
+    R. Crespo-Otero, J. Pittner, M. Persico, H. Lischka, NEWTON-X: 
+    a package for Newtonian dynamics close to the crossing seam, 
+    version 2.5, www.newtonx.org (2022).
+
+    M. Barbatti, M. Ruckenbauer, F. Plasser, J. Pittner, G. Granucci, 
+    M. Persico, H. Lischka, WIREs: Comp. Mol. Sci., 4, 26 (2014).
+
+    Please, check the documentation for references to specific 
+    methods and algorithms.
+
+    For download the program, documentation, and tutorial, visit:
+    http://www.newtonx.org
+
+    For support, visit the Newton-X discussion group at:
+    https://groups.google.com/d/forum/newtonx
+----------------------------------------------------------------------
+
+
+Newton-X path: /user/home/li23821/Programs/newtonx-cs/bin
+
+Starting Initial Condition selection 
+ 
+
+makedir.pl:
+    title     = title
+    type      = 4
+    subfile   = pmold
+    batchdef  = #PBS -N
+    seed      = 1234
+    nis       = 1
+    nfs       = 2
+    delta     = 0.01
+    eps       = 0.005
+    kappa     = 0
+    os_condon = -1
+    prob_kind = F 
+    screen    = 0 
+    norm      = local 
+    e_center  = 0 
+    e_var     = 0.5 
+    nref      = 1 
+    temp      = 0
+    l_shape   = gauss
+    dens      = N
+    absenergy = 0
+    run_IS    = 0
+    prtlv     = 1 
+
+
+
+ The following transitions will be considered:
+ Initial state = 1   =>   Final state = 2
+
+
+=============== Checking obligatory files and directories ===============
+
+File initial_condition.1.2 was not found but file initial_condition exists.
+This file will be used to generate trajectories. 
+
+=============== Cheking optional files and directories ==================
+
+File control.dyn exists 
+
+File control.dyn exists 
+File jiri.inp exists 
+File sh.inp exists 
+File therm.inp was not found. 
+
+File JOB_AD exists 
+File JOB_NAD was not found. 
+
+File wf.inp was not found. 
+
+File columbus.par was not found. 
+
+File dftb.par was not found. 
+
+File turbomole.par was not found. 
+
+File intcfl was not found. 
+
+File boundaries.inp was not found. 
+
+File freeze.inp was not found. 
+
+File therm.freeze was not found. 
+
+File analyt.par was not found. 
+
+File NX_analysis was not found. 
+
+File stopsign.inp was not found. 
+
+File auxnac.inp exists 
+File complex.inp was not found. 
+
+File pmold was not found. 
+
+
+===============             Ending checking            ==================
+
+Energy transitions will not be restricted.
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES was created 
+
+
+makedir.pl: 
+The largest transition intensity in initial_condition has
+oscillator strength 0.5422 and vertical excitation energy (eV) 7.2205.
+Normalization factor for probabilities F = 0.5422.
+
+ini.state  fin.state   DE    Osc.St. Intensity  Energ.Window  Prob      Rand.N.  Status
+   1          2       6.907   0.318   0.31830      YES        0.58705   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ1 was created 
+
+   1          2       7.288   0.428   0.42780      YES        0.78901   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ2 was created 
+
+   1          2       7.109   0.231   0.23090      YES        0.42586   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ3 was created 
+
+   1          2       7.076   0.282   0.28160      YES        0.51937   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ4 was created 
+
+   1          2       7.161   0.379   0.37910      YES        0.69919   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ5 was created 
+
+   1          2       6.849   0.002   0.00220      YES        0.00406   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ6 was created 
+
+   1          2       7.366   0.453   0.45320      YES        0.83585   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ7 was created 
+
+   1          2       7.121   0.260   0.25990      YES        0.47934   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ8 was created 
+
+   1          2       7.513   0.535   0.53470      YES        0.98617   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ9 was created 
+
+   1          2       6.767   0.370   0.37030      YES        0.68296   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ10 was created 
+
+   1          2       6.335   0.002   0.00230      YES        0.00424   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ11 was created 
+
+   1          2       7.095   0.288   0.28820      YES        0.53154   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ12 was created 
+
+   1          2       7.223   0.016   0.01570      YES        0.02896   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ13 was created 
+
+   1          2       7.214   0.286   0.28570      YES        0.52693   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ14 was created 
+
+   1          2       7.223   0.008   0.00840      YES        0.01549   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ15 was created 
+
+   1          2       6.918   0.206   0.20590      YES        0.37975   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ16 was created 
+
+   1          2       7.086   0.173   0.17260      YES        0.31833   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ17 was created 
+
+   1          2       7.045   0.242   0.24180      YES        0.44596   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ18 was created 
+
+   1          2       7.505   0.458   0.45840      YES        0.84544   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ19 was created 
+
+   1          2       7.363   0.375   0.37480      YES        0.69126   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ20 was created 
+
+   1          2       7.425   0.401   0.40060      YES        0.73884   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ21 was created 
+
+   1          2       6.941   0.389   0.38900      YES        0.71745   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ22 was created 
+
+   1          2       7.025   0.001   0.00140      YES        0.00258   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ23 was created 
+
+   1          2       7.263   0.471   0.47070      YES        0.86813   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ24 was created 
+
+   1          2       7.207   0.357   0.35700      YES        0.65843   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ25 was created 
+
+   1          2       7.107   0.298   0.29760      YES        0.54887   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ26 was created 
+
+   1          2       7.047   0.006   0.00580      YES        0.01070   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ27 was created 
+
+   1          2       7.139   0.389   0.38890      YES        0.71726   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ28 was created 
+
+   1          2       7.109   0.028   0.02810      YES        0.05183   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ29 was created 
+
+   1          2       7.181   0.284   0.28360      YES        0.52305   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ30 was created 
+
+   1          2       6.719   0.338   0.33800      YES        0.62339   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ31 was created 
+
+   1          2       7.127   0.255   0.25530      YES        0.47086   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ32 was created 
+
+   1          2       7.281   0.361   0.36110      YES        0.66599   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ33 was created 
+
+   1          2       7.292   0.108   0.10820      YES        0.19956   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ34 was created 
+
+   1          2       6.696   0.009   0.00870      YES        0.01605   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ35 was created 
+
+   1          2       7.350   0.306   0.30650      YES        0.56529   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ36 was created 
+
+   1          2       6.641   0.003   0.00280      YES        0.00516   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ37 was created 
+
+   1          2       7.228   0.185   0.18550      YES        0.34212   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ38 was created 
+
+   1          2       7.145   0.105   0.10540      YES        0.19439   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ39 was created 
+
+   1          2       7.058   0.023   0.02320      YES        0.04279   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ40 was created 
+
+   1          2       7.169   0.226   0.22570      YES        0.41627   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ41 was created 
+
+   1          2       7.449   0.212   0.21180      YES        0.39063   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ42 was created 
+
+   1          2       7.112   0.443   0.44340      YES        0.81778   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ43 was created 
+
+   1          2       7.124   0.407   0.40670      YES        0.75009   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ44 was created 
+
+   1          2       6.691   0.011   0.01100      YES        0.02029   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ45 was created 
+
+   1          2       7.203   0.065   0.06510      YES        0.12007   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ46 was created 
+
+   1          2       7.239   0.391   0.39060      YES        0.72040   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ47 was created 
+
+   1          2       7.354   0.254   0.25430      YES        0.46902   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ48 was created 
+
+   1          2       7.504   0.006   0.00650      YES        0.01199   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ49 was created 
+
+   1          2       7.182   0.163   0.16320      YES        0.30100   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ50 was created 
+
+   1          2       7.051   0.316   0.31640      YES        0.58355   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ51 was created 
+
+   1          2       7.112   0.407   0.40670      YES        0.75009   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ52 was created 
+
+   1          2       7.136   0.422   0.42190      YES        0.77813   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ53 was created 
+
+   1          2       7.184   0.007   0.00680      YES        0.01254   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ54 was created 
+
+   1          2       7.178   0.292   0.29240      YES        0.53928   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ55 was created 
+
+   1          2       7.437   0.223   0.22340      YES        0.41203   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ56 was created 
+
+   1          2       7.231   0.118   0.11850      YES        0.21855   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ57 was created 
+
+   1          2       6.984   0.336   0.33550      YES        0.61878   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ58 was created 
+
+   1          2       7.009   0.338   0.33780      YES        0.62302   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ59 was created 
+
+   1          2       6.678   0.003   0.00310      YES        0.00572   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ60 was created 
+
+   1          2       7.257   0.419   0.41860      YES        0.77204   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ61 was created 
+
+   1          2       6.931   0.067   0.06740      YES        0.12431   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ62 was created 
+
+   1          2       7.003   0.113   0.11270      YES        0.20786   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ63 was created 
+
+   1          2       7.160   0.388   0.38760      YES        0.71487   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ64 was created 
+
+   1          2       7.234   0.097   0.09650      YES        0.17798   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ65 was created 
+
+   1          2       7.298   0.329   0.32900      YES        0.60679   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ66 was created 
+
+   1          2       7.312   0.440   0.43980      YES        0.81114   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ67 was created 
+
+   1          2       6.536   0.009   0.00900      YES        0.01660   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ68 was created 
+
+   1          2       7.158   0.161   0.16140      YES        0.29768   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ69 was created 
+
+   1          2       6.909   0.109   0.10880      YES        0.20066   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ70 was created 
+
+   1          2       7.243   0.202   0.20170      YES        0.37200   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ71 was created 
+
+   1          2       7.067   0.136   0.13640      YES        0.25157   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ72 was created 
+
+   1          2       7.003   0.329   0.32900      YES        0.60679   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ73 was created 
+
+   1          2       7.249   0.415   0.41550      YES        0.76632   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ74 was created 
+
+   1          2       7.146   0.252   0.25160      YES        0.46404   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ75 was created 
+
+   1          2       7.222   0.005   0.00480      YES        0.00885   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ76 was created 
+
+   1          2       7.226   0.327   0.32700      YES        0.60310   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ77 was created 
+
+   1          2       7.172   0.402   0.40200      YES        0.74142   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ78 was created 
+
+   1          2       7.367   0.038   0.03840      YES        0.07082   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ79 was created 
+
+   1          2       7.043   0.248   0.24830      YES        0.45795   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ80 was created 
+
+   1          2       7.218   0.134   0.13360      YES        0.24640   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ81 was created 
+
+   1          2       6.684   0.062   0.06230      YES        0.11490   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ82 was created 
+
+   1          2       7.125   0.052   0.05160      YES        0.09517   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ83 was created 
+
+   1          2       7.144   0.008   0.00820      YES        0.01512   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ84 was created 
+
+   1          2       7.037   0.092   0.09180      YES        0.16931   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ85 was created 
+
+   1          2       7.103   0.229   0.22850      YES        0.42143   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ86 was created 
+
+   1          2       7.197   0.173   0.17340      YES        0.31981   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ87 was created 
+
+   1          2       6.918   0.322   0.32150      YES        0.59295   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ88 was created 
+
+   1          2       7.107   0.353   0.35340      YES        0.65179   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ89 was created 
+
+   1          2       7.206   0.390   0.38980      YES        0.71892   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ90 was created 
+
+   1          2       7.366   0.324   0.32350      YES        0.59664   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ91 was created 
+
+   1          2       6.791   0.266   0.26580      YES        0.49023   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ92 was created 
+
+   1          2       6.936   0.014   0.01420      YES        0.02619   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ93 was created 
+
+   1          2       7.088   0.363   0.36320      YES        0.66986   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ94 was created 
+
+   1          2       7.072   0.387   0.38650      YES        0.71284   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ95 was created 
+
+   1          2       7.361   0.447   0.44670      YES        0.82387   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ96 was created 
+
+   1          2       6.763   0.258   0.25840      YES        0.47658   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ97 was created 
+
+   1          2       7.052   0.261   0.26140      YES        0.48211   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ98 was created 
+
+   1          2       7.185   0.340   0.34040      YES        0.62781   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ99 was created 
+
+   1          2       7.184   0.239   0.23880      YES        0.44043   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ100 was created 
+
+   1          2       7.226   0.010   0.01010      YES        0.01863   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ101 was created 
+
+   1          2       7.466   0.414   0.41450      YES        0.76448   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ102 was created 
+
+   1          2       6.920   0.117   0.11700      YES        0.21579   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ103 was created 
+
+   1          2       7.068   0.110   0.10990      YES        0.20269   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ104 was created 
+
+   1          2       7.281   0.285   0.28510      YES        0.52582   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ105 was created 
+
+   1          2       7.277   0.074   0.07370      YES        0.13593   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ106 was created 
+
+   1          2       7.230   0.267   0.26650      YES        0.49152   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ107 was created 
+
+   1          2       6.995   0.001   0.00140      YES        0.00258   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ108 was created 
+
+   1          2       7.102   0.295   0.29520      YES        0.54445   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ109 was created 
+
+   1          2       7.154   0.237   0.23670      YES        0.43655   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ110 was created 
+
+   1          2       7.042   0.392   0.39230      YES        0.72353   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ111 was created 
+
+   1          2       6.540   0.019   0.01870      YES        0.03449   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ112 was created 
+
+   1          2       7.095   0.310   0.30980      YES        0.57138   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ113 was created 
+
+   1          2       6.692   0.236   0.23570      YES        0.43471   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ114 was created 
+
+   1          2       7.476   0.416   0.41620      YES        0.76761   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ115 was created 
+
+   1          2       7.175   0.183   0.18320      YES        0.33788   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ116 was created 
+
+   1          2       7.499   0.414   0.41370      YES        0.76300   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ117 was created 
+
+   1          2       7.113   0.361   0.36130      YES        0.66636   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ118 was created 
+
+   1          2       7.189   0.159   0.15910      YES        0.29343   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ119 was created 
+
+   1          2       7.059   0.290   0.28960      YES        0.53412   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ120 was created 
+
+   1          2       7.211   0.049   0.04880      YES        0.09000   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ121 was created 
+
+   1          2       7.125   0.301   0.30080      YES        0.55478   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ122 was created 
+
+   1          2       7.520   0.423   0.42270      YES        0.77960   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ123 was created 
+
+   1          2       7.141   0.476   0.47580      YES        0.87754   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ124 was created 
+
+   1          2       7.284   0.356   0.35600      YES        0.65658   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ125 was created 
+
+   1          2       7.258   0.501   0.50140      YES        0.92475   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ126 was created 
+
+   1          2       6.696   0.002   0.00180      YES        0.00332   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ127 was created 
+
+   1          2       7.187   0.021   0.02140      YES        0.03947   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ128 was created 
+
+   1          2       6.969   0.270   0.27040      YES        0.49871   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ129 was created 
+
+   1          2       7.350   0.519   0.51870      YES        0.95666   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ130 was created 
+
+   1          2       7.166   0.336   0.33620      YES        0.62007   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ131 was created 
+
+   1          2       7.298   0.476   0.47650      YES        0.87883   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ132 was created 
+
+   1          2       6.933   0.007   0.00680      YES        0.01254   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ133 was created 
+
+   1          2       6.929   0.273   0.27320      YES        0.50387   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ134 was created 
+
+   1          2       7.391   0.076   0.07590      YES        0.13999   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ135 was created 
+
+   1          2       7.291   0.269   0.26930      YES        0.49668   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ136 was created 
+
+   1          2       7.479   0.139   0.13870      YES        0.25581   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ137 was created 
+
+   1          2       6.964   0.146   0.14640      YES        0.27001   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ138 was created 
+
+   1          2       6.977   0.453   0.45280      YES        0.83512   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ139 was created 
+
+   1          2       7.432   0.235   0.23470      YES        0.43287   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ140 was created 
+
+   1          2       7.230   0.385   0.38500      YES        0.71007   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ141 was created 
+
+   1          2       7.047   0.230   0.23000      YES        0.42420   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ142 was created 
+
+   1          2       6.883   0.114   0.11360      YES        0.20952   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ143 was created 
+
+   1          2       7.405   0.302   0.30190      YES        0.55681   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ144 was created 
+
+   1          2       7.041   0.107   0.10680      YES        0.19698   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ145 was created 
+
+   1          2       7.104   0.204   0.20430      YES        0.37680   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ146 was created 
+
+   1          2       6.863   0.001   0.00070      YES        0.00129   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ147 was created 
+
+   1          2       7.320   0.497   0.49660      YES        0.91590   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ148 was created 
+
+   1          2       7.059   0.288   0.28800      YES        0.53117   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ149 was created 
+
+   1          2       7.196   0.445   0.44450      YES        0.81981   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ150 was created 
+
+   1          2       7.049   0.129   0.12930      YES        0.23847   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ151 was created 
+
+   1          2       7.169   0.143   0.14300      YES        0.26374   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ152 was created 
+
+   1          2       6.858   0.011   0.01060      YES        0.01955   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ153 was created 
+
+   1          2       7.505   0.390   0.39030      YES        0.71985   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ154 was created 
+
+   1          2       7.381   0.036   0.03600      YES        0.06640   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ155 was created 
+
+   1          2       7.194   0.014   0.01360      YES        0.02508   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ156 was created 
+
+   1          2       7.155   0.408   0.40790      YES        0.75231   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ157 was created 
+
+   1          2       7.139   0.424   0.42360      YES        0.78126   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ158 was created 
+
+   1          2       7.133   0.488   0.48800      YES        0.90004   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ159 was created 
+
+   1          2       6.931   0.018   0.01820      YES        0.03357   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ160 was created 
+
+   1          2       7.045   0.017   0.01700      YES        0.03135   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ161 was created 
+
+   1          2       7.099   0.446   0.44580      YES        0.82221   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ162 was created 
+
+   1          2       6.765   0.015   0.01500      YES        0.02767   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ163 was created 
+
+   1          2       6.850   0.245   0.24520      YES        0.45223   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ164 was created 
+
+   1          2       6.793   0.115   0.11480      YES        0.21173   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ165 was created 
+
+   1          2       7.119   0.427   0.42670      YES        0.78698   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ166 was created 
+
+   1          2       7.138   0.323   0.32310      YES        0.59591   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ167 was created 
+
+   1          2       7.432   0.494   0.49360      YES        0.91037   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ168 was created 
+
+   1          2       6.614   0.014   0.01400      YES        0.02582   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ169 was created 
+
+   1          2       7.105   0.409   0.40920      YES        0.75470   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ170 was created 
+
+   1          2       7.177   0.001   0.00080      YES        0.00148   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ171 was created 
+
+   1          2       6.658   0.271   0.27120      YES        0.50018   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ172 was created 
+
+   1          2       6.877   0.389   0.38860      YES        0.71671   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ173 was created 
+
+   1          2       7.081   0.098   0.09810      YES        0.18093   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ174 was created 
+
+   1          2       7.035   0.422   0.42190      YES        0.77813   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ175 was created 
+
+   1          2       7.018   0.059   0.05920      YES        0.10918   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ176 was created 
+
+   1          2       6.970   0.161   0.16130      YES        0.29749   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ177 was created 
+
+   1          2       7.187   0.416   0.41570      YES        0.76669   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ178 was created 
+
+   1          2       7.246   0.209   0.20900      YES        0.38547   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ179 was created 
+
+   1          2       7.089   0.275   0.27540      YES        0.50793   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ180 was created 
+
+   1          2       7.181   0.013   0.01280      YES        0.02361   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ181 was created 
+
+   1          2       7.210   0.220   0.22030      YES        0.40631   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ182 was created 
+
+   1          2       7.391   0.116   0.11600      YES        0.21394   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ183 was created 
+
+   1          2       7.064   0.338   0.33800      YES        0.62339   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ184 was created 
+
+   1          2       6.901   0.128   0.12750      YES        0.23515   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ185 was created 
+
+   1          2       7.249   0.480   0.48050      YES        0.88620   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ186 was created 
+
+   1          2       7.197   0.378   0.37770      YES        0.69661   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ187 was created 
+
+   1          2       6.914   0.483   0.48310      YES        0.89100   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ188 was created 
+
+   1          2       7.215   0.398   0.39830      YES        0.73460   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ189 was created 
+
+   1          2       7.456   0.077   0.07750      YES        0.14294   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ190 was created 
+
+   1          2       7.233   0.478   0.47840      YES        0.88233   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ191 was created 
+
+   1          2       6.708   0.006   0.00570      YES        0.01051   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ192 was created 
+
+   1          2       7.037   0.011   0.01110      YES        0.02047   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ193 was created 
+
+   1          2       7.058   0.247   0.24710      YES        0.45574   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ194 was created 
+
+   1          2       6.645   0.030   0.03000      YES        0.05533   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ195 was created 
+
+   1          2       7.082   0.001   0.00060      YES        0.00111   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ196 was created 
+
+   1          2       7.165   0.027   0.02670      YES        0.04924   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ197 was created 
+
+   1          2       7.399   0.466   0.46550      YES        0.85854   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ198 was created 
+
+   1          2       7.119   0.264   0.26350      YES        0.48598   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ199 was created 
+
+   1          2       7.103   0.440   0.44000      YES        0.81151   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ200 was created 
+
+   1          2       7.343   0.416   0.41620      YES        0.76761   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ201 was created 
+
+   1          2       6.778   0.235   0.23520      YES        0.43379   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ202 was created 
+
+   1          2       7.098   0.239   0.23920      YES        0.44117   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ203 was created 
+
+   1          2       7.150   0.445   0.44480      YES        0.82036   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ204 was created 
+
+   1          2       7.343   0.143   0.14280      YES        0.26337   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ205 was created 
+
+   1          2       7.229   0.389   0.38850      YES        0.71653   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ206 was created 
+
+   1          2       7.065   0.015   0.01450      YES        0.02674   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ207 was created 
+
+   1          2       6.722   0.155   0.15480      YES        0.28550   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ208 was created 
+
+   1          2       7.296   0.464   0.46400      YES        0.85577   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ209 was created 
+
+   1          2       7.002   0.430   0.43030      YES        0.79362   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ210 was created 
+
+   1          2       7.005   0.116   0.11590      YES        0.21376   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ211 was created 
+
+   1          2       7.325   0.383   0.38280      YES        0.70601   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ212 was created 
+
+   1          2       7.117   0.362   0.36170      YES        0.66710   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ213 was created 
+
+   1          2       6.895   0.022   0.02210      YES        0.04076   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ214 was created 
+
+   1          2       7.421   0.487   0.48720      YES        0.89856   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ215 was created 
+
+   1          2       6.959   0.005   0.00490      YES        0.00904   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ216 was created 
+
+   1          2       7.297   0.483   0.48330      YES        0.89137   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ217 was created 
+
+   1          2       6.867   0.025   0.02470      YES        0.04556   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ218 was created 
+
+   1          2       7.456   0.423   0.42340      YES        0.78089   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ219 was created 
+
+   1          2       7.350   0.019   0.01880      YES        0.03467   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ220 was created 
+
+   1          2       7.102   0.462   0.46220      YES        0.85245   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ221 was created 
+
+   1          2       6.758   0.247   0.24720      YES        0.45592   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ222 was created 
+
+   1          2       7.342   0.146   0.14640      YES        0.27001   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ223 was created 
+
+   1          2       7.367   0.503   0.50340      YES        0.92844   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ224 was created 
+
+   1          2       6.712   0.001   0.00050      YES        0.00092   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ225 was created 
+
+   1          2       7.157   0.490   0.49020      YES        0.90409   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ226 was created 
+
+   1          2       6.704   0.010   0.00960      YES        0.01771   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ227 was created 
+
+   1          2       7.101   0.426   0.42620      YES        0.78606   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ228 was created 
+
+   1          2       7.284   0.233   0.23260      YES        0.42899   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ229 was created 
+
+   1          2       7.201   0.455   0.45510      YES        0.83936   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ230 was created 
+
+   1          2       6.857   0.407   0.40670      YES        0.75009   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ231 was created 
+
+   1          2       7.461   0.496   0.49560      YES        0.91405   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ232 was created 
+
+   1          2       7.169   0.090   0.08970      YES        0.16544   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ233 was created 
+
+   1          2       7.299   0.217   0.21740      YES        0.40096   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ234 was created 
+
+   1          2       7.201   0.262   0.26170      YES        0.48266   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ235 was created 
+
+   1          2       6.952   0.106   0.10620      YES        0.19587   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ236 was created 
+
+   1          2       7.261   0.345   0.34500      YES        0.63630   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ237 was created 
+
+   1          2       7.265   0.427   0.42680      YES        0.78716   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ238 was created 
+
+   1          2       7.329   0.160   0.16030      YES        0.29565   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ239 was created 
+
+   1          2       7.039   0.402   0.40230      YES        0.74198   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ240 was created 
+
+   1          2       7.252   0.008   0.00820      YES        0.01512   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ241 was created 
+
+   1          2       7.123   0.373   0.37350      YES        0.68886   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ242 was created 
+
+   1          2       7.298   0.119   0.11900      YES        0.21948   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ243 was created 
+
+   1          2       7.182   0.191   0.19070      YES        0.35172   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ244 was created 
+
+   1          2       6.992   0.000   0.00030      YES        0.00055   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ245 was created 
+
+   1          2       7.320   0.432   0.43200      YES        0.79675   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ246 was created 
+
+   1          2       7.061   0.011   0.01090      YES        0.02010   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ247 was created 
+
+   1          2       7.461   0.408   0.40790      YES        0.75231   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ248 was created 
+
+   1          2       7.284   0.415   0.41470      YES        0.76485   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ249 was created 
+
+   1          2       6.883   0.388   0.38770      YES        0.71505   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ250 was created 
+
+   1          2       7.184   0.019   0.01940      YES        0.03578   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ251 was created 
+
+   1          2       7.148   0.307   0.30740      YES        0.56695   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ252 was created 
+
+   1          2       7.293   0.207   0.20680      YES        0.38141   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ253 was created 
+
+   1          2       6.983   0.335   0.33530      YES        0.61841   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ254 was created 
+
+   1          2       7.103   0.002   0.00210      YES        0.00387   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ255 was created 
+
+   1          2       7.284   0.391   0.39110      YES        0.72132   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ256 was created 
+
+   1          2       7.053   0.409   0.40930      YES        0.75489   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ257 was created 
+
+   1          2       6.953   0.234   0.23360      YES        0.43084   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ258 was created 
+
+   1          2       7.202   0.307   0.30700      YES        0.56621   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ259 was created 
+
+   1          2       7.179   0.477   0.47740      YES        0.88049   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ260 was created 
+
+   1          2       6.996   0.220   0.22020      YES        0.40612   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ261 was created 
+
+   1          2       6.891   0.021   0.02090      YES        0.03855   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ262 was created 
+
+   1          2       7.375   0.236   0.23590      YES        0.43508   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ263 was created 
+
+   1          2       7.025   0.001   0.00120      YES        0.00221   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ264 was created 
+
+   1          2       7.335   0.347   0.34670      YES        0.63943   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ265 was created 
+
+   1          2       7.238   0.183   0.18340      YES        0.33825   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ266 was created 
+
+   1          2       7.316   0.184   0.18410      YES        0.33954   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ267 was created 
+
+   1          2       7.186   0.021   0.02100      YES        0.03873   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ268 was created 
+
+   1          2       6.885   0.019   0.01920      YES        0.03541   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ269 was created 
+
+   1          2       7.351   0.426   0.42640      YES        0.78643   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ270 was created 
+
+   1          2       6.783   0.038   0.03840      YES        0.07082   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ271 was created 
+
+   1          2       7.205   0.275   0.27540      YES        0.50793   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ272 was created 
+
+   1          2       7.326   0.280   0.28010      YES        0.51660   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ273 was created 
+
+   1          2       7.386   0.329   0.32850      YES        0.60586   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ274 was created 
+
+   1          2       7.204   0.160   0.15980      YES        0.29473   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ275 was created 
+
+   1          2       6.878   0.256   0.25550      YES        0.47123   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ276 was created 
+
+   1          2       7.385   0.528   0.52800      YES        0.97381   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ277 was created 
+
+   1          2       7.099   0.366   0.36650      YES        0.67595   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ278 was created 
+
+   1          2       6.781   0.274   0.27380      YES        0.50498   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ279 was created 
+
+   1          2       7.221   0.542   0.54220      YES        1.00000   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ280 was created 
+
+   1          2       7.296   0.485   0.48540      YES        0.89524   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ281 was created 
+
+   1          2       7.135   0.009   0.00890      YES        0.01641   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ282 was created 
+
+   1          2       6.693   0.211   0.21130      YES        0.38971   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ283 was created 
+
+   1          2       7.030   0.354   0.35390      YES        0.65271   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ284 was created 
+
+   1          2       7.167   0.127   0.12680      YES        0.23386   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ285 was created 
+
+   1          2       7.528   0.503   0.50260      YES        0.92696   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ286 was created 
+
+   1          2       7.383   0.517   0.51730      YES        0.95408   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ287 was created 
+
+   1          2       7.013   0.375   0.37470      YES        0.69107   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ288 was created 
+
+   1          2       6.767   0.372   0.37250      YES        0.68702   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ289 was created 
+
+   1          2       7.257   0.333   0.33320      YES        0.61453   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ290 was created 
+
+   1          2       7.023   0.501   0.50130      YES        0.92457   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ291 was created 
+
+   1          2       6.876   0.345   0.34490      YES        0.63611   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ292 was created 
+
+   1          2       7.098   0.284   0.28360      YES        0.52305   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ293 was created 
+
+   1          2       6.851   0.195   0.19500      YES        0.35965   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ294 was created 
+
+   1          2       7.095   0.349   0.34870      YES        0.64312   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ295 was created 
+
+   1          2       7.308   0.021   0.02140      YES        0.03947   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ296 was created 
+
+   1          2       6.974   0.042   0.04220      YES        0.07783   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ297 was created 
+
+   1          2       7.000   0.000   0.00000      YES        0.00000   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ298 was created 
+
+   1          2       7.148   0.407   0.40660      YES        0.74991   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ299 was created 
+
+   1          2       7.092   0.057   0.05720      YES        0.10550   1.00000  accept 
+Directory /user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES/TRAJ300 was created 
+
+
+Input files for each trajectory were written to 
+/user/work/li23821/FJH/fromage_NX_wOrca/Benzene_test/Dynamics/Baeck-Ann/xTB/TRAJECTORIES directory. 
+
+
+ End of initial conditions selection. 
+          ====================== NEWTON-X ends here ==================  
