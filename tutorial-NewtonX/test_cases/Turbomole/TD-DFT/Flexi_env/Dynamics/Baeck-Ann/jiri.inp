@@ -1,0 +1,17 @@
+ &jirinp
+	kross        = 1
+	cascade      = 0
+	current      = 0
+	never_state  = 0
+	include_pair = 0
+	e_ci         = 0.2
+	ci_cons      = 1
+	cio_options  = "-s transmomin -a -t 5e-4 -e -1"
+	cisc_options = "-o"
+	idalton      = 64
+	cprog        = 2
+	coptda       = 1
+	ncore        = 0
+	ndisc        = 0
+	blasthread   = 1
+/

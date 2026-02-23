@@ -1,0 +1,6 @@
+high_level      gaussian
+low_level       xtb
+nprocs          8
+newtonx		yes
+singlestate	1
+spin		0

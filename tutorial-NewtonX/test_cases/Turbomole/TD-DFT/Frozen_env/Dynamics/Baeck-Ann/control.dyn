@@ -1,0 +1,21 @@
+ &input
+	nat        = 12
+	nstat      = 5
+	nstatdyn   = 4
+	istep      = 0
+	dt         = 0.5
+	t          = 0
+	tmax       = 200
+	prog       = 15.1
+	thres      = 100
+	killstat   = 1
+	timekill   = 0
+	ndamp      = 0
+	lvprt      = 1
+	kt         = 1
+	mem        = 200
+	etot_jump  = 0.5
+	etot_drift = 0.5
+	nxrestart  = 0
+	zpecorr    = 0
+/

@@ -1,0 +1,20 @@
+&dat
+ nact = 2
+ iprog = 4
+ numat = 12
+ npoints = 300
+ file_geom = geom
+ file_nmodes = freq.log
+ anh_f = 1
+ rescale = n
+ temp = 298.15
+ ics_flg = n
+ chk_e = 1
+ nis = 1
+ nfs = 12
+ kvert = 1
+ de = 100
+ prog = 6.5
+ iseed = 0
+ lvprt = 1
+/

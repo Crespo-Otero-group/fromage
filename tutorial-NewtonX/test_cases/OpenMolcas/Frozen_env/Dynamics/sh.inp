@@ -1,0 +1,18 @@
+ &shinp
+	vdoth        = 0
+	integrator   = 5
+	phase        = 1
+	nohop        = 0
+	forcesurf    = 1
+	getphase     = 1
+	nrelax       = 0
+	tully        = 1
+	ms           = 20
+	mom          = 1
+	adjmom       = 0
+	probmin      = 0
+	popdev       = 0.05
+	decohmod     = 1
+	decay        = 0.1
+	seed         = 1
+/

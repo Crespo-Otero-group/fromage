@@ -1,0 +1,175 @@
+
+          ============================================================  
+                                     NEWTON-X                           
+                   Newtonian dynamics close to the crossing seam        
+          ============================================================  
+
+                                  www.newtonx.org                       
+
+    Newton-X CS version 2.6 (build 01, 2023-10-25)
+    www.newtonx.org
+----------------------------------------------------------------------
+    The Newton-X CS program is distributed free of charge for non-
+    commercial and non-profit uses. You may use the program freely 
+    and adapt the code to your needs. Please, if you have any 
+    enhancements, share them with us. You are, however, not allowed 
+    to re-distribute code or binaries in parts or total. Anyone 
+    intending to use Newton-X must contact us. This program is 
+    shipped to the user "as is". There is no guarantee that it will 
+    work as described. Usage is at your own risk, there is no 
+    liability taken for any damage or loss of data and/or money. 
+    If you experience problems, you may contact the developers and 
+    a community of users at the Newton-X discussion group, but bear 
+    in mind that there is no kind of official support for Newton-X.
+
+    Cite Newton-X as:
+    M. Barbatti, G. Granucci, M. Ruckenbauer, F. Plasser, 
+    R. Crespo-Otero, J. Pittner, M. Persico, H. Lischka, NEWTON-X: 
+    a package for Newtonian dynamics close to the crossing seam, 
+    version 2.5, www.newtonx.org (2022).
+
+    M. Barbatti, M. Ruckenbauer, F. Plasser, J. Pittner, G. Granucci, 
+    M. Persico, H. Lischka, WIREs: Comp. Mol. Sci., 4, 26 (2014).
+
+    Please, check the documentation for references to specific 
+    methods and algorithms.
+
+    For download the program, documentation, and tutorial, visit:
+    http://www.newtonx.org
+
+    For support, visit the Newton-X discussion group at:
+    https://groups.google.com/d/forum/newtonx
+----------------------------------------------------------------------
+
+
+Newton-X path: /home/uccarcr/Programs/Newton-X/newtonx-cs/bin
+
+Starting Initial Condition selection 
+ 
+
+makedir.pl:
+    title     = title
+    type      = 4
+    subfile   = pmold
+    batchdef  = #PBS -N
+    seed      = 1234
+    nis       = 1
+    nfs       = 2
+    delta     = 0.01
+    eps       = 0.005
+    kappa     = 0
+    os_condon = -1
+    prob_kind = F 
+    screen    = 0 
+    norm      = local 
+    e_center  = 0 
+    e_var     = 0.5 
+    nref      = 1 
+    temp      = 0
+    l_shape   = gauss
+    dens      = N
+    absenergy = 0
+    run_IS    = 0
+    prtlv     = 1 
+
+
+
+ The following transitions will be considered:
+ Initial state = 1   =>   Final state = 2
+
+
+=============== Checking obligatory files and directories ===============
+
+File initial_condition.1.2 was not found but file initial_condition exists.
+This file will be used to generate trajectories. 
+
+=============== Cheking optional files and directories ==================
+
+File control.dyn exists 
+
+File control.dyn exists 
+File jiri.inp exists 
+File sh.inp exists 
+File therm.inp was not found. 
+
+File JOB_AD exists 
+File JOB_NAD was not found. 
+
+File wf.inp was not found. 
+
+File columbus.par was not found. 
+
+File dftb.par was not found. 
+
+File turbomole.par was not found. 
+
+File intcfl was not found. 
+
+File boundaries.inp was not found. 
+
+File freeze.inp was not found. 
+
+File therm.freeze was not found. 
+
+File analyt.par was not found. 
+
+File NX_analysis was not found. 
+
+File stopsign.inp was not found. 
+
+File auxnac.inp was not found. 
+
+File complex.inp was not found. 
+
+File pmold was not found. 
+
+
+===============             Ending checking            ==================
+
+Energy transitions will not be restricted.
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES was created 
+
+
+makedir.pl: 
+The largest transition intensity in initial_condition has
+oscillator strength 1.0000 and vertical excitation energy (eV) 0.001.
+Normalization factor for probabilities F = 1.
+
+ini.state  fin.state   DE    Osc.St. Intensity  Energ.Window  Prob      Rand.N.  Status
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ1 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ2 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ3 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ4 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ5 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ6 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ7 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ8 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ9 was created 
+
+   1          2       0.001   1.000   1.00000      YES        1.00000   1.00000  accept 
+Directory /lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES/TRAJ10 was created 
+
+
+Input files for each trajectory were written to 
+/lustre/scratch/scratch/uccarcr/Fede/fromage_with_NX/Code_and_test_inputs/Tests_cases/OpenMolcas/Flexi_env/Dynamics/TRAJECTORIES directory. 
+
+
+ End of initial conditions selection. 
+          ====================== NEWTON-X ends here ==================  

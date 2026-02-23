@@ -1,0 +1,14 @@
+&collect
+ itrj = 1
+ jtrj = 10
+ tmin = 0
+ tmax = 100
+ dt = 0.5
+ proptype = 3
+ nstat = 5
+ nic = 3
+ iclist = 1,3,13
+ bmat = 0
+ run_IS = 0
+ run_complex = 0
+/

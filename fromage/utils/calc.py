@@ -178,8 +178,8 @@ class DFTB_calc(Calc):
 
         ef.write_dftb("geom.xyz",atoms,
                             [], self.calc_name + ".temp")
-        if points_flex is not None:
-            ef.write_dftb_charges("charges.dat", points_flex)
+        if point_flex is not None:
+            ef.write_dftb_charges("charges.dat", point_flex)
             if state is not None and states is not None:
                 ef.write_dftb_dyn('dftb_in.hsd', self.calc_name + ".temp", state,
                                   states, nac_coupling, soc_coupling, point_flex)
@@ -195,7 +195,7 @@ class DFTB_calc(Calc):
 
         return proc
 
-    def run_freq(self, atoms, points_flex = None, nprocs=None):
+    def run_freq(self, atoms, point_flex = None, nprocs=None):
         """
         Runs a DFTB+ freq calculation using a .xyz file 
         and return a subprocess.Popen
@@ -215,7 +215,7 @@ class DFTB_calc(Calc):
 
         ef.write_dftb("geom.xyz",atoms,
                             [], self.calc_name + ".temp", freq = True)
-        if points_flex is not None:
+        if point_flex is not None:
             ef.write_dftb_charges("charges.dat", point_flex)
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
@@ -496,14 +496,6 @@ class Gauss_calc(Calc):
         soc = []
 
         if state is not None and states is not None:
-            with open("ERRORES","a") as check:
-                check.write("%s" % " DATA ")
-                check.write("STATE\n")
-                check.write("%s\n" % state)
-                check.write("STATES\n")
-                check.write("%s\n" % states)
-                check.write("NATOMS\n")
-                check.write("%s\n" % natoms)
             energy, gradients_b, scf_energy, nac, soc = rf.read_gauss_dyn(self.calc_name+".log",
                                                                           fchk_file,
                                                                           natoms,
@@ -2650,7 +2642,8 @@ class Orca_calc(Calc):
     """
     DFT, TDDFT, SF-DFT and CASSCF calculations computed with Orca
     """
-    def run(self, atoms, points_flex = None, nprocs=None):
+    def run(self, atoms, point_flex = None, nprocs=None, state=None,
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a Orca input file and return a subprocess.Popen
 
@@ -2665,19 +2658,45 @@ class Orca_calc(Calc):
 
         orca_path = os.path.join(self.here, self.calc_name)
         os.chdir(orca_path)
-        ef.write_orca(self.calc_name + ".inp", atoms,
-                       "mh.temp")
-        if points_flex is not None:
+        # Write a temporary geom file for Orca to read
+        ef.write_xyz("geom.xyz", atoms)
+
+        if point_flex is not None:
             ef.write_orca_charges(("charges.pc", point_flex))
+
+        if state is not None and states is not None:
+             ef.write_orca(
+                     self.calc_name + ".inp",
+                     atoms,
+                     self.calc_name + ".temp",
+                     state = state,
+                     states = states#,
+                    #singlestate=
+                    #nac_coupling= Add these lines when NAC or SOC are considered for the dynamics
+                    #soc_coupling=
+            )
+        else:
+            ef.write_orca(
+                    self.calc_name + ".inp",
+                    atoms,
+                    "mh.temp"
+            )
+
         os.environ["np"] = nprocs
-        proc = subprocess.Popen(
-            "orca " + self.calc_name + ".inp" + " > " + self.calc_name + ".out", shell=True)
+        orca = os.path.join(os.environ["ORCAHOME"], "orca")
+        inp = self.calc_name + ".inp"
+        out = self.calc_name + ".out"
+ 
+        with open(out, "w") as f:
+            proc = subprocess.Popen([orca, inp], stdout=f, stderr=subprocess.STDOUT)
+       # proc = subprocess.Popen(
+#            "orca " + self.calc_name + ".inp" + " > " + self.calc_name + ".out", shell=True)
 
         os.chdir(self.here)
 
         return proc
 
-    def run_freq(self, atoms, points_flex = None, nprocs=None):
+    def run_freq(self, atoms, point_flex = None, nprocs=None):
         """
         Write a Orca input file and return a subprocess.Popen
 
@@ -2692,9 +2711,15 @@ class Orca_calc(Calc):
 
         orca_path = os.path.join(self.here, self.calc_name)
         os.chdir(orca_path)
-        ef.write_orca(self.calc_name + ".inp", atoms,
-                       "mh.temp")
-        if points_flex is not None:
+
+        # Write a temporary geom file for Orca to read
+        ef.write_xyz("geom.xyz", atoms)
+
+        ef.write_orca(self.calc_name + ".inp", 
+                      atoms,
+                      "mh.temp",
+                      Freq=True)
+        if point_flex is not None:
             ef.write_orca_charges(("charges.pc", point_flex))
         os.environ["np"] = nprocs
         proc = subprocess.Popen(
@@ -2704,11 +2729,21 @@ class Orca_calc(Calc):
 
         return proc
 
-    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+    def read_out(self, 
+                 positions, 
+                 dyn_bool=False,
+                 in_mol=None, 
+                 in_shell=None, 
+                 natoms_flex=None,
+                 natoms = None,
+                 state = None,
+                 states = None,
+                 mult = [],
+                 singlestate = 0,
+                 nac_coupling = [],
+                 soc_coupling = []):
         """
         Analyse a Orca.out file while printing geometry updates
-
-        This is a modified function method from the Gaussian Calc class
 
         To update the geom files, include in_mol and in_shell
 
@@ -2734,30 +2769,44 @@ class Orca_calc(Calc):
         orca_path = os.path.join(self.here, self.calc_name)
         os.chdir(orca_path)
 
+        nac = []
+        soc = []
+
         # energies are in Hartree
         # gradients are in Hartree/Bohr
-        energy, gradients_bohr, scf_energy = rf.read_orca_out(self.calc_name + ".out")
 
-        # truncate gradients if too long and fix gradients units to Hartree/Angstrom
-        if natoms_flex is not None:
-            if int(len(positions)) < int(3*natoms_flex): 
-                dim_flex = int(len(positions) + 3 * natoms_flex)
-                gradients = np.zeros(dim_flex)
+        if state is not None and states is not None:
+            energy, gradients_bohr, scf_energy, nac, soc = rf.read_orca_dyn(self.calc_name + ".out",
+                                                                         natoms,
+                                                                         state,
+                                                                         states,
+                                                                         mult,
+                                                                         singlestate,
+                                                                         nac_coupling,
+                                                                         soc_coupling)
+            # Fix gradients units to Hartree/Angstrom
+            gradients = gradients_bohr * bohrconv
+        else:        
+            energy, gradients_bohr, scf_energy = rf.read_orca_out(self.calc_name + ".out")
+            # update the geometry log
+            if in_mol is not None:
+                self.update_geom(positions, in_mol, in_shell)
+
+            # truncate gradients if too long and fix gradients units to Hartree/Angstrom
+            if natoms_flex is not None:
+                if int(len(positions)) <= int(3*natoms_flex): 
+                    dim_flex = int(len(positions) + 3 * natoms_flex)
+                    gradients = np.zeros(dim_flex)
+                else:
+                    # truncate gradients if too long and fix units to Hartree/Angstrom
+                    gradients = np.zeros(len(positions))
+                gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
             else:
-                gradients = np.zeros(len(positions))
-            # Fix gradients units to Hartree/Angstrom
-            gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
-        else:
-            # Fix gradients units to Hartree/Angstrom
-            gradients = gradients_bohr[:len(positions)] * bohrconv
-
-        # update the geometry log
-        if in_mol is not None:
-            self.update_geom(positions, in_mol, in_shell)
+                gradients = gradients_bohr[:len(positions)] * bohrconv
 
         os.chdir(self.here)
 
-        return (energy, gradients, scf_energy)
+        return (energy, gradients, scf_energy, nac, soc)
 
     def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """

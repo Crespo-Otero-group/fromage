@@ -1,0 +1,5 @@
+	ba_smooth  = 1
+	ba_nsmooth = 4
+	ba_dh      = 0.1
+	ba_de      = 2
+	ba_dv      = 0.1

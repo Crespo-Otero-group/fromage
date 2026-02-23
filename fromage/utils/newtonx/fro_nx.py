@@ -196,7 +196,6 @@ def write_ener_oos(energies, oos):
     for os in oos:
         oos_nx.write(f"{os}\n")
 
-
 #    for i in range(1,oos.shape[0]+1):
 #        with open("epot.{}".format(i + 1), 'w') as en_fl, \
 #             open("oos.{}".format(i + 1), 'w') as oos_fl:
@@ -266,6 +265,8 @@ def copy_output_files(method):
         subprocess.run("cp mh/* .", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
     elif method == 'molcas':
         copy_outputs_molcas()
+    elif method == 'orca':
+        copy_outputs_orca()
 
     return None
 
@@ -292,10 +293,23 @@ def copy_outputs_molcas():
 
     return None
 
+################# COMPLETE HERE ORCA ###################
+def copy_outputs_orca():
+    """
+    """
+    subprocess.run("cp mh/mh.out orca.out", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    return None
+
+########################################################
 def _chk_hlevel_in_methods(high_level):
     """
     """
-    methods = ['molcas','turbomole','turbomole_tddft','gaussian']
+    methods = ['molcas',
+               'turbomole',
+               'turbomole_tddft',
+               'gaussian',
+               'orca',
+               'fomo-ci']
     # Check if the high_level method is supported for SH-dynamics with NX
     if high_level in methods:
        pass
@@ -394,7 +408,7 @@ def newtonx_sequence(inputs,natoms,states,state):
 
     in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
 
-    methods_wnacs = ['molcas', 'dftb'] # Extend this list to other methods that compute NACs
+    methods_wnacs = ['molcas', 'dftb', 'fomo-ci'] # Extend this list to other methods that compute NACs
     pass_nac = []
 
     if high_level in methods_wnacs:

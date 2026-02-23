@@ -1,0 +1,13 @@
+%chk=gck.chk
+%rwf=gaussian
+%mem=46GB
+%nproc=6
+#p td=(nstates=&NSTATES) wb97xd 6-31G* charge force symmetry=none  IOP(3/59=14) 
+
+sds
+
+0 1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX
+

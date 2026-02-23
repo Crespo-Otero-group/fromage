@@ -998,7 +998,15 @@ def write_nwchem(file_name, atoms, temp_name):
     out_file.close()
     return
 
-def write_orca(file_name, atoms, temp_name):
+def write_orca(file_name, 
+               atoms, 
+               temp_name,
+               freq=None, 
+               state=None, 
+               states=None):
+              # singlestate : int
+              # nac_coupling : list,
+              # soc_coupling : list):
     """
     Write an Orca input file. Currently, this function is redundant
     with the write_qchem function.
@@ -1029,6 +1037,15 @@ def write_orca(file_name, atoms, temp_name):
                 atomStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 out_file.write(atomStr)
+        if "&NSTATES" in line and states is not None:
+            nstates = '%s' % (int(np.sum(states))-1)
+            line = line.replace('&NSTATES', nstates)
+            out_file.write(line)
+        if "&STATE" in line and states is not None:
+            curr_state = '%s' % (state - 1)
+            line = line.replace('&STATE', curr_state)
+            out_file.write(line)
+       #if &NAC or &SOC complete here 
         else:
             out_file.write(line)
     out_file.close()

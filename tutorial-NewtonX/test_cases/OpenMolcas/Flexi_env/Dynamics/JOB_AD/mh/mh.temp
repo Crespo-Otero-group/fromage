@@ -1,0 +1,24 @@
+&GATEWAY
+ coord=geom.xyz
+ basis=ANO-S-VDZP
+ Group=Nosymm
+ RICD
+ XField
+ XXX__CHARGES__XXX
+
+&SEWARD
+
+&RASSCF
+ FileOrb=$MOLCAS_PROJECT.RasOrb
+ Spin=1
+ Charge=0
+ Nactel=6 0 0
+ Inactive = 18
+ Ras2=6
+ CIRoot=6 6 1
+
+&GRAD
+
+&NAC
+
+

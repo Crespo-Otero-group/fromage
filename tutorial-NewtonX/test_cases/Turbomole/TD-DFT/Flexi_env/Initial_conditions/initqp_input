@@ -1,0 +1,21 @@
+&dat
+ nact = 2
+ iprog = 5
+ numat = 180
+ npoints = 10
+ file_geom = geom
+ nm_flag = 3
+ file_nmodes = oniom.freq.molden
+ anh_f = 1
+ rescale = n
+ temp = 298.15
+ ics_flg = n
+ chk_e = 1
+ nis = 1
+ nfs = 3
+ kvert = 1
+ de = 100
+ prog = 15.1
+ iseed = 12345
+ lvprt = 2
+/

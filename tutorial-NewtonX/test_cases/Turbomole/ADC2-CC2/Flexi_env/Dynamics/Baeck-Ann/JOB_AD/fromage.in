@@ -1,0 +1,8 @@
+high_level      turbomole
+low_level       xtb
+nprocs          8
+newtonx         yes
+singlestate     1
+spin            0
+ll_flex_natoms  168
+hl_natoms       12

@@ -1,0 +1,12 @@
+%chk=gck.chk
+%rwf=gaussian
+%mem=46GB
+%nproc=6
+#p td=(nstates=&NSTATES,root=&STATE) b3lyp 6-31G* charge symmetry=none force IOP(3/59=14) 
+
+sds
+
+0 1
+XXX__POS__XXX
+
+XXX__CHARGES__XXX

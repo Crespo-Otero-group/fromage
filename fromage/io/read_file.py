@@ -2305,16 +2305,13 @@ def read_orca_out(in_name):
     state_energy=None
 
     for i, line in enumerate(content):
-        if "Total Energy" in line:
+        if "Total Energy       :" in line:
             gr_energy = float(line.split()[3])
         if "FINAL SINGLE POINT ENERGY" in line:
             state_energy = float(line.split()[4])
-            # For a ground state calculation:
-            # ex_energy = gr_energy
         if "CARTESIAN GRADIENT" in line:
             orig_line = i
-            break
-        if "Dispersion correction" in line:
+        if "Dispersion correction" in line and len(line.split()) == 3:
             disp = float(line.split()[2])
 
     for line in content[orig_line + 3:]:
@@ -2324,13 +2321,81 @@ def read_orca_out(in_name):
         else:
             break
     
-    state_energy += disp
+#    state_energy += disp
     if gr_energy == None:
         gr_energy = state_energy
     else:
         gr_energy += disp
 
     return state_energy, grad, gr_energy
+
+def read_orca_dyn(out_file,natom,state,states,mult,singlestate,nac_coupling,soc_coupling):
+    """
+    This function is used to read the Orca6 TD-DFT output when the nonadiabatic
+     dynamics or the Newton-X option is ON.
+     Read .log with extended results.
+     Note 1: NACs are only implemeted between the current state in the dynamics
+             and S0.
+     Note 2: Reading SOCs from Orca is not implemeted yet in fromage but is straightforward
+            to do it
+    """
+    au2eV = 27.21138386
+    disp = 0
+    count = 0
+    nstates = int(np.sum(states))
+    energies = np.zeros(nstates)
+    grad = []
+    gradients = np.array([])
+    nac = []
+    nacs = np.array([])
+    nac_tmp = []
+    soc = []
+
+    orig_line = None
+    read_E = False
+    read_N = False 
+    read_S = False
+
+    with open(out_file) as Orca_file:
+        content = Orca_file.readlines()
+    
+    for i, line in enumerate(content):
+        if ("TD-DFT/TDA EXCITED STATES" in line) or ("TD-DFT EXCITED STATES" in line):
+            read_E = True
+        if count == nstates:
+            read_E = False
+            count = 0
+        if "Total Energy       :" in line:
+            energies[count] = float(line.split()[3])
+        if read_E and line.lstrip().startswith('STATE'):
+            count += 1
+            energies[count] = float(line.split()[3]) + energies[0]
+        if "Dispersion correction" in line and len(line.split()) == 3:
+            disp = float(line.split()[2])
+        if "CARTESIAN GRADIENT" in line:
+            orig_line = i + 3
+
+    for line in content[orig_line:]:
+        if len(line.split()) == 6:
+            atom_grads = [float(i) for i in line.split()[3:]]
+            grad = np.concatenate((grad,atom_grads))
+        else:
+            break
+
+        # Here implement the conditional for NAC/SOC
+
+
+    energies += disp
+    gr_energy = energies[0]
+    gradall = np.zeros((np.sum(states), natom, 3))
+    grad = np.array(grad).reshape(natom,3)
+    gradall[state - 1] = grad
+    gradients = gradall
+
+    nac = np.array(nac)
+    soc = np.array(soc)
+
+    return energies, gradients, gr_energy, nac, soc
 
 ###################################################################
 #####################  Read Hessians  #############################
@@ -2609,3 +2674,30 @@ def read_gauss_os(in_file):
     oos = np.array(oos)
 
     return oos
+
+def read_orca_os(in_file):
+    """
+    Get oscillator strengths values from a Orca.out file
+    """
+    osc_str_line='absorption spectrum via transition electric dipole moments'
+    iline = None
+
+    with open(in_file, 'r') as f:
+        data = f.readlines()
+
+    for i, line in enumerate(data):
+        if 'nroots' in line.lower():
+            nstates = int(line.split()[-1])
+        if osc_str_line in line.lower().strip():
+            iline = i
+    if iline is None:
+        raise ValueError("The line %s was not found in the output file." % osc_str_line)
+    init_line = iline + 5
+    for line in log[init_line:init_line+nstates]:
+        oos.append(float(line.split()[6]))
+
+    oos = np.array(oos)
+
+    return oos
+        
+
