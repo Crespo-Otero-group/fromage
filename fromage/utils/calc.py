@@ -2136,6 +2136,9 @@ class xtb_calc(Calc):
         # Fix gradients units to Hartree/Angstrom
 #        gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
 
+        # Move the gradient file to avoid the program keep going if low-level calc fails
+        subprocess.run("mv gradient last_gradient", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+
         os.chdir(self.here)
  
         return (energy, gradients, scf_energy)
