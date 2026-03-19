@@ -2665,7 +2665,7 @@ class Orca_calc(Calc):
         ef.write_xyz("geom.xyz", atoms)
 
         if point_flex is not None:
-            ef.write_orca_charges(("charges.pc", point_flex))
+            ef.write_orca_charges(("pointcharges.pc", point_flex))
 
         if state is not None and states is not None:
              ef.write_orca(
@@ -2865,3 +2865,16 @@ class Orca_calc(Calc):
 
         os.chdir(self.here)
         return
+
+    def read_osc_str(self):
+        """
+        Get the osc str. values from the .out file of an Orca6 calc
+        """
+
+        orca_path = os.path.join(self.here,self.calc_name)
+        os.chdir(orca_path)
+        osc_str = rf.read_orca_os(self.calc_name + ".out")
+
+        os.chdir(self.here)
+
+        return osc_str
