@@ -1057,11 +1057,11 @@ def write_orca_charges(file_name, points):
     out_file = open(file_name, "w")
 
     ncharges = str(len(points))
-    out_file.write(ncharges)
+    out_file.write(ncharges + "\n")
 
     for point in points:
         point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
-            point.x, point.y, point.z, point.q) + "\n"
+            point.q, point.x, point.y, point.z) + "\n"
         out_file.write(point_str)
     out_file.close()
 

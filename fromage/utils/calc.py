@@ -2665,7 +2665,7 @@ class Orca_calc(Calc):
         ef.write_xyz("geom.xyz", atoms)
 
         if point_flex is not None:
-            ef.write_orca_charges(("pointcharges.pc", point_flex))
+            ef.write_orca_charges("pointcharges.pc", point_flex)
 
         if state is not None and states is not None:
              ef.write_orca(
