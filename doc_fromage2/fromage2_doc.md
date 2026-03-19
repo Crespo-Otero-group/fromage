@@ -1,7 +1,5 @@
 # `fromage` 2.0 Notes
 
-**Authors:** Federico J. Hernández (f.hernandez@qmul.ac.uk), Rachel Crespo-Otero (r.crespo-otero@ucl.ac.uk)
-
 ---
 
 ## 1. Introduction
