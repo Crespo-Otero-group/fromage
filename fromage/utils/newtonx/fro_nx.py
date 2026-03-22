@@ -377,7 +377,7 @@ def newtonx_initconds(inputs,natoms,states,state):
         
     mh_en_gr = mh.read_out(in_pos,natoms_flex = ll_natoms,natoms = hl_natoms,state = state,
                            states = states, mult = mult, singlestate = singlestate,
-                           soc_coupling = soc_coupling)
+                           soc_coupling = soc_coupling, in_cond=in_cond)
 
     mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
 

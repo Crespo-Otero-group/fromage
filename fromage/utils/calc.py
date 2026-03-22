@@ -2744,7 +2744,8 @@ class Orca_calc(Calc):
                  mult = [],
                  singlestate = 0,
                  nac_coupling = [],
-                 soc_coupling = []):
+                 soc_coupling = [],
+                 in_cond = None):
         """
         Analyse a Orca.out file while printing geometry updates
 
@@ -2786,7 +2787,8 @@ class Orca_calc(Calc):
                                                                          mult,
                                                                          singlestate,
                                                                          nac_coupling,
-                                                                         soc_coupling)
+                                                                         soc_coupling,
+                                                                         in_cond)
             # Fix gradients units to Hartree/Angstrom
             gradients = gradients_bohr * bohrconv
         else:        
