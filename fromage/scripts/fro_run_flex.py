@@ -27,6 +27,7 @@ from fromage.dynamics import fro_dyn as fd
 from fromage.utils import vib_analysis as va
 from fromage.io.parse_config_file import bool_cast
 from fromage.dynamics.periodic_table import Element
+from fromage.utils.newtonx import fro_nx as nx
 
 
 def sequence(in_pos):
@@ -111,7 +112,7 @@ def sequence(in_pos):
                            in_mol = all_flex_atoms, # FJH here I am giving QM and flex QM' region instead of mol_atoms
                            in_shell = fixed_atoms, # FJH here I am giving only the fixed atoms instead of all the shell_atoms
                            natoms_flex = natoms_flex)
-    ml_en_gr = ml.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex)
+    ml_en_gr = ml.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex, pcgrad=pcgrad_bool)
 #
     if high_level == "gaussian_cas":
         mh_en_gr = mh.read_out(in_pos[:dim_qm],natoms_flex = natoms_flex)[0:3]
@@ -120,7 +121,7 @@ def sequence(in_pos):
                 in_pos[:dim_qm], natoms_flex = natoms_flex)[3], mh.read_out(
                     in_pos[:dim_qm], natoms_flex = natoms_flex)[2])
     else:
-        mh_en_gr = mh.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex)
+        mh_en_gr = mh.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex, pcgrad=pcgrad_bool)
         if bool_ci:
             mg_en_gr = mg.read_out(in_pos[:dim_qm], natoms_flex = natoms_flex)
 
@@ -176,7 +177,8 @@ def sequence(in_pos):
                      en_out = en_out,
                      gr_out = gr_out,
                      e_diff = e_diff,
-                     bool_ci = bool_ci)
+                     bool_ci = bool_ci,
+                     pcgrad_bool = pcgrad_bool)
 
     return (en_out, gr_out)
 
@@ -311,7 +313,8 @@ def _write_calc_info(out_file,
                      en_out,
                      gr_out,
                      e_diff,
-                     bool_ci = None):
+                     bool_ci = None,
+                     pcgrad_bool = False):
     """
     print some updates in the output
     """
@@ -384,7 +387,8 @@ if __name__ == '__main__':
         "natoms_flex": "0",
         "normal_modes" : "0",
         "newtonx" : "0",
-        "frozen_at" : None} 
+        "frozen_at" : None,
+        "pcgrad" : "0"} 
 
     inputs = def_inputs.copy()
 
@@ -440,6 +444,7 @@ if __name__ == '__main__':
     at_reparam = inputs["at_reparam"]
     single_point = bool_cast(inputs["single_point"])
     dyn_restart = bool_cast(inputs["dyn_restart"])
+    pcgrad_bool = bool_cast(inputs["pcgrad"])
     
     # sigma is called lambda in some papers but that is a bad variable name
     # in Python
@@ -467,7 +472,8 @@ if __name__ == '__main__':
     if newtonx:
         set_newtonx(inputs,single_point)
         _write_tail(start_time,out_file)
-        sys.exit('Finished fromage module')
+        print('Finished fromage module')
+        sys.exit(0)
 
     # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
     #If so, the atom number is collected and a "w" symbol is added next to 

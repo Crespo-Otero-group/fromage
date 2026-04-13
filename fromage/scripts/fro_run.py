@@ -87,11 +87,17 @@ def sequence(in_pos):
         ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),
                          nprocs = nprocs , at_reparam = at_reparam)
         ml_proc.wait()
+
+        
     else:
         rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
         rl_proc.wait()
         ml_proc = ml.run(atoms = ao.array2atom(mol_atoms, in_pos),nprocs = nprocs)
+
         ml_proc.wait()
+
+
+
 #    mh_proc.wait()
     if bool_ci and high_level != "gaussian_cas":
         mg_proc.wait()
@@ -371,7 +377,8 @@ if __name__ == '__main__':
     if newtonx:
         set_newtonx(inputs,single_point)
         _write_tail(start_time,out_file)
-        sys.exit('Finished fromage module')
+        print('Finished fromage module')
+        sys.exit(0)
         
     # Check if the are are atoms to be reparametrised for a FOMO-CI calc. 
     #If so, the atom number is collected and a "w" symbol is added next to 

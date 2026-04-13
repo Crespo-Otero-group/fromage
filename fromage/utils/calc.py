@@ -178,16 +178,20 @@ class DFTB_calc(Calc):
 
         ef.write_dftb("geom.xyz",atoms,
                             [], self.calc_name + ".temp")
+               
         if point_flex is not None:
             ef.write_dftb_charges("charges.dat", point_flex)
+            ef.write_dftb("dftb_in.hsd", atoms, point_flex, "dftb_in.temp")
             if state is not None and states is not None:
                 ef.write_dftb_dyn('dftb_in.hsd', self.calc_name + ".temp", state,
                                   states, nac_coupling, soc_coupling, point_flex)
         else:
+            if os.path.exists("dftb_in.temp") and not os.path.exists("dftb_in.hsd"):
+
+                ef.write_dftb("dftb_in.hsd", atoms, [], "dftb_in.temp")
             if state is not None and states is not None:
                 ef.write_dftb_dyn('dftb_in.hsd', self.calc_name + ".temp", state, states,
                                   singlestate, nac_coupling, soc_coupling, [])
-                
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
 
@@ -213,10 +217,14 @@ class DFTB_calc(Calc):
         dftb_path = os.path.join(self.here, self.calc_name)
         os.chdir(dftb_path)
 
-        ef.write_dftb("geom.xyz",atoms,
-                            [], self.calc_name + ".temp", freq = True)
+        ef.write_dftb("geom.xyz", atoms, [], self.calc_name + ".temp")
         if point_flex is not None:
             ef.write_dftb_charges("charges.dat", point_flex)
+            if os.path.exists("dftb_in.temp"):
+              ef.write_dftb("dftb_in.hsd", atoms, point_flex, "dftb_in.temp")
+        elif os.path.exists("dftb_in.temp"):
+            ef.write_dftb("dftb_in.hsd", atoms, [], "dftb_in.temp")
+        ef.write_dftb_freq_calc('dftb_in.hsd')
         # Run DFTB+
         proc = subprocess.Popen("dftb+ > dftb_out", shell=True)
 
@@ -236,7 +244,8 @@ class DFTB_calc(Calc):
                  states = None,
                  mult = [],
                  singlestate = 0,
-                 soc_coupling = []):
+                 soc_coupling = [],
+                 pcgrad = False):
         """
         Analyse a DFTB+ detailed.out file while printing geometry updates
 
@@ -285,13 +294,27 @@ class DFTB_calc(Calc):
             energy, gradients_b, scf_energy = rf.read_dftb_out("detailed.out")
             if natoms_flex is not None:
                 if int(len(positions)) <= int(3*natoms_flex): 
-                    dim_flex = int(len(positions) + 3. * natoms_flex)
+                    dim_flex = int(len(positions) + 3 * natoms_flex)
                     gradients = np.zeros(dim_flex)
                 else:
                     # truncate gradients if too long and fix gradients units to Hartree/Angstrom
                     gradients = np.zeros(len(positions))
                 # Fix gradients units to Hartree/Angstrom
-                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+                #gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+                n = min(len(gradients), len(gradients_b))
+                gradients[:n] = gradients_b[:n] * bohrconv
+                if pcgrad and len(gradients) > n and os.path.isfile("detailed.out"):
+                    pc_grad = rf.read_dftb_pcgrad("detailed.out")
+                    pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
+                    gradients[n:n + len(pc_flat)] * bohrconv
+                    # TEMPORARY DEBUG
+                    print("[pcgrad] {:s} nuclear grad norm: {:.6e} Ha/Ang  "
+                          "shell grad norm: {:.6e} Ha/Ang".format(
+                              self.calc_name,
+                              np.linalg.norm(gradients[:n]),
+                              np.linalg.norm(pc_flat)))
+
+
             else:
                 # Fix gradients units to Hartree/Angstrom
                 gradients = gradients_b[:len(positions)] * bohrconv
@@ -2136,6 +2159,9 @@ class xtb_calc(Calc):
         # Fix gradients units to Hartree/Angstrom
 #        gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
 
+
+        subprocess.run("mv gradient last_gradient", shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+
         os.chdir(self.here)
  
         return (energy, gradients, scf_energy)
@@ -2662,8 +2688,7 @@ class Orca_calc(Calc):
         ef.write_xyz("geom.xyz", atoms)
 
         if point_flex is not None:
-            ef.write_orca_charges(("charges.pc", point_flex))
-
+            ef.write_orca_charges("pointcharges.pc", point_flex)
         if state is not None and states is not None:
              ef.write_orca(
                      self.calc_name + ".inp",
@@ -2712,18 +2737,25 @@ class Orca_calc(Calc):
         orca_path = os.path.join(self.here, self.calc_name)
         os.chdir(orca_path)
 
+        os.environ["np"] = nprocs
+        orca = os.path.join(os.environ["ORCAHOME"], "orca")
+        inp = self.calc_name + ".inp"
+        out = self.calc_name + ".out"
+
         # Write a temporary geom file for Orca to read
         ef.write_xyz("geom.xyz", atoms)
 
         ef.write_orca(self.calc_name + ".inp", 
                       atoms,
                       "mh.temp",
-                      Freq=True)
+                      freq=True)
         if point_flex is not None:
-            ef.write_orca_charges(("charges.pc", point_flex))
-        os.environ["np"] = nprocs
-        proc = subprocess.Popen(
-            "orca " + self.calc_name + ".inp" + " > " + self.calc_name + ".out", shell=True)
+            ef.write_orca_charges("pointcharges.pc", point_flex)
+
+        with open(out, "w") as f:
+            proc = subprocess.Popen([orca, inp], stdout = f, stderr=subprocess.STDOUT)
+
+
 
         os.chdir(self.here)
 
@@ -2741,7 +2773,8 @@ class Orca_calc(Calc):
                  mult = [],
                  singlestate = 0,
                  nac_coupling = [],
-                 soc_coupling = []):
+                 soc_coupling = [],
+                 pcgrad = False):
         """
         Analyse a Orca.out file while printing geometry updates
 
@@ -2801,6 +2834,18 @@ class Orca_calc(Calc):
                     # truncate gradients if too long and fix units to Hartree/Angstrom
                     gradients = np.zeros(len(positions))
                 gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
+                pcgrad_file = self.calc_name + ".pcgrad"
+                if len(gradients) > len(positions) and os.path.isfile(pcgrad_file):
+                    pc_grad = rf.read_orca_pcgrad(pcgrad_file)
+                    pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
+                    gradients[len(positions):len(positions) + len(pc_flat)] = pc_flat
+                    print("[pcgrad] {:s} nuclear grad norm: {:.6e} Ha/Ang  "
+                          "shell grad norm: {:.6e} Ha/Ang".format(
+                              self.calc_name,
+                              np.linalg.norm(gradients[:len(positions)]),
+                              np.linalg.norm(pc_flat)))
+
+
             else:
                 gradients = gradients_bohr[:len(positions)] * bohrconv
 
@@ -2837,7 +2882,7 @@ class Orca_calc(Calc):
 
     def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
         """
-        Read dipole moment and dipole derivatives from a Turbomole output
+        Read dipole moment and dipole derivatives from an Orca output
        
         Returns
         ----------
@@ -2861,4 +2906,18 @@ class Orca_calc(Calc):
             d_mu = d_mu_tmp[:len(positions),:3]
 
         os.chdir(self.here)
-        return
+        return d_mu
+
+
+    def read_osc_str(self):
+        """
+        Get the osc str. values from the .out file of an Orca6 calc
+        """
+
+        orca_path = os.path.join(self.here,self.calc_name)
+        os.chdir(orca_path)
+        osc_str = rf.read_orca_os(self.calc_name + ".out")
+
+        os.chdir(self.here)
+
+        return osc_str

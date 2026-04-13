@@ -79,6 +79,11 @@ def initNmodesParams(at_symbols,init_pos,settings):
         ip["read_hessian"] = settings["read_hessian"]
     else:
         ip["read_hessian"] = "None"
+    if "skip_rl_hess_calc" in settings.keys():
+        ip["skip_rl_hess_calc"] = settings["skip_rl_hess_calc"]
+    else:
+        ip["skip_rl_hess_calc"] = "None"
+
     if "frozen_at" in settings.keys():
         frozen_at = settings["frozen_at"]
         if frozen_at is not None:
@@ -251,9 +256,9 @@ def write_vibrations_MOLDEN(in_name,symbols,coord,freqs,inten,in_modes,rmass,str
     inten = inten.reshape((-1,1))
     rmass = rmass.reshape((-1,1))
     nfreqs = len(freqs) - str_mode
-    frequencies = '\n'.join(['%12.6f' % x for x in freqs[str_mode:]])
-    intensities = '\n'.join(['%12.6f' % x for x in inten[str_mode:]])
-    rmasses = '\n'.join(['%12.6f' % x for x in rmass[str_mode:]])
+    frequencies = '\n'.join(['%12.6f' % x for x in freqs[str_mode:].flatten()])
+    intensities = '\n'.join(['%12.6f' % x for x in inten[str_mode:].flatten()])
+    rmasses = '\n'.join(['%12.6f' % x for x in rmass[str_mode:].flatten()])
 
     for i in range(nmodes):
        count = 0
@@ -396,6 +401,7 @@ def sequence_hess(Nmodes):
     c_low = Nmodes.c_low
     c_high = Nmodes.c_high
     read_hessian = Nmodes.read_hessian
+    skip_rl_hess_calc = Nmodes.skip_rl_hess_calc
     out_file = open(Nmodes.out_file,'a+')
     verbose = Nmodes.verbose
     freeze_atoms = Nmodes.freeze_atoms
@@ -417,13 +423,14 @@ def sequence_hess(Nmodes):
         out_file.write("Computing ONIOM Hessian" + "\n")
         start_time = datetime.now()
         out_file.write("STARTING TIME: " + str(start_time) + "\n")
-
-        if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
-            rl_proc = rl.run_freq(ao.array2atom(all_atoms, all_pos),nprocs,at_reparam)
-            rl_proc.wait()
-        else:
-            rl_proc = rl.run_freq(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
-            rl_proc.wait()
+        
+        if not skip_rl_hess_calc:
+            if low_level == "fomo-ci" or low_level == "mopac" and at_reparam is not None:
+                rl_proc = rl.run_freq(ao.array2atom(all_atoms, all_pos),nprocs,at_reparam)
+                rl_proc.wait()
+            else:
+                rl_proc = rl.run_freq(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
+                rl_proc.wait()
 
         # Get the charges and use them for the model region
         rl_charges_array = rl.read_charges()
@@ -673,6 +680,11 @@ class NormalModes:
             self.at_reparam = None
         if "read_hessian" in init_dict.keys():
             self.read_hessian = bool_cast(init_dict["read_hessian"])
+        if "skip_rl_hess_calc" in init_dict.keys():
+            self.skip_rl_hess_calc = bool_cast(init_dict["skip_rl_hess_calc"])
+        else:
+            self.skip_rl_hess_calc = False
+                
 
         if "freeze_atoms" in init_dict.keys():
             self.freeze_atoms = init_dict["freeze_atoms"]

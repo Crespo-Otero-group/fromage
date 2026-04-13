@@ -295,6 +295,13 @@ def write_dftb(file_name, atoms, points, temp_name, proj_name='dftb',freq=None):
                 atomStr = " {:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 out_file.write(atomStr)
+        elif "XXX__CHARGES__XXX" in line:
+            for point in points:
+                point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+                        point.x, point.y, point.z, point.q) + "\n"
+                out_file.write(point_str)
+
+
         else:
             out_file.write(line)
     out_file.close()
@@ -1037,11 +1044,11 @@ def write_orca(file_name,
                 atomStr = "{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
                     atom.elem, atom.x, atom.y, atom.z) + "\n"
                 out_file.write(atomStr)
-        if "&NSTATES" in line and states is not None:
+        elif "&NSTATES" in line and states is not None:
             nstates = '%s' % (int(np.sum(states))-1)
             line = line.replace('&NSTATES', nstates)
             out_file.write(line)
-        if "&STATE" in line and states is not None:
+        elif "&STATE" in line and states is not None:
             curr_state = '%s' % (state - 1)
             line = line.replace('&STATE', curr_state)
             out_file.write(line)
@@ -1057,15 +1064,41 @@ def write_orca_charges(file_name, points):
     out_file = open(file_name, "w")
 
     ncharges = str(len(points))
-    out_file.write(ncharges)
+    out_file.write(ncharges + "\n")
 
     for point in points:
         point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
-            point.x, point.y, point.z, point.q) + "\n"
+            point.q, point.x, point.y, point.z) + "\n"
         out_file.write(point_str)
     out_file.close()
 
     return
+
+
+def write_dftb_temp(file_name, atoms, points, template_path):
+    """
+    Marcus WIP, writing dftb input template 
+    file
+
+    using the here found in the fro_prep_run.py
+    """
+    import shutil
+    if file_name == 'ml.temp':
+        with open(file_name, 'w') as f:
+            f.write(f"{len(atoms)}\n\nXXX__POS__XXX\n")
+        shutil.copy(template_path, "dftb_in.temp")
+
+    elif file_name == 'rl.temp':
+        total = len(atoms) + len(points)
+        with open(file_name, 'w') as f:
+            f.write(f"{total}\nshell.xyz\n  XXX__POS__XXX\n")
+            for atom in points:
+                f.write("{:>6} {:10.6f} {:10.6f} {:10.6f}".format(
+                    atom.elem, atom.x, atom.y, atom.z) + "\n")
+
+        shutil.copy(template_path, "dftb_in.hsd")
+ 
+
 
 def write_mopac(file_name, atoms, temp_name):
     """

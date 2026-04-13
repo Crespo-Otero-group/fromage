@@ -2374,22 +2374,34 @@ def read_orca_dyn(out_file,natom,state,states,mult,singlestate,nac_coupling,soc_
             disp = float(line.split()[2])
         if "CARTESIAN GRADIENT" in line:
             orig_line = i + 3
-
+    if orig_line is not None:
+        for line in content[orig_line:]:
+            if len(line.split()) == 6:
+                atom_grads = [float(i) for i in line.split()[3:]]
+                grad = np.concatenate((grad,atom_grads))
+            else:
+                break
+    """
+    if lin
     for line in content[orig_line:]:
         if len(line.split()) == 6:
             atom_grads = [float(i) for i in line.split()[3:]]
             grad = np.concatenate((grad,atom_grads))
         else:
             break
-
+    """
         # Here implement the conditional for NAC/SOC
 
 
     energies += disp
     gr_energy = energies[0]
     gradall = np.zeros((np.sum(states), natom, 3))
-    grad = np.array(grad).reshape(natom,3)
-    gradall[state - 1] = grad
+    #print("[DEBUG newtonx_sequence] orca energies={} gradall={}".format(energies, gradall))
+    if len(grad) > 0:
+        grad = np.array(grad).reshape(natom, 3)
+        gradall[state - 1] = grad
+    #grad = np.array(grad).reshape(natom,3)
+    #gradall[state - 1] = grad
     gradients = gradall
 
     nac = np.array(nac)
@@ -2512,7 +2524,7 @@ def read_hessian_orca(in_name):
     """
 
     with open(in_name, 'r') as file:
-        lines = data.read().splitlines()
+        lines = file.read().splitlines()
 
     hess = None
     for n, line in enumerate(lines):
@@ -2593,25 +2605,29 @@ def read_turbo_mu(in_name):
 
 def read_orca_mu(in_name):
     """
-    Read the dipole derivatives computed with Turbomole
+    Read the dipole derivatives computed with Orca
     """
 
-    lines = in_name.splitlines()
-    nums = []
-    dim = 0
-    read_data = False
+    with open(in_name, 'r') as data:
+        lines = data.read().splitlines()
+        nums = []
+        dim = 0
+        read_data = False
 
-    for i, line in enumerate(lines):
-        if '$dipole_derivatives' in line:
-            dim = int(lines[i + 1].strip())
-            read_data = True
-            continue
-        if read_data:
-            nums.extend([float(num) for num in line.split()])
-            if len(nums) // 3 == dim:
-                break
+        for i, line in enumerate(lines):
+            if '$dipole_derivatives' in line:
+                dim = int(lines[i + 1].strip())
+                read_data = True
+                continue
+            if read_data:
+                try:
+                    nums.extend([float(num) for num in line.split()])
+                except ValueError:
+                    continue
+                if len(nums) >= dim * 3: 
+                    break
 
-    return np.array(nums).reshape((dim, 3))
+    return np.array(nums[:dim*3]).reshape((dim, 3)) 
 
 #def read_turbo_os(in_file):
 #    """
@@ -2681,7 +2697,7 @@ def read_orca_os(in_file):
     """
     osc_str_line='absorption spectrum via transition electric dipole moments'
     iline = None
-
+    oos = []
     with open(in_file, 'r') as f:
         data = f.readlines()
 
@@ -2693,11 +2709,62 @@ def read_orca_os(in_file):
     if iline is None:
         raise ValueError("The line %s was not found in the output file." % osc_str_line)
     init_line = iline + 5
-    for line in log[init_line:init_line+nstates]:
+    for line in data[init_line:init_line+nstates]:
         oos.append(float(line.split()[6]))
 
     oos = np.array(oos)
 
     return oos
         
+
+### READING THE PC GRADS
+
+def read_orca_pcgrad(filename):
+    """
+    Reads an ORCA .pcgrad file for the gradients on the point charges
+
+    Returns
+    -------
+    numpy array of shape (ncharges, 3) in Hartree/Bohr
+    """
+
+    with open(filename) as f:
+        lines = f.readlines()
+    ncharges = int(lines[0].strip())
+    grads = []
+    for line in lines[1:1 + ncharges]:
+        grads.append([float(x) for x in line.split()])
+    return np.array(grads)
+
+def read_dftb_pcgrad(filename):
+    """
+    Same as orca function above but for the DFTB+ detailed.out
+    looks for 'Forces on external charges' header
+    of format
+    index fx fy fz
+
+    Returns
+    -------
+    numpy array of shape (ncharges, 3) in Hartree/Bohr
+    """
+    grads = []
+    reading = False
+    with open(filename) as f:
+        for line in f:
+            if 'Forces on external charges' in line:
+                reading = True
+                continue
+            if reading:
+                if not line.strip():
+                    break
+                try:
+                    parts = line.split()
+                    grads.append([float(parts[0]), float(parts[1]), float(parts[2])])
+                except (ValueError, IndexError):
+                    break
+    return -np.array(grads)
+
+
+
+
 

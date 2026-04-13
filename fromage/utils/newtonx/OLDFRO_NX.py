@@ -19,21 +19,20 @@ from fromage.io.parse_config_file import bool_cast
 bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 
 def read_nx_control():
+    """
+    This subrutine identifies if the Newton-X calculation is to compute a spectra
+    or dynamics
+    """
     states = []
     try:
-        with open("../../user_config.nml", "r") as file:
-            for line in file:
-                line = line.strip()
-                if '=' not in line:
-                    continue
-                key = line.split('=')[0].strip()
-                val = line.split('=')[1].strip().rstrip(',')
-                if key == 'nat':
-                    natoms = int(val)
-                elif key == 'nstat':
-                    states.append(int(val))
-                elif key == 'nstatdyn':
-                    state = int(val)
+        with open("control.d", "r") as file:
+            line = file.readline()
+            info = line.split(',')
+            natoms = int(info[0].strip())
+            states.append(int(info[2].strip()))
+#            states = [int(info[2].strip())]
+#            nstates = int(np.sum(states))
+            state = int(info[3].strip())        
     except FileNotFoundError:
         try:
             with open("initqp_input", "r") as data:
@@ -45,10 +44,12 @@ def read_nx_control():
                     states = [int(line.split()[2])]
                 if "NIS" in line:
                     state = int(line.split()[2])
+             
         except FileNotFoundError:
             print("Error in subroutine fromage/utils/newtonx/fro_nx.py.")
-            print("Both 'user_config.nml' and 'initqp_input' files not found.")
+            print("Both 'control.d' and 'initqp_input' files not found.")
             print("Check you have properly set the input files for NX")
+            data = None
 
     return natoms, states, state
 
@@ -99,14 +100,8 @@ def parse_fro_input(inputs,states):
     out_file = inputs["out_file"]
     out_file = open(out_file,"a+")
 
-    mol_file = inputs.get("mol_file", "mol.init.xyz")
-    if "shell_file" in inputs:
-        shell_file = inputs["shell_file"]
-    elif "shell_file_flex" in inputs:
-        shell_file = inputs["shell_file_flex"]
-    else:
-        shell_file = "shell.xyz"
-    shell_file_fixed = inputs.get("shell_file_fixed", "shell_fixed.xyz")
+    mol_file = inputs["mol_file"]
+    shell_file = inputs["shell_file"]
     high_level = inputs["high_level"]
     low_level = inputs["low_level"]
     if "hl_natoms" in inputs.keys():    
@@ -151,7 +146,6 @@ def parse_fro_input(inputs,states):
     vals.append(out_file)
     vals.append(mol_file)
     vals.append(shell_file)
-    vals.append(shell_file_fixed)
     vals.append(high_level)
     vals.append(low_level)
     vals.append(hl_natoms)
@@ -326,22 +320,18 @@ def _chk_hlevel_in_methods(high_level):
     
     return None
 
-def get_mol_shell_atoms(mol_file, shell_file, flex=None, fixed_shell_file=None):
+def get_mol_shell_atoms(mol_file,shell_file,flex=None):
     """
     """
-    # read initial coordinates
+    # read initial coordniates
     mol_atoms = rf.read_xyz(mol_file)[0]
 
     if flex:
+        # read shell atoms
         shell_atoms = rf.read_xyz(shell_file)[0]
     else:
         shell_atoms = []
-
-    fixed_atoms = []
-    if flex and fixed_shell_file and os.path.isfile(fixed_shell_file):
-        fixed_atoms = rf.read_xyz(fixed_shell_file)[0]
-
-    # make the initial QM coordinates into a flat list
+    # make the initial coordinates into a flat list
     atoms_array = []
     for atom in mol_atoms:
         atoms_array.append(atom.x)
@@ -350,14 +340,14 @@ def get_mol_shell_atoms(mol_file, shell_file, flex=None, fixed_shell_file=None):
 
     in_pos = np.array(atoms_array)
 
-    return in_pos, mol_atoms, shell_atoms, fixed_atoms
+    return in_pos, mol_atoms, shell_atoms
 
 def newtonx_initconds(inputs,natoms,states,state):
     """
     """
-    (out_file, mol_file, shell_file, shell_file_fixed, high_level,
-    low_level, hl_natoms, ll_natoms,  pop_an,
-    nprocs, singlestate, spin, mult, soc_coupling,
+    (out_file, mol_file, shell_file, high_level,
+    low_level, hl_natoms, ll_natoms,  pop_an, 
+    nprocs, singlestate, spin, mult, soc_coupling, 
     at_reparam) = parse_fro_input(inputs,states)
 
     write_nx_head(out_file)
@@ -369,8 +359,7 @@ def newtonx_initconds(inputs,natoms,states,state):
         natoms_flex = ll_natoms
         dim_hl = int(3*hl_natoms)
 
-    in_pos, mol_atoms, shell_atoms, fixed_atoms = get_mol_shell_atoms(
-        mol_file, shell_file, flex, shell_file_fixed)
+    in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
 
     # initialise calculation objects
     rl = calc.setup_calc("rl", low_level)
@@ -381,12 +370,11 @@ def newtonx_initconds(inputs,natoms,states,state):
     in_cond = True
     if flex:
         run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
-                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,in_cond,
-                  fixed_atoms=fixed_atoms)
+                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,in_cond)
     else:
         run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
                   singlestate,pass_nac,soc_coupling,in_cond=in_cond)
-    natoms_mh = hl_natoms if hl_natoms is not None else len(mol_atoms)    
+        
     mh_en_gr = mh.read_out(in_pos,natoms_flex = ll_natoms,natoms = hl_natoms,state = state,
                            states = states, mult = mult, singlestate = singlestate,
                            soc_coupling = soc_coupling)
@@ -404,12 +392,10 @@ def newtonx_sequence(inputs,natoms,states,state):
     """
     """
     # Parse fromage.in file
-    (out_file, mol_file, shell_file, shell_file_fixed, high_level,
-    low_level, hl_natoms, ll_natoms,  pop_an,
-    nprocs, singlestate, spin, mult, soc_coupling,
+    (out_file, mol_file, shell_file, high_level, 
+    low_level, hl_natoms, ll_natoms,  pop_an, 
+    nprocs, singlestate, spin, mult, soc_coupling, 
     at_reparam) = parse_fro_input(inputs,states)
-
-    pcgrad_bool = bool_cast(inputs.get("pcgrad", "0"))
 
     write_nx_head(out_file)
     _chk_hlevel_in_methods(high_level)
@@ -420,14 +406,7 @@ def newtonx_sequence(inputs,natoms,states,state):
         natoms_flex = ll_natoms
         dim_hl = int(3*hl_natoms)
 
-    in_pos, mol_atoms, shell_atoms, fixed_atoms = get_mol_shell_atoms(
-        mol_file, shell_file, flex, shell_file_fixed)
-
-    print("[DEBUG newtonx_sequence] mol_file={} shell_file={} shell_file_fixed={}".format(
-        mol_file, shell_file, shell_file_fixed))
-    print("[DEBUG newtonx_sequence] len(mol_atoms)={} len(shell_atoms)={} len(fixed_atoms)={} len(in_pos)={}".format(
-        len(mol_atoms), len(shell_atoms), len(fixed_atoms), len(in_pos)))
-    print("[DEBUG newtonx_sequence] in_pos[:3]={}".format(in_pos[:3]))
+    in_pos, mol_atoms, shell_atoms = get_mol_shell_atoms(mol_file,shell_file,flex)
 
     methods_wnacs = ['molcas', 'dftb', 'fomo-ci'] # Extend this list to other methods that compute NACs
     pass_nac = []
@@ -444,24 +423,23 @@ def newtonx_sequence(inputs,natoms,states,state):
 
     if flex:
         run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
-                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,None,
-                  fixed_atoms=fixed_atoms)
+                  singlestate,pass_nac,soc_coupling,shell_atoms,hl_natoms,ll_natoms,None)
     else:
         run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,
                   singlestate,pass_nac,soc_coupling)
 
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     if flex:
-        rl_en_gr = rl.read_out(in_pos, in_mol=mol_atoms, in_shell=shell_atoms, natoms_flex=ll_natoms)
-        ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms, pcgrad=pcgrad_bool)
+        rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms,natoms_flex = ll_natoms)
+        ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex = ll_natoms)
         if high_level == 'molcas':
-            mh_en_gr = mh.read_out(in_pos, natoms_flex=ll_natoms, natoms=hl_natoms, state=state,
-                                   states=states, mult=mult, singlestate=singlestate,
-                                   soc_coupling=soc_coupling, newtonx=True)
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling, newtonx = True)
         else:
-            mh_en_gr = mh.read_out(in_pos, natoms_flex=ll_natoms, natoms=hl_natoms, state=state,
-                                   states=states, mult=mult, singlestate=singlestate,
-                                   soc_coupling=soc_coupling, pcgrad=pcgrad_bool)
+            mh_en_gr = mh.read_out(in_pos, natoms_flex = ll_natoms, natoms = hl_natoms, state = state,
+                                   states = states, mult = mult, singlestate = singlestate,
+                                   soc_coupling = soc_coupling)
         
     else:
         rl_en_gr = rl.read_out(in_pos,in_mol = mol_atoms,in_shell = shell_atoms)
@@ -494,11 +472,8 @@ def newtonx_sequence(inputs,natoms,states,state):
         2 gr_energy float
     """
     mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
-
-    ml_en, ml_gr, ml_scf, _, _ = ml_en_gr
-    rl_en, rl_gr, rl_scf, _, _ = rl_en_gr
-    print("[DEBUG] len(ml_gr)={} len(rl_gr)={}".format(len(ml_gr), len(rl_gr)))
-    print("[DEBUG] mh_gr_tmp shape={}".format(np.array(mh_gr_tmp).shape))
+    ml_en, ml_gr, ml_scf = ml_en_gr
+    rl_en, rl_gr, rl_scf = rl_en_gr
 
     if flex:
         flex_natoms = hl_natoms + ll_natoms
@@ -506,18 +481,6 @@ def newtonx_sequence(inputs,natoms,states,state):
         ml_gr = np.array(ml_gr).reshape((1, flex_natoms, 3))
         mh_gr = np.zeros((nstates, flex_natoms, 3))
         mh_gr[:,:hl_natoms,:] = mh_gr_tmp
-        if pcgrad_bool and high_level == "orca":
-            pcgrad_file = os.path.join("mh", "mh.pcgrad")
-            if os.path.isfile(pcgrad_file):
-                pc_grad = rf.read_orca_pcgrad(pcgrad_file)
-                pc_grad_flex = pc_grad[:ll_natoms] * bohrconv
-                mh_gr[state - 1, hl_natoms:, :] = pc_grad_flex
-                print("[pcgrad] mh nuclear grad norm: {:.6e} Ha/Ang  "
-                      "shell grad norm: {:.6e} Ha/Ang".format(
-                      np.linalg.norm(mh_gr[:, :hl_natoms, :]),
-                      np.linalg.norm(pc_grad_flex)))
-            else:
-                print("[pcgrad] WARNING: mh.pcgrad not found at {}".format(pcgrad_file))
         rl_gr = np.array(rl_gr).reshape((1, flex_natoms, 3))
     else:
         ml_gr = np.array(ml_gr).reshape((1, natoms, 3))
@@ -539,66 +502,55 @@ def newtonx_sequence(inputs,natoms,states,state):
     return None  
 
 def run_calcs(out_file,in_pos,mh,ml,rl,mol_atoms,at_reparam,pop_an,nprocs,state,states,singlestate,
-              pass_nac=[],soc_coupling=[],shell_atoms=None,hl_natoms=None,ll_natoms=None,in_cond=None,
-              fixed_atoms=None):
+              pass_nac=[],soc_coupling=[],shell_atoms=None,hl_natoms=None,ll_natoms=None,in_cond=None):
     """
     Run the calculations as subprocesses in parallel
     Note that the schemes are different if frozen or
     flexible ONIOM is required
     """
 
+    # Run the calculations as subprocesses in parallel
     calcs = []
 
     if hl_natoms and ll_natoms:
         all_atoms = mol_atoms + shell_atoms
-        dim_hl = 3 * hl_natoms
-
-        flex_pos_array = []
+        dim_hl = 3*hl_natoms
+        fixed_atoms_array = []
         for atom in shell_atoms:
-            flex_pos_array.extend([atom.x, atom.y, atom.z])
-        all_pos = np.concatenate((in_pos, np.array(flex_pos_array)))
+            fixed_atoms_array.append(atom.x)
+            fixed_atoms_array.append(atom.y)
+            fixed_atoms_array.append(atom.z)
+        fixed_atoms_array = np.array(fixed_atoms_array)
+        all_pos = np.concatenate((in_pos, fixed_atoms_array), axis = 0)
 
-        rl_proc = rl.run(atoms=ao.array2atom(all_atoms, all_pos), nprocs=nprocs)
+        rl_proc = rl.run(atoms = ao.array2atom(all_atoms, all_pos), nprocs = nprocs)
         rl_proc.wait()
-        rl_charges_array = rl.read_charges(pop=pop_an)
+        rl_charges_array = rl.read_charges(pop = pop_an)
 
-        flex_pc = ao.array2atom(shell_atoms, np.array(flex_pos_array),
-                                rl_charges_array[hl_natoms:hl_natoms + ll_natoms])
-        if fixed_atoms:
-            fixed_pos_array = []
-            for atom in fixed_atoms:
-                fixed_pos_array.extend([atom.x, atom.y, atom.z])
-            fixed_pc = ao.array2atom(fixed_atoms, np.array(fixed_pos_array),
-                                     rl_charges_array[hl_natoms + ll_natoms:
-                                                      hl_natoms + ll_natoms + len(fixed_atoms)])
-            all_pc = flex_pc + fixed_pc
-        else:
-            all_pc = flex_pc
-
-        mh_proc = mh.run(ao.array2atom(mol_atoms, in_pos[:dim_hl]),
-                         all_pc,
-                         nprocs,
-                         state=state,
-                         states=states,
-                         singlestate=singlestate,
-                         nac_coupling=pass_nac,
-                         soc_coupling=soc_coupling)
+        mh_proc = mh.run(ao.array2atom(mol_atoms,in_pos[:dim_hl]),
+                                       ao.array2atom(all_atoms[hl_natoms:],all_pos[dim_hl:],rl_charges_array[hl_natoms:]),
+                                       nprocs,
+                                       state = state,
+                                       states = states,
+                                       singlestate = singlestate,
+                                       nac_coupling = pass_nac,
+                                       soc_coupling = soc_coupling)
         calcs.append(mh_proc)
         mh_proc.wait()
         if in_cond is None:
-            ml_proc = ml.run(ao.array2atom(mol_atoms, in_pos[:dim_hl]),
-                             all_pc,
-                             nprocs)
+            ml_proc = ml.run(ao.array2atom(mol_atoms,in_pos[:dim_hl]),
+                                           ao.array2atom(all_atoms[hl_natoms:],all_pos[dim_hl:],rl_charges_array[hl_natoms:]),
+                                           nprocs)
             calcs.append(ml_proc)
             ml_proc.wait()
     else:
         mh_proc = mh.run(atoms=ao.array2atom(mol_atoms, in_pos),
-                         nprocs=nprocs,
-                         state=state,
-                         states=states,
-                         singlestate=singlestate,
-                         nac_coupling=pass_nac,
-                         soc_coupling=soc_coupling)
+                         nprocs = nprocs,
+                         state = state,
+                         states = states,
+                         singlestate = singlestate,
+                         nac_coupling = pass_nac,
+                         soc_coupling = soc_coupling)
         calcs.append(mh_proc)
         if in_cond is None:
             rl_proc = rl.run(atoms = ao.array2atom(mol_atoms, in_pos), nprocs = nprocs)
@@ -637,4 +589,3 @@ def write_ONIOM_info(out_file,mh_en,ml_en,rl_en,en_combo,scf_combo,state):
     out_file.flush()    
 
     return None
-

@@ -105,6 +105,8 @@ if __name__ == '__main__':
                 writer_list.append(ef.write_xtb_temp)
             elif prog == "fomo-ci" or prog == "mopac":
                 writer_list.append(ef.write_tinker_temp)
+            elif prog == "dftb+" or prog == "dftb":
+                writer_list.append(ef.write_dftb_temp)
             else:
                 writer_list.append(ef.write_g_temp)
         return writer_list[0], writer_list[1]
@@ -176,6 +178,22 @@ if __name__ == '__main__':
         low_level_write("mopac_tnk.temp", "ml_tnk.key", region_1, region_2, region_2)
         os.chdir(rl_path)
         low_level_write("rl.temp", os.path.join(here, "rl.template"), region_1, region_2)
+
+    elif low_level_write == ef.write_dftb_temp:
+        # marcus edit for dftb support
+        # ml first, xyz geom template plus HSD template with charges
+        import shutil
+
+        os.chdir(ml_path)
+        low_level_write("ml.temp", region_1, region_2, 
+                        os.path.join(here, "dftb_in.template"))
+        ef.write_dftb("dftb_in.hsd", region_1, region_2, "dftb_in.temp")
+
+
+
+        os.chdir(rl_path)
+        low_level_write("rl.temp", region_1, region_2,
+                        os.path.join(here, "rl_dftb_in.template"))
     else:
         os.chdir(ml_path)
         low_level_write("ml.temp", [], region_2, os.path.join(here, "ml.template"))
@@ -191,6 +209,8 @@ if __name__ == '__main__':
     else:
         os.chdir(mh_path)
         high_level_write("mh.temp", [], high_points, os.path.join(here, "mh.template"))
+        if inputs["high_level"].lower() == "orca":
+            ef.write_orca_charges("pointcharges.pc", high_points)
         os.chdir(mg_path)    
         high_level_write("mg.temp", [], high_points, os.path.join(here, "mg.template"))
 
