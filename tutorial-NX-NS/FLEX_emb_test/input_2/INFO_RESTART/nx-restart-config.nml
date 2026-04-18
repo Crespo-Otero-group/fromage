@@ -1,0 +1,20 @@
+&nxconfig
+  nat = 56
+  nstat = 5
+  nstatdyn = 2
+  progname = fromage
+  methodname = oniom
+  dt = 0.500000000000
+  tmax = 5.00000000000
+  dc_method = 3
+  sh_method = 1
+  use_locdiab = F
+  nxrestart = 1
+  init_time = 2.500000000000
+  init_step = 5
+  init_geom = INFO_RESTART/geom
+  init_veloc = INFO_RESTART/veloc
+  init_wf = INFO_RESTART/wf.inp
+  init_phase = INFO_RESTART/phase.inp
+/
+

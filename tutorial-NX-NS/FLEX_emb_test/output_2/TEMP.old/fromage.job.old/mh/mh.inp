@@ -1,0 +1,18 @@
+%maxcore 12000
+%pal
+nprocs 10
+end
+!wB97X-D3 sto-3g Engrad
+%SCF MAXITER 5000 END
+!NOSOSCF
+%TDDFT
+   NROOTS   4
+   IROOT    1
+   TRIPLETS FALSE
+   TDA FALSE
+END
+%method
+DoEQ true
+end
+* xyzfile 0 1 geom.xyz *
+

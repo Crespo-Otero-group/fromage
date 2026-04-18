@@ -1,0 +1,9 @@
+high_level      orca
+low_level       dftb
+nprocs          20
+newtonx		yes
+singlestate	1
+spin		0
+hl_natoms	8
+ll_flex_natoms  48
+pcgrad		yes

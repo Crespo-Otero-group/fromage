@@ -1,0 +1,127 @@
+|===============================================================================
+|
+|  DFTB+ development version (commit: a23bfb2)
+|
+|  Copyright (C) 2006 - 2025  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|    Recent Developments in DFTB+, a Software Package for Efficient Atomistic
+|    Quantum Mechanical Simulations, J. Phys. Chem. A 129, 5373−5390 (2025).
+|    [https://doi.org/10.1021/acs.jpca.5c01146]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+Reading input file 'dftb_in.hsd'
+Parser version: 14
+
+--------------------------------------------------------------------------------
+***  Converting input from parser version  4 to parser version 14 ...
+WARNING!
+-> Adding legacy step size for finite difference differentiation
+Path: dftbplusinput/Hamiltonian/DFTB/Differentiation
+
+***  Done.
+
+Reading SK-files:
+/home/marcus/programs/mio-1-1/O-O.skf
+/home/marcus/programs/mio-1-1/O-C.skf
+/home/marcus/programs/mio-1-1/O-N.skf
+/home/marcus/programs/mio-1-1/O-H.skf
+/home/marcus/programs/mio-1-1/C-C.skf
+/home/marcus/programs/mio-1-1/C-N.skf
+/home/marcus/programs/mio-1-1/C-H.skf
+/home/marcus/programs/mio-1-1/N-N.skf
+/home/marcus/programs/mio-1-1/N-H.skf
+/home/marcus/programs/mio-1-1/H-H.skf
+Done.
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+OpenMP threads:              4
+Chosen random seed:          14422482
+Current stacksize:           8 [Mb] (recommended: unlimited)
+WARNING!
+-> Current stacksize not set to unlimited or hard limit, which might cause
+   random crashes (e.g. segmentation faults). It is advised to unlimit the
+   stacksize by issuing 'ulimit -s unlimited' (Linux) or setting it to the 
+   hard limit by 'ulimit -s hard' (Mac) in advance.
+Mode:                        Static calculation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-06
+Max. scc iterations:                   1000
+Shell resolved Hubbard:      No
+Spin polarisation:           No
+Nr. of up electrons:           372.000000
+Nr. of down electrons:         372.000000
+Periodic boundaries:         No
+Electronic solver:           Divide and Conquer
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.051000
+Nr. of chrg. vec. in memory:           1000
+Max. SCC-cycles:                       1000
+Electronic temperature:              0.100000E-07 H      0.272114E-06 eV
+Initial charges:             Set automatically (system chrg:   0.000E+00)
+Included shells:             O:  s, p
+                             C:  s, p
+                             N:  s, p
+                             H:  s
+Using Lennard-Jones dispersion corrections
+Extra options:
+                             Mulliken analysis
+                             Force calculation
+Force type                   original
+
+--------------------------------------------------------------------------------
+
+***  Geometry step: 0
+
+ iSCC Total electronic   Diff electronic      SCC error    
+    1   -0.36703595E+03    0.00000000E+00    0.10693419E+01
+    2   -0.36716752E+03   -0.36703595E+03    0.99212772E+00
+    3   -0.36777768E+03   -0.13157186E+00    0.41191938E+00
+    4   -0.36765156E+03   -0.61016666E+00    0.55034133E+00
+    5   -0.36795038E+03    0.12612967E+00    0.88748480E-01
+    6   -0.36794999E+03   -0.29882707E+00    0.92321567E-01
+    7   -0.36795359E+03    0.39456093E-03    0.74424110E-02
+    8   -0.36795357E+03   -0.36029541E-02    0.74737537E-02
+    9   -0.36795361E+03    0.24201046E-04    0.12863079E-02
+   10   -0.36795361E+03   -0.39104426E-04    0.14590399E-02
+   11   -0.36795361E+03    0.15235548E-06    0.25816445E-03
+   12   -0.36795361E+03   -0.11788962E-05    0.13475707E-03
+   13   -0.36795361E+03   -0.19650486E-07    0.79958341E-04
+   14   -0.36795361E+03   -0.58232104E-08    0.12487348E-04
+   15   -0.36795361E+03   -0.31547529E-08    0.12982107E-04
+   16   -0.36795361E+03    0.13756107E-10    0.15390778E-05
+   17   -0.36795361E+03   -0.63266725E-10    0.73809084E-06
+   18   -0.36795361E+03   -0.15347723E-11    0.32060334E-06
+>> Charges saved for restart in charges.bin
+   19   -0.36795361E+03   -0.17053026E-12    0.83535477E-07
+
+Total Energy:                     -349.8965095437 H        -9521.1685 eV
+Extrapolated to 0K:               -349.8965095437 H        -9521.1685 eV
+Total Mermin free energy:         -349.8965095437 H        -9521.1685 eV
+Force related energy:             -349.8965095437 H        -9521.1685 eV
+
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+Pre-SCC initialisation                 +       0.07 (  1.0%)       0.01 (  0.2%)
+SCC                                    +       6.71 ( 97.5%)       6.00 ( 99.2%)
+Post-SCC processing                    +       0.08 (  1.1%)       0.03 (  0.5%)
+Post-geometry optimisation             +       0.02 (  0.3%)       0.01 (  0.1%)
+--------------------------------------------------------------------------------
+Missing                                +       0.00 (  0.0%)       0.00 (  0.0%)
+Total                                  =       6.88 (100.0%)       6.05 (100.0%)
+--------------------------------------------------------------------------------

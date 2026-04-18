@@ -1,0 +1,105 @@
+Geometry = xyzFormat {
+8
+O  -0.052755  -0.072079  -1.722302
+C  -0.060893   0.004579  -0.471520
+N   0.866733  -0.568199   0.289128
+N  -1.083389   0.625143   0.232403
+H   1.487320  -1.084410  -0.196445
+H   0.806344  -0.708173   1.282933
+H  -1.463666   1.384155  -0.440270
+H  -0.968358   0.900596   1.274612
+}
+Driver = {}
+Hamiltonian = DFTB {
+  SCC = Yes
+  SCCTolerance = 1.0e-7
+  MaxSCCIterations = 1000
+  Mixer = Broyden {
+    MixingParameter = 0.051
+    InverseJacobiWeight = 0.01
+    MinimalWeight = 1.
+    MaximalWeight = 100000.
+    WeightFactor = 0.01
+  }
+  Dispersion = LennardJones {
+    Parameters = UFFParameters {}
+  }
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "/home/marcus/programs/mio-1-1/"
+    Separator = "-"
+    Suffix = ".skf"
+    LowerCaseTypeName = No
+  }
+  MaxAngularMomentum = {
+    H = "s"
+    C = "p"
+    N = "p"
+    O = "p"
+  }
+  Charge = 0.0
+  Filling = Fermi {
+    Temperature [Kelvin] = 0.0
+  }
+  ReadInitialCharges = No
+  Solver = DivideAndConquer {}
+  OldSKInterpolation = No
+  Differentiation = FiniteDiff {
+    Delta = 1.0000000000000000E-002
+  }
+  PolynomialRepulsive = {}
+  Hybrid = None {}
+  ShellResolvedSCC = No
+  InitialCharges = {}
+  ConvergentSCCOnly = Yes
+  HCorrection = None {}
+  SpinPolarisation = {}
+  ElectricField = {}
+  OnSiteCorrection = {}
+  Solvation = {}
+  ElectronicConstraints = {}
+  Electrostatics = GammaFunctional {}
+  Mdftb = None {}
+  ThirdOrder = No
+  ThirdOrderFull = No
+  ForceEvaluation = "Traditional"
+}
+Options = {
+  RestartFrequency = 20
+  RandomSeed = 0
+  WriteAutotestTag = Yes
+  WriteDetailedXML = Yes
+  WriteResultsTag = Yes
+  WriteDetailedOut = Yes
+  WriteHS = No
+  WriteRealHS = No
+  MinimiseMemoryUsage = No
+  ShowFoldedCoords = No
+  TimingVerbosity = 1
+  WriteCharges = Yes
+  WriteChargesAsText = No
+  BinaryAccessTypes = {
+ "stream"
+  }
+}
+Analysis = {
+  PrintForces = Yes
+  MullikenAnalysis = Yes
+  CM5 = {
+    Alpha = 1.3091845140260001
+    Radii = AtomicRadii {}
+    Cutoff = 30.000000000000000
+  }
+  ProjectStates = {}
+  WriteEigenvectors = No
+  WriteBandOut = Yes
+  WriteNetCharges = No
+  AtomResolvedEnergies = No
+}
+ParserOptions = {
+  WriteHSDInput = Yes
+  ParserVersion = 14
+  StopAfterParsing = No
+  IgnoreUnprocessedNodes = No
+}
+Reks = None {}
+ExcitedState = {}

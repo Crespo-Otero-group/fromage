@@ -1,0 +1,23 @@
+STARTING TIME: 2026-04-18 11:29:54.249975
+
+************************************************
+ Find the bug between the code and the output 
+
+If you see something that it doesn't look right
+          See it, Say it, Sort it...           
+
+************************************************
+DONE
+ELAPSED TIME: 0:00:18.006552
+ENDING TIME: 2026-04-18 11:30:12.256527
+tive  #
+     #  fromage is therfore used as a  #
+     # third-party program of Newton-X #
+     ###################################
+------------------------------
+Real low energy:                 -9520.11500316 eV -349.85759656 au
+Model low energy:                 -306.55154770 eV  -11.26555590 au
+Model high energy:               -6845.96080647 eV -251.58429212 au
+ONIOM Total energy:             -16059.52426193 eV -590.17633278 au
+ONIOM SCF energy:               -16066.14838746 eV -590.41976478 au
+Gap:                                 6.62412552 eV    0.24343200 au
