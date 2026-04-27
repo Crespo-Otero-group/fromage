@@ -2600,7 +2600,7 @@ class fomo_ci_calc(Calc):
 
         os.environ["np"] = nprocs
         proc = subprocess.Popen(
-            "mpirun -np $np mopacpi.x " + self.calc_name + ".dat" , shell=True)
+            "$MOP/mopacpi.x " + self.calc_name + ".dat" , shell=True)
 
         os.chdir(self.here)
 
@@ -2617,7 +2617,7 @@ class fomo_ci_calc(Calc):
                  states = None,
                  mult = [],
                  singlestate = 0,
-                 soc_coupling = [])
+                 soc_coupling = []):
 
         """
         Analyse a MOPAC-FOMO-CI .out file while printing geometry updates

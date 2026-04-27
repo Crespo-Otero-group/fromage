@@ -226,6 +226,12 @@ If `OpenMolcas` or `Turbomole` are used for the high-level calculations, the poi
 
 If initial conditions are required from a Wigner sampling, once the cluster has the desired size and shape, the next step is to run a `fromage` optimisation in the selected electronic state. We use in this tutorial the ground electronic state as an example. To do this, it is recommended to create another directory, for instance, `Ben_S0min`, to get a relaxed structure from which the Wigner sampling can be done for the initial conditions. Once the optimisation has converged, a normal modes calculation has to be done containing the point charges. Then, the output of the normal modes calculation will be used to set the initial conditions as is normally done in NewtonX.
 
+##### MOPAC-PI (fomo-ci)
+
+Currently in development. Frozen working, make sure you point to the bin for mopac-pi as MOP as we call $MOP/... etc.
+
+
+
 #### 2.1.2 Flexible Environment
 
 Now, we consider setting everything for a flexible environment. The approach followed considers that the flexible environment is surrounded by a fixed environment which prevents the system from increasing its volume artificially during the optimisation or dynamics. For this, the preparation calculation is done in the exact same way as explained in Section 2.1.1. Then, the `shell.xyz` file is divided in two: `shell_flex.xyz`, which contains all the atoms which are optimised or evolved at the QM' level, and `shell_frozen.xyz` which contains the more external clamped atoms.
