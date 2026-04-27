@@ -2164,7 +2164,7 @@ class xtb_calc(Calc):
 
         os.chdir(self.here)
  
-        return (energy, gradients, scf_energy)
+        return (energy, gradients, scf_energy, None, None)
 
     def read_charges(self, pop = None):
         """
@@ -2352,7 +2352,7 @@ class xtb_calc_gfnff(Calc):
 
         os.chdir(self.here)
 
-        return (energy, gradients, scf_energy)
+        return (energy, gradients, scf_energy, None, None)
 
     def read_charges(self, pop = None):
         """
