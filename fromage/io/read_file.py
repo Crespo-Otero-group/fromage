@@ -2329,7 +2329,14 @@ def read_orca_out(in_name):
 
     return state_energy, grad, gr_energy
 
-def read_orca_dyn(out_file,natom,state,states,mult,singlestate,nac_coupling,soc_coupling):
+def read_orca_dyn(out_file,
+                  natom,state,
+                  states,
+                  mult,
+                  singlestate,
+                  nac_coupling,
+                  soc_coupling,
+                  in_cond):
     """
     This function is used to read the Orca6 TD-DFT output when the nonadiabatic
      dynamics or the Newton-X option is ON.
@@ -2344,8 +2351,8 @@ def read_orca_dyn(out_file,natom,state,states,mult,singlestate,nac_coupling,soc_
     count = 0
     nstates = int(np.sum(states))
     energies = np.zeros(nstates)
-    grad = []
-    gradients = np.array([])
+    grad = np.array([])
+#    gradients = np.array([])
     nac = []
     nacs = np.array([])
     nac_tmp = []
@@ -2381,17 +2388,6 @@ def read_orca_dyn(out_file,natom,state,states,mult,singlestate,nac_coupling,soc_
                 grad = np.concatenate((grad,atom_grads))
             else:
                 break
-    """
-    if lin
-    for line in content[orig_line:]:
-        if len(line.split()) == 6:
-            atom_grads = [float(i) for i in line.split()[3:]]
-            grad = np.concatenate((grad,atom_grads))
-        else:
-            break
-    """
-        # Here implement the conditional for NAC/SOC
-
 
     energies += disp
     gr_energy = energies[0]

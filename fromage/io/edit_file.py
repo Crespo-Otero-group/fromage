@@ -1100,7 +1100,7 @@ def write_dftb_temp(file_name, atoms, points, template_path):
  
 
 
-def write_mopac(file_name, atoms, temp_name):
+def write_mopac(file_name, atoms, temp_name, pcharges, state=None, states=None):
     """
     Write a MOPAC input file.
 
@@ -1131,6 +1131,11 @@ def write_mopac(file_name, atoms, temp_name):
                 atomStr = "{:>6} {:10.6f} {:3} {:10.6f} {:3} {:10.6f} {:3}".format(
                     atom.elem, atom.x, 1, atom.y, 1, atom.z, 1) + "\n"
                 out_file.write(atomStr)
+        elif "XXX__CHARGES__XXX" in line:
+            for point in pcharges:
+                point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
+                    point.x, point.y, point.z, point.q) + "\n"
+                out_file.write(point_str)
         else:
             out_file.write(line)
     out_file.close()
