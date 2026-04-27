@@ -2546,8 +2546,8 @@ class fomo_ci_calc(Calc):
     MNDO, AM1, PM3, PM6 and FOMO-CI with all the previous Hamiltonians
     performed with MOPAC software
     """
-
-    def run(self, atoms, nprocs, at_reparam=None):
+    def run(self, atoms, point_flex = None, nprocs = None, state=None,
+            states=None, singlestate=0, nac_coupling=[], soc_coupling=[]):
         """
         Write a MOPAC input file and return a subprocess.Popen
 
@@ -2563,20 +2563,40 @@ class fomo_ci_calc(Calc):
         mopac_path = os.path.join(self.here, self.calc_name)
         os.chdir(mopac_path)
  
+        if self.calc_name == 'rl':
+            # Write modified mopac inputs
+            ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", [])
+
+        if point_flex is not None:
+            if self.calc_name == 'mh':
+                if at_reparam is not None:
+                    for k in at_reparam:
+                        k -= 1
+                        atoms[k].elem = atoms[k].elem+"w"
+                if state is not None and states is not None:
+                    ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", 
+                                   point_flex, state = state, states = states)
+                else:
+                    ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp",
+                                   point_flex)
+
+            #elif self.calc_name == 'mh': FJH complete here in case mopac is used as low_level
+        else:
+            if state is not None and states is not None:
+                ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp",
+                                   [], state = state, states = states)
+            else:
+                ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", [])
 
         mol = Mol(atoms)
 
-        if self.calc_name == 'rl':
-            # Write modified mopac inputs
-            ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp")
-        else:
         # Writes modified mopac inputs
-            if at_reparam is not None:
-               for k in at_reparam:
-                   k -= 1
-                   atoms[k].elem = atoms[k].elem+"w" 
-            ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp")
-            ef.write_tinker_xyz(self.calc_name + "_tnk.xyz", atoms, "mopac_tnk.temp")
+#            if at_reparam is not None:
+#               for k in at_reparam:
+#                   k -= 1
+#                   atoms[k].elem = atoms[k].elem+"w" 
+#            ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp")
+#            ef.write_tinker_xyz(self.calc_name + "_tnk.xyz", atoms, "mopac_tnk.temp")
 
         os.environ["np"] = nprocs
         proc = subprocess.Popen(
@@ -2586,7 +2606,19 @@ class fomo_ci_calc(Calc):
 
         return proc
 
-    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+    def read_out(self,
+                 positions,
+                 dyn_bool=False,
+                 in_mol=None,
+                 in_shell=None,
+                 natoms_flex=None,
+                 natoms = None,
+                 state = None,
+                 states = None,
+                 mult = [],
+                 singlestate = 0,
+                 soc_coupling = [])
+
         """
         Analyse a MOPAC-FOMO-CI .out file while printing geometry updates
 
@@ -2615,15 +2647,26 @@ class fomo_ci_calc(Calc):
         mopac_path = os.path.join(self.here, self.calc_name)
         os.chdir(mopac_path)
 
+        nac = []
+        soc = []
+
         # energies are in Hartree
         # gradients are in Hartree/Bohr
         energy, gradients_b, scf_energy = rf.mopac_fomo_ci_out(self.calc_name + ".dat.out")
         # fix gradients units to Hartree/Angstrom
-        gradients = gradients_b * bohrconv
         # update the geometry log
         if in_mol is not None:
             self.update_geom(positions, in_mol, in_shell)
 
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3. * natoms_flex)
+                gradients = np.zeros(dim_flex)
+            else:
+                gradients = np.zeros(len(positions))
+            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+        else:
+            gradients = gradients_b[:len(positions)] * bohrconv
         # truncate gradients if too long
         gradients = gradients[:len(positions)]
 
@@ -2632,7 +2675,7 @@ class fomo_ci_calc(Calc):
 
         os.chdir(self.here)
 
-        return (energy, gradients, scf_energy)
+        return (energy, gradients, scf_energy, nac, soc)
 
     def read_nacs(self):
         """

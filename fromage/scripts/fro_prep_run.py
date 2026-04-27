@@ -103,8 +103,8 @@ if __name__ == '__main__':
         for prog in [inputs["high_level"], inputs["low_level"]]:
             if prog == "xtb":
                 writer_list.append(ef.write_xtb_temp)
-            elif prog == "fomo-ci" or prog == "mopac":
-                writer_list.append(ef.write_tinker_temp)
+#            elif prog == "fomo-ci" or prog == "mopac":    # FJH commented these two lines as the new version of MOPACPI
+#                writer_list.append(ef.write_tinker_temp)  # now incorporates point charges embedding
             else:
                 writer_list.append(ef.write_g_temp)
         return writer_list[0], writer_list[1]
@@ -170,24 +170,30 @@ if __name__ == '__main__':
 #    low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
 #    os.chdir(ml_path)
     if low_level_write == ef.write_tinker_temp:
-        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed,")
-        print("fromage will produce files without including the atom types for the QM region" + "\n")
-        os.chdir(ml_path)
-        low_level_write("mopac_tnk.temp", "ml_tnk.key", region_1, region_2, region_2)
-        os.chdir(rl_path)
-        low_level_write("rl.temp", os.path.join(here, "rl.template"), region_1, region_2)
+        continue
+    # FJH commented these two lines as the new version of MOPACPI now incorporates point charges embedding
+
+#        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed,")
+#        print("fromage will produce files without including the atom types for the QM region" + "\n")
+#        os.chdir(ml_path)      
+#        low_level_write("mopac_tnk.temp", "ml_tnk.key", region_1, region_2, region_2)
+#        os.chdir(rl_path)
+#        low_level_write("rl.temp", os.path.join(here, "rl.template"), region_1, region_2)
     else:
         os.chdir(ml_path)
         low_level_write("ml.temp", [], region_2, os.path.join(here, "ml.template"))
         os.chdir(rl_path)
         low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
     if high_level_write == ef.write_tinker_temp:
-        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed," + "\n")
-        print("fromage will produce files without including the atom types for the QM region" + "\n")
-        os.chdir(mh_path)
-        high_level_write("mopac_tnk.temp", "mh_tnk.key", region_1, region_2, high_points)
-        os.chdir(mg_path)
-        high_level_write("mopac_tnk.temp", "mg_tnk.key", region_1, region_2, high_points)
+        continue
+
+    # FJH commented these two lines as the new version of MOPACPI now incorporates point charges embedding
+#        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed," + "\n")
+#        print("fromage will produce files without including the atom types for the QM region" + "\n")
+#        os.chdir(mh_path)
+#        high_level_write("mopac_tnk.temp", "mh_tnk.key", region_1, region_2, high_points)
+#        os.chdir(mg_path)
+#        high_level_write("mopac_tnk.temp", "mg_tnk.key", region_1, region_2, high_points)
     else:
         os.chdir(mh_path)
         high_level_write("mh.temp", [], high_points, os.path.join(here, "mh.template"))
