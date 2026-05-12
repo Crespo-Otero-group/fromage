@@ -1136,6 +1136,8 @@ def write_mopac(file_name, atoms, temp_name, pcharges, state=None, states=None):
                 point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
                     point.x, point.y, point.z, point.q) + "\n"
                 out_file.write(point_str)
+        elif "&STATE" in line and state is not None:
+            out_file.write(line.replace("&STATE", str(state)))
         else:
             out_file.write(line)
     out_file.close()

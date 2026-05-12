@@ -2277,6 +2277,91 @@ def mopac_fomo_ci_out(in_name):
             gr_energy = float(content[i+5].split()[0])
 
     return state_energy, grad, gr_energy
+
+def read_mopac_fomo_ci_dyn(out_file,
+                           natom,
+                           state,
+                           states,
+                           mult,
+                           singlestate,
+                           nac_coupling,
+                           soc_coupling, 
+                           in_cond):
+
+
+    """
+    Read MOPAC-PI FOMO-CI output for NAMD with NX-NS interface
+
+    Similar format to the static one, WIP
+    """
+
+    nstates = int(np.sum(states))
+
+    with open(out_file) as f:
+        content = f.readlines()
+
+    energies = []
+    in_ci = False
+    after_header = False
+    for line in content:
+        if "CI VECTORS" in line:
+            in_ci = True
+            continue
+        if not in_ci:
+            continue
+        if len(energies) >= nstates:
+            break
+        
+        stripped = line.strip()
+        if not stripped:
+            continue
+        tokens = stripped.split()
+
+        if all(t.isdigit() for t in tokens):
+            after_header = True
+            continue
+        if after_header:
+            try:
+                row = [float(t) for t in tokens]
+                energies.extend(row)
+                after_header = False
+            except ValueError:
+                after_header = False
+
+    energies = np.array(energies[:nstates])
+    gr_energy = float(energies[0]) if len(energies) > 0 else 0.0
+
+    # for nx and dynamics requires all gradients (at least padding)
+
+    grad = []
+    reading = False
+    for line in content:
+        if "GRADIENT OF THE POTENTIAL" in line:
+            reading = True
+            continue
+        if reading:
+            if len(line.split()) == 3:
+                grad.extend([float(x) for x in line.split()])
+            else:
+                reading = False
+
+    gradall = np.zeros((nstates, natom, 3))
+    if len(grad) >= natom * 3:
+        gradall[state - 1] = np.array(grad[:natom * 3]).reshape(natom, 3)
+
+    return energies, gradall, gr_energy, np.array([]), np.array([])
+            
+
+
+
+
+
+
+
+
+
+
+
 #
 def read_orca_out(in_name):
     """

@@ -306,7 +306,7 @@ class DFTB_calc(Calc):
                 if pcgrad and len(gradients) > n and os.path.isfile("detailed.out"):
                     pc_grad = rf.read_dftb_pcgrad("detailed.out")
                     pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
-                    gradients[n:n + len(pc_flat)] * bohrconv
+                    gradients[n:n + len(pc_flat)] = pc_flat
                     # TEMPORARY DEBUG
                     print("[pcgrad] {:s} nuclear grad norm: {:.6e} Ha/Ang  "
                           "shell grad norm: {:.6e} Ha/Ang".format(
@@ -2153,7 +2153,9 @@ class xtb_calc(Calc):
                 gradients = np.zeros(dim_flex)
             else:
                 gradients = np.zeros(len(positions))
-            gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
+            #gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
+            n = min(len(gradients), len(gradients_bohr))
+            gradients[:n] = gradients_bohr[:n] * bohrconv
         else:
             gradients = gradients_bohr[:len(positions)] * bohrconv
         # Fix gradients units to Hartree/Angstrom
@@ -2673,25 +2675,33 @@ class fomo_ci_calc(Calc):
         nac = []
         soc = []
 
-        # energies are in Hartree
-        # gradients are in Hartree/Bohr
-        energy, gradients_b, scf_energy = rf.mopac_fomo_ci_out(self.calc_name + ".dat.out")
-        # fix gradients units to Hartree/Angstrom
-        # update the geometry log
-        if in_mol is not None:
-            self.update_geom(positions, in_mol, in_shell)
 
-        if natoms_flex is not None:
-            if int(len(positions)) <= int(3*natoms_flex):
-                dim_flex = int(len(positions) + 3. * natoms_flex)
-                gradients = np.zeros(dim_flex)
-            else:
-                gradients = np.zeros(len(positions))
-            gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+        if state is not None and states is not None:
+            energy, gradients_b, scf_energy, nac, soc = rf.read_mopac_fomo_ci_dyn(
+                    self.calc_name + ".dat.out", natoms, state, states,
+                    mult, singlestate, [], soc_coupling, None)
+            gradients = gradients_b * bohrconv
         else:
-            gradients = gradients_b[:len(positions)] * bohrconv
-        # truncate gradients if too long
-        gradients = gradients[:len(positions)]
+
+            # energies are in Hartree
+            # gradients are in Hartree/Bohr
+            energy, gradients_b, scf_energy = rf.mopac_fomo_ci_out(self.calc_name + ".dat.out")
+            # fix gradients units to Hartree/Angstrom
+            # update the geometry log
+            if in_mol is not None:
+                self.update_geom(positions, in_mol, in_shell)
+
+            if natoms_flex is not None:
+                if int(len(positions)) <= int(3*natoms_flex):
+                    dim_flex = int(len(positions) + 3. * natoms_flex)
+                    gradients = np.zeros(dim_flex)
+                else:
+                    gradients = np.zeros(len(positions))
+                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+            else:
+                gradients = gradients_b[:len(positions)] * bohrconv
+            # truncate gradients if too long
+            gradients = gradients[:len(positions)]
 
         os.environ["calc_name"] = self.calc_name
         subprocess.call("rm $calc_name.arc*", shell=True)

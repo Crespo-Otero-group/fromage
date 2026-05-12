@@ -20,6 +20,14 @@ bohrconv = 1.88973  # Something in Angstrom * bohrconv = Something in Bohr
 
 def read_nx_control():
     states = []
+    state = None
+    natoms = None
+
+    if os.path.isfile("current_state.dat"):
+        with open("current_state.dat") as f:
+            state = int(f.read().strip())
+    
+
     try:
         with open("../../user_config.nml", "r") as file:
             for line in file:
@@ -32,7 +40,7 @@ def read_nx_control():
                     natoms = int(val)
                 elif key == 'nstat':
                     states.append(int(val))
-                elif key == 'nstatdyn':
+                elif key == 'nstatdyn' and state is None:
                     state = int(val)
     except FileNotFoundError:
         try:
@@ -315,7 +323,8 @@ def _chk_hlevel_in_methods(high_level):
                'turbomole_tddft',
                'gaussian',
                'orca',
-               'fomo-ci']
+               'fomo-ci',
+               'mopac']
     # Check if the high_level method is supported for SH-dynamics with NX
     if high_level in methods:
        pass
@@ -429,7 +438,7 @@ def newtonx_sequence(inputs,natoms,states,state):
         len(mol_atoms), len(shell_atoms), len(fixed_atoms), len(in_pos)))
     print("[DEBUG newtonx_sequence] in_pos[:3]={}".format(in_pos[:3]))
 
-    methods_wnacs = ['molcas', 'dftb', 'fomo-ci'] # Extend this list to other methods that compute NACs
+    methods_wnacs = ['molcas', 'dftb'] # Extend this list to other methods that compute NACs
     pass_nac = []
 
     if high_level in methods_wnacs:
@@ -453,7 +462,11 @@ def newtonx_sequence(inputs,natoms,states,state):
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     if flex:
         rl_en_gr = rl.read_out(in_pos, in_mol=mol_atoms, in_shell=shell_atoms, natoms_flex=ll_natoms)
-        ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms, pcgrad=pcgrad_bool)
+        if low_level == 'dftb':
+            ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms, pcgrad=pcgrad_bool)
+        else:
+            ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms)
+
         if high_level == 'molcas':
             mh_en_gr = mh.read_out(in_pos, natoms_flex=ll_natoms, natoms=hl_natoms, state=state,
                                    states=states, mult=mult, singlestate=singlestate,
@@ -494,7 +507,7 @@ def newtonx_sequence(inputs,natoms,states,state):
         2 gr_energy float
     """
     mh_en, mh_gr_tmp, mh_scf, nac, soc = mh_en_gr
-
+    print("[DEBUG] mh_gr:{}".format(np.array(mh_gr_tmp)))
     ml_en, ml_gr, ml_scf, _, _ = ml_en_gr
     rl_en, rl_gr, rl_scf, _, _ = rl_en_gr
     print("[DEBUG] len(ml_gr)={} len(rl_gr)={}".format(len(ml_gr), len(rl_gr)))
