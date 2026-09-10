@@ -103,6 +103,9 @@ if __name__ == '__main__':
         for prog in [inputs["high_level"], inputs["low_level"]]:
             if prog == "xtb":
                 writer_list.append(ef.write_xtb_temp)
+
+            elif prog == 'openqp':
+                writer_list.append(ef.write_oqp_temp)
 #            elif prog == "fomo-ci" or prog == "mopac":    # FJH commented these two lines as the new version of MOPACPI
 #                writer_list.append(ef.write_tinker_temp)  # now incorporates point charges embedding
             else:
@@ -191,7 +194,7 @@ if __name__ == '__main__':
         os.chdir(rl_path)
         low_level_write("rl.temp", region_2, [], os.path.join(here, "rl.template"))
     if high_level_write == ef.write_tinker_temp:
-        continue
+        pass
 
     # FJH commented these two lines as the new version of MOPACPI now incorporates point charges embedding
 #        print("Warning: Obabel is needed to produce the Tinker mopac_tnk.xyz file. If Obabel is not installed," + "\n")

@@ -567,7 +567,12 @@ def read_gauss_dyn(in_name,fchk_file,natom,state,states,mult,singlestate,soc_cou
     energies = np.array(energies)
 
     gradall = np.zeros((np.sum(states), natom, 3))
-    grad = np.array(grad).reshape(natom,3)
+    #grad = np.array(grad).reshape(natom,3)
+    #MEB edit in order to maybe make it work with the ghost atoms
+    grad_arr = np.array(grad)
+    grad = grad_arr[:natom *3].reshape(natom, 3)
+
+
     gradall[state - 1] = grad
     gradients = gradall
 
@@ -576,7 +581,9 @@ def read_gauss_dyn(in_name,fchk_file,natom,state,states,mult,singlestate,soc_cou
     nstates = int(np.sum(states))
     ncoup = int(nstates*(nstates-1)/2)
     nacall = np.zeros((ncoup, natom, 3))
-    nac = np.array(nac).reshape(natom,3)
+    #nac = np.array(nac).reshape(natom,3)
+    #MEB edit, same as grads
+    nac = np.array(nac)[:natom *3].reshape(natom, 3)
     nacall[state - 1] = nac
     nacs = nacall
     soc = np.array(soc)
@@ -2398,6 +2405,8 @@ def read_orca_out(in_name):
             orig_line = i
         if "Dispersion correction" in line and len(line.split()) == 3:
             disp = float(line.split()[2])
+    if orig_line is None or state_energy is None:
+        raise RuntimeError("Orca seems to have failed, oops")
 
     for line in content[orig_line + 3:]:
         if len(line.split()) == 6:
@@ -2847,5 +2856,65 @@ def read_dftb_pcgrad(filename):
 
 
 
+
+
+def read_oqp_energies(in_name):
+    """
+    reads the energies file (generated when export=True)
+    ROHF reference, S0, S1, S2
+    """
+    return np.atleast_1d(np.loadtxt(in_name))
+
+
+def read_oqp_grad(in_name):
+    """
+    same as energies but for grads
+    """
+
+    return np.atleast_2d(np.loadtxt(in_name)).flatten()
+
+def read_oqp_out(state, energies_name="energies"):
+    energies = read_oqp_energies(energies_name)
+    gr_energy = energies[1] # GROUND STATE IS S0 NOT ROHF REFERENCE
+    ex_energy = energies[state]
+    grad = read_oqp_grad("grad_" + str(state))
+    return ex_energy, grad, gr_energy
+
+def read_oqp_dyn(nstate, energies_name="energies"):
+    """
+    NOT TESTED YET BUT FOLLOWS same template as the others
+    so will test in the future
+    """
+
+    energies = read_oqp_energies(energies_name)
+    gr_energy = energies[1]
+    state_energies = energies[1:1 + nstate]
+
+    grads = []
+    for k in range(1, nstate + 1):
+        gfile = "grad_" + str(k)
+        grads.append(np.atleast_2d(np.loadtxt(gfile))
+                     if os.path.isfile(gfile) else None)
+    natoms = next(g.shape[0] for g in grads if g is not None)
+    grad = np.zeros((nstate, natoms, 3))
+    for i, g in enumerate(grads):
+        if g is not None:
+            grad[i] = g
+
+    return state_energies, grad, gr_energy, np.array([]), np.array([])
+
+
+def read_oqp_pcgrad(filename):
+    """
+    not sure how accurate it is but obtained from the internals of openqp mrsf
+    it is also untested
+    """
+    return np.atleast_2d(np.loadtxt(filename, skiprows=1))
+
+def read_xtb_pcgrad(filename="pcgrad"):
+    """
+    also untested yet, i believe only possible from gfn2 not model1
+    """
+    return np.atleast_2d(np.loadtxt(filename))
 
 

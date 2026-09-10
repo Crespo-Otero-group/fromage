@@ -324,7 +324,8 @@ def _chk_hlevel_in_methods(high_level):
                'gaussian',
                'orca',
                'fomo-ci',
-               'mopac']
+               'mopac',
+               'openqp']
     # Check if the high_level method is supported for SH-dynamics with NX
     if high_level in methods:
        pass
@@ -462,7 +463,7 @@ def newtonx_sequence(inputs,natoms,states,state):
     # read results. Each x_en_gr is a tuple (energy,gradients,scf_energy)
     if flex:
         rl_en_gr = rl.read_out(in_pos, in_mol=mol_atoms, in_shell=shell_atoms, natoms_flex=ll_natoms)
-        if low_level == 'dftb':
+        if low_level in ('dftb', 'gaussian', 'xtb'):
             ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms, pcgrad=pcgrad_bool)
         else:
             ml_en_gr = ml.read_out(in_pos[:dim_hl], natoms_flex=ll_natoms)
@@ -531,6 +532,41 @@ def newtonx_sequence(inputs,natoms,states,state):
                       np.linalg.norm(pc_grad_flex)))
             else:
                 print("[pcgrad] WARNING: mh.pcgrad not found at {}".format(pcgrad_file))
+
+
+        elif pcgrad_bool and high_level == 'gaussian':
+            mh_pc_grads = getattr(mh, 'pc_grads', None)
+            if mh_pc_grads is not None and len(mh_pc_grads) >= 3 * ll_natoms:
+                mh_pc_flex = mh_pc_grads[:3 * ll_natoms].reshape(ll_natoms, 3)
+                mh_gr[state - 1, hl_natoms:, :] = mh_pc_flex
+                VERBOSITY = True
+                if VERBOSITY:
+                    print("[pcgrad gaussian] mh Bq grad norm: {:.6e} Ha/Ang".format(np.linalg.norm(mh_pc_flex)))
+            else:
+                print("[pcgrad gaussian] WARNINGL mh.pc_grads not allowed")
+
+        elif pcgrad_bool and high_level == 'openqp':
+            pcgrad_file = os.path.join("mh", "pcgrad_" + str(int(state)))
+            if os.path.isfile(pcgrad_file):
+                pc_grad = rf.read_oqp_pcgrad(pcgrad_file)
+                pc_grad_flex = pc_grad[:ll_natoms] * bohrconv
+                mh_gr[state - 1, hl_natoms:, :] = pc_grad_flex
+                VERBOSITY = True
+                if VERBOSITY:
+                    print("[pcgrad openqp] mh nuclear grad norm: {:.6e} Ha/Ang  "
+                        "shell grad norm: {:.6e} Ha/Ang".format(
+                            np.linalg.norm(mh_gr[:, :hl_natoms, :]),
+                            np.linalg.norm(pc_grad_flex)))
+            else:
+                print("[pcgrad openqp] WARNING: {} not found -- is fromage=True "
+                      "set in the [qmmm] block of mh.temp?".format(pcgrad_file))
+
+        
+        """
+        IMPORTANT NOTE (MEB): i am still unsure of the signs of the values so can 
+        negate if needed 
+        """
+
         rl_gr = np.array(rl_gr).reshape((1, flex_natoms, 3))
     else:
         ml_gr = np.array(ml_gr).reshape((1, natoms, 3))

@@ -247,6 +247,13 @@ def write_gauss(file_name, atoms, points, temp_name, proj_name='gaussian', freq=
                 point_str = "{:10.6f} {:10.6f} {:10.6f} {:10.6f}".format(
                     point.x, point.y, point.z, point.q) + "\n"
                 out_file.write(point_str)
+
+        elif "XXX__BQ__XXX" in line:
+            for point in points:
+                bq_str = "Bq-#6-{:.6f} 0 {:10.6f} {:10.6f} {:10.6f}".format(
+                        point.q, point.x, point.y, point.z) + "\n"
+                out_file.write(bq_str)
+
         else:
             out_file.write(line)
     out_file.close()
@@ -351,6 +358,66 @@ def write_dftb_charges(file_name, points):
     out_file.close()
 
     return
+
+
+def write_oqp_charges(file_name, points):
+    """
+    writing openqp charges
+    """
+
+    out_file = open(file_name, "w")
+
+    for point in points:
+        point_str = "{:10.6f}".format(point.q) + "\n"
+        out_file.write(point_str)
+    out_file.close()
+
+    return
+
+def write_oqp(file_name, atoms, points, temp_name, proj_name='openqp',
+              state=None, states=None, singlestate=0):
+    """
+    writing the oqp input file for the .inp format
+    """
+    with open(temp_name) as temp_file:
+        temp_content = temp_file.readlines()
+
+    qm_range = "0-" + str(len(atoms) - 1)
+
+    nstates = None
+    if states is not None:
+        nstates = int(np.sum(states))
+
+    if state is None or nstates is None:
+        grad_list = ", ".join(str(k) for k in range(1, (nstates or 1) + 1))
+    elif singlestate:
+        grad_list = str(int(state))
+    else:
+        grad_list = ", ".join(str(k) for k in range(1, nstates + 1))
+
+    written = []
+    for line in temp_content:
+        line = line.replace("XXX__QM_ATOMS__XXX", qm_range)
+        if nstates is not None:
+            line = line.replace("&NSTATES", str(nstates))
+        line = line.replace("&STATE", grad_list)
+        written.append(line)
+
+    active = [l for l in written if not l.strip().startswith("#")]
+    leftover = sorted({tok for tok in ("&NSTATES", "&STATE", "XXX__QM_ATOMS__XXX")
+                       if any(tok in l for l in active)})
+    if leftover:
+        raise ValueError(
+            "write_oqp: issue ")
+
+    out_file = open(file_name, "w")
+    out_file.writelines(written)
+    out_file.close()
+
+    return
+
+
+
 
 def write_xtb(file_name, atoms, points, temp_name, proj_name='xtb'):
     """
@@ -789,6 +856,39 @@ def write_g_temp(file_name, fixed_atoms, points, temp_name, proj_name='gaussian'
             out_file.write(line)
     out_file.close()
     return
+
+
+
+def write_oqp_temp(file_name, fixed_atoms, points, temp_name):
+    """
+    MEB writing template from mh.template
+
+    if flex etc, we take also shell.xyz and shell_charges.dat etc
+    """
+
+    with open(temp_name) as temp_file:
+        temp_content = temp_file.readlines()
+
+    out_file = open(file_name, "w")
+    for line in temp_content:
+        if "XXX__FIX__XXX" in line:
+            for atom in fixed_atoms:
+                out_file.write("{:>6} {:10.6f} {:10.6f} {:10.6f}\n".format(
+                    atom.elem, atom.x, atom.y, atom.z))
+        elif "XXX__CHARGES__XXX" in line:
+            for point in points:
+                out_file.write("{:10.6f} {:10.6f} {:10.6f} {:10.6f}\n".format(
+                    point.x, point.y, point.z, point.q))
+        else:
+            out_file.write(line)
+    out_file.close()
+    
+    if points is not None and len(points) > 0:
+        write_xyz("shell.xyz", points)
+        write_oqp_charges("shell_charges.dat", points)
+
+    return
+
 
 
 def write_xtb_temp(file_name, fixed_atoms, points, temp_name, proj_name='xtb'):

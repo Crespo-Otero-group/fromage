@@ -23,6 +23,7 @@ from scipy.optimize import minimize
 from fromage.io import read_file as rf
 from fromage.utils import array_operations as ao
 from fromage.utils import calc
+from fromage.utils import freeze
 from fromage.dynamics import fro_dyn as fd
 from fromage.utils.newtonx import fro_nx as nx
 from fromage.io.parse_config_file import bool_cast
@@ -143,10 +144,8 @@ def sequence(in_pos):
         gr_out = gr_combo
         e_diff = 0
 
-    if frozen_at is not None:
-        for atom in freeze_atoms:
-            dim = int(atom*3)
-            gr_out[dim-3:dim] = 0.0
+    gr_out = freeze.apply_constraints(in_pos, gr_out, frozen_atoms = frozen_atoms, frozen_dihedrals = frozen_dihedrals)
+
 
     global iteration
     iteration += 1
@@ -311,7 +310,8 @@ if __name__ == '__main__':
         "at_reparam": None,
         "natoms_flex": "0",
         "newtonx" : "0",
-        "frozen_at" : None} 
+        "frozen_at": None,
+        "frozen_dih": None,} 
 
     inputs = def_inputs.copy()
 
@@ -406,9 +406,15 @@ if __name__ == '__main__':
     # make the list into an array
     atoms_array = np.array(atoms_array)
 
-    frozen_at = inputs["frozen_at"]
-    if frozen_at is not None:
-        freeze_atoms = [int(num) - 1 for num in frozen_at]
+    frozen_atoms = freeze.parse_frozen_atoms(inputs["frozen_at"])
+    frozen_dihedrals = freeze.parse_frozen_dihedrals(inputs["frozen_dih"])
+    if frozen_atoms:
+        out_file.write("Freezing atoms (1-based): " +
+                       " ".join(str(i + 1) for i in frozen_atoms) + "\n")
+    if frozen_dihedrals:
+        out_file.write("Freezing dihedrals (1-based): " +
+                       ", ".join("-".join(str(a + 1) for a in q)
+                                 for q in frozen_dihedrals) + "\n")
 
     if single_point:
         sequence(atoms_array)

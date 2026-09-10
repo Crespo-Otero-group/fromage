@@ -41,7 +41,8 @@ def setup_calc(calc_name, calc_type):
                   "nwchem_dft": nwchem_calc_DFT,
                   "mopac": fomo_ci_calc,
                   "fomo-ci": fomo_ci_calc,
-                  "orca": Orca_calc}
+                  "orca": Orca_calc,
+                  "openqp": OpenQP_calc}
     try:
         out_calc = calc_types[calc_type](calc_name)
     except KeyError:
@@ -485,7 +486,8 @@ class Gauss_calc(Calc):
                  states = None,
                  mult = [],
                  singlestate = 0,
-                 soc_coupling = []):
+                 soc_coupling = [],
+                 pcgrad=None):
         """
         Analyse a Gaussian .chk file while printing geometry updates
 
@@ -530,6 +532,12 @@ class Gauss_calc(Calc):
 
             # fix gradients units to Hartree/Angstrom
             gradients = gradients_b * bohrconv
+
+
+            # for mh gaussian we store Bq point charge gradients for pcgrad 
+            if pcgrad and natoms is not None:
+                _, raw_grad_fchk, _ = rf.read_fchk(fchk_file)
+                self.pc_grads = raw_grad_fchk[3* natoms:] * bohrconv
         else:
             energy, gradients_b, scf_energy = rf.read_fchk("gck.fchk")
             # update the geometry log
@@ -544,7 +552,14 @@ class Gauss_calc(Calc):
                 else:
                     # truncate gradients if too long
                     gradients = np.zeros(len(positions))
-                gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+                #gradients[:len(positions)] = gradients_b[:len(positions)] * bohrconv
+
+                if pcgrad:
+                    n = min(len(gradients), len(gradients_b))
+                else:
+                    n = min(len(gradients), len(positions), len(gradients_b))
+
+                gradients[:n] = gradients_b[:n] * bohrconv
             else:
                 gradients = gradients_b[:len(positions)] * bohrconv
         os.chdir(self.here)
@@ -2029,6 +2044,40 @@ class Molcas_calc(Calc):
         os.chdir(self.here)
         return
           
+_XTB_ACC_DEFAULTS = {"ml": None, "rl": "10", "mh": None, "mg": None}
+_XTB_ACC_CFG = {}
+
+def _xtb_acc_flag(here, calc_name):
+    """
+    somewhat of a monkey patch to define xtb accuracy
+    """
+    cfg = _XTB_ACC_CFG.get(here)
+    if cfg is None:
+        cfg = {}
+        cfg_path = os.path.join(here, "fromage.in")
+        if os.path.isfile(cfg_path):
+            try:
+                cfg = rf.read_config(cfg_path)
+            except Exception:
+                cfg = {}
+        _XTB_ACC_CFG[here] = cfg
+
+    region = str(calc_name).lower()
+    default = _XTB_ACC_DEFAULTS.get(region)
+    val = cfg.get("xtb_acc_" + region, cfg.get("xtb_acc", default))
+    if isinstance(val, list):
+        val = val[0] if val else default
+    if val is None or str(val).lower() in ("none", "default", "off"):
+        return ""
+    try:
+        float(val)
+    except (TypeError, ValueError):
+        print("[xtb] WARNING: unreadable xtb_acc value {!r} for {}, "
+              "omitting --acc".format(val, region))
+        return ""
+    return " --acc " + str(val)
+
+
 class xtb_calc(Calc):
     """
     Calculation of energy and gradients with GFN2-xTB
@@ -2059,10 +2108,11 @@ class xtb_calc(Calc):
             ef.write_xtb("geom.xyz", atoms,
                            [], self.calc_name + ".temp")
 
+        acc = _xtb_acc_flag(self.here, self.calc_name)
         if os.path.isfile("xtb.input"):
-            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --iterations 2000 --norestart > xtb.out"
+            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --iterations 2000" + acc + " --norestart > xtb.out 2>&1"
         else:
-            xtb_run_string = "xtb geom.xyz --grad --iterations 2000 --acc 10 --norestart > xtb.out"
+            xtb_run_string = "xtb geom.xyz --grad --iterations 2000" + acc + " --norestart > xtb.out 2>&1"
 
         proc = subprocess.Popen(
             xtb_run_string, shell=True)
@@ -2108,7 +2158,8 @@ class xtb_calc(Calc):
         return proc   
         
 
-    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+    def read_out(self, positions, in_mol=None, in_shell=None, natoms_flex=None,
+                 pcgrad=False):
         """
         Analyze a GFN2-xTB gradients file  while printing
         geometry updates
@@ -2156,6 +2207,21 @@ class xtb_calc(Calc):
             #gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
             n = min(len(gradients), len(gradients_bohr))
             gradients[:n] = gradients_bohr[:n] * bohrconv
+            if pcgrad and len(gradients) > n and os.path.isfile("pcgrad"):
+                pc_grad = rf.read_xtb_pcgrad("pcgrad")
+                pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
+                gradients[n:n + len(pc_flat)] = pc_flat
+                print("[pcgrad] {:s} nuclear grad norm: {:.6e} Ha/Ang  "
+                      "shell grad norm: {:.6e} Ha/Ang".format(
+                          self.calc_name,
+                          np.linalg.norm(gradients[:n]),
+                          np.linalg.norm(pc_flat)))
+            elif pcgrad and len(gradients) > n:
+                print("[pcgrad] WARNING: {:s}/pcgrad not found -- is the "
+                      "$embedding block present in {:s}/xtb.input?".format(
+                          self.calc_name, self.calc_name))
+
+
         else:
             gradients = gradients_bohr[:len(positions)] * bohrconv
         # Fix gradients units to Hartree/Angstrom
@@ -2254,10 +2320,11 @@ class xtb_calc_gfnff(Calc):
             ef.write_xtb("geom.xyz", atoms,
                            [], self.calc_name + ".temp")
 
+        acc = _xtb_acc_flag(self.here, self.calc_name)
         if os.path.isfile("xtb.input"):
-            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --gfnff --iterations 2000 --norestart > xtb.out"
+            xtb_run_string = "xtb -I xtb.input geom.xyz --grad --gfnff --iterations 2000" + acc + " --norestart > xtb.out 2>&1"
         else:
-            xtb_run_string = "xtb geom.xyz --grad --gfnff --iterations 2000 --acc 10 --norestart > xtb.out"
+            xtb_run_string = "xtb geom.xyz --grad --gfnff --iterations 2000" + acc + " --norestart > xtb.out 2>&1"
 
         proc = subprocess.Popen(
             xtb_run_string, shell=True)
@@ -2590,7 +2657,7 @@ class fomo_ci_calc(Calc):
  
         if self.calc_name == 'rl':
             # Write modified mopac inputs
-            ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", [])
+            ef.write_mopac(self.calc_name + ".dat", atoms,"rl.temp", [])
 
         if point_flex is not None:
             if self.calc_name == 'mh':
@@ -2599,19 +2666,26 @@ class fomo_ci_calc(Calc):
                         k -= 1
                         atoms[k].elem = atoms[k].elem+"w"
                 if state is not None and states is not None:
-                    ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", 
+                    ef.write_mopac(self.calc_name + ".dat", atoms,self.calc_name+".temp", 
                                    point_flex, state = state, states = states)
                 else:
-                    ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp",
+                    ef.write_mopac(self.calc_name + ".dat", atoms,self.calc_name+".temp",
                                    point_flex)
 
             #elif self.calc_name == 'mh': FJH complete here in case mopac is used as low_level
         else:
             if state is not None and states is not None:
-                ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp",
+                ef.write_mopac(self.calc_name + ".dat", atoms,self.calc_name+ ".temp",
                                    [], state = state, states = states)
             else:
-                ef.write_mopac(self.calc_name + ".dat", atoms,"mopac.temp", [])
+                ef.write_mopac(self.calc_name + ".dat", atoms, self.calc_name + ".temp", [])
+
+        #WIP FIXING MG AND MH COND OPT MEB
+        if self.calc_name == "mg":
+            if state is not None: #? and states is not None (for mg opt not dyns)
+                ef.write_mopac(self.calc_name + ".dat", atoms, self.calc_name + ".temp",
+                                    [], state = state)
+
 
         mol = Mol(atoms)
 
@@ -2757,7 +2831,7 @@ class Orca_calc(Calc):
             ef.write_orca(
                     self.calc_name + ".inp",
                     atoms,
-                    "mh.temp"
+                    self.calc_name  + ".temp"
             )
 
         os.environ["np"] = nprocs
@@ -2890,7 +2964,7 @@ class Orca_calc(Calc):
                     gradients = np.zeros(len(positions))
                 gradients[:len(positions)] = gradients_bohr[:len(positions)] * bohrconv
                 pcgrad_file = self.calc_name + ".pcgrad"
-                if len(gradients) > len(positions) and os.path.isfile(pcgrad_file):
+                if pcgrad and len(gradients) > len(positions) and os.path.isfile(pcgrad_file):
                     pc_grad = rf.read_orca_pcgrad(pcgrad_file)
                     pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
                     gradients[len(positions):len(positions) + len(pc_flat)] = pc_flat
@@ -2976,3 +3050,123 @@ class Orca_calc(Calc):
         os.chdir(self.here)
 
         return osc_str
+
+
+class OpenQP_calc(Calc):
+    """
+    Calculation with OpenQP MRSFTDDFT
+    using the fromage version of openqp, need to put on github
+    Using ESPF charges
+    """
+
+    def run(self, atoms, point_flex = None, nprocs = None, state=None,
+            states=None, singlestate = 0, nac_coupling=[], soc_coupling=[]):
+
+
+        oqp_path = os.path.join(self.here, self.calc_name)
+        os.chdir(oqp_path)
+        # assuming system=geom.xyz in .inp file
+        ef.write_xyz("geom.xyz", atoms)
+        if point_flex is not None:
+            ef.write_xyz("shell.xyz", point_flex)
+            ef.write_oqp_charges("shell_charges.dat", point_flex)
+
+        ef.write_oqp("grad.inp", atoms, point_flex, self.calc_name + ".temp",
+                     state=state, states=states, singlestate=singlestate)
+
+        # MEB, noticed issues with environements and openqp version before, 
+        # this has been least problematic, if openqp is in a conda environment
+        openqp_bin = os.environ.get("OPENQP_BIN", "openqp")
+
+        oqp_out = self.calc_name + ".out"
+        with open(oqp_out, "w") as fh:
+            proc = subprocess.Popen([openqp_bin, "grad.inp"],
+                                    stdout=fh, stderr=subprocess.STDOUT)
+
+        os.chdir(self.here)
+
+        return proc
+
+
+    def run_freq(self, atoms, point_flex = None, nprocs=None):
+        """
+        Frequency calculation. still waiting to implement
+        have made the embedding hessian work though
+        """
+        raise NotImplementedError("run_freq not implemented for OpenQP_calc")
+
+    def read_out(self, positions, dyn_bool = False, in_mol = None,
+                 in_shell = None, natoms_flex = None, natoms = None,
+                 state = None, states = None, mult = [], singlestate = 0,
+                 nac_coupling = [], soc_coupling = [], pcgrad = False,
+                 in_cond = None):
+        """
+        the read function
+        """
+        oqp_path = os.path.join(self.here, self.calc_name)
+        os.chdir(oqp_path)
+
+        nac = []
+        soc = []
+        oqp_state = 1 if state is None else int(state)
+
+        if state is not None and states is not None:
+            nstates = int(np.sum(states))
+            energy, gradients_bohr, scf_energy, nac, soc = rf.read_oqp_dyn(nstates)
+            gradients = gradients_bohr * bohrconv
+            if in_mol is not None:
+                self.update_geom(positions, in_mol, in_shell)
+            os.chdir(self.here)
+            return (energy, gradients, scf_energy, nac, soc)
+        energy, gradients_bohr, scf_energy = rf.read_oqp_out(oqp_state)
+
+
+        # packing the gradients
+        # in hartree angstrom
+        if natoms_flex is not None:
+            if int(len(positions)) <= int(3*natoms_flex):
+                dim_flex = int(len(positions) + 3 * natoms_flex)
+                gradients = np.zeros(dim_flex)
+            else:
+                gradients = np.zeros(len(positions))
+
+            # converting the qma tom gradients from hartree bohr to hartree angstrom
+            n = min(len(gradients), len(gradients_bohr))
+            gradients[:n] = gradients_bohr[:n] * bohrconv
+            pcgrad_file = "pcgrad_" + str(oqp_state)
+            if pcgrad and len(gradients) > n and os.path.isfile(pcgrad_file):
+                pc_grad = rf.read_oqp_pcgrad(pcgrad_file)
+                pc_flat = pc_grad[:natoms_flex].flatten() * bohrconv
+                gradients[n:n + len(pc_flat)] = pc_flat
+                # TEMPORARY DEBUG (mirrors DFTB_calc)
+                print("[pcgrad] {:s} nuclear grad norm: {:.6e} Ha/Ang  "
+                      "shell grad norm: {:.6e} Ha/Ang".format(
+                          self.calc_name,
+                          np.linalg.norm(gradients[:n]),
+                          np.linalg.norm(pc_flat)))
+        else:
+            gradients = gradients_bohr[:len(positions)] * bohrconv
+        if in_mol is not None:
+            self.update_geom(positions, in_mol, in_shell)
+
+        os.chdir(self.here)
+        return (energy, gradients, scf_energy, nac, soc)
+
+    def read_charges(self, pop = None):
+        """
+        Per-state ESPF charges OpenQP prints under the embedding path. Optional
+        for the ONIOM (the shell charges come from the rl calc). Not yet wired.
+        """
+        raise NotImplementedError("read_charges not implemented for OpenQP_calc")
+
+    def read_hessian(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        raise NotImplementedError("read_hessian not implemented for OpenQP_calc")
+
+    def read_mu(self, positions, in_mol=None, in_shell=None, natoms_flex=None):
+        # per-state dipoles / transition dipoles from the td_prop block
+        raise NotImplementedError("read_mu not implemented for OpenQP_calc")
+
+    def read_osc_str(self):
+        # oscillator strengths from the td_prop transition table
+        raise NotImplementedError("read_osc_str not implemented for OpenQP_calc")
+
